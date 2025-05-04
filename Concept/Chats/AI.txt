@@ -1,0 +1,67 @@
+﻿Absolutely — here’s a high-level **text-based diagram** that captures the flow of your GM assistant system using multi-pass AI reasoning:
+
+```
+┌──────────────────────────────────────────┐
+│              GM Input Console            │
+│        ("Billie jumps into the lava")    │
+└──────────────────────────────────────────┘
+                      │
+                      ▼
+┌──────────────────────────────────────────┐
+│           Scene Context Builder          │
+│  (Summarizes current location, actors,   │
+│   recent events from GM scene notes)     │
+└──────────────────────────────────────────┘
+                      │
+                      ▼
+┌──────────────────────────────────────────┐
+│             Prompt Composer              │
+│  (Formats LLM prompt with GM input +     │
+│   context, asks: "What info do you need?")│
+└──────────────────────────────────────────┘
+                      │
+                      ▼
+┌──────────────────────────────────────────┐
+│         AI Pass 1: Query Analyzer        │
+│  (LLM replies with structured list of    │
+│   needed facts: character, rules, etc.)  │
+└──────────────────────────────────────────┘
+                      │
+                      ▼
+┌──────────────────────────────────────────┐
+│              Fact Resolver               │
+│  (Pulls requested data from game state:  │
+│   character sheet, rulebook, environment)│
+└──────────────────────────────────────────┘
+                      │
+                      ▼
+┌──────────────────────────────────────────┐
+│        AI Pass 2: Response Generator     │
+│  (LLM generates Lua, narration, or logic │
+│   using GM input + resolved facts)       │
+└──────────────────────────────────────────┘
+                      │
+                      ▼
+┌──────────────────────────────────────────┐
+│         Suggestion Display Engine        │
+│   (Shows result to GM: accept/edit/run)  │
+└──────────────────────────────────────────┘
+```
+
+---
+
+### 🔁 Optional Caching Layers:
+
+* `Scene Notes Memory` → feeds into Scene Context Builder
+* `Used Facts Log` → available for trace/debug
+* `LLM Model Adapter` → backend interface (Ollama, OpenAI, etc.)
+
+---
+
+This structure is designed to be **modular**, **traceable**, and **GM-friendly**, allowing you to:
+
+* Add safeguards
+* Show exactly what the AI is basing its decisions on
+* Provide clear UI points for the GM to intervene
+
+Would you like an editable version in Markdown, PlantUML, or Graphviz?
