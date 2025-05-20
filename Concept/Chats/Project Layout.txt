@@ -1,29 +1,29 @@
 ﻿/YourRepoRoot
 │
 ├── Src/
-│   ├── LFA.ROM/               # Game state, actors, actions, turn logic (Rule Object Model)
-│   ├── LFA.Engine/             # Game processing, main loop, rule/apply logic
-│   ├── LFA.Rules/              # NRules setup, rule loading, triggers
-│   ├── LFA.Scripting/          # MoonSharp integration and script host
-│   ├── LFA.Interface/          # Shared messaging contracts (DTOs)
-│   ├── LFA.Interface.Web/      # ASP.NET Core WebSocket server
-│   ├── LFA.Interface.CLI/      # Console host, wscat/dev tools
-│   ├── LFA.AI/                 # AI prompt manager, context handlers
-│   └── LFA.Infrastructure/     # Logging, config, file I/O helpers
+│   ├── LunaFlow.ROM/               # Game state, actors, actions, turn logic (Rule Object Model)
+│   ├── LunaFlow.Engine/             # Game processing, main loop, rule/apply logic
+│   ├── LunaFlow.Rules/              # NRules setup, rule loading, triggers
+│   ├── LunaFlow.Scripting/          # MoonSharp integration and script host
+│   ├── LunaFlow.Interface/          # Shared messaging contracts (DTOs)
+│   ├── LunaFlow.Interface.Web/      # ASP.NET Core WebSocket server
+│   ├── LunaFlow.Interface.CLI/      # Console host, wscat/dev tools
+│   ├── LunaFlow.AI/                 # AI prompt manager, context handlers
+│   └── LunaFlow.Infrastructure/     # Logging, config, file I/O helpers
 │
 ├── Test/
-│   └── LFA.Tests/              # Unit + integration tests
+│   └── LunaFlow.Tests/              # Unit + integration tests
 │
-├── Scripts/                   # Lua scripts for core events and behaviors
+├── Lua/                   # Lua scripts for core events and behaviors
 │   └── core/
 │
 ├── Data/                      # JSON files: characters, scenes, state
 │
-├── Doc/                       # DocFX project + API references
+├── doc_project/                      # DocFX project + API references
 │   ├── docfx.json
-│   ├── articles/
+│   ├── docs/
 │   └── api/
-│
+├──	docs
 ├── README.md
 ├── .gitignore
-└── YourSolution.sln
+└── LunaFlow_A.sln
