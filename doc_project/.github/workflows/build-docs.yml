@@ -23,6 +23,10 @@ jobs:
 
       - name: Install DocFX
         run: dotnet tool update -g docfx
+      - name: Clean previous output
+        run: |
+          rm -rf doc_project/api
+          rm -rf docs
 
       - name: Build DocFX site
         working-directory: ./doc_project
