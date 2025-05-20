@@ -1,0 +1,90 @@
+﻿Perfect. Here’s a clean, structured recap of your current architecture and decisions — focused on your **automated tabletop RPG system**, with selections confirmed as of now.
+
+---
+
+# 🧾 Project Stack Recap: Automated Tabletop RPG
+
+## 🎯 Project Vision
+
+A **developer-driven, rulebook-powered RPG framework** with dynamic scripting and AI support.
+The system is modular and built around “Rules” that define narrative, mechanics, and interactions in a highly configurable way.
+
+---
+
+## 🧱 Core Components & Technologies
+
+### 🎮 Runtime & Game Engine
+
+| Component          | Technology          | Purpose                                   |
+| ------------------ | ------------------- | ----------------------------------------- |
+| Game Loop          | **C# (.NET)**       | Manages state, turns, command flow        |
+| Rule Engine        | **NRules**          | Evaluates declarative game rules          |
+| Scripting Engine   | **MoonSharp (Lua)** | Runs game logic, events, GM commands      |
+| Persistence Format | **JSON**            | Stores structured data (characters, maps) |
+
+---
+
+### 🧠 AI Integration (Narrative Scripting Assistant)
+
+| Role            | Technology             | Purpose                                   |
+| --------------- | ---------------------- | ----------------------------------------- |
+| Language Model  | **Ollama** (local LLM) | Handles interpretation of GM requests     |
+| Prompt Strategy | **Multi-Pass Flow**    | Phase 1: fact requests, Phase 2: response |
+| Scene Summary   | GM-edited notes        | Provide current state to AI               |
+| Model Format    | **GGUF (quantized)**   | Local inference support                   |
+
+---
+
+## 📦 Data & Scripting Model
+
+### ✅ Primary Selections
+
+| Element                | Format / Tech           | Notes                                      |
+| ---------------------- | ----------------------- | ------------------------------------------ |
+| World Data             | **JSON**                | Characters, items, locations               |
+| Embedded Behavior      | **Lua (via MoonSharp)** | Scripted logic inside JSON objects         |
+| Scripting Execution    | **MoonSharp**           | In-engine execution, sandboxed             |
+| Mod/Rulebook Expansion | C# (compiled), Lua      | Rule authors use C#; worldbuilders use Lua |
+| Config Authoring       | JSON or Lua             | Choice depends on logic needs              |
+
+---
+
+## 🧱 Architectural Highlights
+
+### ✅ Multi-Pass AI Interaction
+
+1. **GM issues command** (e.g., “Billie jumps into lava”)
+2. **AI asks for data** it needs (e.g., “Billie’s resistances”)
+3. **Game system returns facts** from sheets/rules
+4. **AI provides final answer or script**
+
+### ✅ Structured Context Injection
+
+* Scene summaries
+* Active character data
+* Current location + recent events
+
+---
+
+## 🧩 Scripting Strategy
+
+| Pattern                        | Usage                          | Notes                          |
+| ------------------------------ | ------------------------------ | ------------------------------ |
+| JSON + Lua string fields       | Inline logic for small actions | Escaping needed                |
+| JSON + Lua file references     | Larger behavior scripts        | Cleaner, preferred             |
+| Lua config files (`return {}`) | Full data/logic blend for devs | Skips deserialization entirely |
+
+---
+
+## ⚙️ Reasoning for Current Selections
+
+* **JSON**: Familiar, tool-friendly, integrates with both AI and C#.
+* **MoonSharp**: Best sandboxed scripting solution for C# with Lua; runtime safety and flexibility.
+* **NRules**: Excellent rule-based system for declarative logic (equipment bonuses, conditional outcomes).
+* **Ollama + Multi-pass AI**: Facilitates rich narrative queries without hallucination, supports GM-in-the-loop design.
+
+---
+
+Would you like this exported as a Markdown file, or extended into a GitHub-style `README.md` or internal design doc?
+
+Client software.

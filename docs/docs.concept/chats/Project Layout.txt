@@ -1,0 +1,29 @@
+﻿/YourRepoRoot
+│
+├── Src/
+│   ├── LunaFlow.ROM/               # Game state, actors, actions, turn logic (Rule Object Model)
+│   ├── LunaFlow.Engine/             # Game processing, main loop, rule/apply logic
+│   ├── LunaFlow.Rules/              # NRules setup, rule loading, triggers
+│   ├── LunaFlow.Scripting/          # MoonSharp integration and script host
+│   ├── LunaFlow.Interface/          # Shared messaging contracts (DTOs)
+│   ├── LunaFlow.Interface.Web/      # ASP.NET Core WebSocket server
+│   ├── LunaFlow.Interface.CLI/      # Console host, wscat/dev tools
+│   ├── LunaFlow.AI/                 # AI prompt manager, context handlers
+│   └── LunaFlow.Infrastructure/     # Logging, config, file I/O helpers
+│
+├── Test/
+│   └── LunaFlow.Tests/              # Unit + integration tests
+│
+├── Lua/                   # Lua scripts for core events and behaviors
+│   └── core/
+│
+├── Data/                      # JSON files: characters, scenes, state
+│
+├── doc_project/                      # DocFX project + API references
+│   ├── docfx.json
+│   ├── docs/
+│   └── api/
+├──	docs
+├── README.md
+├── .gitignore
+└── LunaFlow_A.sln

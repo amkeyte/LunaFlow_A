@@ -1,5 +1,5 @@
 {
-  "source_base_path": "C:/Users/amkey/source/repos/LunaFlow_A/doc_project",
+  "source_base_path": "C:/Users/amkey/source/repos/LunaFlow_A/LunaFlow_A.Documentation",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -36,21 +36,71 @@
       "version": ""
     },
     {
-      "type": "Conceptual",
-      "source_relative_path": "docs/getting-started.md",
+      "type": "Resource",
+      "source_relative_path": "docs.concept/chats/AI.txt",
       "output": {
-        ".html": {
-          "relative_path": "docs/getting-started.html"
+        "resource": {
+          "relative_path": "docs.concept/chats/AI.txt"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs.concept/chats/Git layout.txt",
+      "output": {
+        "resource": {
+          "relative_path": "docs.concept/chats/Git layout.txt"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs.concept/chats/Layering.txt",
+      "output": {
+        "resource": {
+          "relative_path": "docs.concept/chats/Layering.txt"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs.concept/chats/Project Layout.txt",
+      "output": {
+        "resource": {
+          "relative_path": "docs.concept/chats/Project Layout.txt"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs.concept/chats/Technologies.txt",
+      "output": {
+        "resource": {
+          "relative_path": "docs.concept/chats/Technologies.txt"
         }
       },
       "version": ""
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "docs/introduction.md",
+      "source_relative_path": "docs.concept/chats/index.md",
       "output": {
         ".html": {
-          "relative_path": "docs/introduction.html"
+          "relative_path": "docs.concept/chats/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs.concept/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs.concept/index.html"
         }
       },
       "version": ""

@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<AllowBuild>true</AllowBuild>
+		<!-- required to silence VS -->
+		<OutputType>Library</OutputType>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+		<BuildProjectReferences>false</BuildProjectReferences>
+		<SkipCompilerExecution>true</SkipCompilerExecution>
+		<!-- THIS is the magic -->
+		<EmitCompilerGeneratedFiles>false</EmitCompilerGeneratedFiles>
+		<CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+		<RunPostBuildEvent>Never</RunPostBuildEvent>
+	</PropertyGroup>
+
+
+	<Target Name="CleanDocfxOutput" AfterTargets="Clean">
+		<RemoveDir Directories="$(MSBuildProjectDirectory)\..\docs" />
+		<RemoveDir Directories="$(MSBuildProjectDirectory)\docs" />
+		<RemoveDir Directories="$(MSBuildProjectDirectory)\api" />
+	</Target>
+
+	<Target Name="BuildDocfx" AfterTargets="Build">
+		<!--Automatically run docBuild_ python scripts to prep md files for docfx.-->
+		<ItemGroup>
+			<DocBuildScripts Include="**\docBuild_*.py" />
+		</ItemGroup>
+		<Message Text="Running docBuild_*.py scripts..." />
+		<Exec Command="@(DocBuildScripts->'python &quot;%(FullPath)&quot;', ' &amp;&amp; ')" />
+		
+		<!--Build DocFX-->
+		<Message Text="Building DocFX documentation..." Importance="high" />
+		<Exec Command="docfx metadata docfx.json" WorkingDirectory="$(MSBuildProjectDirectory)" />
+		<Exec Command="docfx build docfx.json" WorkingDirectory="$(MSBuildProjectDirectory)" />
+	</Target>
+</Project>

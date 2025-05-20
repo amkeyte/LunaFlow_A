@@ -1,6 +1,13 @@
-﻿Absolutely — here’s a high-level **text-based diagram** that captures the flow of your GM assistant system using multi-pass AI reasoning:
+﻿---
+uid: LunaFlow.Architecture.GMSystem
+title: GM Assistant System – Multi-Pass AI Reasoning
+---
 
-```
+# 🎮 GM Assistant System – Multi-Pass AI Reasoning
+
+This document describes the internal architecture of the GM assistant’s multi-pass AI reasoning workflow.
+
+```text
 ┌──────────────────────────────────────────┐
 │              GM Input Console            │
 │        ("Billie jumps into the lava")    │
@@ -17,7 +24,7 @@
 ┌──────────────────────────────────────────┐
 │             Prompt Composer              │
 │  (Formats LLM prompt with GM input +     │
-│   context, asks: "What info do you need?")│
+│  context, asks: "What info do you need?")│
 └──────────────────────────────────────────┘
                       │
                       ▼
@@ -46,22 +53,20 @@
 │         Suggestion Display Engine        │
 │   (Shows result to GM: accept/edit/run)  │
 └──────────────────────────────────────────┘
-```
 
----
+##🔁 Optional Caching Layers
+Scene Notes Memory → feeds into Scene Context Builder
 
-### 🔁 Optional Caching Layers:
+-Used Facts Log → available for trace/debug
 
-* `Scene Notes Memory` → feeds into Scene Context Builder
-* `Used Facts Log` → available for trace/debug
-* `LLM Model Adapter` → backend interface (Ollama, OpenAI, etc.)
+-LLM Model Adapter → backend interface (Ollama, OpenAI, etc.)
 
----
+##✅ Design Goals
+This modular pipeline ensures the assistant is:
 
-This structure is designed to be **modular**, **traceable**, and **GM-friendly**, allowing you to:
+-Traceable – each step is logged and inspectable
 
-* Add safeguards
-* Show exactly what the AI is basing its decisions on
-* Provide clear UI points for the GM to intervene
+-GM-friendly – GM can preview or override every step
 
-Would you like an editable version in Markdown, PlantUML, or Graphviz?
+-Modular – each stage can be tested or swapped independently
+

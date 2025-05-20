@@ -15,9 +15,19 @@
   "build": {
     "content": [
       { "files": [ "api/**.yml", "api/index.md" ] },
-      { "files": [ "**.md", "toc.yml" ] }
+      { "files": [ "**.md", "toc.yml" ] },
+      {
+        "src": "docs.concept",
+        "files": [ "**/*.md", "**/*.yml" ]
+      }
     ],
-    "resource": [],
+    "resource": [
+      {
+        "src": "docs.concept/chats",
+        "files": [ "**/*.txt" ],
+        "dest": "docs.concept/chats"
+      }
+    ],
     "overwrite": [],
     "template": [ "default" ],
     "dest": "../docs"
