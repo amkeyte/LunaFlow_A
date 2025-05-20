@@ -1,17 +1,10 @@
 ### YamlMime:TableOfContent
 items:
-- uid: LFA.Engine
-  name: LFA.Engine
-  type: Namespace
-  items:
-  - uid: LFA.Engine.GameEngine
-    name: GameEngine
-    type: Class
 - uid: LunaFlow.Engine
   name: LunaFlow.Engine
   type: Namespace
   items:
-  - uid: LunaFlow.Engine.Class1
-    name: Class1
+  - uid: LunaFlow.Engine.GameEngine
+    name: GameEngine
     type: Class
 memberLayout: SamePage

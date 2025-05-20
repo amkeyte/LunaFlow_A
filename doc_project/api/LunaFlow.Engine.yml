@@ -4,7 +4,7 @@ items:
   commentId: N:LunaFlow.Engine
   id: LunaFlow.Engine
   children:
-  - LunaFlow.Engine.Class1
+  - LunaFlow.Engine.GameEngine
   langs:
   - csharp
   - vb
@@ -15,9 +15,9 @@ items:
   assemblies:
   - LunaFlow.Engine
 references:
-- uid: LunaFlow.Engine.Class1
-  commentId: T:LunaFlow.Engine.Class1
-  href: LunaFlow.Engine.Class1.html
-  name: Class1
-  nameWithType: Class1
-  fullName: LunaFlow.Engine.Class1
+- uid: LunaFlow.Engine.GameEngine
+  commentId: T:LunaFlow.Engine.GameEngine
+  href: LunaFlow.Engine.GameEngine.html
+  name: GameEngine
+  nameWithType: GameEngine
+  fullName: LunaFlow.Engine.GameEngine

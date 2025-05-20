@@ -1,9 +1,7 @@
 {
-  "LFA.Engine": "LFA.Engine.yml",
-  "LFA.Engine.GameEngine": "LFA.Engine.GameEngine.yml",
-  "LFA.Engine.GameEngine.#ctor": "LFA.Engine.GameEngine.yml",
-  "LFA.Engine.GameEngine.Execute(System.String)": "LFA.Engine.GameEngine.yml",
-  "LFA.Engine.GameEngine.Initialize": "LFA.Engine.GameEngine.yml",
   "LunaFlow.Engine": "LunaFlow.Engine.yml",
-  "LunaFlow.Engine.Class1": "LunaFlow.Engine.Class1.yml"
+  "LunaFlow.Engine.GameEngine": "LunaFlow.Engine.GameEngine.yml",
+  "LunaFlow.Engine.GameEngine.#ctor": "LunaFlow.Engine.GameEngine.yml",
+  "LunaFlow.Engine.GameEngine.Execute(System.String)": "LunaFlow.Engine.GameEngine.yml",
+  "LunaFlow.Engine.GameEngine.Initialize": "LunaFlow.Engine.GameEngine.yml"
 }

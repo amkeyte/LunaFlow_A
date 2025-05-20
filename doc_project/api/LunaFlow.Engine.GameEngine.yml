@@ -1,27 +1,37 @@
 ### YamlMime:ManagedReference
 items:
-- uid: LunaFlow.Engine.Class1
-  commentId: T:LunaFlow.Engine.Class1
-  id: Class1
+- uid: LunaFlow.Engine.GameEngine
+  commentId: T:LunaFlow.Engine.GameEngine
+  id: GameEngine
   parent: LunaFlow.Engine
-  children: []
+  children:
+  - LunaFlow.Engine.GameEngine.#ctor
+  - LunaFlow.Engine.GameEngine.Execute(System.String)
+  - LunaFlow.Engine.GameEngine.Initialize
   langs:
   - csharp
   - vb
-  name: Class1
-  nameWithType: Class1
-  fullName: LunaFlow.Engine.Class1
+  name: GameEngine
+  nameWithType: GameEngine
+  fullName: LunaFlow.Engine.GameEngine
   type: Class
   source:
-    id: Class1
-    path: C:\Users\amkey\source\repos\LunaFlow_A\src\LunaFlow.Engine\Class1.cs
-    startLine: 2
+    remote:
+      path: src/LunaFlow.Engine/GameEngine.cs
+      branch: docs
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: GameEngine
+    path: ../src/LunaFlow.Engine/GameEngine.cs
+    startLine: 8
   assemblies:
   - LunaFlow.Engine
   namespace: LunaFlow.Engine
+  summary: Represents the core engine that processes game logic, player actions, and rule evaluation.
+  remarks: 'Version: LFA.0.0.0'
+  example: []
   syntax:
-    content: public class Class1
-    content.vb: Public Class Class1
+    content: public class GameEngine
+    content.vb: Public Class GameEngine
   inheritance:
   - System.Object
   inheritedMembers:
@@ -32,6 +42,103 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
+- uid: LunaFlow.Engine.GameEngine.#ctor
+  commentId: M:LunaFlow.Engine.GameEngine.#ctor
+  id: '#ctor'
+  parent: LunaFlow.Engine.GameEngine
+  langs:
+  - csharp
+  - vb
+  name: GameEngine()
+  nameWithType: GameEngine.GameEngine()
+  fullName: LunaFlow.Engine.GameEngine.GameEngine()
+  type: Constructor
+  source:
+    remote:
+      path: src/LunaFlow.Engine/GameEngine.cs
+      branch: docs
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: .ctor
+    path: ../src/LunaFlow.Engine/GameEngine.cs
+    startLine: 13
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Initializes a new instance of the <xref href="LunaFlow.Engine.GameEngine" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public GameEngine()
+    content.vb: Public Sub New()
+  overload: LunaFlow.Engine.GameEngine.#ctor*
+  nameWithType.vb: GameEngine.New()
+  fullName.vb: LunaFlow.Engine.GameEngine.New()
+  name.vb: New()
+- uid: LunaFlow.Engine.GameEngine.Initialize
+  commentId: M:LunaFlow.Engine.GameEngine.Initialize
+  id: Initialize
+  parent: LunaFlow.Engine.GameEngine
+  langs:
+  - csharp
+  - vb
+  name: Initialize()
+  nameWithType: GameEngine.Initialize()
+  fullName: LunaFlow.Engine.GameEngine.Initialize()
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/GameEngine.cs
+      branch: docs
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Initialize
+    path: ../src/LunaFlow.Engine/GameEngine.cs
+    startLine: 21
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Starts a new game session or prepares the engine for turn processing.
+  example: []
+  syntax:
+    content: public void Initialize()
+    content.vb: Public Sub Initialize()
+  overload: LunaFlow.Engine.GameEngine.Initialize*
+- uid: LunaFlow.Engine.GameEngine.Execute(System.String)
+  commentId: M:LunaFlow.Engine.GameEngine.Execute(System.String)
+  id: Execute(System.String)
+  parent: LunaFlow.Engine.GameEngine
+  langs:
+  - csharp
+  - vb
+  name: Execute(string)
+  nameWithType: GameEngine.Execute(string)
+  fullName: LunaFlow.Engine.GameEngine.Execute(string)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/GameEngine.cs
+      branch: docs
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Execute
+    path: ../src/LunaFlow.Engine/GameEngine.cs
+    startLine: 32
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Executes a single step of the game loop, such as processing a player command.
+  example: []
+  syntax:
+    content: public string Execute(string input)
+    parameters:
+    - id: input
+      type: System.String
+      description: The command or action to process.
+    return:
+      type: System.String
+      description: A result message or state update for the client.
+    content.vb: Public Function Execute(input As String) As String
+  overload: LunaFlow.Engine.GameEngine.Execute*
+  nameWithType.vb: GameEngine.Execute(String)
+  fullName.vb: LunaFlow.Engine.GameEngine.Execute(String)
+  name.vb: Execute(String)
 references:
 - uid: LunaFlow.Engine
   commentId: N:LunaFlow.Engine
@@ -292,3 +399,41 @@ references:
   name: System
   nameWithType: System
   fullName: System
+- uid: LunaFlow.Engine.GameEngine
+  commentId: T:LunaFlow.Engine.GameEngine
+  href: LunaFlow.Engine.GameEngine.html
+  name: GameEngine
+  nameWithType: GameEngine
+  fullName: LunaFlow.Engine.GameEngine
+- uid: LunaFlow.Engine.GameEngine.#ctor*
+  commentId: Overload:LunaFlow.Engine.GameEngine.#ctor
+  href: LunaFlow.Engine.GameEngine.html#LunaFlow_Engine_GameEngine__ctor
+  name: GameEngine
+  nameWithType: GameEngine.GameEngine
+  fullName: LunaFlow.Engine.GameEngine.GameEngine
+  nameWithType.vb: GameEngine.New
+  fullName.vb: LunaFlow.Engine.GameEngine.New
+  name.vb: New
+- uid: LunaFlow.Engine.GameEngine.Initialize*
+  commentId: Overload:LunaFlow.Engine.GameEngine.Initialize
+  href: LunaFlow.Engine.GameEngine.html#LunaFlow_Engine_GameEngine_Initialize
+  name: Initialize
+  nameWithType: GameEngine.Initialize
+  fullName: LunaFlow.Engine.GameEngine.Initialize
+- uid: LunaFlow.Engine.GameEngine.Execute*
+  commentId: Overload:LunaFlow.Engine.GameEngine.Execute
+  href: LunaFlow.Engine.GameEngine.html#LunaFlow_Engine_GameEngine_Execute_System_String_
+  name: Execute
+  nameWithType: GameEngine.Execute
+  fullName: LunaFlow.Engine.GameEngine.Execute
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
