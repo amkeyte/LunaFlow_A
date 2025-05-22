@@ -1,5 +1,5 @@
 - name: Chats
   href: index.md
   homepage: index.md
-- name: Index Template
-  href: index_template.md
+- name: Chatlist
+  href: chatList.md

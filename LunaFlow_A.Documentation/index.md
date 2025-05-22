@@ -17,4 +17,4 @@ _layout: landing
 - [LunaFlow.Infrastructure](api/LunaFlow.Infrastructure.html)
 
 ## [Documentation](docs/index.html)
-- [Project Conceptual Notes](/docs/concept/index.html)
+- [Project Conceptual Notes](docs/concept/index.html)

@@ -103,7 +103,7 @@ def process_folder(folder_path):
         full_path = os.path.join(folder_path, item)
         if os.path.isdir(full_path):
             subfolders.append(full_path)
-        elif item.endswith(".md") and item.lower() != "index.md":
+        elif item.endswith(".md") and "index" not in item.lower():
             md_files.append(item)
 
     # Create index.md if missing
