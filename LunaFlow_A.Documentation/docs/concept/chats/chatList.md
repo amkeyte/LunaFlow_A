@@ -1,13 +1,3 @@
-﻿---
-title: Chats
----
-
-# Welcome to Chats
-
-This is a special landing page.
-
-## Chat Logs
-
 # Chat Transcripts Index
 
 Available chat notes:
