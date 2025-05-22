@@ -23,6 +23,16 @@
       "version": ""
     },
     {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Toc",
       "source_relative_path": "api/toc.yml",
       "output": {
@@ -37,70 +47,119 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "docs.concept/chats/AI.txt",
+      "source_relative_path": "docs/concept/chats/AI.txt",
       "output": {
         "resource": {
-          "relative_path": "docs.concept/chats/AI.txt"
+          "relative_path": "docs/concept/chats/AI.txt"
         }
       },
       "version": ""
     },
     {
       "type": "Resource",
-      "source_relative_path": "docs.concept/chats/Git layout.txt",
+      "source_relative_path": "docs/concept/chats/Git layout.txt",
       "output": {
         "resource": {
-          "relative_path": "docs.concept/chats/Git layout.txt"
+          "relative_path": "docs/concept/chats/Git layout.txt"
         }
       },
       "version": ""
     },
     {
       "type": "Resource",
-      "source_relative_path": "docs.concept/chats/Layering.txt",
+      "source_relative_path": "docs/concept/chats/Layering.txt",
       "output": {
         "resource": {
-          "relative_path": "docs.concept/chats/Layering.txt"
+          "relative_path": "docs/concept/chats/Layering.txt"
         }
       },
       "version": ""
     },
     {
       "type": "Resource",
-      "source_relative_path": "docs.concept/chats/Project Layout.txt",
+      "source_relative_path": "docs/concept/chats/Project Layout.txt",
       "output": {
         "resource": {
-          "relative_path": "docs.concept/chats/Project Layout.txt"
+          "relative_path": "docs/concept/chats/Project Layout.txt"
         }
       },
       "version": ""
     },
     {
       "type": "Resource",
-      "source_relative_path": "docs.concept/chats/Technologies.txt",
+      "source_relative_path": "docs/concept/chats/Technologies.txt",
       "output": {
         "resource": {
-          "relative_path": "docs.concept/chats/Technologies.txt"
+          "relative_path": "docs/concept/chats/Technologies.txt"
         }
       },
       "version": ""
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "docs.concept/chats/index.md",
+      "source_relative_path": "docs/concept/chats/index.md",
       "output": {
         ".html": {
-          "relative_path": "docs.concept/chats/index.html"
+          "relative_path": "docs/concept/chats/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "docs/concept/chats/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/concept/chats/toc.html"
+        },
+        ".json": {
+          "relative_path": "docs/concept/chats/toc.json"
         }
       },
       "version": ""
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "docs.concept/index.md",
+      "source_relative_path": "docs/concept/index.md",
       "output": {
         ".html": {
-          "relative_path": "docs.concept/index.html"
+          "relative_path": "docs/concept/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "docs/concept/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/concept/toc.html"
+        },
+        ".json": {
+          "relative_path": "docs/concept/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "docs/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/toc.html"
+        },
+        ".json": {
+          "relative_path": "docs/toc.json"
         }
       },
       "version": ""

@@ -12,22 +12,19 @@
       "dest": "api"
     }
   ],
-  "build": {
-    "content": [
-      { "files": [ "api/**.yml", "api/index.md" ] },
-      { "files": [ "**.md", "toc.yml" ] },
-      {
-        "src": "docs.concept",
-        "files": [ "**/*.md", "**/*.yml" ]
-      }
-    ],
-    "resource": [
-      {
-        "src": "docs.concept/chats",
-        "files": [ "**/*.txt" ],
-        "dest": "docs.concept/chats"
-      }
-    ],
+    "build": {
+      "content": [
+        { "files": [ "toc.yml", "index.md" ] },
+        { "files": [ "api/**.yml", "api/index.md" ] },
+        { "files": [ "docs/**.yml", "docs/**.md" ] },
+      ],
+      "resource": [
+        {
+          "src": "docs",
+          "files": [ "**/*.txt" ],
+          "dest": "docs"
+        }
+      ],
     "overwrite": [],
     "template": [ "default" ],
     "dest": "../docs"

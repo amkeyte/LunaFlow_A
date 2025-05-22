@@ -61,3 +61,6 @@ references:
   isSpec: "True"
   fullName: LunaFlow.Engine.GameEngine.Initialize
   nameWithType: GameEngine.Initialize
+- uid: api.index
+  name: API Reference
+  href: api/index.html
