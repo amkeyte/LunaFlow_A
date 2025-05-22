@@ -6,6 +6,7 @@
     /// <remarks>
     /// Version: LFA.0.0.0
     /// </remarks>
+    [Obsolete]
     public class GameEngine
     {
         /// <summary>
