@@ -30,8 +30,14 @@ items:
   remarks: 'Version: LFA.0.0.0'
   example: []
   syntax:
-    content: public class GameEngine
-    content.vb: Public Class GameEngine
+    content: >-
+      [Obsolete]
+
+      public class GameEngine
+    content.vb: >-
+      <Obsolete>
+
+      Public Class GameEngine
   inheritance:
   - System.Object
   inheritedMembers:
@@ -42,6 +48,10 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
+  attributes:
+  - type: System.ObsoleteAttribute
+    ctor: System.ObsoleteAttribute.#ctor
+    arguments: []
 - uid: LunaFlow.Engine.GameEngine.#ctor
   commentId: M:LunaFlow.Engine.GameEngine.#ctor
   id: '#ctor'
@@ -60,7 +70,7 @@ items:
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: .ctor
     path: ../src/LunaFlow.Engine/GameEngine.cs
-    startLine: 13
+    startLine: 14
   assemblies:
   - LunaFlow.Engine
   namespace: LunaFlow.Engine
@@ -91,7 +101,7 @@ items:
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: Initialize
     path: ../src/LunaFlow.Engine/GameEngine.cs
-    startLine: 21
+    startLine: 22
   assemblies:
   - LunaFlow.Engine
   namespace: LunaFlow.Engine
@@ -119,7 +129,7 @@ items:
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: Execute
     path: ../src/LunaFlow.Engine/GameEngine.cs
-    startLine: 32
+    startLine: 33
   assemblies:
   - LunaFlow.Engine
   namespace: LunaFlow.Engine
