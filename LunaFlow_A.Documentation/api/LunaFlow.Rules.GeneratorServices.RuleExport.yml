@@ -15,7 +15,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/RuleExport.cs
-      branch: dev-engine-rules-experiments
+      branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: RuleExport
     path: ../src/LunaFlow.Rules/GeneratorServices/RuleExport.cs

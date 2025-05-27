@@ -16,7 +16,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/IRuleIRGenerator.cs
-      branch: dev-engine-rules-experiments
+      branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: IRuleIRGenerator
     path: ../src/LunaFlow.Rules/GeneratorServices/IRuleIRGenerator.cs
@@ -43,7 +43,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/IRuleIRGenerator.cs
-      branch: dev-engine-rules-experiments
+      branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: Generate
     path: ../src/LunaFlow.Rules/GeneratorServices/IRuleIRGenerator.cs

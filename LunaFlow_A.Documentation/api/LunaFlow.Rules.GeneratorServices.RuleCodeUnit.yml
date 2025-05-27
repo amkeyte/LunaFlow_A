@@ -19,7 +19,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/RuleCodeUnit.cs
-      branch: dev-engine-rules-experiments
+      branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: RuleCodeUnit
     path: ../src/LunaFlow.Rules/GeneratorServices/RuleCodeUnit.cs
@@ -55,7 +55,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/RuleCodeUnit.cs
-      branch: dev-engine-rules-experiments
+      branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: FileName
     path: ../src/LunaFlow.Rules/GeneratorServices/RuleCodeUnit.cs
@@ -86,7 +86,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/RuleCodeUnit.cs
-      branch: dev-engine-rules-experiments
+      branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: Namespace
     path: ../src/LunaFlow.Rules/GeneratorServices/RuleCodeUnit.cs
@@ -117,7 +117,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/RuleCodeUnit.cs
-      branch: dev-engine-rules-experiments
+      branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: Classes
     path: ../src/LunaFlow.Rules/GeneratorServices/RuleCodeUnit.cs
@@ -148,7 +148,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/RuleCodeUnit.cs
-      branch: dev-engine-rules-experiments
+      branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: RegistryMethodBody
     path: ../src/LunaFlow.Rules/GeneratorServices/RuleCodeUnit.cs

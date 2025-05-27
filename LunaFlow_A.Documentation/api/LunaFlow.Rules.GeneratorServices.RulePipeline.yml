@@ -17,7 +17,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/RulePipeline.cs
-      branch: dev-engine-rules-experiments
+      branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: RulePipeline
     path: ../src/LunaFlow.Rules/GeneratorServices/RulePipeline.cs
@@ -53,7 +53,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/RulePipeline.cs
-      branch: dev-engine-rules-experiments
+      branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: .ctor
     path: ../src/LunaFlow.Rules/GeneratorServices/RulePipeline.cs
@@ -94,7 +94,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/RulePipeline.cs
-      branch: dev-engine-rules-experiments
+      branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: Compile
     path: ../src/LunaFlow.Rules/GeneratorServices/RulePipeline.cs

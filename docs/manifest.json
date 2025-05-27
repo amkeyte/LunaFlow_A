@@ -94,6 +94,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.Class1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.Class1.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.IRuleCompiler.yml",
       "output": {
         ".html": {
@@ -238,6 +248,16 @@
       "output": {
         ".html": {
           "relative_path": "api/LunaFlow.Rules.GeneratorServices.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.html"
         }
       },
       "version": ""

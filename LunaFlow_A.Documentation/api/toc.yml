@@ -25,6 +25,13 @@ items:
   - uid: LunaFlow.Engine.RuleEngine
     name: RuleEngine
     type: Class
+- uid: LunaFlow.Rules
+  name: LunaFlow.Rules
+  type: Namespace
+  items:
+  - uid: LunaFlow.Rules.Class1
+    name: Class1
+    type: Class
 - uid: LunaFlow.Rules.GeneratorServices
   name: LunaFlow.Rules.GeneratorServices
   type: Namespace

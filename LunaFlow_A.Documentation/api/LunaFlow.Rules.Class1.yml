@@ -1,38 +1,35 @@
 ### YamlMime:ManagedReference
 items:
-- uid: LunaFlow.Engine.RuleEngine
-  commentId: T:LunaFlow.Engine.RuleEngine
-  id: RuleEngine
-  parent: LunaFlow.Engine
+- uid: LunaFlow.Rules.Class1
+  commentId: T:LunaFlow.Rules.Class1
+  id: Class1
+  parent: LunaFlow.Rules
   children:
-  - LunaFlow.Engine.RuleEngine.#ctor
-  - LunaFlow.Engine.RuleEngine.CreateSession
+  - LunaFlow.Rules.Class1.#ctor
+  - LunaFlow.Rules.Class1.boo
   langs:
   - csharp
   - vb
-  name: RuleEngine
-  nameWithType: RuleEngine
-  fullName: LunaFlow.Engine.RuleEngine
+  name: Class1
+  nameWithType: Class1
+  fullName: LunaFlow.Rules.Class1
   type: Class
   source:
     remote:
-      path: src/LunaFlow.Engine/Game/RuleEngine.cs
+      path: src/LunaFlow.Rules/Class1.cs
       branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: RuleEngine
-    path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
-    startLine: 10
+    id: Class1
+    path: ../src/LunaFlow.Rules/Class1.cs
+    startLine: 5
   assemblies:
-  - LunaFlow.Engine
-  namespace: LunaFlow.Engine
-  summary: >-
-    Provides a central rule evaluation engine for LunaFlow.
-
-    All game actions and consequences are evaluated through this system.
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  summary: Placeholder for DocFx
   example: []
   syntax:
-    content: public class RuleEngine
-    content.vb: Public Class RuleEngine
+    content: public class Class1
+    content.vb: Public Class Class1
   inheritance:
   - System.Object
   inheritedMembers:
@@ -43,97 +40,87 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
-- uid: LunaFlow.Engine.RuleEngine.#ctor
-  commentId: M:LunaFlow.Engine.RuleEngine.#ctor
-  id: '#ctor'
-  parent: LunaFlow.Engine.RuleEngine
+- uid: LunaFlow.Rules.Class1.boo
+  commentId: F:LunaFlow.Rules.Class1.boo
+  id: boo
+  parent: LunaFlow.Rules.Class1
   langs:
   - csharp
   - vb
-  name: RuleEngine()
-  nameWithType: RuleEngine.RuleEngine()
-  fullName: LunaFlow.Engine.RuleEngine.RuleEngine()
+  name: boo
+  nameWithType: Class1.boo
+  fullName: LunaFlow.Rules.Class1.boo
+  type: Field
+  source:
+    remote:
+      path: src/LunaFlow.Rules/Class1.cs
+      branch: docs
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: boo
+    path: ../src/LunaFlow.Rules/Class1.cs
+    startLine: 10
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  summary: who cares
+  example: []
+  syntax:
+    content: public static string boo
+    return:
+      type: System.String
+    content.vb: Public Shared boo As String
+- uid: LunaFlow.Rules.Class1.#ctor
+  commentId: M:LunaFlow.Rules.Class1.#ctor
+  id: '#ctor'
+  parent: LunaFlow.Rules.Class1
+  langs:
+  - csharp
+  - vb
+  name: Class1()
+  nameWithType: Class1.Class1()
+  fullName: LunaFlow.Rules.Class1.Class1()
   type: Constructor
   source:
     remote:
-      path: src/LunaFlow.Engine/Game/RuleEngine.cs
+      path: src/LunaFlow.Rules/Class1.cs
       branch: docs
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: .ctor
-    path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
-    startLine: 18
+    path: ../src/LunaFlow.Rules/Class1.cs
+    startLine: 11
   assemblies:
-  - LunaFlow.Engine
-  namespace: LunaFlow.Engine
-  summary: >-
-    Initializes a new instance of the <xref href="LunaFlow.Engine.RuleEngine" data-throw-if-not-resolved="false"></xref> class.
-
-    Compiles and loads all game rules.
-  example: []
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
   syntax:
-    content: public RuleEngine()
+    content: public Class1()
     content.vb: Public Sub New()
-  overload: LunaFlow.Engine.RuleEngine.#ctor*
-  nameWithType.vb: RuleEngine.New()
-  fullName.vb: LunaFlow.Engine.RuleEngine.New()
+  overload: LunaFlow.Rules.Class1.#ctor*
+  nameWithType.vb: Class1.New()
+  fullName.vb: LunaFlow.Rules.Class1.New()
   name.vb: New()
-- uid: LunaFlow.Engine.RuleEngine.CreateSession
-  commentId: M:LunaFlow.Engine.RuleEngine.CreateSession
-  id: CreateSession
-  parent: LunaFlow.Engine.RuleEngine
-  langs:
-  - csharp
-  - vb
-  name: CreateSession()
-  nameWithType: RuleEngine.CreateSession()
-  fullName: LunaFlow.Engine.RuleEngine.CreateSession()
-  type: Method
-  source:
-    remote:
-      path: src/LunaFlow.Engine/Game/RuleEngine.cs
-      branch: docs
-      repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: CreateSession
-    path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
-    startLine: 33
-  assemblies:
-  - LunaFlow.Engine
-  namespace: LunaFlow.Engine
-  summary: >-
-    Creates and returns a fresh rule evaluation session.
-
-    Use this to evaluate state after commands or world changes.
-  example: []
-  syntax:
-    content: public ISession CreateSession()
-    return:
-      type: NRules.ISession
-      description: An <xref href="NRules.ISession" data-throw-if-not-resolved="false"></xref> for inserting facts and firing rules.
-    content.vb: Public Function CreateSession() As ISession
-  overload: LunaFlow.Engine.RuleEngine.CreateSession*
 references:
-- uid: LunaFlow.Engine
-  commentId: N:LunaFlow.Engine
+- uid: LunaFlow.Rules
+  commentId: N:LunaFlow.Rules
   href: LunaFlow.html
-  name: LunaFlow.Engine
-  nameWithType: LunaFlow.Engine
-  fullName: LunaFlow.Engine
+  name: LunaFlow.Rules
+  nameWithType: LunaFlow.Rules
+  fullName: LunaFlow.Rules
   spec.csharp:
   - uid: LunaFlow
     name: LunaFlow
     href: LunaFlow.html
   - name: .
-  - uid: LunaFlow.Engine
-    name: Engine
-    href: LunaFlow.Engine.html
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
   spec.vb:
   - uid: LunaFlow
     name: LunaFlow
     href: LunaFlow.html
   - name: .
-  - uid: LunaFlow.Engine
-    name: Engine
-    href: LunaFlow.Engine.html
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
 - uid: System.Object
   commentId: T:System.Object
   parent: System
@@ -371,37 +358,23 @@ references:
   name: System
   nameWithType: System
   fullName: System
-- uid: LunaFlow.Engine.RuleEngine
-  commentId: T:LunaFlow.Engine.RuleEngine
-  href: LunaFlow.Engine.RuleEngine.html
-  name: RuleEngine
-  nameWithType: RuleEngine
-  fullName: LunaFlow.Engine.RuleEngine
-- uid: LunaFlow.Engine.RuleEngine.#ctor*
-  commentId: Overload:LunaFlow.Engine.RuleEngine.#ctor
-  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine__ctor
-  name: RuleEngine
-  nameWithType: RuleEngine.RuleEngine
-  fullName: LunaFlow.Engine.RuleEngine.RuleEngine
-  nameWithType.vb: RuleEngine.New
-  fullName.vb: LunaFlow.Engine.RuleEngine.New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: LunaFlow.Rules.Class1.#ctor*
+  commentId: Overload:LunaFlow.Rules.Class1.#ctor
+  href: LunaFlow.Rules.Class1.html#LunaFlow_Rules_Class1__ctor
+  name: Class1
+  nameWithType: Class1.Class1
+  fullName: LunaFlow.Rules.Class1.Class1
+  nameWithType.vb: Class1.New
+  fullName.vb: LunaFlow.Rules.Class1.New
   name.vb: New
-- uid: NRules.ISession
-  commentId: T:NRules.ISession
-  parent: NRules
-  isExternal: true
-  name: ISession
-  nameWithType: ISession
-  fullName: NRules.ISession
-- uid: LunaFlow.Engine.RuleEngine.CreateSession*
-  commentId: Overload:LunaFlow.Engine.RuleEngine.CreateSession
-  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_CreateSession
-  name: CreateSession
-  nameWithType: RuleEngine.CreateSession
-  fullName: LunaFlow.Engine.RuleEngine.CreateSession
-- uid: NRules
-  commentId: N:NRules
-  isExternal: true
-  name: NRules
-  nameWithType: NRules
-  fullName: NRules

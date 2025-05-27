@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Rules
+  commentId: N:LunaFlow.Rules
+  id: LunaFlow.Rules
+  children:
+  - LunaFlow.Rules.Class1
+  langs:
+  - csharp
+  - vb
+  name: LunaFlow.Rules
+  nameWithType: LunaFlow.Rules
+  fullName: LunaFlow.Rules
+  type: Namespace
+  assemblies:
+  - LunaFlow.Rules
+references:
+- uid: LunaFlow.Rules.Class1
+  commentId: T:LunaFlow.Rules.Class1
+  href: LunaFlow.Rules.Class1.html
+  name: Class1
+  nameWithType: Class1
+  fullName: LunaFlow.Rules.Class1

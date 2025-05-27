@@ -302,6 +302,43 @@ references:
   isSpec: "True"
   fullName: LunaFlow.Engine.RuleEngine.CreateSession
   nameWithType: RuleEngine.CreateSession
+- uid: LunaFlow.Rules
+  name: LunaFlow.Rules
+  href: api/LunaFlow.Rules.html
+  commentId: N:LunaFlow.Rules
+  fullName: LunaFlow.Rules
+  nameWithType: LunaFlow.Rules
+- uid: LunaFlow.Rules.Class1
+  name: Class1
+  href: api/LunaFlow.Rules.Class1.html
+  commentId: T:LunaFlow.Rules.Class1
+  fullName: LunaFlow.Rules.Class1
+  nameWithType: Class1
+- uid: LunaFlow.Rules.Class1.#ctor
+  name: Class1()
+  href: api/LunaFlow.Rules.Class1.html#LunaFlow_Rules_Class1__ctor
+  commentId: M:LunaFlow.Rules.Class1.#ctor
+  name.vb: New()
+  fullName: LunaFlow.Rules.Class1.Class1()
+  fullName.vb: LunaFlow.Rules.Class1.New()
+  nameWithType: Class1.Class1()
+  nameWithType.vb: Class1.New()
+- uid: LunaFlow.Rules.Class1.#ctor*
+  name: Class1
+  href: api/LunaFlow.Rules.Class1.html#LunaFlow_Rules_Class1__ctor_
+  commentId: Overload:LunaFlow.Rules.Class1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: LunaFlow.Rules.Class1.Class1
+  fullName.vb: LunaFlow.Rules.Class1.New
+  nameWithType: Class1.Class1
+  nameWithType.vb: Class1.New
+- uid: LunaFlow.Rules.Class1.boo
+  name: boo
+  href: api/LunaFlow.Rules.Class1.html#LunaFlow_Rules_Class1_boo
+  commentId: F:LunaFlow.Rules.Class1.boo
+  fullName: LunaFlow.Rules.Class1.boo
+  nameWithType: Class1.boo
 - uid: LunaFlow.Rules.GeneratorServices
   name: LunaFlow.Rules.GeneratorServices
   href: api/LunaFlow.Rules.GeneratorServices.html
