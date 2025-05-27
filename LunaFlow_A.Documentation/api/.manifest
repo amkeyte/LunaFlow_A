@@ -1,7 +1,27 @@
 {
   "LunaFlow.Engine": "LunaFlow.Engine.yml",
+  "LunaFlow.Engine.Command": "LunaFlow.Engine.Command.yml",
+  "LunaFlow.Engine.Command.#ctor(System.String)": "LunaFlow.Engine.Command.yml",
+  "LunaFlow.Engine.Command.Arguments": "LunaFlow.Engine.Command.yml",
+  "LunaFlow.Engine.Command.Name": "LunaFlow.Engine.Command.yml",
+  "LunaFlow.Engine.Command.ToString": "LunaFlow.Engine.Command.yml",
+  "LunaFlow.Engine.CommandDispatcher": "LunaFlow.Engine.CommandDispatcher.yml",
+  "LunaFlow.Engine.CommandDispatcher.#ctor": "LunaFlow.Engine.CommandDispatcher.yml",
+  "LunaFlow.Engine.CommandDispatcher.Dispatch(LunaFlow.Engine.Command)": "LunaFlow.Engine.CommandDispatcher.yml",
+  "LunaFlow.Engine.CommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)": "LunaFlow.Engine.CommandDispatcher.yml",
+  "LunaFlow.Engine.EngineHost": "LunaFlow.Engine.EngineHost.yml",
+  "LunaFlow.Engine.EngineHost.#ctor": "LunaFlow.Engine.EngineHost.yml",
+  "LunaFlow.Engine.EngineHost.#ctor(LunaFlow.Engine.IGameEngine,LunaFlow.Engine.CommandDispatcher)": "LunaFlow.Engine.EngineHost.yml",
+  "LunaFlow.Engine.EngineHost.Run": "LunaFlow.Engine.EngineHost.yml",
   "LunaFlow.Engine.GameEngine": "LunaFlow.Engine.GameEngine.yml",
   "LunaFlow.Engine.GameEngine.#ctor": "LunaFlow.Engine.GameEngine.yml",
   "LunaFlow.Engine.GameEngine.Execute(System.String)": "LunaFlow.Engine.GameEngine.yml",
-  "LunaFlow.Engine.GameEngine.Initialize": "LunaFlow.Engine.GameEngine.yml"
+  "LunaFlow.Engine.GameEngine.Initialize": "LunaFlow.Engine.GameEngine.yml",
+  "LunaFlow.Engine.ICommandHandler": "LunaFlow.Engine.ICommandHandler.yml",
+  "LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.Command)": "LunaFlow.Engine.ICommandHandler.yml",
+  "LunaFlow.Engine.IGameEngine": "LunaFlow.Engine.IGameEngine.yml",
+  "LunaFlow.Engine.IGameEngine.Initialize": "LunaFlow.Engine.IGameEngine.yml",
+  "LunaFlow.Engine.RuleEngine": "LunaFlow.Engine.RuleEngine.yml",
+  "LunaFlow.Engine.RuleEngine.#ctor": "LunaFlow.Engine.RuleEngine.yml",
+  "LunaFlow.Engine.RuleEngine.CreateSession": "LunaFlow.Engine.RuleEngine.yml"
 }

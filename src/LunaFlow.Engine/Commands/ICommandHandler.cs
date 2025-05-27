@@ -4,7 +4,8 @@
     /// Defines the interface for handling a specific type of command.
     /// Implementers execute logic in response to a matching command name.
     /// </summary>
-    internal interface ICommandHandler
+    public interface ICommandHandler
     {
+        void Handle(Command command);
     }
 }

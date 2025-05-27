@@ -4,7 +4,8 @@
     /// Defines the contract for the core LunaFlow game engine.
     /// Exposes methods for initialization, input handling, and lifecycle control.
     /// </summary>
-    internal interface IGameEngine
+    public interface IGameEngine
     {
+        public void Initialize();
     }
 }

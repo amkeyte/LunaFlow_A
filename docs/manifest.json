@@ -14,10 +14,70 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.Command.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.Command.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.CommandDispatcher.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.CommandDispatcher.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.EngineHost.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.EngineHost.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/LunaFlow.Engine.GameEngine.yml",
       "output": {
         ".html": {
           "relative_path": "api/LunaFlow.Engine.GameEngine.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.ICommandHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.ICommandHandler.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.IGameEngine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.IGameEngine.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.RuleEngine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.RuleEngine.html"
         }
       },
       "version": ""

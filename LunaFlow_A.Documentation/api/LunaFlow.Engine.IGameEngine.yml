@@ -1,0 +1,89 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Engine.IGameEngine
+  commentId: T:LunaFlow.Engine.IGameEngine
+  id: IGameEngine
+  parent: LunaFlow.Engine
+  children:
+  - LunaFlow.Engine.IGameEngine.Initialize
+  langs:
+  - csharp
+  - vb
+  name: IGameEngine
+  nameWithType: IGameEngine
+  fullName: LunaFlow.Engine.IGameEngine
+  type: Interface
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Interfaces/IGameEngine.cs
+      branch: docs
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: IGameEngine
+    path: ../src/LunaFlow.Engine/Interfaces/IGameEngine.cs
+    startLine: 6
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: >-
+    Defines the contract for the core LunaFlow game engine.
+
+    Exposes methods for initialization, input handling, and lifecycle control.
+  example: []
+  syntax:
+    content: public interface IGameEngine
+    content.vb: Public Interface IGameEngine
+- uid: LunaFlow.Engine.IGameEngine.Initialize
+  commentId: M:LunaFlow.Engine.IGameEngine.Initialize
+  id: Initialize
+  parent: LunaFlow.Engine.IGameEngine
+  langs:
+  - csharp
+  - vb
+  name: Initialize()
+  nameWithType: IGameEngine.Initialize()
+  fullName: LunaFlow.Engine.IGameEngine.Initialize()
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Interfaces/IGameEngine.cs
+      branch: docs
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Initialize
+    path: ../src/LunaFlow.Engine/Interfaces/IGameEngine.cs
+    startLine: 8
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  syntax:
+    content: void Initialize()
+    content.vb: Sub Initialize()
+  overload: LunaFlow.Engine.IGameEngine.Initialize*
+references:
+- uid: LunaFlow.Engine
+  commentId: N:LunaFlow.Engine
+  href: LunaFlow.html
+  name: LunaFlow.Engine
+  nameWithType: LunaFlow.Engine
+  fullName: LunaFlow.Engine
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+- uid: LunaFlow.Engine.IGameEngine.Initialize*
+  commentId: Overload:LunaFlow.Engine.IGameEngine.Initialize
+  href: LunaFlow.Engine.IGameEngine.html#LunaFlow_Engine_IGameEngine_Initialize
+  name: Initialize
+  nameWithType: IGameEngine.Initialize
+  fullName: LunaFlow.Engine.IGameEngine.Initialize

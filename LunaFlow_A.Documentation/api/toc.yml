@@ -4,7 +4,25 @@ items:
   name: LunaFlow.Engine
   type: Namespace
   items:
+  - uid: LunaFlow.Engine.Command
+    name: Command
+    type: Class
+  - uid: LunaFlow.Engine.CommandDispatcher
+    name: CommandDispatcher
+    type: Class
+  - uid: LunaFlow.Engine.EngineHost
+    name: EngineHost
+    type: Class
   - uid: LunaFlow.Engine.GameEngine
     name: GameEngine
+    type: Class
+  - uid: LunaFlow.Engine.ICommandHandler
+    name: ICommandHandler
+    type: Interface
+  - uid: LunaFlow.Engine.IGameEngine
+    name: IGameEngine
+    type: Interface
+  - uid: LunaFlow.Engine.RuleEngine
+    name: RuleEngine
     type: Class
 memberLayout: SamePage

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.Engine", "src\Luna
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow_A.Documentation", "LunaFlow_A.Documentation\LunaFlow_A.Documentation.csproj", "{9B7A5825-3FE6-413C-8812-FDB86C87B778}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.EngineTests", "tests\LunaFlow.EngineTests\LunaFlow.EngineTests.csproj", "{C8289A5F-DB98-CC4C-BCF6-74D8728978CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{9B7A5825-3FE6-413C-8812-FDB86C87B778}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B7A5825-3FE6-413C-8812-FDB86C87B778}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B7A5825-3FE6-413C-8812-FDB86C87B778}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8289A5F-DB98-CC4C-BCF6-74D8728978CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8289A5F-DB98-CC4C-BCF6-74D8728978CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8289A5F-DB98-CC4C-BCF6-74D8728978CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8289A5F-DB98-CC4C-BCF6-74D8728978CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
