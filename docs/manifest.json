@@ -93,6 +93,156 @@
       "version": ""
     },
     {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.IRuleCompiler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.IRuleCompiler.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.IRuleParser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.IRuleParser.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleCodeClass.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleCodeClass.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleCodeUnit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleCodeUnit.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleExport.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleExport.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleGroupAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleGroupAttribute.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleIR.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleIR.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleIRGroup.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleIRGroup.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleParseContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleParseContext.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.RulePipeline.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.RulePipeline.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.RulePrototype.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.RulePrototype.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleTemplateAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.RuleTemplateAttribute.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.StandingRuleAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.StandingRuleAttribute.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.GeneratorServices.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.GeneratorServices.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "api/index.md",
       "output": {
@@ -151,6 +301,16 @@
       "output": {
         "resource": {
           "relative_path": "docs/concept/chats/Project Layout.txt"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/concept/chats/RuleGeneration.txt",
+      "output": {
+        "resource": {
+          "relative_path": "docs/concept/chats/RuleGeneration.txt"
         }
       },
       "version": ""

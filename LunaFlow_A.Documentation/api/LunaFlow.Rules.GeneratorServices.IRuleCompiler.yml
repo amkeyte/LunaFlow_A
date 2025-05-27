@@ -1,0 +1,107 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Rules.GeneratorServices.IRuleCompiler
+  commentId: T:LunaFlow.Rules.GeneratorServices.IRuleCompiler
+  id: IRuleCompiler
+  parent: LunaFlow.Rules.GeneratorServices
+  children:
+  - LunaFlow.Rules.GeneratorServices.IRuleCompiler.Compile(LunaFlow.Rules.GeneratorServices.RuleCodeUnit)
+  langs:
+  - csharp
+  - vb
+  name: IRuleCompiler
+  nameWithType: IRuleCompiler
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleCompiler
+  type: Interface
+  source:
+    remote:
+      path: src/LunaFlow.Rules/GeneratorServices/IRuleCompiler.cs
+      branch: dev-engine-rules-experiments
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: IRuleCompiler
+    path: ../src/LunaFlow.Rules/GeneratorServices/IRuleCompiler.cs
+    startLine: 5
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules.GeneratorServices
+  summary: Defines the interface responsible for emitting code files or compiling rules to assemblies.
+  example: []
+  syntax:
+    content: public interface IRuleCompiler
+    content.vb: Public Interface IRuleCompiler
+- uid: LunaFlow.Rules.GeneratorServices.IRuleCompiler.Compile(LunaFlow.Rules.GeneratorServices.RuleCodeUnit)
+  commentId: M:LunaFlow.Rules.GeneratorServices.IRuleCompiler.Compile(LunaFlow.Rules.GeneratorServices.RuleCodeUnit)
+  id: Compile(LunaFlow.Rules.GeneratorServices.RuleCodeUnit)
+  parent: LunaFlow.Rules.GeneratorServices.IRuleCompiler
+  langs:
+  - csharp
+  - vb
+  name: Compile(RuleCodeUnit)
+  nameWithType: IRuleCompiler.Compile(RuleCodeUnit)
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleCompiler.Compile(LunaFlow.Rules.GeneratorServices.RuleCodeUnit)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Rules/GeneratorServices/IRuleCompiler.cs
+      branch: dev-engine-rules-experiments
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Compile
+    path: ../src/LunaFlow.Rules/GeneratorServices/IRuleCompiler.cs
+    startLine: 11
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules.GeneratorServices
+  summary: Compiles or emits code for a generated rule unit.
+  example: []
+  syntax:
+    content: void Compile(RuleCodeUnit codeUnit)
+    parameters:
+    - id: codeUnit
+      type: LunaFlow.Rules.GeneratorServices.RuleCodeUnit
+      description: The generated code unit to emit.
+    content.vb: Sub Compile(codeUnit As RuleCodeUnit)
+  overload: LunaFlow.Rules.GeneratorServices.IRuleCompiler.Compile*
+references:
+- uid: LunaFlow.Rules.GeneratorServices
+  commentId: N:LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.html
+  name: LunaFlow.Rules.GeneratorServices
+  nameWithType: LunaFlow.Rules.GeneratorServices
+  fullName: LunaFlow.Rules.GeneratorServices
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  - name: .
+  - uid: LunaFlow.Rules.GeneratorServices
+    name: GeneratorServices
+    href: LunaFlow.Rules.GeneratorServices.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  - name: .
+  - uid: LunaFlow.Rules.GeneratorServices
+    name: GeneratorServices
+    href: LunaFlow.Rules.GeneratorServices.html
+- uid: LunaFlow.Rules.GeneratorServices.IRuleCompiler.Compile*
+  commentId: Overload:LunaFlow.Rules.GeneratorServices.IRuleCompiler.Compile
+  href: LunaFlow.Rules.GeneratorServices.IRuleCompiler.html#LunaFlow_Rules_GeneratorServices_IRuleCompiler_Compile_LunaFlow_Rules_GeneratorServices_RuleCodeUnit_
+  name: Compile
+  nameWithType: IRuleCompiler.Compile
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleCompiler.Compile
+- uid: LunaFlow.Rules.GeneratorServices.RuleCodeUnit
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleCodeUnit
+  parent: LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.RuleCodeUnit.html
+  name: RuleCodeUnit
+  nameWithType: RuleCodeUnit
+  fullName: LunaFlow.Rules.GeneratorServices.RuleCodeUnit

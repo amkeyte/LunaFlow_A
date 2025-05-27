@@ -1,0 +1,117 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Rules.GeneratorServices.IRuleParser
+  commentId: T:LunaFlow.Rules.GeneratorServices.IRuleParser
+  id: IRuleParser
+  parent: LunaFlow.Rules.GeneratorServices
+  children:
+  - LunaFlow.Rules.GeneratorServices.IRuleParser.Parse(LunaFlow.Rules.GeneratorServices.RuleParseContext)
+  langs:
+  - csharp
+  - vb
+  name: IRuleParser
+  nameWithType: IRuleParser
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleParser
+  type: Interface
+  source:
+    remote:
+      path: src/LunaFlow.Rules/GeneratorServices/IRuleParser.cs
+      branch: dev-engine-rules-experiments
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: IRuleParser
+    path: ../src/LunaFlow.Rules/GeneratorServices/IRuleParser.cs
+    startLine: 5
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules.GeneratorServices
+  summary: Defines the interface for parsing rule declarations from author code into an intermediate representation.
+  example: []
+  syntax:
+    content: public interface IRuleParser
+    content.vb: Public Interface IRuleParser
+- uid: LunaFlow.Rules.GeneratorServices.IRuleParser.Parse(LunaFlow.Rules.GeneratorServices.RuleParseContext)
+  commentId: M:LunaFlow.Rules.GeneratorServices.IRuleParser.Parse(LunaFlow.Rules.GeneratorServices.RuleParseContext)
+  id: Parse(LunaFlow.Rules.GeneratorServices.RuleParseContext)
+  parent: LunaFlow.Rules.GeneratorServices.IRuleParser
+  langs:
+  - csharp
+  - vb
+  name: Parse(RuleParseContext)
+  nameWithType: IRuleParser.Parse(RuleParseContext)
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleParser.Parse(LunaFlow.Rules.GeneratorServices.RuleParseContext)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Rules/GeneratorServices/IRuleParser.cs
+      branch: dev-engine-rules-experiments
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Parse
+    path: ../src/LunaFlow.Rules/GeneratorServices/IRuleParser.cs
+    startLine: 12
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules.GeneratorServices
+  summary: Parses one or more rule groups and returns the intermediate rule data.
+  example: []
+  syntax:
+    content: RuleIRGroup Parse(RuleParseContext context)
+    parameters:
+    - id: context
+      type: LunaFlow.Rules.GeneratorServices.RuleParseContext
+      description: The context describing what to parse.
+    return:
+      type: LunaFlow.Rules.GeneratorServices.RuleIRGroup
+      description: A parsed group of intermediate rule data.
+    content.vb: Function Parse(context As RuleParseContext) As RuleIRGroup
+  overload: LunaFlow.Rules.GeneratorServices.IRuleParser.Parse*
+references:
+- uid: LunaFlow.Rules.GeneratorServices
+  commentId: N:LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.html
+  name: LunaFlow.Rules.GeneratorServices
+  nameWithType: LunaFlow.Rules.GeneratorServices
+  fullName: LunaFlow.Rules.GeneratorServices
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  - name: .
+  - uid: LunaFlow.Rules.GeneratorServices
+    name: GeneratorServices
+    href: LunaFlow.Rules.GeneratorServices.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  - name: .
+  - uid: LunaFlow.Rules.GeneratorServices
+    name: GeneratorServices
+    href: LunaFlow.Rules.GeneratorServices.html
+- uid: LunaFlow.Rules.GeneratorServices.IRuleParser.Parse*
+  commentId: Overload:LunaFlow.Rules.GeneratorServices.IRuleParser.Parse
+  href: LunaFlow.Rules.GeneratorServices.IRuleParser.html#LunaFlow_Rules_GeneratorServices_IRuleParser_Parse_LunaFlow_Rules_GeneratorServices_RuleParseContext_
+  name: Parse
+  nameWithType: IRuleParser.Parse
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleParser.Parse
+- uid: LunaFlow.Rules.GeneratorServices.RuleParseContext
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleParseContext
+  parent: LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.RuleParseContext.html
+  name: RuleParseContext
+  nameWithType: RuleParseContext
+  fullName: LunaFlow.Rules.GeneratorServices.RuleParseContext
+- uid: LunaFlow.Rules.GeneratorServices.RuleIRGroup
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleIRGroup
+  parent: LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.RuleIRGroup.html
+  name: RuleIRGroup
+  nameWithType: RuleIRGroup
+  fullName: LunaFlow.Rules.GeneratorServices.RuleIRGroup

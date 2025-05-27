@@ -16,7 +16,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Engine/Commands/ICommandHandler.cs
-      branch: docs
+      branch: dev-engine-rules-experiments
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: ICommandHandler
     path: ../src/LunaFlow.Engine/Commands/ICommandHandler.cs
@@ -46,7 +46,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Engine/Commands/ICommandHandler.cs
-      branch: docs
+      branch: dev-engine-rules-experiments
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: Handle
     path: ../src/LunaFlow.Engine/Commands/ICommandHandler.cs

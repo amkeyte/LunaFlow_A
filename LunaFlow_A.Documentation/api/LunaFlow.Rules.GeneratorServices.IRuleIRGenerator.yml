@@ -1,0 +1,117 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator
+  commentId: T:LunaFlow.Rules.GeneratorServices.IRuleIRGenerator
+  id: IRuleIRGenerator
+  parent: LunaFlow.Rules.GeneratorServices
+  children:
+  - LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.Generate(LunaFlow.Rules.GeneratorServices.RuleIRGroup)
+  langs:
+  - csharp
+  - vb
+  name: IRuleIRGenerator
+  nameWithType: IRuleIRGenerator
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator
+  type: Interface
+  source:
+    remote:
+      path: src/LunaFlow.Rules/GeneratorServices/IRuleIRGenerator.cs
+      branch: dev-engine-rules-experiments
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: IRuleIRGenerator
+    path: ../src/LunaFlow.Rules/GeneratorServices/IRuleIRGenerator.cs
+    startLine: 5
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules.GeneratorServices
+  summary: Defines the interface for converting parsed rules into a format suitable for code generation.
+  example: []
+  syntax:
+    content: public interface IRuleIRGenerator
+    content.vb: Public Interface IRuleIRGenerator
+- uid: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.Generate(LunaFlow.Rules.GeneratorServices.RuleIRGroup)
+  commentId: M:LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.Generate(LunaFlow.Rules.GeneratorServices.RuleIRGroup)
+  id: Generate(LunaFlow.Rules.GeneratorServices.RuleIRGroup)
+  parent: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator
+  langs:
+  - csharp
+  - vb
+  name: Generate(RuleIRGroup)
+  nameWithType: IRuleIRGenerator.Generate(RuleIRGroup)
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.Generate(LunaFlow.Rules.GeneratorServices.RuleIRGroup)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Rules/GeneratorServices/IRuleIRGenerator.cs
+      branch: dev-engine-rules-experiments
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Generate
+    path: ../src/LunaFlow.Rules/GeneratorServices/IRuleIRGenerator.cs
+    startLine: 12
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules.GeneratorServices
+  summary: Converts an intermediate rule group into a fully-formed code unit.
+  example: []
+  syntax:
+    content: RuleCodeUnit Generate(RuleIRGroup ir)
+    parameters:
+    - id: ir
+      type: LunaFlow.Rules.GeneratorServices.RuleIRGroup
+      description: The rule group to convert.
+    return:
+      type: LunaFlow.Rules.GeneratorServices.RuleCodeUnit
+      description: A code unit ready for compilation or emission.
+    content.vb: Function Generate(ir As RuleIRGroup) As RuleCodeUnit
+  overload: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.Generate*
+references:
+- uid: LunaFlow.Rules.GeneratorServices
+  commentId: N:LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.html
+  name: LunaFlow.Rules.GeneratorServices
+  nameWithType: LunaFlow.Rules.GeneratorServices
+  fullName: LunaFlow.Rules.GeneratorServices
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  - name: .
+  - uid: LunaFlow.Rules.GeneratorServices
+    name: GeneratorServices
+    href: LunaFlow.Rules.GeneratorServices.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  - name: .
+  - uid: LunaFlow.Rules.GeneratorServices
+    name: GeneratorServices
+    href: LunaFlow.Rules.GeneratorServices.html
+- uid: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.Generate*
+  commentId: Overload:LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.Generate
+  href: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.html#LunaFlow_Rules_GeneratorServices_IRuleIRGenerator_Generate_LunaFlow_Rules_GeneratorServices_RuleIRGroup_
+  name: Generate
+  nameWithType: IRuleIRGenerator.Generate
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.Generate
+- uid: LunaFlow.Rules.GeneratorServices.RuleIRGroup
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleIRGroup
+  parent: LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.RuleIRGroup.html
+  name: RuleIRGroup
+  nameWithType: RuleIRGroup
+  fullName: LunaFlow.Rules.GeneratorServices.RuleIRGroup
+- uid: LunaFlow.Rules.GeneratorServices.RuleCodeUnit
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleCodeUnit
+  parent: LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.RuleCodeUnit.html
+  name: RuleCodeUnit
+  nameWithType: RuleCodeUnit
+  fullName: LunaFlow.Rules.GeneratorServices.RuleCodeUnit

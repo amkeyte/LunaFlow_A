@@ -1,0 +1,150 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Rules.GeneratorServices
+  commentId: N:LunaFlow.Rules.GeneratorServices
+  id: LunaFlow.Rules.GeneratorServices
+  children:
+  - LunaFlow.Rules.GeneratorServices.IRuleCompiler
+  - LunaFlow.Rules.GeneratorServices.IRuleIRGenerator
+  - LunaFlow.Rules.GeneratorServices.IRuleParser
+  - LunaFlow.Rules.GeneratorServices.RuleCodeClass
+  - LunaFlow.Rules.GeneratorServices.RuleCodeUnit
+  - LunaFlow.Rules.GeneratorServices.RuleExport
+  - LunaFlow.Rules.GeneratorServices.RuleGroupAttribute
+  - LunaFlow.Rules.GeneratorServices.RuleIR
+  - LunaFlow.Rules.GeneratorServices.RuleIRGroup
+  - LunaFlow.Rules.GeneratorServices.RuleParseContext
+  - LunaFlow.Rules.GeneratorServices.RulePipeline
+  - LunaFlow.Rules.GeneratorServices.RulePrototype
+  - LunaFlow.Rules.GeneratorServices.RuleTemplateAttribute
+  - LunaFlow.Rules.GeneratorServices.StandingRuleAttribute
+  langs:
+  - csharp
+  - vb
+  name: LunaFlow.Rules.GeneratorServices
+  nameWithType: LunaFlow.Rules.GeneratorServices
+  fullName: LunaFlow.Rules.GeneratorServices
+  type: Namespace
+  assemblies:
+  - LunaFlow.Rules
+references:
+- uid: LunaFlow.Rules.GeneratorServices.IRuleCompiler
+  commentId: T:LunaFlow.Rules.GeneratorServices.IRuleCompiler
+  parent: LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.IRuleCompiler.html
+  name: IRuleCompiler
+  nameWithType: IRuleCompiler
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleCompiler
+- uid: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator
+  commentId: T:LunaFlow.Rules.GeneratorServices.IRuleIRGenerator
+  parent: LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator.html
+  name: IRuleIRGenerator
+  nameWithType: IRuleIRGenerator
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator
+- uid: LunaFlow.Rules.GeneratorServices.IRuleParser
+  commentId: T:LunaFlow.Rules.GeneratorServices.IRuleParser
+  parent: LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.IRuleParser.html
+  name: IRuleParser
+  nameWithType: IRuleParser
+  fullName: LunaFlow.Rules.GeneratorServices.IRuleParser
+- uid: LunaFlow.Rules.GeneratorServices.RuleCodeClass
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleCodeClass
+  href: LunaFlow.Rules.GeneratorServices.RuleCodeClass.html
+  name: RuleCodeClass
+  nameWithType: RuleCodeClass
+  fullName: LunaFlow.Rules.GeneratorServices.RuleCodeClass
+- uid: LunaFlow.Rules.GeneratorServices.RuleCodeUnit
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleCodeUnit
+  parent: LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.RuleCodeUnit.html
+  name: RuleCodeUnit
+  nameWithType: RuleCodeUnit
+  fullName: LunaFlow.Rules.GeneratorServices.RuleCodeUnit
+- uid: LunaFlow.Rules.GeneratorServices.RuleExport
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleExport
+  href: LunaFlow.Rules.GeneratorServices.RuleExport.html
+  name: RuleExport
+  nameWithType: RuleExport
+  fullName: LunaFlow.Rules.GeneratorServices.RuleExport
+- uid: LunaFlow.Rules.GeneratorServices.RuleGroupAttribute
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleGroupAttribute
+  href: LunaFlow.Rules.GeneratorServices.RuleGroupAttribute.html
+  name: RuleGroupAttribute
+  nameWithType: RuleGroupAttribute
+  fullName: LunaFlow.Rules.GeneratorServices.RuleGroupAttribute
+- uid: LunaFlow.Rules.GeneratorServices.RuleIR
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleIR
+  href: LunaFlow.Rules.GeneratorServices.RuleIR.html
+  name: RuleIR
+  nameWithType: RuleIR
+  fullName: LunaFlow.Rules.GeneratorServices.RuleIR
+- uid: LunaFlow.Rules.GeneratorServices.RuleIRGroup
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleIRGroup
+  parent: LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.RuleIRGroup.html
+  name: RuleIRGroup
+  nameWithType: RuleIRGroup
+  fullName: LunaFlow.Rules.GeneratorServices.RuleIRGroup
+- uid: LunaFlow.Rules.GeneratorServices.RuleParseContext
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleParseContext
+  parent: LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.RuleParseContext.html
+  name: RuleParseContext
+  nameWithType: RuleParseContext
+  fullName: LunaFlow.Rules.GeneratorServices.RuleParseContext
+- uid: LunaFlow.Rules.GeneratorServices.RulePipeline
+  commentId: T:LunaFlow.Rules.GeneratorServices.RulePipeline
+  href: LunaFlow.Rules.GeneratorServices.RulePipeline.html
+  name: RulePipeline
+  nameWithType: RulePipeline
+  fullName: LunaFlow.Rules.GeneratorServices.RulePipeline
+- uid: LunaFlow.Rules.GeneratorServices.RulePrototype
+  commentId: T:LunaFlow.Rules.GeneratorServices.RulePrototype
+  href: LunaFlow.Rules.GeneratorServices.RulePrototype.html
+  name: RulePrototype
+  nameWithType: RulePrototype
+  fullName: LunaFlow.Rules.GeneratorServices.RulePrototype
+- uid: LunaFlow.Rules.GeneratorServices.RuleTemplateAttribute
+  commentId: T:LunaFlow.Rules.GeneratorServices.RuleTemplateAttribute
+  href: LunaFlow.Rules.GeneratorServices.RuleTemplateAttribute.html
+  name: RuleTemplateAttribute
+  nameWithType: RuleTemplateAttribute
+  fullName: LunaFlow.Rules.GeneratorServices.RuleTemplateAttribute
+- uid: LunaFlow.Rules.GeneratorServices.StandingRuleAttribute
+  commentId: T:LunaFlow.Rules.GeneratorServices.StandingRuleAttribute
+  href: LunaFlow.Rules.GeneratorServices.StandingRuleAttribute.html
+  name: StandingRuleAttribute
+  nameWithType: StandingRuleAttribute
+  fullName: LunaFlow.Rules.GeneratorServices.StandingRuleAttribute
+- uid: LunaFlow.Rules.GeneratorServices
+  commentId: N:LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.html
+  name: LunaFlow.Rules.GeneratorServices
+  nameWithType: LunaFlow.Rules.GeneratorServices
+  fullName: LunaFlow.Rules.GeneratorServices
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  - name: .
+  - uid: LunaFlow.Rules.GeneratorServices
+    name: GeneratorServices
+    href: LunaFlow.Rules.GeneratorServices.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  - name: .
+  - uid: LunaFlow.Rules.GeneratorServices
+    name: GeneratorServices
+    href: LunaFlow.Rules.GeneratorServices.html

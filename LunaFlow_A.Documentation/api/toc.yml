@@ -25,4 +25,50 @@ items:
   - uid: LunaFlow.Engine.RuleEngine
     name: RuleEngine
     type: Class
+- uid: LunaFlow.Rules.GeneratorServices
+  name: LunaFlow.Rules.GeneratorServices
+  type: Namespace
+  items:
+  - uid: LunaFlow.Rules.GeneratorServices.IRuleCompiler
+    name: IRuleCompiler
+    type: Interface
+  - uid: LunaFlow.Rules.GeneratorServices.IRuleIRGenerator
+    name: IRuleIRGenerator
+    type: Interface
+  - uid: LunaFlow.Rules.GeneratorServices.IRuleParser
+    name: IRuleParser
+    type: Interface
+  - uid: LunaFlow.Rules.GeneratorServices.RuleCodeClass
+    name: RuleCodeClass
+    type: Class
+  - uid: LunaFlow.Rules.GeneratorServices.RuleCodeUnit
+    name: RuleCodeUnit
+    type: Class
+  - uid: LunaFlow.Rules.GeneratorServices.RuleExport
+    name: RuleExport
+    type: Class
+  - uid: LunaFlow.Rules.GeneratorServices.RuleGroupAttribute
+    name: RuleGroupAttribute
+    type: Class
+  - uid: LunaFlow.Rules.GeneratorServices.RuleIR
+    name: RuleIR
+    type: Class
+  - uid: LunaFlow.Rules.GeneratorServices.RuleIRGroup
+    name: RuleIRGroup
+    type: Class
+  - uid: LunaFlow.Rules.GeneratorServices.RuleParseContext
+    name: RuleParseContext
+    type: Class
+  - uid: LunaFlow.Rules.GeneratorServices.RulePipeline
+    name: RulePipeline
+    type: Class
+  - uid: LunaFlow.Rules.GeneratorServices.RulePrototype
+    name: RulePrototype
+    type: Class
+  - uid: LunaFlow.Rules.GeneratorServices.RuleTemplateAttribute
+    name: RuleTemplateAttribute
+    type: Class
+  - uid: LunaFlow.Rules.GeneratorServices.StandingRuleAttribute
+    name: StandingRuleAttribute
+    type: Class
 memberLayout: SamePage

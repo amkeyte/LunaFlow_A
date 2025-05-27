@@ -16,4 +16,5 @@ Available chat notes:
 - [Git layout.txt](Git%20layout.txt)
 - [Layering.txt](Layering.txt)
 - [Project Layout.txt](Project%20Layout.txt)
+- [RuleGeneration.txt](RuleGeneration.txt)
 - [Technologies.txt](Technologies.txt)
