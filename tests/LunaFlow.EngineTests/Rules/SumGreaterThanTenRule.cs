@@ -1,17 +1,19 @@
 ﻿using LunaFlow.EngineTests.Mocks;
 using NRules.Fluent.Dsl;
+using NRules.RuleModel;
 
 namespace LunaFlow.EngineTests.Rules
 {
     /// <summary>
     /// Increments a session counter when the sum of a number pair exceeds 10.
     /// </summary>
+    [Repeatability(RuleRepeatability.NonRepeatable)]
     public class SumGreaterThanTenRule : Rule
     {
         public override void Define()
         {
-            NumberPair pair = null;
-            MatchCounter counter = null;
+            NumberPair? pair = null;
+            MatchCounter? counter = null;
 
             When()
                 .Match<NumberPair>(() => pair, p => p.A + p.B > 10)

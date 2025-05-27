@@ -1,4 +1,5 @@
-﻿using NRules.Fluent.Dsl;
+﻿using System.Diagnostics;
+using NRules.Fluent.Dsl;
 
 namespace LunaFlow.EngineTests.Rules
 {
@@ -20,6 +21,7 @@ namespace LunaFlow.EngineTests.Rules
             var ruleType = rule.GetType().Name;
             var x = $"{ruleType} said {message}.";
             _results.Add(x);
+            if (Debugger.IsAttached && _results.Count > 100) Debugger.Break();
         }
 
         /// <summary>
