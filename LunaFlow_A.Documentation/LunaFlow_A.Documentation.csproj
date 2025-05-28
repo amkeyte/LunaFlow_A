@@ -23,16 +23,25 @@
 	</Target>
 
 	<Target Name="BuildDocfx" AfterTargets="Build">
-		<!--Automatically run docBuild_ python scripts to prep md files for docfx.-->
+		<!--Automatically run docPreBuild_ python scripts to prep md files for docfx.-->
 		<ItemGroup>
-			<DocBuildScripts Include="**\docBuild_*.py" />
+			<DocPreBuildScripts Include="**\docPreBuild_*.py" />
 		</ItemGroup>
-		<Message Text="Running docBuild_*.py scripts..." />
-		<Exec Command="@(DocBuildScripts->'python &quot;%(FullPath)&quot;', ' &amp;&amp; ')" />
+		<Message Text="Running docPreBuild_*.py scripts..." />
+		<Exec Command="@(DocPreBuildScripts->'python &quot;%(FullPath)&quot;', ' &amp;&amp; ')" />
 		
 		<!--Build DocFX-->
 		<Message Text="Building DocFX documentation..." Importance="high" />
 		<Exec Command="docfx metadata docfx.json" WorkingDirectory="$(MSBuildProjectDirectory)" />
+
+		<!--Automatically run docMidBuild_ python scripts to prep md files for docfx.-->
+		<ItemGroup>
+			<DocMidBuildScripts Include="**\docMidBuild_*.py" />
+		</ItemGroup>
+		<Message Text="Running docMidBuild_*.py scripts..." />
+		<Exec Command="@(DocMidBuildScripts->'python &quot;%(FullPath)&quot;', ' &amp;&amp; ')" />
+		
+		
 		<Exec Command="docfx build docfx.json" WorkingDirectory="$(MSBuildProjectDirectory)" />
 	</Target>
 </Project>

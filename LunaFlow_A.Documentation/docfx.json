@@ -34,7 +34,7 @@
     "_appLogoPath": "LunaFlowLogoSmall.png"
   },
   "overwrite": [],
-  "template": [ "default" ],
+  "template": [ "templates/nojs"  ],
   "dest": "../docs"
 }
 

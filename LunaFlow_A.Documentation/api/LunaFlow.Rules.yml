@@ -5,6 +5,7 @@ items:
   id: LunaFlow.Rules
   children:
   - LunaFlow.Rules.Class1
+  - LunaFlow.Rules.GeneratorServices
   langs:
   - csharp
   - vb
@@ -21,3 +22,9 @@ references:
   name: Class1
   nameWithType: Class1
   fullName: LunaFlow.Rules.Class1
+- uid: LunaFlow.Rules.GeneratorServices
+  commentId: N:LunaFlow.Rules.GeneratorServices
+  href: LunaFlow.Rules.GeneratorServices.html
+  name: GeneratorServices
+  nameWithType: GeneratorServices
+  fullName: LunaFlow.Rules.GeneratorServices
