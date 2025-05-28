@@ -1,39 +1,116 @@
-﻿using NRules;
+﻿using System.Reflection;
+using NRules;
 using NRules.Fluent;
 using NRules.Fluent.Dsl;
 
 namespace LunaFlow.Engine
 {
     /// <summary>
-    /// Provides a central rule evaluation engine for LunaFlow.
-    /// All game actions and consequences are evaluated through this system.
+    /// Provides a simplified wrapper around the NRules engine for dynamic rule loading and execution.
     /// </summary>
     public class RuleEngine
     {
-        private readonly ISessionFactory _sessionFactory;
+        private RuleRepository _repository = new();
+        private ISessionFactory _factory;
+        private ISession _session;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RuleEngine"/> class.
-        /// Compiles and loads all game rules.
+        /// Loads rules from the specified <see cref="Assembly"/>. All types that derive from <see cref="Rule"/> are included.
         /// </summary>
-        public RuleEngine()
+        /// <param name="assembly">The assembly containing rule types.</param>
+        public void LoadRulesFromAssembly(Assembly assembly)
         {
-            var repository = new RuleRepository();
-
-            // Load all rule types from the Rules namespace (can also load by assembly)
-            repository.Load(x => x.From(typeof(RuleEngine).Assembly).Where(t => typeof(Rule).IsAssignableFrom(t.RuleType)));//verify RuleType is correct
-
-            _sessionFactory = repository.Compile();
+            _repository.Load(x => x.From(assembly)
+                                   .Where(t => typeof(Rule).IsAssignableFrom(t.RuleType)));
+            Compile();
         }
 
         /// <summary>
-        /// Creates and returns a fresh rule evaluation session.
-        /// Use this to evaluate state after commands or world changes.
+        /// Loads a single rule type into the engine.
         /// </summary>
-        /// <returns>An <see cref="ISession"/> for inserting facts and firing rules.</returns>
-        public ISession CreateSession()
+        /// <param name="ruleType">The type of the rule to load.</param>
+        public void LoadRulesFromType(Type ruleType)
         {
-            return _sessionFactory.CreateSession();
+            LoadRulesFromTypes(new[] { ruleType });
+        }
+
+        /// <summary>
+        /// Loads a set of rule types into the engine.
+        /// </summary>
+        /// <param name="ruleTypes">The collection of rule types to load.</param>
+        public void LoadRulesFromTypes(IEnumerable<Type> ruleTypes)
+        {
+            _repository.Load(x => x.From(ruleTypes));
+            Compile();
+        }
+
+        /// <summary>
+        /// Inserts a fact into the current rule session.
+        /// </summary>
+        /// <param name="fact">The fact object to insert.</param>
+        /// <exception cref="InvalidOperationException">Thrown if the rule engine has not been initialized.</exception>
+        public void Insert(object fact)
+        {
+            EnsureSessionInitialized();
+            _session.Insert(fact);
+        }
+
+        /// <summary>
+        /// Retracts a fact from the current rule session.
+        /// </summary>
+        /// <param name="fact">The fact object to retract.</param>
+        /// <exception cref="InvalidOperationException">Thrown if the rule engine has not been initialized.</exception>
+        public void Retract(object fact)
+        {
+            EnsureSessionInitialized();
+            _session.Retract(fact);
+        }
+
+        /// <summary>
+        /// Updates a fact in the current rule session.
+        /// </summary>
+        /// <param name="fact">The fact object to update.</param>
+        /// <exception cref="InvalidOperationException">Thrown if the rule engine has not been initialized.</exception>
+        public void Update(object fact)
+        {
+            EnsureSessionInitialized();
+            _session.Update(fact);
+        }
+
+        /// <summary>
+        /// Executes all active rules in the current rule session.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if the rule engine has not been initialized.</exception>
+        public void Fire()
+        {
+            EnsureSessionInitialized();
+            _session.Fire();
+        }
+        /// <summary>
+        /// Clears the rule repository and disposes the current session.
+        /// This can be used to reset the engine before reloading a new set of rules.
+        /// </summary>
+        public void Clear()
+        {
+            _repository = new RuleRepository();
+            _factory = null;
+            _session = null;
+        }
+
+        private void EnsureSessionInitialized()
+        {
+            if (_session == null)
+                throw new InvalidOperationException("RuleEngine has not been initialized. Call LoadRulesFromAssembly or LoadRulesFromTypes before using this method.");
+        }
+        /// <summary>
+        /// Compiles the rule repository and creates a new session.
+        /// </summary>
+        private void Compile()
+        {
+            _factory = _repository.Compile();
+            _session = _factory.CreateSession();
         }
     }
 }
+
+
