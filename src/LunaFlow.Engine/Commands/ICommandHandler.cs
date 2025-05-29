@@ -6,6 +6,6 @@
     /// </summary>
     public interface ICommandHandler
     {
-        void Handle(Command command);
+        void Handle(ICommand command);
     }
 }

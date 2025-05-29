@@ -1,4 +1,6 @@
-﻿namespace LunaFlow.Engine
+﻿using LunaFlow.Engine.Commands;
+
+namespace LunaFlow.Engine
 {
     /// <summary>
     /// Acts as the entry point for the LunaFlow engine.
@@ -8,6 +10,7 @@
     {
         private readonly GameEngineOptions _gameOptions = new();
         private readonly CommandOptions _commandOptions = new();
+        private readonly GameEngine _engine = new();
 
         public EngineHost ConfigureGameEngine(Action<GameEngineOptions> configure)
         {
@@ -41,17 +44,22 @@
                 Console.WriteLine("[LunaFlow] No command dispatcher specified.");
             }
 
-            _engine.Initialize();
+            _engine.Initialize(_gameOptions);
 
             while (true)
             {
                 string input = ReadInput();
                 if (string.IsNullOrWhiteSpace(input)) continue;
 
-                Command command = ParseCommand(input);
+                DefaultCommand command = ParseCommand(input);
                 _dispatcher.Dispatch(command);
             }
 
+        }
+
+        private string ReadInput()
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -63,6 +71,7 @@
 
     public class CommandOptions
     {
-        public object? CommandDispatcher { get; set; }
+        public ICommandParser CommandParser { get; set; } = new DefaultCommandParser();
+        public DefaultCommandDispatcher CommandDispatcher { get; set; } = new DefaultCommandDispatcher();
     }
 }

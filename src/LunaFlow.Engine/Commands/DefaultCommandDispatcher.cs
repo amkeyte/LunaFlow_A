@@ -4,14 +4,14 @@
     /// Responsible for routing incoming commands to the appropriate command handler.
     /// Maintains a registry of handlers and manages dispatch logic.
     /// </summary>
-    public class CommandDispatcher
+    public class DefaultCommandDispatcher : ICommandDispatcher
     {
         private readonly Dictionary<string, ICommandHandler> _handlers;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandDispatcher"/> class.
+        /// Initializes a new instance of the <see cref="DefaultCommandDispatcher"/> class.
         /// </summary>
-        public CommandDispatcher()
+        public DefaultCommandDispatcher()
         {
             _handlers = new Dictionary<string, ICommandHandler>(StringComparer.OrdinalIgnoreCase);
         }
@@ -35,7 +35,7 @@
         /// Dispatches a command to the appropriate handler, if one is registered.
         /// </summary>
         /// <param name="command">The command to execute.</param>
-        public void Dispatch(Command command)
+        public void Dispatch(ICommand command)
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));

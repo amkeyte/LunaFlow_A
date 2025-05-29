@@ -20,8 +20,9 @@
         /// <summary>
         /// Starts a new game session or prepares the engine for turn processing.
         /// </summary>
-        public void Initialize()
+        public void Initialize(GameEngineOptions opt)
         {
+            // do stuff with opt
             // Setup game world, state, etc.
             Console.WriteLine("GameEngine initialized.");
         }

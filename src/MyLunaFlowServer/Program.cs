@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using LunaFlow.Engine;
 
-Console.WriteLine("Welcom to MyLunaFlowServer, powered by LunaFlow_A");
+Console.WriteLine("Welcomw to MyLunaFlowServer, powered by LunaFlow_A");
 Console.WriteLine("Starting server");
 var engine = new EngineHost()
     .ConfigureGameEngine(opts =>
