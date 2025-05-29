@@ -6,29 +6,41 @@
     /// </summary>
     public class EngineHost
     {
-        private readonly IGameEngine _engine;
-        private readonly CommandDispatcher _dispatcher;
+        private readonly GameEngineOptions _gameOptions = new();
+        private readonly CommandOptions _commandOptions = new();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EngineHost"/> class.
-        /// </summary>
-        /// <param name="engine">The core game engine to use for processing.</param>
-        /// <param name="dispatcher">The command dispatcher responsible for routing user commands.</param>
-        public EngineHost(IGameEngine engine, CommandDispatcher dispatcher)
+        public EngineHost ConfigureGameEngine(Action<GameEngineOptions> configure)
         {
-            _engine = engine;
-            _dispatcher = dispatcher;
+            configure?.Invoke(_gameOptions);
+            return this;
         }
 
-        public EngineHost()
+        public EngineHost ConfigureCommand(Action<CommandOptions> configure)
         {
+            configure?.Invoke(_commandOptions);
+            return this;
         }
 
-        /// <summary>
-        /// Starts the engine and enters the main command-processing loop.
-        /// </summary>
         public void Run()
         {
+            Console.WriteLine($"[LunaFlow] Starting game '{_gameOptions.GameName}'...");
+
+            if (_gameOptions.EnableRulesEngine)
+            {
+                Console.WriteLine("[LunaFlow] Rules engine enabled.");
+                // TODO: Initialize rule engine
+            }
+
+            if (_commandOptions.CommandDispatcher is not null)
+            {
+                Console.WriteLine($"[LunaFlow] Using command dispatcher: {_commandOptions.CommandDispatcher.GetType().Name}");
+                // TODO: Start dispatch loop
+            }
+            else
+            {
+                Console.WriteLine("[LunaFlow] No command dispatcher specified.");
+            }
+
             _engine.Initialize();
 
             while (true)
@@ -39,28 +51,18 @@
                 Command command = ParseCommand(input);
                 _dispatcher.Dispatch(command);
             }
-        }
 
-        /// <summary>
-        /// Reads user input from the current I/O source (e.g., console or WebSocket).
-        /// </summary>
-        /// <returns>Raw input string.</returns>
-        private string ReadInput()
-        {
-            // This is stubbed for now — you may later inject an input adapter here.
-            Console.Write("> ");
-            return Console.ReadLine() ?? "";
         }
+    }
 
-        /// <summary>
-        /// Parses raw user input into a <see cref="Command"/> object.
-        /// </summary>
-        /// <param name="input">Raw input string from the user.</param>
-        /// <returns>A structured command object ready for dispatch.</returns>
-        private Command ParseCommand(string input)
-        {
-            // TODO: Replace with more robust parsing logic and argument extraction.
-            return new Command(input.Trim());
-        }
+    public class GameEngineOptions
+    {
+        public string GameName { get; set; } = "Unnamed";
+        public bool EnableRulesEngine { get; set; } = true;
+    }
+
+    public class CommandOptions
+    {
+        public object? CommandDispatcher { get; set; }
     }
 }
