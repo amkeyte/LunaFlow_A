@@ -5,8 +5,14 @@ items:
   id: RuleEngine
   parent: LunaFlow.Engine
   children:
-  - LunaFlow.Engine.RuleEngine.#ctor
-  - LunaFlow.Engine.RuleEngine.CreateSession
+  - LunaFlow.Engine.RuleEngine.Clear
+  - LunaFlow.Engine.RuleEngine.Fire
+  - LunaFlow.Engine.RuleEngine.Insert(System.Object)
+  - LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly(System.Reflection.Assembly)
+  - LunaFlow.Engine.RuleEngine.LoadRulesFromType(System.Type)
+  - LunaFlow.Engine.RuleEngine.LoadRulesFromTypes(System.Collections.Generic.IEnumerable{System.Type})
+  - LunaFlow.Engine.RuleEngine.Retract(System.Object)
+  - LunaFlow.Engine.RuleEngine.Update(System.Object)
   langs:
   - csharp
   - vb
@@ -17,7 +23,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Engine/Game/RuleEngine.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: RuleEngine
     path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
@@ -25,10 +31,7 @@ items:
   assemblies:
   - LunaFlow.Engine
   namespace: LunaFlow.Engine
-  summary: >-
-    Provides a central rule evaluation engine for LunaFlow.
-
-    All game actions and consequences are evaluated through this system.
+  summary: Provides a simplified wrapper around the NRules engine for dynamic rule loading and execution.
   example: []
   syntax:
     content: public class RuleEngine
@@ -43,74 +46,285 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
-- uid: LunaFlow.Engine.RuleEngine.#ctor
-  commentId: M:LunaFlow.Engine.RuleEngine.#ctor
-  id: '#ctor'
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly(System.Reflection.Assembly)
+  commentId: M:LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly(System.Reflection.Assembly)
+  id: LoadRulesFromAssembly(System.Reflection.Assembly)
   parent: LunaFlow.Engine.RuleEngine
   langs:
   - csharp
   - vb
-  name: RuleEngine()
-  nameWithType: RuleEngine.RuleEngine()
-  fullName: LunaFlow.Engine.RuleEngine.RuleEngine()
-  type: Constructor
-  source:
-    remote:
-      path: src/LunaFlow.Engine/Game/RuleEngine.cs
-      branch: docs
-      repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: .ctor
-    path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
-    startLine: 18
-  assemblies:
-  - LunaFlow.Engine
-  namespace: LunaFlow.Engine
-  summary: >-
-    Initializes a new instance of the <xref href="LunaFlow.Engine.RuleEngine" data-throw-if-not-resolved="false"></xref> class.
-
-    Compiles and loads all game rules.
-  example: []
-  syntax:
-    content: public RuleEngine()
-    content.vb: Public Sub New()
-  overload: LunaFlow.Engine.RuleEngine.#ctor*
-  nameWithType.vb: RuleEngine.New()
-  fullName.vb: LunaFlow.Engine.RuleEngine.New()
-  name.vb: New()
-- uid: LunaFlow.Engine.RuleEngine.CreateSession
-  commentId: M:LunaFlow.Engine.RuleEngine.CreateSession
-  id: CreateSession
-  parent: LunaFlow.Engine.RuleEngine
-  langs:
-  - csharp
-  - vb
-  name: CreateSession()
-  nameWithType: RuleEngine.CreateSession()
-  fullName: LunaFlow.Engine.RuleEngine.CreateSession()
+  name: LoadRulesFromAssembly(Assembly)
+  nameWithType: RuleEngine.LoadRulesFromAssembly(Assembly)
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly(System.Reflection.Assembly)
   type: Method
   source:
     remote:
       path: src/LunaFlow.Engine/Game/RuleEngine.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: CreateSession
+    id: LoadRulesFromAssembly
     path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
-    startLine: 33
+    startLine: 20
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Loads rules from the specified <xref href="System.Reflection.Assembly" data-throw-if-not-resolved="false"></xref>. All types that derive from <xref href="NRules.Fluent.Dsl.Rule" data-throw-if-not-resolved="false"></xref> are included.
+  example: []
+  syntax:
+    content: public void LoadRulesFromAssembly(Assembly assembly)
+    parameters:
+    - id: assembly
+      type: System.Reflection.Assembly
+      description: The assembly containing rule types.
+    content.vb: Public Sub LoadRulesFromAssembly(assembly As Assembly)
+  overload: LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly*
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromType(System.Type)
+  commentId: M:LunaFlow.Engine.RuleEngine.LoadRulesFromType(System.Type)
+  id: LoadRulesFromType(System.Type)
+  parent: LunaFlow.Engine.RuleEngine
+  langs:
+  - csharp
+  - vb
+  name: LoadRulesFromType(Type)
+  nameWithType: RuleEngine.LoadRulesFromType(Type)
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromType(System.Type)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Game/RuleEngine.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: LoadRulesFromType
+    path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
+    startLine: 31
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Loads a single rule type into the engine.
+  example: []
+  syntax:
+    content: public void LoadRulesFromType(Type ruleType)
+    parameters:
+    - id: ruleType
+      type: System.Type
+      description: The type of the rule to load.
+    content.vb: Public Sub LoadRulesFromType(ruleType As Type)
+  overload: LunaFlow.Engine.RuleEngine.LoadRulesFromType*
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromTypes(System.Collections.Generic.IEnumerable{System.Type})
+  commentId: M:LunaFlow.Engine.RuleEngine.LoadRulesFromTypes(System.Collections.Generic.IEnumerable{System.Type})
+  id: LoadRulesFromTypes(System.Collections.Generic.IEnumerable{System.Type})
+  parent: LunaFlow.Engine.RuleEngine
+  langs:
+  - csharp
+  - vb
+  name: LoadRulesFromTypes(IEnumerable<Type>)
+  nameWithType: RuleEngine.LoadRulesFromTypes(IEnumerable<Type>)
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromTypes(System.Collections.Generic.IEnumerable<System.Type>)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Game/RuleEngine.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: LoadRulesFromTypes
+    path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
+    startLine: 40
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Loads a set of rule types into the engine.
+  example: []
+  syntax:
+    content: public void LoadRulesFromTypes(IEnumerable<Type> ruleTypes)
+    parameters:
+    - id: ruleTypes
+      type: System.Collections.Generic.IEnumerable{System.Type}
+      description: The collection of rule types to load.
+    content.vb: Public Sub LoadRulesFromTypes(ruleTypes As IEnumerable(Of Type))
+  overload: LunaFlow.Engine.RuleEngine.LoadRulesFromTypes*
+  nameWithType.vb: RuleEngine.LoadRulesFromTypes(IEnumerable(Of Type))
+  fullName.vb: LunaFlow.Engine.RuleEngine.LoadRulesFromTypes(System.Collections.Generic.IEnumerable(Of System.Type))
+  name.vb: LoadRulesFromTypes(IEnumerable(Of Type))
+- uid: LunaFlow.Engine.RuleEngine.Insert(System.Object)
+  commentId: M:LunaFlow.Engine.RuleEngine.Insert(System.Object)
+  id: Insert(System.Object)
+  parent: LunaFlow.Engine.RuleEngine
+  langs:
+  - csharp
+  - vb
+  name: Insert(object)
+  nameWithType: RuleEngine.Insert(object)
+  fullName: LunaFlow.Engine.RuleEngine.Insert(object)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Game/RuleEngine.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Insert
+    path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
+    startLine: 51
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Inserts a fact into the current rule session.
+  example: []
+  syntax:
+    content: public void Insert(object fact)
+    parameters:
+    - id: fact
+      type: System.Object
+      description: The fact object to insert.
+    content.vb: Public Sub Insert(fact As Object)
+  overload: LunaFlow.Engine.RuleEngine.Insert*
+  exceptions:
+  - type: System.InvalidOperationException
+    commentId: T:System.InvalidOperationException
+    description: Thrown if the rule engine has not been initialized.
+  nameWithType.vb: RuleEngine.Insert(Object)
+  fullName.vb: LunaFlow.Engine.RuleEngine.Insert(Object)
+  name.vb: Insert(Object)
+- uid: LunaFlow.Engine.RuleEngine.Retract(System.Object)
+  commentId: M:LunaFlow.Engine.RuleEngine.Retract(System.Object)
+  id: Retract(System.Object)
+  parent: LunaFlow.Engine.RuleEngine
+  langs:
+  - csharp
+  - vb
+  name: Retract(object)
+  nameWithType: RuleEngine.Retract(object)
+  fullName: LunaFlow.Engine.RuleEngine.Retract(object)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Game/RuleEngine.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Retract
+    path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
+    startLine: 62
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Retracts a fact from the current rule session.
+  example: []
+  syntax:
+    content: public void Retract(object fact)
+    parameters:
+    - id: fact
+      type: System.Object
+      description: The fact object to retract.
+    content.vb: Public Sub Retract(fact As Object)
+  overload: LunaFlow.Engine.RuleEngine.Retract*
+  exceptions:
+  - type: System.InvalidOperationException
+    commentId: T:System.InvalidOperationException
+    description: Thrown if the rule engine has not been initialized.
+  nameWithType.vb: RuleEngine.Retract(Object)
+  fullName.vb: LunaFlow.Engine.RuleEngine.Retract(Object)
+  name.vb: Retract(Object)
+- uid: LunaFlow.Engine.RuleEngine.Update(System.Object)
+  commentId: M:LunaFlow.Engine.RuleEngine.Update(System.Object)
+  id: Update(System.Object)
+  parent: LunaFlow.Engine.RuleEngine
+  langs:
+  - csharp
+  - vb
+  name: Update(object)
+  nameWithType: RuleEngine.Update(object)
+  fullName: LunaFlow.Engine.RuleEngine.Update(object)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Game/RuleEngine.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Update
+    path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
+    startLine: 73
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Updates a fact in the current rule session.
+  example: []
+  syntax:
+    content: public void Update(object fact)
+    parameters:
+    - id: fact
+      type: System.Object
+      description: The fact object to update.
+    content.vb: Public Sub Update(fact As Object)
+  overload: LunaFlow.Engine.RuleEngine.Update*
+  exceptions:
+  - type: System.InvalidOperationException
+    commentId: T:System.InvalidOperationException
+    description: Thrown if the rule engine has not been initialized.
+  nameWithType.vb: RuleEngine.Update(Object)
+  fullName.vb: LunaFlow.Engine.RuleEngine.Update(Object)
+  name.vb: Update(Object)
+- uid: LunaFlow.Engine.RuleEngine.Fire
+  commentId: M:LunaFlow.Engine.RuleEngine.Fire
+  id: Fire
+  parent: LunaFlow.Engine.RuleEngine
+  langs:
+  - csharp
+  - vb
+  name: Fire()
+  nameWithType: RuleEngine.Fire()
+  fullName: LunaFlow.Engine.RuleEngine.Fire()
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Game/RuleEngine.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Fire
+    path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
+    startLine: 83
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Executes all active rules in the current rule session.
+  example: []
+  syntax:
+    content: public void Fire()
+    content.vb: Public Sub Fire()
+  overload: LunaFlow.Engine.RuleEngine.Fire*
+  exceptions:
+  - type: System.InvalidOperationException
+    commentId: T:System.InvalidOperationException
+    description: Thrown if the rule engine has not been initialized.
+- uid: LunaFlow.Engine.RuleEngine.Clear
+  commentId: M:LunaFlow.Engine.RuleEngine.Clear
+  id: Clear
+  parent: LunaFlow.Engine.RuleEngine
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: RuleEngine.Clear()
+  fullName: LunaFlow.Engine.RuleEngine.Clear()
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Game/RuleEngine.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Clear
+    path: ../src/LunaFlow.Engine/Game/RuleEngine.cs
+    startLine: 92
   assemblies:
   - LunaFlow.Engine
   namespace: LunaFlow.Engine
   summary: >-
-    Creates and returns a fresh rule evaluation session.
+    Clears the rule repository and disposes the current session.
 
-    Use this to evaluate state after commands or world changes.
+    This can be used to reset the engine before reloading a new set of rules.
   example: []
   syntax:
-    content: public ISession CreateSession()
-    return:
-      type: NRules.ISession
-      description: An <xref href="NRules.ISession" data-throw-if-not-resolved="false"></xref> for inserting facts and firing rules.
-    content.vb: Public Function CreateSession() As ISession
-  overload: LunaFlow.Engine.RuleEngine.CreateSession*
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: LunaFlow.Engine.RuleEngine.Clear*
 references:
 - uid: LunaFlow.Engine
   commentId: N:LunaFlow.Engine
@@ -371,37 +585,238 @@ references:
   name: System
   nameWithType: System
   fullName: System
-- uid: LunaFlow.Engine.RuleEngine
-  commentId: T:LunaFlow.Engine.RuleEngine
-  href: LunaFlow.Engine.RuleEngine.html
-  name: RuleEngine
-  nameWithType: RuleEngine
-  fullName: LunaFlow.Engine.RuleEngine
-- uid: LunaFlow.Engine.RuleEngine.#ctor*
-  commentId: Overload:LunaFlow.Engine.RuleEngine.#ctor
-  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine__ctor
-  name: RuleEngine
-  nameWithType: RuleEngine.RuleEngine
-  fullName: LunaFlow.Engine.RuleEngine.RuleEngine
-  nameWithType.vb: RuleEngine.New
-  fullName.vb: LunaFlow.Engine.RuleEngine.New
-  name.vb: New
-- uid: NRules.ISession
-  commentId: T:NRules.ISession
-  parent: NRules
+- uid: System.Reflection.Assembly
+  commentId: T:System.Reflection.Assembly
+  parent: System.Reflection
   isExternal: true
-  name: ISession
-  nameWithType: ISession
-  fullName: NRules.ISession
-- uid: LunaFlow.Engine.RuleEngine.CreateSession*
-  commentId: Overload:LunaFlow.Engine.RuleEngine.CreateSession
-  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_CreateSession
-  name: CreateSession
-  nameWithType: RuleEngine.CreateSession
-  fullName: LunaFlow.Engine.RuleEngine.CreateSession
-- uid: NRules
-  commentId: N:NRules
+  href: https://learn.microsoft.com/dotnet/api/system.reflection.assembly
+  name: Assembly
+  nameWithType: Assembly
+  fullName: System.Reflection.Assembly
+- uid: NRules.Fluent.Dsl.Rule
+  commentId: T:NRules.Fluent.Dsl.Rule
+  parent: NRules.Fluent.Dsl
   isExternal: true
-  name: NRules
-  nameWithType: NRules
-  fullName: NRules
+  name: Rule
+  nameWithType: Rule
+  fullName: NRules.Fluent.Dsl.Rule
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly*
+  commentId: Overload:LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly
+  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_LoadRulesFromAssembly_System_Reflection_Assembly_
+  name: LoadRulesFromAssembly
+  nameWithType: RuleEngine.LoadRulesFromAssembly
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly
+- uid: System.Reflection
+  commentId: N:System.Reflection
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Reflection
+  nameWithType: System.Reflection
+  fullName: System.Reflection
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Reflection
+    name: Reflection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.reflection
+- uid: NRules.Fluent.Dsl
+  commentId: N:NRules.Fluent.Dsl
+  isExternal: true
+  name: NRules.Fluent.Dsl
+  nameWithType: NRules.Fluent.Dsl
+  fullName: NRules.Fluent.Dsl
+  spec.csharp:
+  - uid: NRules
+    name: NRules
+    isExternal: true
+  - name: .
+  - uid: NRules.Fluent
+    name: Fluent
+    isExternal: true
+  - name: .
+  - uid: NRules.Fluent.Dsl
+    name: Dsl
+    isExternal: true
+  spec.vb:
+  - uid: NRules
+    name: NRules
+    isExternal: true
+  - name: .
+  - uid: NRules.Fluent
+    name: Fluent
+    isExternal: true
+  - name: .
+  - uid: NRules.Fluent.Dsl
+    name: Dsl
+    isExternal: true
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromType*
+  commentId: Overload:LunaFlow.Engine.RuleEngine.LoadRulesFromType
+  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_LoadRulesFromType_System_Type_
+  name: LoadRulesFromType
+  nameWithType: RuleEngine.LoadRulesFromType
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromType
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.type
+  name: Type
+  nameWithType: Type
+  fullName: System.Type
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromTypes*
+  commentId: Overload:LunaFlow.Engine.RuleEngine.LoadRulesFromTypes
+  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_LoadRulesFromTypes_System_Collections_Generic_IEnumerable_System_Type__
+  name: LoadRulesFromTypes
+  nameWithType: RuleEngine.LoadRulesFromTypes
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromTypes
+- uid: System.Collections.Generic.IEnumerable{System.Type}
+  commentId: T:System.Collections.Generic.IEnumerable{System.Type}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<Type>
+  nameWithType: IEnumerable<Type>
+  fullName: System.Collections.Generic.IEnumerable<System.Type>
+  nameWithType.vb: IEnumerable(Of Type)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of System.Type)
+  name.vb: IEnumerable(Of Type)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Type
+    name: Type
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.type
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.InvalidOperationException
+  commentId: T:System.InvalidOperationException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.invalidoperationexception
+  name: InvalidOperationException
+  nameWithType: InvalidOperationException
+  fullName: System.InvalidOperationException
+- uid: LunaFlow.Engine.RuleEngine.Insert*
+  commentId: Overload:LunaFlow.Engine.RuleEngine.Insert
+  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Insert_System_Object_
+  name: Insert
+  nameWithType: RuleEngine.Insert
+  fullName: LunaFlow.Engine.RuleEngine.Insert
+- uid: LunaFlow.Engine.RuleEngine.Retract*
+  commentId: Overload:LunaFlow.Engine.RuleEngine.Retract
+  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Retract_System_Object_
+  name: Retract
+  nameWithType: RuleEngine.Retract
+  fullName: LunaFlow.Engine.RuleEngine.Retract
+- uid: LunaFlow.Engine.RuleEngine.Update*
+  commentId: Overload:LunaFlow.Engine.RuleEngine.Update
+  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Update_System_Object_
+  name: Update
+  nameWithType: RuleEngine.Update
+  fullName: LunaFlow.Engine.RuleEngine.Update
+- uid: LunaFlow.Engine.RuleEngine.Fire*
+  commentId: Overload:LunaFlow.Engine.RuleEngine.Fire
+  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Fire
+  name: Fire
+  nameWithType: RuleEngine.Fire
+  fullName: LunaFlow.Engine.RuleEngine.Fire
+- uid: LunaFlow.Engine.RuleEngine.Clear*
+  commentId: Overload:LunaFlow.Engine.RuleEngine.Clear
+  href: LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Clear
+  name: Clear
+  nameWithType: RuleEngine.Clear
+  fullName: LunaFlow.Engine.RuleEngine.Clear

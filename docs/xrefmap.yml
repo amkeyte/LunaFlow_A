@@ -7,158 +7,244 @@ references:
   commentId: N:LunaFlow.Engine
   fullName: LunaFlow.Engine
   nameWithType: LunaFlow.Engine
-- uid: LunaFlow.Engine.Command
-  name: Command
-  href: api/LunaFlow.Engine.Command.html
-  commentId: T:LunaFlow.Engine.Command
-  fullName: LunaFlow.Engine.Command
-  nameWithType: Command
-- uid: LunaFlow.Engine.Command.#ctor(System.String)
-  name: Command(string)
-  href: api/LunaFlow.Engine.Command.html#LunaFlow_Engine_Command__ctor_System_String_
-  commentId: M:LunaFlow.Engine.Command.#ctor(System.String)
-  name.vb: New(String)
-  fullName: LunaFlow.Engine.Command.Command(string)
-  fullName.vb: LunaFlow.Engine.Command.New(String)
-  nameWithType: Command.Command(string)
-  nameWithType.vb: Command.New(String)
-- uid: LunaFlow.Engine.Command.#ctor*
-  name: Command
-  href: api/LunaFlow.Engine.Command.html#LunaFlow_Engine_Command__ctor_
-  commentId: Overload:LunaFlow.Engine.Command.#ctor
+- uid: LunaFlow.Engine.CommandOptions
+  name: CommandOptions
+  href: api/LunaFlow.Engine.CommandOptions.html
+  commentId: T:LunaFlow.Engine.CommandOptions
+  fullName: LunaFlow.Engine.CommandOptions
+  nameWithType: CommandOptions
+- uid: LunaFlow.Engine.CommandOptions.CommandDispatcher
+  name: CommandDispatcher
+  href: api/LunaFlow.Engine.CommandOptions.html#LunaFlow_Engine_CommandOptions_CommandDispatcher
+  commentId: P:LunaFlow.Engine.CommandOptions.CommandDispatcher
+  fullName: LunaFlow.Engine.CommandOptions.CommandDispatcher
+  nameWithType: CommandOptions.CommandDispatcher
+- uid: LunaFlow.Engine.CommandOptions.CommandDispatcher*
+  name: CommandDispatcher
+  href: api/LunaFlow.Engine.CommandOptions.html#LunaFlow_Engine_CommandOptions_CommandDispatcher_
+  commentId: Overload:LunaFlow.Engine.CommandOptions.CommandDispatcher
+  isSpec: "True"
+  fullName: LunaFlow.Engine.CommandOptions.CommandDispatcher
+  nameWithType: CommandOptions.CommandDispatcher
+- uid: LunaFlow.Engine.CommandOptions.CommandParser
+  name: CommandParser
+  href: api/LunaFlow.Engine.CommandOptions.html#LunaFlow_Engine_CommandOptions_CommandParser
+  commentId: P:LunaFlow.Engine.CommandOptions.CommandParser
+  fullName: LunaFlow.Engine.CommandOptions.CommandParser
+  nameWithType: CommandOptions.CommandParser
+- uid: LunaFlow.Engine.CommandOptions.CommandParser*
+  name: CommandParser
+  href: api/LunaFlow.Engine.CommandOptions.html#LunaFlow_Engine_CommandOptions_CommandParser_
+  commentId: Overload:LunaFlow.Engine.CommandOptions.CommandParser
+  isSpec: "True"
+  fullName: LunaFlow.Engine.CommandOptions.CommandParser
+  nameWithType: CommandOptions.CommandParser
+- uid: LunaFlow.Engine.Commands
+  name: LunaFlow.Engine.Commands
+  href: api/LunaFlow.Engine.Commands.html
+  commentId: N:LunaFlow.Engine.Commands
+  fullName: LunaFlow.Engine.Commands
+  nameWithType: LunaFlow.Engine.Commands
+- uid: LunaFlow.Engine.Commands.DefaultCommandParser
+  name: DefaultCommandParser
+  href: api/LunaFlow.Engine.Commands.DefaultCommandParser.html
+  commentId: T:LunaFlow.Engine.Commands.DefaultCommandParser
+  fullName: LunaFlow.Engine.Commands.DefaultCommandParser
+  nameWithType: DefaultCommandParser
+- uid: LunaFlow.Engine.Commands.DefaultCommandParser.Parse(System.Object)
+  name: Parse(object)
+  href: api/LunaFlow.Engine.Commands.DefaultCommandParser.html#LunaFlow_Engine_Commands_DefaultCommandParser_Parse_System_Object_
+  commentId: M:LunaFlow.Engine.Commands.DefaultCommandParser.Parse(System.Object)
+  name.vb: Parse(Object)
+  fullName: LunaFlow.Engine.Commands.DefaultCommandParser.Parse(object)
+  fullName.vb: LunaFlow.Engine.Commands.DefaultCommandParser.Parse(Object)
+  nameWithType: DefaultCommandParser.Parse(object)
+  nameWithType.vb: DefaultCommandParser.Parse(Object)
+- uid: LunaFlow.Engine.Commands.DefaultCommandParser.Parse*
+  name: Parse
+  href: api/LunaFlow.Engine.Commands.DefaultCommandParser.html#LunaFlow_Engine_Commands_DefaultCommandParser_Parse_
+  commentId: Overload:LunaFlow.Engine.Commands.DefaultCommandParser.Parse
+  isSpec: "True"
+  fullName: LunaFlow.Engine.Commands.DefaultCommandParser.Parse
+  nameWithType: DefaultCommandParser.Parse
+- uid: LunaFlow.Engine.Commands.ICommandParser
+  name: ICommandParser
+  href: api/LunaFlow.Engine.Commands.ICommandParser.html
+  commentId: T:LunaFlow.Engine.Commands.ICommandParser
+  fullName: LunaFlow.Engine.Commands.ICommandParser
+  nameWithType: ICommandParser
+- uid: LunaFlow.Engine.Commands.ICommandParser.Parse(System.Object)
+  name: Parse(object)
+  href: api/LunaFlow.Engine.Commands.ICommandParser.html#LunaFlow_Engine_Commands_ICommandParser_Parse_System_Object_
+  commentId: M:LunaFlow.Engine.Commands.ICommandParser.Parse(System.Object)
+  name.vb: Parse(Object)
+  fullName: LunaFlow.Engine.Commands.ICommandParser.Parse(object)
+  fullName.vb: LunaFlow.Engine.Commands.ICommandParser.Parse(Object)
+  nameWithType: ICommandParser.Parse(object)
+  nameWithType.vb: ICommandParser.Parse(Object)
+- uid: LunaFlow.Engine.Commands.ICommandParser.Parse*
+  name: Parse
+  href: api/LunaFlow.Engine.Commands.ICommandParser.html#LunaFlow_Engine_Commands_ICommandParser_Parse_
+  commentId: Overload:LunaFlow.Engine.Commands.ICommandParser.Parse
+  isSpec: "True"
+  fullName: LunaFlow.Engine.Commands.ICommandParser.Parse
+  nameWithType: ICommandParser.Parse
+- uid: LunaFlow.Engine.DefaultCommand
+  name: DefaultCommand
+  href: api/LunaFlow.Engine.DefaultCommand.html
+  commentId: T:LunaFlow.Engine.DefaultCommand
+  fullName: LunaFlow.Engine.DefaultCommand
+  nameWithType: DefaultCommand
+- uid: LunaFlow.Engine.DefaultCommand.#ctor(System.Object)
+  name: DefaultCommand(object)
+  href: api/LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand__ctor_System_Object_
+  commentId: M:LunaFlow.Engine.DefaultCommand.#ctor(System.Object)
+  name.vb: New(Object)
+  fullName: LunaFlow.Engine.DefaultCommand.DefaultCommand(object)
+  fullName.vb: LunaFlow.Engine.DefaultCommand.New(Object)
+  nameWithType: DefaultCommand.DefaultCommand(object)
+  nameWithType.vb: DefaultCommand.New(Object)
+- uid: LunaFlow.Engine.DefaultCommand.#ctor*
+  name: DefaultCommand
+  href: api/LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand__ctor_
+  commentId: Overload:LunaFlow.Engine.DefaultCommand.#ctor
   isSpec: "True"
   name.vb: New
-  fullName: LunaFlow.Engine.Command.Command
-  fullName.vb: LunaFlow.Engine.Command.New
-  nameWithType: Command.Command
-  nameWithType.vb: Command.New
-- uid: LunaFlow.Engine.Command.Arguments
+  fullName: LunaFlow.Engine.DefaultCommand.DefaultCommand
+  fullName.vb: LunaFlow.Engine.DefaultCommand.New
+  nameWithType: DefaultCommand.DefaultCommand
+  nameWithType.vb: DefaultCommand.New
+- uid: LunaFlow.Engine.DefaultCommand.Arguments
   name: Arguments
-  href: api/LunaFlow.Engine.Command.html#LunaFlow_Engine_Command_Arguments
-  commentId: P:LunaFlow.Engine.Command.Arguments
-  fullName: LunaFlow.Engine.Command.Arguments
-  nameWithType: Command.Arguments
-- uid: LunaFlow.Engine.Command.Arguments*
+  href: api/LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand_Arguments
+  commentId: P:LunaFlow.Engine.DefaultCommand.Arguments
+  fullName: LunaFlow.Engine.DefaultCommand.Arguments
+  nameWithType: DefaultCommand.Arguments
+- uid: LunaFlow.Engine.DefaultCommand.Arguments*
   name: Arguments
-  href: api/LunaFlow.Engine.Command.html#LunaFlow_Engine_Command_Arguments_
-  commentId: Overload:LunaFlow.Engine.Command.Arguments
+  href: api/LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand_Arguments_
+  commentId: Overload:LunaFlow.Engine.DefaultCommand.Arguments
   isSpec: "True"
-  fullName: LunaFlow.Engine.Command.Arguments
-  nameWithType: Command.Arguments
-- uid: LunaFlow.Engine.Command.Name
+  fullName: LunaFlow.Engine.DefaultCommand.Arguments
+  nameWithType: DefaultCommand.Arguments
+- uid: LunaFlow.Engine.DefaultCommand.Name
   name: Name
-  href: api/LunaFlow.Engine.Command.html#LunaFlow_Engine_Command_Name
-  commentId: P:LunaFlow.Engine.Command.Name
-  fullName: LunaFlow.Engine.Command.Name
-  nameWithType: Command.Name
-- uid: LunaFlow.Engine.Command.Name*
+  href: api/LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand_Name
+  commentId: P:LunaFlow.Engine.DefaultCommand.Name
+  fullName: LunaFlow.Engine.DefaultCommand.Name
+  nameWithType: DefaultCommand.Name
+- uid: LunaFlow.Engine.DefaultCommand.Name*
   name: Name
-  href: api/LunaFlow.Engine.Command.html#LunaFlow_Engine_Command_Name_
-  commentId: Overload:LunaFlow.Engine.Command.Name
+  href: api/LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand_Name_
+  commentId: Overload:LunaFlow.Engine.DefaultCommand.Name
   isSpec: "True"
-  fullName: LunaFlow.Engine.Command.Name
-  nameWithType: Command.Name
-- uid: LunaFlow.Engine.Command.ToString
+  fullName: LunaFlow.Engine.DefaultCommand.Name
+  nameWithType: DefaultCommand.Name
+- uid: LunaFlow.Engine.DefaultCommand.ToString
   name: ToString()
-  href: api/LunaFlow.Engine.Command.html#LunaFlow_Engine_Command_ToString
-  commentId: M:LunaFlow.Engine.Command.ToString
-  fullName: LunaFlow.Engine.Command.ToString()
-  nameWithType: Command.ToString()
-- uid: LunaFlow.Engine.Command.ToString*
+  href: api/LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand_ToString
+  commentId: M:LunaFlow.Engine.DefaultCommand.ToString
+  fullName: LunaFlow.Engine.DefaultCommand.ToString()
+  nameWithType: DefaultCommand.ToString()
+- uid: LunaFlow.Engine.DefaultCommand.ToString*
   name: ToString
-  href: api/LunaFlow.Engine.Command.html#LunaFlow_Engine_Command_ToString_
-  commentId: Overload:LunaFlow.Engine.Command.ToString
+  href: api/LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand_ToString_
+  commentId: Overload:LunaFlow.Engine.DefaultCommand.ToString
   isSpec: "True"
-  fullName: LunaFlow.Engine.Command.ToString
-  nameWithType: Command.ToString
-- uid: LunaFlow.Engine.CommandDispatcher
-  name: CommandDispatcher
-  href: api/LunaFlow.Engine.CommandDispatcher.html
-  commentId: T:LunaFlow.Engine.CommandDispatcher
-  fullName: LunaFlow.Engine.CommandDispatcher
-  nameWithType: CommandDispatcher
-- uid: LunaFlow.Engine.CommandDispatcher.#ctor
-  name: CommandDispatcher()
-  href: api/LunaFlow.Engine.CommandDispatcher.html#LunaFlow_Engine_CommandDispatcher__ctor
-  commentId: M:LunaFlow.Engine.CommandDispatcher.#ctor
+  fullName: LunaFlow.Engine.DefaultCommand.ToString
+  nameWithType: DefaultCommand.ToString
+- uid: LunaFlow.Engine.DefaultCommandDispatcher
+  name: DefaultCommandDispatcher
+  href: api/LunaFlow.Engine.DefaultCommandDispatcher.html
+  commentId: T:LunaFlow.Engine.DefaultCommandDispatcher
+  fullName: LunaFlow.Engine.DefaultCommandDispatcher
+  nameWithType: DefaultCommandDispatcher
+- uid: LunaFlow.Engine.DefaultCommandDispatcher.#ctor
+  name: DefaultCommandDispatcher()
+  href: api/LunaFlow.Engine.DefaultCommandDispatcher.html#LunaFlow_Engine_DefaultCommandDispatcher__ctor
+  commentId: M:LunaFlow.Engine.DefaultCommandDispatcher.#ctor
   name.vb: New()
-  fullName: LunaFlow.Engine.CommandDispatcher.CommandDispatcher()
-  fullName.vb: LunaFlow.Engine.CommandDispatcher.New()
-  nameWithType: CommandDispatcher.CommandDispatcher()
-  nameWithType.vb: CommandDispatcher.New()
-- uid: LunaFlow.Engine.CommandDispatcher.#ctor*
-  name: CommandDispatcher
-  href: api/LunaFlow.Engine.CommandDispatcher.html#LunaFlow_Engine_CommandDispatcher__ctor_
-  commentId: Overload:LunaFlow.Engine.CommandDispatcher.#ctor
+  fullName: LunaFlow.Engine.DefaultCommandDispatcher.DefaultCommandDispatcher()
+  fullName.vb: LunaFlow.Engine.DefaultCommandDispatcher.New()
+  nameWithType: DefaultCommandDispatcher.DefaultCommandDispatcher()
+  nameWithType.vb: DefaultCommandDispatcher.New()
+- uid: LunaFlow.Engine.DefaultCommandDispatcher.#ctor*
+  name: DefaultCommandDispatcher
+  href: api/LunaFlow.Engine.DefaultCommandDispatcher.html#LunaFlow_Engine_DefaultCommandDispatcher__ctor_
+  commentId: Overload:LunaFlow.Engine.DefaultCommandDispatcher.#ctor
   isSpec: "True"
   name.vb: New
-  fullName: LunaFlow.Engine.CommandDispatcher.CommandDispatcher
-  fullName.vb: LunaFlow.Engine.CommandDispatcher.New
-  nameWithType: CommandDispatcher.CommandDispatcher
-  nameWithType.vb: CommandDispatcher.New
-- uid: LunaFlow.Engine.CommandDispatcher.Dispatch(LunaFlow.Engine.Command)
-  name: Dispatch(Command)
-  href: api/LunaFlow.Engine.CommandDispatcher.html#LunaFlow_Engine_CommandDispatcher_Dispatch_LunaFlow_Engine_Command_
-  commentId: M:LunaFlow.Engine.CommandDispatcher.Dispatch(LunaFlow.Engine.Command)
-  fullName: LunaFlow.Engine.CommandDispatcher.Dispatch(LunaFlow.Engine.Command)
-  nameWithType: CommandDispatcher.Dispatch(Command)
-- uid: LunaFlow.Engine.CommandDispatcher.Dispatch*
+  fullName: LunaFlow.Engine.DefaultCommandDispatcher.DefaultCommandDispatcher
+  fullName.vb: LunaFlow.Engine.DefaultCommandDispatcher.New
+  nameWithType: DefaultCommandDispatcher.DefaultCommandDispatcher
+  nameWithType.vb: DefaultCommandDispatcher.New
+- uid: LunaFlow.Engine.DefaultCommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)
+  name: Dispatch(ICommand)
+  href: api/LunaFlow.Engine.DefaultCommandDispatcher.html#LunaFlow_Engine_DefaultCommandDispatcher_Dispatch_LunaFlow_Engine_ICommand_
+  commentId: M:LunaFlow.Engine.DefaultCommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)
+  fullName: LunaFlow.Engine.DefaultCommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)
+  nameWithType: DefaultCommandDispatcher.Dispatch(ICommand)
+- uid: LunaFlow.Engine.DefaultCommandDispatcher.Dispatch*
   name: Dispatch
-  href: api/LunaFlow.Engine.CommandDispatcher.html#LunaFlow_Engine_CommandDispatcher_Dispatch_
-  commentId: Overload:LunaFlow.Engine.CommandDispatcher.Dispatch
+  href: api/LunaFlow.Engine.DefaultCommandDispatcher.html#LunaFlow_Engine_DefaultCommandDispatcher_Dispatch_
+  commentId: Overload:LunaFlow.Engine.DefaultCommandDispatcher.Dispatch
   isSpec: "True"
-  fullName: LunaFlow.Engine.CommandDispatcher.Dispatch
-  nameWithType: CommandDispatcher.Dispatch
-- uid: LunaFlow.Engine.CommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)
+  fullName: LunaFlow.Engine.DefaultCommandDispatcher.Dispatch
+  nameWithType: DefaultCommandDispatcher.Dispatch
+- uid: LunaFlow.Engine.DefaultCommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)
   name: RegisterHandler(string, ICommandHandler)
-  href: api/LunaFlow.Engine.CommandDispatcher.html#LunaFlow_Engine_CommandDispatcher_RegisterHandler_System_String_LunaFlow_Engine_ICommandHandler_
-  commentId: M:LunaFlow.Engine.CommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)
+  href: api/LunaFlow.Engine.DefaultCommandDispatcher.html#LunaFlow_Engine_DefaultCommandDispatcher_RegisterHandler_System_String_LunaFlow_Engine_ICommandHandler_
+  commentId: M:LunaFlow.Engine.DefaultCommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)
   name.vb: RegisterHandler(String, ICommandHandler)
-  fullName: LunaFlow.Engine.CommandDispatcher.RegisterHandler(string, LunaFlow.Engine.ICommandHandler)
-  fullName.vb: LunaFlow.Engine.CommandDispatcher.RegisterHandler(String, LunaFlow.Engine.ICommandHandler)
-  nameWithType: CommandDispatcher.RegisterHandler(string, ICommandHandler)
-  nameWithType.vb: CommandDispatcher.RegisterHandler(String, ICommandHandler)
-- uid: LunaFlow.Engine.CommandDispatcher.RegisterHandler*
+  fullName: LunaFlow.Engine.DefaultCommandDispatcher.RegisterHandler(string, LunaFlow.Engine.ICommandHandler)
+  fullName.vb: LunaFlow.Engine.DefaultCommandDispatcher.RegisterHandler(String, LunaFlow.Engine.ICommandHandler)
+  nameWithType: DefaultCommandDispatcher.RegisterHandler(string, ICommandHandler)
+  nameWithType.vb: DefaultCommandDispatcher.RegisterHandler(String, ICommandHandler)
+- uid: LunaFlow.Engine.DefaultCommandDispatcher.RegisterHandler*
   name: RegisterHandler
-  href: api/LunaFlow.Engine.CommandDispatcher.html#LunaFlow_Engine_CommandDispatcher_RegisterHandler_
-  commentId: Overload:LunaFlow.Engine.CommandDispatcher.RegisterHandler
+  href: api/LunaFlow.Engine.DefaultCommandDispatcher.html#LunaFlow_Engine_DefaultCommandDispatcher_RegisterHandler_
+  commentId: Overload:LunaFlow.Engine.DefaultCommandDispatcher.RegisterHandler
   isSpec: "True"
-  fullName: LunaFlow.Engine.CommandDispatcher.RegisterHandler
-  nameWithType: CommandDispatcher.RegisterHandler
+  fullName: LunaFlow.Engine.DefaultCommandDispatcher.RegisterHandler
+  nameWithType: DefaultCommandDispatcher.RegisterHandler
 - uid: LunaFlow.Engine.EngineHost
   name: EngineHost
   href: api/LunaFlow.Engine.EngineHost.html
   commentId: T:LunaFlow.Engine.EngineHost
   fullName: LunaFlow.Engine.EngineHost
   nameWithType: EngineHost
-- uid: LunaFlow.Engine.EngineHost.#ctor
-  name: EngineHost()
-  href: api/LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost__ctor
-  commentId: M:LunaFlow.Engine.EngineHost.#ctor
-  name.vb: New()
-  fullName: LunaFlow.Engine.EngineHost.EngineHost()
-  fullName.vb: LunaFlow.Engine.EngineHost.New()
-  nameWithType: EngineHost.EngineHost()
-  nameWithType.vb: EngineHost.New()
-- uid: LunaFlow.Engine.EngineHost.#ctor(LunaFlow.Engine.IGameEngine,LunaFlow.Engine.CommandDispatcher)
-  name: EngineHost(IGameEngine, CommandDispatcher)
-  href: api/LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost__ctor_LunaFlow_Engine_IGameEngine_LunaFlow_Engine_CommandDispatcher_
-  commentId: M:LunaFlow.Engine.EngineHost.#ctor(LunaFlow.Engine.IGameEngine,LunaFlow.Engine.CommandDispatcher)
-  name.vb: New(IGameEngine, CommandDispatcher)
-  fullName: LunaFlow.Engine.EngineHost.EngineHost(LunaFlow.Engine.IGameEngine, LunaFlow.Engine.CommandDispatcher)
-  fullName.vb: LunaFlow.Engine.EngineHost.New(LunaFlow.Engine.IGameEngine, LunaFlow.Engine.CommandDispatcher)
-  nameWithType: EngineHost.EngineHost(IGameEngine, CommandDispatcher)
-  nameWithType.vb: EngineHost.New(IGameEngine, CommandDispatcher)
-- uid: LunaFlow.Engine.EngineHost.#ctor*
-  name: EngineHost
-  href: api/LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost__ctor_
-  commentId: Overload:LunaFlow.Engine.EngineHost.#ctor
+- uid: LunaFlow.Engine.EngineHost.ConfigureCommand(System.Action{LunaFlow.Engine.CommandOptions})
+  name: ConfigureCommand(Action<CommandOptions>)
+  href: api/LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost_ConfigureCommand_System_Action_LunaFlow_Engine_CommandOptions__
+  commentId: M:LunaFlow.Engine.EngineHost.ConfigureCommand(System.Action{LunaFlow.Engine.CommandOptions})
+  name.vb: ConfigureCommand(Action(Of CommandOptions))
+  fullName: LunaFlow.Engine.EngineHost.ConfigureCommand(System.Action<LunaFlow.Engine.CommandOptions>)
+  fullName.vb: LunaFlow.Engine.EngineHost.ConfigureCommand(System.Action(Of LunaFlow.Engine.CommandOptions))
+  nameWithType: EngineHost.ConfigureCommand(Action<CommandOptions>)
+  nameWithType.vb: EngineHost.ConfigureCommand(Action(Of CommandOptions))
+- uid: LunaFlow.Engine.EngineHost.ConfigureCommand*
+  name: ConfigureCommand
+  href: api/LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost_ConfigureCommand_
+  commentId: Overload:LunaFlow.Engine.EngineHost.ConfigureCommand
   isSpec: "True"
-  name.vb: New
-  fullName: LunaFlow.Engine.EngineHost.EngineHost
-  fullName.vb: LunaFlow.Engine.EngineHost.New
-  nameWithType: EngineHost.EngineHost
-  nameWithType.vb: EngineHost.New
+  fullName: LunaFlow.Engine.EngineHost.ConfigureCommand
+  nameWithType: EngineHost.ConfigureCommand
+- uid: LunaFlow.Engine.EngineHost.ConfigureGameEngine(System.Action{LunaFlow.Engine.GameEngineOptions})
+  name: ConfigureGameEngine(Action<GameEngineOptions>)
+  href: api/LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost_ConfigureGameEngine_System_Action_LunaFlow_Engine_GameEngineOptions__
+  commentId: M:LunaFlow.Engine.EngineHost.ConfigureGameEngine(System.Action{LunaFlow.Engine.GameEngineOptions})
+  name.vb: ConfigureGameEngine(Action(Of GameEngineOptions))
+  fullName: LunaFlow.Engine.EngineHost.ConfigureGameEngine(System.Action<LunaFlow.Engine.GameEngineOptions>)
+  fullName.vb: LunaFlow.Engine.EngineHost.ConfigureGameEngine(System.Action(Of LunaFlow.Engine.GameEngineOptions))
+  nameWithType: EngineHost.ConfigureGameEngine(Action<GameEngineOptions>)
+  nameWithType.vb: EngineHost.ConfigureGameEngine(Action(Of GameEngineOptions))
+- uid: LunaFlow.Engine.EngineHost.ConfigureGameEngine*
+  name: ConfigureGameEngine
+  href: api/LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost_ConfigureGameEngine_
+  commentId: Overload:LunaFlow.Engine.EngineHost.ConfigureGameEngine
+  isSpec: "True"
+  fullName: LunaFlow.Engine.EngineHost.ConfigureGameEngine
+  nameWithType: EngineHost.ConfigureGameEngine
 - uid: LunaFlow.Engine.EngineHost.Run
   name: Run()
   href: api/LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost_Run
@@ -213,12 +299,12 @@ references:
   isSpec: "True"
   fullName: LunaFlow.Engine.GameEngine.Execute
   nameWithType: GameEngine.Execute
-- uid: LunaFlow.Engine.GameEngine.Initialize
-  name: Initialize()
-  href: api/LunaFlow.Engine.GameEngine.html#LunaFlow_Engine_GameEngine_Initialize
-  commentId: M:LunaFlow.Engine.GameEngine.Initialize
-  fullName: LunaFlow.Engine.GameEngine.Initialize()
-  nameWithType: GameEngine.Initialize()
+- uid: LunaFlow.Engine.GameEngine.Initialize(LunaFlow.Engine.GameEngineOptions)
+  name: Initialize(GameEngineOptions)
+  href: api/LunaFlow.Engine.GameEngine.html#LunaFlow_Engine_GameEngine_Initialize_LunaFlow_Engine_GameEngineOptions_
+  commentId: M:LunaFlow.Engine.GameEngine.Initialize(LunaFlow.Engine.GameEngineOptions)
+  fullName: LunaFlow.Engine.GameEngine.Initialize(LunaFlow.Engine.GameEngineOptions)
+  nameWithType: GameEngine.Initialize(GameEngineOptions)
 - uid: LunaFlow.Engine.GameEngine.Initialize*
   name: Initialize
   href: api/LunaFlow.Engine.GameEngine.html#LunaFlow_Engine_GameEngine_Initialize_
@@ -226,18 +312,130 @@ references:
   isSpec: "True"
   fullName: LunaFlow.Engine.GameEngine.Initialize
   nameWithType: GameEngine.Initialize
+- uid: LunaFlow.Engine.GameEngineOptions
+  name: GameEngineOptions
+  href: api/LunaFlow.Engine.GameEngineOptions.html
+  commentId: T:LunaFlow.Engine.GameEngineOptions
+  fullName: LunaFlow.Engine.GameEngineOptions
+  nameWithType: GameEngineOptions
+- uid: LunaFlow.Engine.GameEngineOptions.EnableRulesEngine
+  name: EnableRulesEngine
+  href: api/LunaFlow.Engine.GameEngineOptions.html#LunaFlow_Engine_GameEngineOptions_EnableRulesEngine
+  commentId: P:LunaFlow.Engine.GameEngineOptions.EnableRulesEngine
+  fullName: LunaFlow.Engine.GameEngineOptions.EnableRulesEngine
+  nameWithType: GameEngineOptions.EnableRulesEngine
+- uid: LunaFlow.Engine.GameEngineOptions.EnableRulesEngine*
+  name: EnableRulesEngine
+  href: api/LunaFlow.Engine.GameEngineOptions.html#LunaFlow_Engine_GameEngineOptions_EnableRulesEngine_
+  commentId: Overload:LunaFlow.Engine.GameEngineOptions.EnableRulesEngine
+  isSpec: "True"
+  fullName: LunaFlow.Engine.GameEngineOptions.EnableRulesEngine
+  nameWithType: GameEngineOptions.EnableRulesEngine
+- uid: LunaFlow.Engine.GameEngineOptions.GameName
+  name: GameName
+  href: api/LunaFlow.Engine.GameEngineOptions.html#LunaFlow_Engine_GameEngineOptions_GameName
+  commentId: P:LunaFlow.Engine.GameEngineOptions.GameName
+  fullName: LunaFlow.Engine.GameEngineOptions.GameName
+  nameWithType: GameEngineOptions.GameName
+- uid: LunaFlow.Engine.GameEngineOptions.GameName*
+  name: GameName
+  href: api/LunaFlow.Engine.GameEngineOptions.html#LunaFlow_Engine_GameEngineOptions_GameName_
+  commentId: Overload:LunaFlow.Engine.GameEngineOptions.GameName
+  isSpec: "True"
+  fullName: LunaFlow.Engine.GameEngineOptions.GameName
+  nameWithType: GameEngineOptions.GameName
+- uid: LunaFlow.Engine.ICommand
+  name: ICommand
+  href: api/LunaFlow.Engine.ICommand.html
+  commentId: T:LunaFlow.Engine.ICommand
+  fullName: LunaFlow.Engine.ICommand
+  nameWithType: ICommand
+- uid: LunaFlow.Engine.ICommand.Arguments
+  name: Arguments
+  href: api/LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_Arguments
+  commentId: P:LunaFlow.Engine.ICommand.Arguments
+  fullName: LunaFlow.Engine.ICommand.Arguments
+  nameWithType: ICommand.Arguments
+- uid: LunaFlow.Engine.ICommand.Arguments*
+  name: Arguments
+  href: api/LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_Arguments_
+  commentId: Overload:LunaFlow.Engine.ICommand.Arguments
+  isSpec: "True"
+  fullName: LunaFlow.Engine.ICommand.Arguments
+  nameWithType: ICommand.Arguments
+- uid: LunaFlow.Engine.ICommand.Name
+  name: Name
+  href: api/LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_Name
+  commentId: P:LunaFlow.Engine.ICommand.Name
+  fullName: LunaFlow.Engine.ICommand.Name
+  nameWithType: ICommand.Name
+- uid: LunaFlow.Engine.ICommand.Name*
+  name: Name
+  href: api/LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_Name_
+  commentId: Overload:LunaFlow.Engine.ICommand.Name
+  isSpec: "True"
+  fullName: LunaFlow.Engine.ICommand.Name
+  nameWithType: ICommand.Name
+- uid: LunaFlow.Engine.ICommand.ToString
+  name: ToString()
+  href: api/LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_ToString
+  commentId: M:LunaFlow.Engine.ICommand.ToString
+  fullName: LunaFlow.Engine.ICommand.ToString()
+  nameWithType: ICommand.ToString()
+- uid: LunaFlow.Engine.ICommand.ToString*
+  name: ToString
+  href: api/LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_ToString_
+  commentId: Overload:LunaFlow.Engine.ICommand.ToString
+  isSpec: "True"
+  fullName: LunaFlow.Engine.ICommand.ToString
+  nameWithType: ICommand.ToString
+- uid: LunaFlow.Engine.ICommandDispatcher
+  name: ICommandDispatcher
+  href: api/LunaFlow.Engine.ICommandDispatcher.html
+  commentId: T:LunaFlow.Engine.ICommandDispatcher
+  fullName: LunaFlow.Engine.ICommandDispatcher
+  nameWithType: ICommandDispatcher
+- uid: LunaFlow.Engine.ICommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)
+  name: Dispatch(ICommand)
+  href: api/LunaFlow.Engine.ICommandDispatcher.html#LunaFlow_Engine_ICommandDispatcher_Dispatch_LunaFlow_Engine_ICommand_
+  commentId: M:LunaFlow.Engine.ICommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)
+  fullName: LunaFlow.Engine.ICommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)
+  nameWithType: ICommandDispatcher.Dispatch(ICommand)
+- uid: LunaFlow.Engine.ICommandDispatcher.Dispatch*
+  name: Dispatch
+  href: api/LunaFlow.Engine.ICommandDispatcher.html#LunaFlow_Engine_ICommandDispatcher_Dispatch_
+  commentId: Overload:LunaFlow.Engine.ICommandDispatcher.Dispatch
+  isSpec: "True"
+  fullName: LunaFlow.Engine.ICommandDispatcher.Dispatch
+  nameWithType: ICommandDispatcher.Dispatch
+- uid: LunaFlow.Engine.ICommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)
+  name: RegisterHandler(string, ICommandHandler)
+  href: api/LunaFlow.Engine.ICommandDispatcher.html#LunaFlow_Engine_ICommandDispatcher_RegisterHandler_System_String_LunaFlow_Engine_ICommandHandler_
+  commentId: M:LunaFlow.Engine.ICommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)
+  name.vb: RegisterHandler(String, ICommandHandler)
+  fullName: LunaFlow.Engine.ICommandDispatcher.RegisterHandler(string, LunaFlow.Engine.ICommandHandler)
+  fullName.vb: LunaFlow.Engine.ICommandDispatcher.RegisterHandler(String, LunaFlow.Engine.ICommandHandler)
+  nameWithType: ICommandDispatcher.RegisterHandler(string, ICommandHandler)
+  nameWithType.vb: ICommandDispatcher.RegisterHandler(String, ICommandHandler)
+- uid: LunaFlow.Engine.ICommandDispatcher.RegisterHandler*
+  name: RegisterHandler
+  href: api/LunaFlow.Engine.ICommandDispatcher.html#LunaFlow_Engine_ICommandDispatcher_RegisterHandler_
+  commentId: Overload:LunaFlow.Engine.ICommandDispatcher.RegisterHandler
+  isSpec: "True"
+  fullName: LunaFlow.Engine.ICommandDispatcher.RegisterHandler
+  nameWithType: ICommandDispatcher.RegisterHandler
 - uid: LunaFlow.Engine.ICommandHandler
   name: ICommandHandler
   href: api/LunaFlow.Engine.ICommandHandler.html
   commentId: T:LunaFlow.Engine.ICommandHandler
   fullName: LunaFlow.Engine.ICommandHandler
   nameWithType: ICommandHandler
-- uid: LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.Command)
-  name: Handle(Command)
-  href: api/LunaFlow.Engine.ICommandHandler.html#LunaFlow_Engine_ICommandHandler_Handle_LunaFlow_Engine_Command_
-  commentId: M:LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.Command)
-  fullName: LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.Command)
-  nameWithType: ICommandHandler.Handle(Command)
+- uid: LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.ICommand)
+  name: Handle(ICommand)
+  href: api/LunaFlow.Engine.ICommandHandler.html#LunaFlow_Engine_ICommandHandler_Handle_LunaFlow_Engine_ICommand_
+  commentId: M:LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.ICommand)
+  fullName: LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.ICommand)
+  nameWithType: ICommandHandler.Handle(ICommand)
 - uid: LunaFlow.Engine.ICommandHandler.Handle*
   name: Handle
   href: api/LunaFlow.Engine.ICommandHandler.html#LunaFlow_Engine_ICommandHandler_Handle_
@@ -270,75 +468,160 @@ references:
   commentId: T:LunaFlow.Engine.RuleEngine
   fullName: LunaFlow.Engine.RuleEngine
   nameWithType: RuleEngine
-- uid: LunaFlow.Engine.RuleEngine.#ctor
-  name: RuleEngine()
-  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine__ctor
-  commentId: M:LunaFlow.Engine.RuleEngine.#ctor
-  name.vb: New()
-  fullName: LunaFlow.Engine.RuleEngine.RuleEngine()
-  fullName.vb: LunaFlow.Engine.RuleEngine.New()
-  nameWithType: RuleEngine.RuleEngine()
-  nameWithType.vb: RuleEngine.New()
-- uid: LunaFlow.Engine.RuleEngine.#ctor*
-  name: RuleEngine
-  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine__ctor_
-  commentId: Overload:LunaFlow.Engine.RuleEngine.#ctor
+- uid: LunaFlow.Engine.RuleEngine.Clear
+  name: Clear()
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Clear
+  commentId: M:LunaFlow.Engine.RuleEngine.Clear
+  fullName: LunaFlow.Engine.RuleEngine.Clear()
+  nameWithType: RuleEngine.Clear()
+- uid: LunaFlow.Engine.RuleEngine.Clear*
+  name: Clear
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Clear_
+  commentId: Overload:LunaFlow.Engine.RuleEngine.Clear
   isSpec: "True"
-  name.vb: New
-  fullName: LunaFlow.Engine.RuleEngine.RuleEngine
-  fullName.vb: LunaFlow.Engine.RuleEngine.New
-  nameWithType: RuleEngine.RuleEngine
-  nameWithType.vb: RuleEngine.New
-- uid: LunaFlow.Engine.RuleEngine.CreateSession
-  name: CreateSession()
-  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_CreateSession
-  commentId: M:LunaFlow.Engine.RuleEngine.CreateSession
-  fullName: LunaFlow.Engine.RuleEngine.CreateSession()
-  nameWithType: RuleEngine.CreateSession()
-- uid: LunaFlow.Engine.RuleEngine.CreateSession*
-  name: CreateSession
-  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_CreateSession_
-  commentId: Overload:LunaFlow.Engine.RuleEngine.CreateSession
+  fullName: LunaFlow.Engine.RuleEngine.Clear
+  nameWithType: RuleEngine.Clear
+- uid: LunaFlow.Engine.RuleEngine.Fire
+  name: Fire()
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Fire
+  commentId: M:LunaFlow.Engine.RuleEngine.Fire
+  fullName: LunaFlow.Engine.RuleEngine.Fire()
+  nameWithType: RuleEngine.Fire()
+- uid: LunaFlow.Engine.RuleEngine.Fire*
+  name: Fire
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Fire_
+  commentId: Overload:LunaFlow.Engine.RuleEngine.Fire
   isSpec: "True"
-  fullName: LunaFlow.Engine.RuleEngine.CreateSession
-  nameWithType: RuleEngine.CreateSession
+  fullName: LunaFlow.Engine.RuleEngine.Fire
+  nameWithType: RuleEngine.Fire
+- uid: LunaFlow.Engine.RuleEngine.Insert(System.Object)
+  name: Insert(object)
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Insert_System_Object_
+  commentId: M:LunaFlow.Engine.RuleEngine.Insert(System.Object)
+  name.vb: Insert(Object)
+  fullName: LunaFlow.Engine.RuleEngine.Insert(object)
+  fullName.vb: LunaFlow.Engine.RuleEngine.Insert(Object)
+  nameWithType: RuleEngine.Insert(object)
+  nameWithType.vb: RuleEngine.Insert(Object)
+- uid: LunaFlow.Engine.RuleEngine.Insert*
+  name: Insert
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Insert_
+  commentId: Overload:LunaFlow.Engine.RuleEngine.Insert
+  isSpec: "True"
+  fullName: LunaFlow.Engine.RuleEngine.Insert
+  nameWithType: RuleEngine.Insert
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly(System.Reflection.Assembly)
+  name: LoadRulesFromAssembly(Assembly)
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_LoadRulesFromAssembly_System_Reflection_Assembly_
+  commentId: M:LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly(System.Reflection.Assembly)
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly(System.Reflection.Assembly)
+  nameWithType: RuleEngine.LoadRulesFromAssembly(Assembly)
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly*
+  name: LoadRulesFromAssembly
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_LoadRulesFromAssembly_
+  commentId: Overload:LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly
+  isSpec: "True"
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromAssembly
+  nameWithType: RuleEngine.LoadRulesFromAssembly
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromType(System.Type)
+  name: LoadRulesFromType(Type)
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_LoadRulesFromType_System_Type_
+  commentId: M:LunaFlow.Engine.RuleEngine.LoadRulesFromType(System.Type)
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromType(System.Type)
+  nameWithType: RuleEngine.LoadRulesFromType(Type)
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromType*
+  name: LoadRulesFromType
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_LoadRulesFromType_
+  commentId: Overload:LunaFlow.Engine.RuleEngine.LoadRulesFromType
+  isSpec: "True"
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromType
+  nameWithType: RuleEngine.LoadRulesFromType
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromTypes(System.Collections.Generic.IEnumerable{System.Type})
+  name: LoadRulesFromTypes(IEnumerable<Type>)
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_LoadRulesFromTypes_System_Collections_Generic_IEnumerable_System_Type__
+  commentId: M:LunaFlow.Engine.RuleEngine.LoadRulesFromTypes(System.Collections.Generic.IEnumerable{System.Type})
+  name.vb: LoadRulesFromTypes(IEnumerable(Of Type))
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromTypes(System.Collections.Generic.IEnumerable<System.Type>)
+  fullName.vb: LunaFlow.Engine.RuleEngine.LoadRulesFromTypes(System.Collections.Generic.IEnumerable(Of System.Type))
+  nameWithType: RuleEngine.LoadRulesFromTypes(IEnumerable<Type>)
+  nameWithType.vb: RuleEngine.LoadRulesFromTypes(IEnumerable(Of Type))
+- uid: LunaFlow.Engine.RuleEngine.LoadRulesFromTypes*
+  name: LoadRulesFromTypes
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_LoadRulesFromTypes_
+  commentId: Overload:LunaFlow.Engine.RuleEngine.LoadRulesFromTypes
+  isSpec: "True"
+  fullName: LunaFlow.Engine.RuleEngine.LoadRulesFromTypes
+  nameWithType: RuleEngine.LoadRulesFromTypes
+- uid: LunaFlow.Engine.RuleEngine.Retract(System.Object)
+  name: Retract(object)
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Retract_System_Object_
+  commentId: M:LunaFlow.Engine.RuleEngine.Retract(System.Object)
+  name.vb: Retract(Object)
+  fullName: LunaFlow.Engine.RuleEngine.Retract(object)
+  fullName.vb: LunaFlow.Engine.RuleEngine.Retract(Object)
+  nameWithType: RuleEngine.Retract(object)
+  nameWithType.vb: RuleEngine.Retract(Object)
+- uid: LunaFlow.Engine.RuleEngine.Retract*
+  name: Retract
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Retract_
+  commentId: Overload:LunaFlow.Engine.RuleEngine.Retract
+  isSpec: "True"
+  fullName: LunaFlow.Engine.RuleEngine.Retract
+  nameWithType: RuleEngine.Retract
+- uid: LunaFlow.Engine.RuleEngine.Update(System.Object)
+  name: Update(object)
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Update_System_Object_
+  commentId: M:LunaFlow.Engine.RuleEngine.Update(System.Object)
+  name.vb: Update(Object)
+  fullName: LunaFlow.Engine.RuleEngine.Update(object)
+  fullName.vb: LunaFlow.Engine.RuleEngine.Update(Object)
+  nameWithType: RuleEngine.Update(object)
+  nameWithType.vb: RuleEngine.Update(Object)
+- uid: LunaFlow.Engine.RuleEngine.Update*
+  name: Update
+  href: api/LunaFlow.Engine.RuleEngine.html#LunaFlow_Engine_RuleEngine_Update_
+  commentId: Overload:LunaFlow.Engine.RuleEngine.Update
+  isSpec: "True"
+  fullName: LunaFlow.Engine.RuleEngine.Update
+  nameWithType: RuleEngine.Update
 - uid: LunaFlow.Rules
   name: LunaFlow.Rules
   href: api/LunaFlow.Rules.html
   commentId: N:LunaFlow.Rules
   fullName: LunaFlow.Rules
   nameWithType: LunaFlow.Rules
-- uid: LunaFlow.Rules.Class1
-  name: Class1
-  href: api/LunaFlow.Rules.Class1.html
-  commentId: T:LunaFlow.Rules.Class1
-  fullName: LunaFlow.Rules.Class1
-  nameWithType: Class1
-- uid: LunaFlow.Rules.Class1.#ctor
-  name: Class1()
-  href: api/LunaFlow.Rules.Class1.html#LunaFlow_Rules_Class1__ctor
-  commentId: M:LunaFlow.Rules.Class1.#ctor
-  name.vb: New()
-  fullName: LunaFlow.Rules.Class1.Class1()
-  fullName.vb: LunaFlow.Rules.Class1.New()
-  nameWithType: Class1.Class1()
-  nameWithType.vb: Class1.New()
-- uid: LunaFlow.Rules.Class1.#ctor*
-  name: Class1
-  href: api/LunaFlow.Rules.Class1.html#LunaFlow_Rules_Class1__ctor_
-  commentId: Overload:LunaFlow.Rules.Class1.#ctor
+- uid: LunaFlow.Rules.ARule
+  name: ARule
+  href: api/LunaFlow.Rules.ARule.html
+  commentId: T:LunaFlow.Rules.ARule
+  fullName: LunaFlow.Rules.ARule
+  nameWithType: ARule
+- uid: LunaFlow.Rules.ARule.Reference
+  name: Reference
+  href: api/LunaFlow.Rules.ARule.html#LunaFlow_Rules_ARule_Reference
+  commentId: P:LunaFlow.Rules.ARule.Reference
+  fullName: LunaFlow.Rules.ARule.Reference
+  nameWithType: ARule.Reference
+- uid: LunaFlow.Rules.ARule.Reference*
+  name: Reference
+  href: api/LunaFlow.Rules.ARule.html#LunaFlow_Rules_ARule_Reference_
+  commentId: Overload:LunaFlow.Rules.ARule.Reference
   isSpec: "True"
-  name.vb: New
-  fullName: LunaFlow.Rules.Class1.Class1
-  fullName.vb: LunaFlow.Rules.Class1.New
-  nameWithType: Class1.Class1
-  nameWithType.vb: Class1.New
-- uid: LunaFlow.Rules.Class1.boo
-  name: boo
-  href: api/LunaFlow.Rules.Class1.html#LunaFlow_Rules_Class1_boo
-  commentId: F:LunaFlow.Rules.Class1.boo
-  fullName: LunaFlow.Rules.Class1.boo
-  nameWithType: Class1.boo
+  fullName: LunaFlow.Rules.ARule.Reference
+  nameWithType: ARule.Reference
+- uid: LunaFlow.Rules.ARule.Superscedes
+  name: Superscedes
+  href: api/LunaFlow.Rules.ARule.html#LunaFlow_Rules_ARule_Superscedes
+  commentId: P:LunaFlow.Rules.ARule.Superscedes
+  fullName: LunaFlow.Rules.ARule.Superscedes
+  nameWithType: ARule.Superscedes
+- uid: LunaFlow.Rules.ARule.Superscedes*
+  name: Superscedes
+  href: api/LunaFlow.Rules.ARule.html#LunaFlow_Rules_ARule_Superscedes_
+  commentId: Overload:LunaFlow.Rules.ARule.Superscedes
+  isSpec: "True"
+  fullName: LunaFlow.Rules.ARule.Superscedes
+  nameWithType: ARule.Superscedes
 - uid: LunaFlow.Rules.GeneratorServices
   name: LunaFlow.Rules.GeneratorServices
   href: api/LunaFlow.Rules.GeneratorServices.html
@@ -869,6 +1152,166 @@ references:
   isSpec: "True"
   fullName: LunaFlow.Rules.GeneratorServices.StandingRuleAttribute.NotType
   nameWithType: StandingRuleAttribute.NotType
+- uid: LunaFlow.Rules.IGameSystem
+  name: IGameSystem
+  href: api/LunaFlow.Rules.IGameSystem.html
+  commentId: T:LunaFlow.Rules.IGameSystem
+  fullName: LunaFlow.Rules.IGameSystem
+  nameWithType: IGameSystem
+- uid: LunaFlow.Rules.IGameSystem.Books
+  name: Books
+  href: api/LunaFlow.Rules.IGameSystem.html#LunaFlow_Rules_IGameSystem_Books
+  commentId: P:LunaFlow.Rules.IGameSystem.Books
+  fullName: LunaFlow.Rules.IGameSystem.Books
+  nameWithType: IGameSystem.Books
+- uid: LunaFlow.Rules.IGameSystem.Books*
+  name: Books
+  href: api/LunaFlow.Rules.IGameSystem.html#LunaFlow_Rules_IGameSystem_Books_
+  commentId: Overload:LunaFlow.Rules.IGameSystem.Books
+  isSpec: "True"
+  fullName: LunaFlow.Rules.IGameSystem.Books
+  nameWithType: IGameSystem.Books
+- uid: LunaFlow.Rules.IGameSystem.Description
+  name: Description
+  href: api/LunaFlow.Rules.IGameSystem.html#LunaFlow_Rules_IGameSystem_Description
+  commentId: P:LunaFlow.Rules.IGameSystem.Description
+  fullName: LunaFlow.Rules.IGameSystem.Description
+  nameWithType: IGameSystem.Description
+- uid: LunaFlow.Rules.IGameSystem.Description*
+  name: Description
+  href: api/LunaFlow.Rules.IGameSystem.html#LunaFlow_Rules_IGameSystem_Description_
+  commentId: Overload:LunaFlow.Rules.IGameSystem.Description
+  isSpec: "True"
+  fullName: LunaFlow.Rules.IGameSystem.Description
+  nameWithType: IGameSystem.Description
+- uid: LunaFlow.Rules.IGameSystem.Name
+  name: Name
+  href: api/LunaFlow.Rules.IGameSystem.html#LunaFlow_Rules_IGameSystem_Name
+  commentId: P:LunaFlow.Rules.IGameSystem.Name
+  fullName: LunaFlow.Rules.IGameSystem.Name
+  nameWithType: IGameSystem.Name
+- uid: LunaFlow.Rules.IGameSystem.Name*
+  name: Name
+  href: api/LunaFlow.Rules.IGameSystem.html#LunaFlow_Rules_IGameSystem_Name_
+  commentId: Overload:LunaFlow.Rules.IGameSystem.Name
+  isSpec: "True"
+  fullName: LunaFlow.Rules.IGameSystem.Name
+  nameWithType: IGameSystem.Name
+- uid: LunaFlow.Rules.IHasLunaFlowReference
+  name: IHasLunaFlowReference
+  href: api/LunaFlow.Rules.IHasLunaFlowReference.html
+  commentId: T:LunaFlow.Rules.IHasLunaFlowReference
+  fullName: LunaFlow.Rules.IHasLunaFlowReference
+  nameWithType: IHasLunaFlowReference
+- uid: LunaFlow.Rules.IHasLunaFlowReference.Reference
+  name: Reference
+  href: api/LunaFlow.Rules.IHasLunaFlowReference.html#LunaFlow_Rules_IHasLunaFlowReference_Reference
+  commentId: P:LunaFlow.Rules.IHasLunaFlowReference.Reference
+  fullName: LunaFlow.Rules.IHasLunaFlowReference.Reference
+  nameWithType: IHasLunaFlowReference.Reference
+- uid: LunaFlow.Rules.IHasLunaFlowReference.Reference*
+  name: Reference
+  href: api/LunaFlow.Rules.IHasLunaFlowReference.html#LunaFlow_Rules_IHasLunaFlowReference_Reference_
+  commentId: Overload:LunaFlow.Rules.IHasLunaFlowReference.Reference
+  isSpec: "True"
+  fullName: LunaFlow.Rules.IHasLunaFlowReference.Reference
+  nameWithType: IHasLunaFlowReference.Reference
+- uid: LunaFlow.Rules.ILunaFlowReference
+  name: ILunaFlowReference
+  href: api/LunaFlow.Rules.ILunaFlowReference.html
+  commentId: T:LunaFlow.Rules.ILunaFlowReference
+  fullName: LunaFlow.Rules.ILunaFlowReference
+  nameWithType: ILunaFlowReference
+- uid: LunaFlow.Rules.ILunaFlowReference.ClassUID
+  name: ClassUID
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_ClassUID
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.ClassUID
+  fullName: LunaFlow.Rules.ILunaFlowReference.ClassUID
+  nameWithType: ILunaFlowReference.ClassUID
+- uid: LunaFlow.Rules.ILunaFlowReference.ClassUID*
+  name: ClassUID
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_ClassUID_
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.ClassUID
+  isSpec: "True"
+  fullName: LunaFlow.Rules.ILunaFlowReference.ClassUID
+  nameWithType: ILunaFlowReference.ClassUID
+- uid: LunaFlow.Rules.ILunaFlowReference.FullPath
+  name: FullPath
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_FullPath
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.FullPath
+  fullName: LunaFlow.Rules.ILunaFlowReference.FullPath
+  nameWithType: ILunaFlowReference.FullPath
+- uid: LunaFlow.Rules.ILunaFlowReference.FullPath*
+  name: FullPath
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_FullPath_
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.FullPath
+  isSpec: "True"
+  fullName: LunaFlow.Rules.ILunaFlowReference.FullPath
+  nameWithType: ILunaFlowReference.FullPath
+- uid: LunaFlow.Rules.ILunaFlowReference.Identifier
+  name: Identifier
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Identifier
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.Identifier
+  fullName: LunaFlow.Rules.ILunaFlowReference.Identifier
+  nameWithType: ILunaFlowReference.Identifier
+- uid: LunaFlow.Rules.ILunaFlowReference.Identifier*
+  name: Identifier
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Identifier_
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.Identifier
+  isSpec: "True"
+  fullName: LunaFlow.Rules.ILunaFlowReference.Identifier
+  nameWithType: ILunaFlowReference.Identifier
+- uid: LunaFlow.Rules.ILunaFlowReference.Parent
+  name: Parent
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Parent
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.Parent
+  fullName: LunaFlow.Rules.ILunaFlowReference.Parent
+  nameWithType: ILunaFlowReference.Parent
+- uid: LunaFlow.Rules.ILunaFlowReference.Parent*
+  name: Parent
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Parent_
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.Parent
+  isSpec: "True"
+  fullName: LunaFlow.Rules.ILunaFlowReference.Parent
+  nameWithType: ILunaFlowReference.Parent
+- uid: LunaFlow.Rules.ILunaFlowReference.Path
+  name: Path
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Path
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.Path
+  fullName: LunaFlow.Rules.ILunaFlowReference.Path
+  nameWithType: ILunaFlowReference.Path
+- uid: LunaFlow.Rules.ILunaFlowReference.Path*
+  name: Path
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Path_
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.Path
+  isSpec: "True"
+  fullName: LunaFlow.Rules.ILunaFlowReference.Path
+  nameWithType: ILunaFlowReference.Path
+- uid: LunaFlow.Rules.ILunaFlowReference.Subreferences
+  name: Subreferences
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Subreferences
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.Subreferences
+  fullName: LunaFlow.Rules.ILunaFlowReference.Subreferences
+  nameWithType: ILunaFlowReference.Subreferences
+- uid: LunaFlow.Rules.ILunaFlowReference.Subreferences*
+  name: Subreferences
+  href: api/LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Subreferences_
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.Subreferences
+  isSpec: "True"
+  fullName: LunaFlow.Rules.ILunaFlowReference.Subreferences
+  nameWithType: ILunaFlowReference.Subreferences
+- uid: LunaFlow.Rules.IRuleBook
+  name: IRuleBook
+  href: api/LunaFlow.Rules.IRuleBook.html
+  commentId: T:LunaFlow.Rules.IRuleBook
+  fullName: LunaFlow.Rules.IRuleBook
+  nameWithType: IRuleBook
+- uid: LunaFlow.Rules.IRuleGroup
+  name: IRuleGroup
+  href: api/LunaFlow.Rules.IRuleGroup.html
+  commentId: T:LunaFlow.Rules.IRuleGroup
+  fullName: LunaFlow.Rules.IRuleGroup
+  nameWithType: IRuleGroup
 - uid: api.index
   name: API Reference
   href: api/index.html

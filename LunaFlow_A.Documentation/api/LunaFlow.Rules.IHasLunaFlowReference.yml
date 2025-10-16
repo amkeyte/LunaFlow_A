@@ -1,0 +1,96 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Rules.IHasLunaFlowReference
+  commentId: T:LunaFlow.Rules.IHasLunaFlowReference
+  id: IHasLunaFlowReference
+  parent: LunaFlow.Rules
+  children:
+  - LunaFlow.Rules.IHasLunaFlowReference.Reference
+  langs:
+  - csharp
+  - vb
+  name: IHasLunaFlowReference
+  nameWithType: IHasLunaFlowReference
+  fullName: LunaFlow.Rules.IHasLunaFlowReference
+  type: Interface
+  source:
+    remote:
+      path: src/LunaFlow.Rules/ILunaFlowReference.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: IHasLunaFlowReference
+    path: ../src/LunaFlow.Rules/ILunaFlowReference.cs
+    startLine: 37
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  summary: Denotes an object containing an ILunaFlowReference
+  example: []
+  syntax:
+    content: public interface IHasLunaFlowReference
+    content.vb: Public Interface IHasLunaFlowReference
+- uid: LunaFlow.Rules.IHasLunaFlowReference.Reference
+  commentId: P:LunaFlow.Rules.IHasLunaFlowReference.Reference
+  id: Reference
+  parent: LunaFlow.Rules.IHasLunaFlowReference
+  langs:
+  - csharp
+  - vb
+  name: Reference
+  nameWithType: IHasLunaFlowReference.Reference
+  fullName: LunaFlow.Rules.IHasLunaFlowReference.Reference
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Rules/ILunaFlowReference.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Reference
+    path: ../src/LunaFlow.Rules/ILunaFlowReference.cs
+    startLine: 40
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  syntax:
+    content: ILunaFlowReference Reference { get; }
+    parameters: []
+    return:
+      type: LunaFlow.Rules.ILunaFlowReference
+    content.vb: ReadOnly Property Reference As ILunaFlowReference
+  overload: LunaFlow.Rules.IHasLunaFlowReference.Reference*
+references:
+- uid: LunaFlow.Rules
+  commentId: N:LunaFlow.Rules
+  href: LunaFlow.html
+  name: LunaFlow.Rules
+  nameWithType: LunaFlow.Rules
+  fullName: LunaFlow.Rules
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+- uid: LunaFlow.Rules.IHasLunaFlowReference.Reference*
+  commentId: Overload:LunaFlow.Rules.IHasLunaFlowReference.Reference
+  href: LunaFlow.Rules.IHasLunaFlowReference.html#LunaFlow_Rules_IHasLunaFlowReference_Reference
+  name: Reference
+  nameWithType: IHasLunaFlowReference.Reference
+  fullName: LunaFlow.Rules.IHasLunaFlowReference.Reference
+- uid: LunaFlow.Rules.ILunaFlowReference
+  commentId: T:LunaFlow.Rules.ILunaFlowReference
+  parent: LunaFlow.Rules
+  href: LunaFlow.Rules.ILunaFlowReference.html
+  name: ILunaFlowReference
+  nameWithType: ILunaFlowReference
+  fullName: LunaFlow.Rules.ILunaFlowReference

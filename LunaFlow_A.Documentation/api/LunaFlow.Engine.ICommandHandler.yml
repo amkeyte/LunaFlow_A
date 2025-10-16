@@ -5,7 +5,7 @@ items:
   id: ICommandHandler
   parent: LunaFlow.Engine
   children:
-  - LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.Command)
+  - LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.ICommand)
   langs:
   - csharp
   - vb
@@ -16,7 +16,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Engine/Commands/ICommandHandler.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: ICommandHandler
     path: ../src/LunaFlow.Engine/Commands/ICommandHandler.cs
@@ -32,21 +32,21 @@ items:
   syntax:
     content: public interface ICommandHandler
     content.vb: Public Interface ICommandHandler
-- uid: LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.Command)
-  commentId: M:LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.Command)
-  id: Handle(LunaFlow.Engine.Command)
+- uid: LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.ICommand)
+  commentId: M:LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.ICommand)
+  id: Handle(LunaFlow.Engine.ICommand)
   parent: LunaFlow.Engine.ICommandHandler
   langs:
   - csharp
   - vb
-  name: Handle(Command)
-  nameWithType: ICommandHandler.Handle(Command)
-  fullName: LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.Command)
+  name: Handle(ICommand)
+  nameWithType: ICommandHandler.Handle(ICommand)
+  fullName: LunaFlow.Engine.ICommandHandler.Handle(LunaFlow.Engine.ICommand)
   type: Method
   source:
     remote:
       path: src/LunaFlow.Engine/Commands/ICommandHandler.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: Handle
     path: ../src/LunaFlow.Engine/Commands/ICommandHandler.cs
@@ -55,11 +55,11 @@ items:
   - LunaFlow.Engine
   namespace: LunaFlow.Engine
   syntax:
-    content: void Handle(Command command)
+    content: void Handle(ICommand command)
     parameters:
     - id: command
-      type: LunaFlow.Engine.Command
-    content.vb: Sub Handle(command As Command)
+      type: LunaFlow.Engine.ICommand
+    content.vb: Sub Handle(command As ICommand)
   overload: LunaFlow.Engine.ICommandHandler.Handle*
 references:
 - uid: LunaFlow.Engine
@@ -86,14 +86,14 @@ references:
     href: LunaFlow.Engine.html
 - uid: LunaFlow.Engine.ICommandHandler.Handle*
   commentId: Overload:LunaFlow.Engine.ICommandHandler.Handle
-  href: LunaFlow.Engine.ICommandHandler.html#LunaFlow_Engine_ICommandHandler_Handle_LunaFlow_Engine_Command_
+  href: LunaFlow.Engine.ICommandHandler.html#LunaFlow_Engine_ICommandHandler_Handle_LunaFlow_Engine_ICommand_
   name: Handle
   nameWithType: ICommandHandler.Handle
   fullName: LunaFlow.Engine.ICommandHandler.Handle
-- uid: LunaFlow.Engine.Command
-  commentId: T:LunaFlow.Engine.Command
+- uid: LunaFlow.Engine.ICommand
+  commentId: T:LunaFlow.Engine.ICommand
   parent: LunaFlow.Engine
-  href: LunaFlow.Engine.Command.html
-  name: Command
-  nameWithType: Command
-  fullName: LunaFlow.Engine.Command
+  href: LunaFlow.Engine.ICommand.html
+  name: ICommand
+  nameWithType: ICommand
+  fullName: LunaFlow.Engine.ICommand

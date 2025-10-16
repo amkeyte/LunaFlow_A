@@ -1,0 +1,53 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Rules.IRuleGroup
+  commentId: T:LunaFlow.Rules.IRuleGroup
+  id: IRuleGroup
+  parent: LunaFlow.Rules
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: IRuleGroup
+  nameWithType: IRuleGroup
+  fullName: LunaFlow.Rules.IRuleGroup
+  type: Interface
+  source:
+    remote:
+      path: src/LunaFlow.Rules/IRuleGroup.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: IRuleGroup
+    path: ../src/LunaFlow.Rules/IRuleGroup.cs
+    startLine: 5
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  summary: A group of related rules
+  example: []
+  syntax:
+    content: public interface IRuleGroup
+    content.vb: Public Interface IRuleGroup
+references:
+- uid: LunaFlow.Rules
+  commentId: N:LunaFlow.Rules
+  href: LunaFlow.html
+  name: LunaFlow.Rules
+  nameWithType: LunaFlow.Rules
+  fullName: LunaFlow.Rules
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html

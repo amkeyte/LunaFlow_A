@@ -110,38 +110,23 @@ Initializes the engine environment and hosts the main run loop.</p>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public class EngineHost</code></pre>
   </div>
-  <h3 id="constructors">Constructors
+  <h3 id="methods">Methods
 </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/amkeyte/LunaFlow_A/new/docs/apiSpec/new?filename=LunaFlow_Engine_EngineHost__ctor.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.EngineHost.%23ctor%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+    <a href="https://github.com/amkeyte/LunaFlow_A/new/dev-Engine/apiSpec/new?filename=LunaFlow_Engine_EngineHost_ConfigureCommand_System_Action_LunaFlow_Engine_CommandOptions__.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.EngineHost.ConfigureCommand(System.Action%7BLunaFlow.Engine.CommandOptions%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/amkeyte/LunaFlow_A/blob/docs/src/LunaFlow.Engine/EngineHost.cs/#L23">View Source</a>
+    <a href="https://github.com/amkeyte/LunaFlow_A/blob/dev-Engine/src/LunaFlow.Engine/EngineHost.cs/#L31">View Source</a>
   </span>
-  <a id="LunaFlow_Engine_EngineHost__ctor_" data-uid="LunaFlow.Engine.EngineHost.#ctor*"></a>
-  <h4 id="LunaFlow_Engine_EngineHost__ctor" data-uid="LunaFlow.Engine.EngineHost.#ctor">EngineHost()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EngineHost()</code></pre>
-  </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/amkeyte/LunaFlow_A/new/docs/apiSpec/new?filename=LunaFlow_Engine_EngineHost__ctor_LunaFlow_Engine_IGameEngine_LunaFlow_Engine_CommandDispatcher_.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.EngineHost.%23ctor(LunaFlow.Engine.IGameEngine%2CLunaFlow.Engine.CommandDispatcher)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/amkeyte/LunaFlow_A/blob/docs/src/LunaFlow.Engine/EngineHost.cs/#L17">View Source</a>
-  </span>
-  <a id="LunaFlow_Engine_EngineHost__ctor_" data-uid="LunaFlow.Engine.EngineHost.#ctor*"></a>
-  <h4 id="LunaFlow_Engine_EngineHost__ctor_LunaFlow_Engine_IGameEngine_LunaFlow_Engine_CommandDispatcher_" data-uid="LunaFlow.Engine.EngineHost.#ctor(LunaFlow.Engine.IGameEngine,LunaFlow.Engine.CommandDispatcher)">EngineHost(IGameEngine, CommandDispatcher)</h4>
-  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="LunaFlow.Engine.EngineHost.html">EngineHost</a> class.</p>
+  <a id="LunaFlow_Engine_EngineHost_ConfigureCommand_" data-uid="LunaFlow.Engine.EngineHost.ConfigureCommand*"></a>
+  <h4 id="LunaFlow_Engine_EngineHost_ConfigureCommand_System_Action_LunaFlow_Engine_CommandOptions__" data-uid="LunaFlow.Engine.EngineHost.ConfigureCommand(System.Action{LunaFlow.Engine.CommandOptions})">ConfigureCommand(Action&lt;CommandOptions&gt;)</h4>
+  <div class="markdown level1 summary"><p>Configures command input and dispatch behavior.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public EngineHost(IGameEngine engine, CommandDispatcher dispatcher)</code></pre>
+    <pre><code class="lang-csharp hljs">public EngineHost ConfigureCommand(Action&lt;CommandOptions&gt; configure)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -154,31 +139,85 @@ Initializes the engine environment and hosts the main run loop.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LunaFlow.Engine.IGameEngine.html">IGameEngine</a></td>
-        <td><span class="parametername">engine</span></td>
-        <td><p>The core game engine to use for processing.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="LunaFlow.Engine.CommandDispatcher.html">CommandDispatcher</a></td>
-        <td><span class="parametername">dispatcher</span></td>
-        <td><p>The command dispatcher responsible for routing user commands.</p>
-</td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="LunaFlow.Engine.CommandOptions.html">CommandOptions</a>&gt;</td>
+        <td><span class="parametername">configure</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
-  <h3 id="methods">Methods
-</h3>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LunaFlow.Engine.EngineHost.html">EngineHost</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/amkeyte/LunaFlow_A/new/docs/apiSpec/new?filename=LunaFlow_Engine_EngineHost_Run.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.EngineHost.Run%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+    <a href="https://github.com/amkeyte/LunaFlow_A/new/dev-Engine/apiSpec/new?filename=LunaFlow_Engine_EngineHost_ConfigureGameEngine_System_Action_LunaFlow_Engine_GameEngineOptions__.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.EngineHost.ConfigureGameEngine(System.Action%7BLunaFlow.Engine.GameEngineOptions%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/amkeyte/LunaFlow_A/blob/docs/src/LunaFlow.Engine/EngineHost.cs/#L30">View Source</a>
+    <a href="https://github.com/amkeyte/LunaFlow_A/blob/dev-Engine/src/LunaFlow.Engine/EngineHost.cs/#L22">View Source</a>
+  </span>
+  <a id="LunaFlow_Engine_EngineHost_ConfigureGameEngine_" data-uid="LunaFlow.Engine.EngineHost.ConfigureGameEngine*"></a>
+  <h4 id="LunaFlow_Engine_EngineHost_ConfigureGameEngine_System_Action_LunaFlow_Engine_GameEngineOptions__" data-uid="LunaFlow.Engine.EngineHost.ConfigureGameEngine(System.Action{LunaFlow.Engine.GameEngineOptions})">ConfigureGameEngine(Action&lt;GameEngineOptions&gt;)</h4>
+  <div class="markdown level1 summary"><p>Configures engine-level options using fluent style.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public EngineHost ConfigureGameEngine(Action&lt;GameEngineOptions&gt; configure)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="LunaFlow.Engine.GameEngineOptions.html">GameEngineOptions</a>&gt;</td>
+        <td><span class="parametername">configure</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="LunaFlow.Engine.EngineHost.html">EngineHost</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/amkeyte/LunaFlow_A/new/dev-Engine/apiSpec/new?filename=LunaFlow_Engine_EngineHost_Run.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.EngineHost.Run%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/amkeyte/LunaFlow_A/blob/dev-Engine/src/LunaFlow.Engine/EngineHost.cs/#L40">View Source</a>
   </span>
   <a id="LunaFlow_Engine_EngineHost_Run_" data-uid="LunaFlow.Engine.EngineHost.Run*"></a>
   <h4 id="LunaFlow_Engine_EngineHost_Run" data-uid="LunaFlow.Engine.EngineHost.Run">Run()</h4>
-  <div class="markdown level1 summary"><p>Starts the engine and enters the main command-processing loop.</p>
+  <div class="markdown level1 summary"><p>Boots the engine and enters the interactive run loop.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -194,10 +233,10 @@ Initializes the engine environment and hosts the main run loop.</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/amkeyte/LunaFlow_A/new/docs/apiSpec/new?filename=LunaFlow_Engine_EngineHost.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.EngineHost%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                    <a href="https://github.com/amkeyte/LunaFlow_A/new/dev-Engine/apiSpec/new?filename=LunaFlow_Engine_EngineHost.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.EngineHost%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/amkeyte/LunaFlow_A/blob/docs/src/LunaFlow.Engine/EngineHost.cs/#L7" class="contribution-link">View Source</a>
+                    <a href="https://github.com/amkeyte/LunaFlow_A/blob/dev-Engine/src/LunaFlow.Engine/EngineHost.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

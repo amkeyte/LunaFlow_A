@@ -1,0 +1,291 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Rules.IGameSystem
+  commentId: T:LunaFlow.Rules.IGameSystem
+  id: IGameSystem
+  parent: LunaFlow.Rules
+  children:
+  - LunaFlow.Rules.IGameSystem.Books
+  - LunaFlow.Rules.IGameSystem.Description
+  - LunaFlow.Rules.IGameSystem.Name
+  langs:
+  - csharp
+  - vb
+  name: IGameSystem
+  nameWithType: IGameSystem
+  fullName: LunaFlow.Rules.IGameSystem
+  type: Interface
+  source:
+    remote:
+      path: src/LunaFlow.Rules/IGameSystem.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: IGameSystem
+    path: ../src/LunaFlow.Rules/IGameSystem.cs
+    startLine: 2
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  syntax:
+    content: 'public interface IGameSystem : IHasLunaFlowReference'
+    content.vb: Public Interface IGameSystem Inherits IHasLunaFlowReference
+  inheritedMembers:
+  - LunaFlow.Rules.IHasLunaFlowReference.Reference
+- uid: LunaFlow.Rules.IGameSystem.Name
+  commentId: P:LunaFlow.Rules.IGameSystem.Name
+  id: Name
+  parent: LunaFlow.Rules.IGameSystem
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: IGameSystem.Name
+  fullName: LunaFlow.Rules.IGameSystem.Name
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Rules/IGameSystem.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Name
+    path: ../src/LunaFlow.Rules/IGameSystem.cs
+    startLine: 4
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  syntax:
+    content: string Name { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property Name As String
+  overload: LunaFlow.Rules.IGameSystem.Name*
+- uid: LunaFlow.Rules.IGameSystem.Description
+  commentId: P:LunaFlow.Rules.IGameSystem.Description
+  id: Description
+  parent: LunaFlow.Rules.IGameSystem
+  langs:
+  - csharp
+  - vb
+  name: Description
+  nameWithType: IGameSystem.Description
+  fullName: LunaFlow.Rules.IGameSystem.Description
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Rules/IGameSystem.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Description
+    path: ../src/LunaFlow.Rules/IGameSystem.cs
+    startLine: 5
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  syntax:
+    content: string Description { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property Description As String
+  overload: LunaFlow.Rules.IGameSystem.Description*
+- uid: LunaFlow.Rules.IGameSystem.Books
+  commentId: P:LunaFlow.Rules.IGameSystem.Books
+  id: Books
+  parent: LunaFlow.Rules.IGameSystem
+  langs:
+  - csharp
+  - vb
+  name: Books
+  nameWithType: IGameSystem.Books
+  fullName: LunaFlow.Rules.IGameSystem.Books
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Rules/IGameSystem.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Books
+    path: ../src/LunaFlow.Rules/IGameSystem.cs
+    startLine: 6
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  syntax:
+    content: IEnumerable<IRuleBook> Books { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IEnumerable{LunaFlow.Rules.IRuleBook}
+    content.vb: ReadOnly Property Books As IEnumerable(Of IRuleBook)
+  overload: LunaFlow.Rules.IGameSystem.Books*
+references:
+- uid: LunaFlow.Rules
+  commentId: N:LunaFlow.Rules
+  href: LunaFlow.html
+  name: LunaFlow.Rules
+  nameWithType: LunaFlow.Rules
+  fullName: LunaFlow.Rules
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+- uid: LunaFlow.Rules.IHasLunaFlowReference.Reference
+  commentId: P:LunaFlow.Rules.IHasLunaFlowReference.Reference
+  parent: LunaFlow.Rules.IHasLunaFlowReference
+  href: LunaFlow.Rules.IHasLunaFlowReference.html#LunaFlow_Rules_IHasLunaFlowReference_Reference
+  name: Reference
+  nameWithType: IHasLunaFlowReference.Reference
+  fullName: LunaFlow.Rules.IHasLunaFlowReference.Reference
+- uid: LunaFlow.Rules.IHasLunaFlowReference
+  commentId: T:LunaFlow.Rules.IHasLunaFlowReference
+  parent: LunaFlow.Rules
+  href: LunaFlow.Rules.IHasLunaFlowReference.html
+  name: IHasLunaFlowReference
+  nameWithType: IHasLunaFlowReference
+  fullName: LunaFlow.Rules.IHasLunaFlowReference
+- uid: LunaFlow.Rules.IGameSystem.Name*
+  commentId: Overload:LunaFlow.Rules.IGameSystem.Name
+  href: LunaFlow.Rules.IGameSystem.html#LunaFlow_Rules_IGameSystem_Name
+  name: Name
+  nameWithType: IGameSystem.Name
+  fullName: LunaFlow.Rules.IGameSystem.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LunaFlow.Rules.IGameSystem.Description*
+  commentId: Overload:LunaFlow.Rules.IGameSystem.Description
+  href: LunaFlow.Rules.IGameSystem.html#LunaFlow_Rules_IGameSystem_Description
+  name: Description
+  nameWithType: IGameSystem.Description
+  fullName: LunaFlow.Rules.IGameSystem.Description
+- uid: LunaFlow.Rules.IGameSystem.Books*
+  commentId: Overload:LunaFlow.Rules.IGameSystem.Books
+  href: LunaFlow.Rules.IGameSystem.html#LunaFlow_Rules_IGameSystem_Books
+  name: Books
+  nameWithType: IGameSystem.Books
+  fullName: LunaFlow.Rules.IGameSystem.Books
+- uid: System.Collections.Generic.IEnumerable{LunaFlow.Rules.IRuleBook}
+  commentId: T:System.Collections.Generic.IEnumerable{LunaFlow.Rules.IRuleBook}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<IRuleBook>
+  nameWithType: IEnumerable<IRuleBook>
+  fullName: System.Collections.Generic.IEnumerable<LunaFlow.Rules.IRuleBook>
+  nameWithType.vb: IEnumerable(Of IRuleBook)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of LunaFlow.Rules.IRuleBook)
+  name.vb: IEnumerable(Of IRuleBook)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: LunaFlow.Rules.IRuleBook
+    name: IRuleBook
+    href: LunaFlow.Rules.IRuleBook.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LunaFlow.Rules.IRuleBook
+    name: IRuleBook
+    href: LunaFlow.Rules.IRuleBook.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic

@@ -1,0 +1,147 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Engine.Commands.ICommandParser
+  commentId: T:LunaFlow.Engine.Commands.ICommandParser
+  id: ICommandParser
+  parent: LunaFlow.Engine.Commands
+  children:
+  - LunaFlow.Engine.Commands.ICommandParser.Parse(System.Object)
+  langs:
+  - csharp
+  - vb
+  name: ICommandParser
+  nameWithType: ICommandParser
+  fullName: LunaFlow.Engine.Commands.ICommandParser
+  type: Interface
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/ICommandParser.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: ICommandParser
+    path: ../src/LunaFlow.Engine/Commands/ICommandParser.cs
+    startLine: 2
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine.Commands
+  syntax:
+    content: public interface ICommandParser
+    content.vb: Public Interface ICommandParser
+- uid: LunaFlow.Engine.Commands.ICommandParser.Parse(System.Object)
+  commentId: M:LunaFlow.Engine.Commands.ICommandParser.Parse(System.Object)
+  id: Parse(System.Object)
+  parent: LunaFlow.Engine.Commands.ICommandParser
+  langs:
+  - csharp
+  - vb
+  name: Parse(object)
+  nameWithType: ICommandParser.Parse(object)
+  fullName: LunaFlow.Engine.Commands.ICommandParser.Parse(object)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/ICommandParser.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Parse
+    path: ../src/LunaFlow.Engine/Commands/ICommandParser.cs
+    startLine: 4
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine.Commands
+  syntax:
+    content: ICommand Parse(object input)
+    parameters:
+    - id: input
+      type: System.Object
+    return:
+      type: LunaFlow.Engine.ICommand
+    content.vb: Function Parse(input As Object) As ICommand
+  overload: LunaFlow.Engine.Commands.ICommandParser.Parse*
+  nameWithType.vb: ICommandParser.Parse(Object)
+  fullName.vb: LunaFlow.Engine.Commands.ICommandParser.Parse(Object)
+  name.vb: Parse(Object)
+references:
+- uid: LunaFlow.Engine.Commands
+  commentId: N:LunaFlow.Engine.Commands
+  href: LunaFlow.html
+  name: LunaFlow.Engine.Commands
+  nameWithType: LunaFlow.Engine.Commands
+  fullName: LunaFlow.Engine.Commands
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+  - name: .
+  - uid: LunaFlow.Engine.Commands
+    name: Commands
+    href: LunaFlow.Engine.Commands.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+  - name: .
+  - uid: LunaFlow.Engine.Commands
+    name: Commands
+    href: LunaFlow.Engine.Commands.html
+- uid: LunaFlow.Engine.Commands.ICommandParser.Parse*
+  commentId: Overload:LunaFlow.Engine.Commands.ICommandParser.Parse
+  href: LunaFlow.Engine.Commands.ICommandParser.html#LunaFlow_Engine_Commands_ICommandParser_Parse_System_Object_
+  name: Parse
+  nameWithType: ICommandParser.Parse
+  fullName: LunaFlow.Engine.Commands.ICommandParser.Parse
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LunaFlow.Engine.ICommand
+  commentId: T:LunaFlow.Engine.ICommand
+  parent: LunaFlow.Engine
+  href: LunaFlow.Engine.ICommand.html
+  name: ICommand
+  nameWithType: ICommand
+  fullName: LunaFlow.Engine.ICommand
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LunaFlow.Engine
+  commentId: N:LunaFlow.Engine
+  href: LunaFlow.html
+  name: LunaFlow.Engine
+  nameWithType: LunaFlow.Engine
+  fullName: LunaFlow.Engine
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html

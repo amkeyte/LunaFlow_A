@@ -12,12 +12,21 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.Engine", "src\LunaFlow.Engine\LunaFlow.Engine.csproj", "{39AE83C7-469D-FA7B-F8A3-BFBE26AB09F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow_A.Documentation", "LunaFlow_A.Documentation\LunaFlow_A.Documentation.csproj", "{9B7A5825-3FE6-413C-8812-FDB86C87B778}"
+	ProjectSection(ProjectDependencies) = postProject
+		{142C3E7B-3E2C-4F29-47C9-B10EF9B40581} = {142C3E7B-3E2C-4F29-47C9-B10EF9B40581}
+		{255C9EFB-609A-7961-3A4D-41D67EE7980C} = {255C9EFB-609A-7961-3A4D-41D67EE7980C}
+		{39AE83C7-469D-FA7B-F8A3-BFBE26AB09F8} = {39AE83C7-469D-FA7B-F8A3-BFBE26AB09F8}
+		{C8289A5F-DB98-CC4C-BCF6-74D8728978CA} = {C8289A5F-DB98-CC4C-BCF6-74D8728978CA}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.EngineTests", "tests\LunaFlow.EngineTests\LunaFlow.EngineTests.csproj", "{C8289A5F-DB98-CC4C-BCF6-74D8728978CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.Rules", "src\LunaFlow.Rules\LunaFlow.Rules.csproj", "{142C3E7B-3E2C-4F29-47C9-B10EF9B40581}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLunaFlowServer", "src\MyLunaFlowServer\MyLunaFlowServer.csproj", "{255C9EFB-609A-7961-3A4D-41D67EE7980C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{142C3E7B-3E2C-4F29-47C9-B10EF9B40581} = {142C3E7B-3E2C-4F29-47C9-B10EF9B40581}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,276 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Engine.ICommand
+  commentId: T:LunaFlow.Engine.ICommand
+  id: ICommand
+  parent: LunaFlow.Engine
+  children:
+  - LunaFlow.Engine.ICommand.Arguments
+  - LunaFlow.Engine.ICommand.Name
+  - LunaFlow.Engine.ICommand.ToString
+  langs:
+  - csharp
+  - vb
+  name: ICommand
+  nameWithType: ICommand
+  fullName: LunaFlow.Engine.ICommand
+  type: Interface
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/ICommand.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: ICommand
+    path: ../src/LunaFlow.Engine/Commands/ICommand.cs
+    startLine: 2
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  syntax:
+    content: public interface ICommand
+    content.vb: Public Interface ICommand
+- uid: LunaFlow.Engine.ICommand.Arguments
+  commentId: P:LunaFlow.Engine.ICommand.Arguments
+  id: Arguments
+  parent: LunaFlow.Engine.ICommand
+  langs:
+  - csharp
+  - vb
+  name: Arguments
+  nameWithType: ICommand.Arguments
+  fullName: LunaFlow.Engine.ICommand.Arguments
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/ICommand.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Arguments
+    path: ../src/LunaFlow.Engine/Commands/ICommand.cs
+    startLine: 4
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  syntax:
+    content: IEnumerable<object?> Arguments { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IEnumerable{System.Object}
+    content.vb: ReadOnly Property Arguments As IEnumerable(Of Object)
+  overload: LunaFlow.Engine.ICommand.Arguments*
+- uid: LunaFlow.Engine.ICommand.Name
+  commentId: P:LunaFlow.Engine.ICommand.Name
+  id: Name
+  parent: LunaFlow.Engine.ICommand
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: ICommand.Name
+  fullName: LunaFlow.Engine.ICommand.Name
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/ICommand.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Name
+    path: ../src/LunaFlow.Engine/Commands/ICommand.cs
+    startLine: 5
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  syntax:
+    content: string Name { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property Name As String
+  overload: LunaFlow.Engine.ICommand.Name*
+- uid: LunaFlow.Engine.ICommand.ToString
+  commentId: M:LunaFlow.Engine.ICommand.ToString
+  id: ToString
+  parent: LunaFlow.Engine.ICommand
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: ICommand.ToString()
+  fullName: LunaFlow.Engine.ICommand.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/ICommand.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: ToString
+    path: ../src/LunaFlow.Engine/Commands/ICommand.cs
+    startLine: 7
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  syntax:
+    content: string ToString()
+    return:
+      type: System.String
+    content.vb: Function ToString() As String
+  overload: LunaFlow.Engine.ICommand.ToString*
+references:
+- uid: LunaFlow.Engine
+  commentId: N:LunaFlow.Engine
+  href: LunaFlow.html
+  name: LunaFlow.Engine
+  nameWithType: LunaFlow.Engine
+  fullName: LunaFlow.Engine
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+- uid: LunaFlow.Engine.ICommand.Arguments*
+  commentId: Overload:LunaFlow.Engine.ICommand.Arguments
+  href: LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_Arguments
+  name: Arguments
+  nameWithType: ICommand.Arguments
+  fullName: LunaFlow.Engine.ICommand.Arguments
+- uid: System.Collections.Generic.IEnumerable{System.Object}
+  commentId: T:System.Collections.Generic.IEnumerable{System.Object}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<object>
+  nameWithType: IEnumerable<object>
+  fullName: System.Collections.Generic.IEnumerable<object>
+  nameWithType.vb: IEnumerable(Of Object)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Object)
+  name.vb: IEnumerable(Of Object)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: LunaFlow.Engine.ICommand.Name*
+  commentId: Overload:LunaFlow.Engine.ICommand.Name
+  href: LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_Name
+  name: Name
+  nameWithType: ICommand.Name
+  fullName: LunaFlow.Engine.ICommand.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LunaFlow.Engine.ICommand.ToString*
+  commentId: Overload:LunaFlow.Engine.ICommand.ToString
+  href: LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_ToString
+  name: ToString
+  nameWithType: ICommand.ToString
+  fullName: LunaFlow.Engine.ICommand.ToString

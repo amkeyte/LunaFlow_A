@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>Class CommandDispatcher </title>
+      <title>Class DefaultCommandDispatcher </title>
       <meta name="viewport" content="width=device-width">
-      <meta name="title" content="Class CommandDispatcher ">
+      <meta name="title" content="Class DefaultCommandDispatcher ">
     
     <meta name="description" content="Responsible for routing incoming commands to the appropriate command handler. Maintains a registry of handlers and manages dispatch logic.">
       <link rel="shortcut icon" href="../favicon.ico">
@@ -66,11 +66,11 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="LunaFlow.Engine.CommandDispatcher">
+            <article class="content wrap" id="_content" data-uid="LunaFlow.Engine.DefaultCommandDispatcher">
 
 
 
-  <h1 id="LunaFlow_Engine_CommandDispatcher" data-uid="LunaFlow.Engine.CommandDispatcher" class="text-break">Class CommandDispatcher</h1>
+  <h1 id="LunaFlow_Engine_DefaultCommandDispatcher" data-uid="LunaFlow.Engine.DefaultCommandDispatcher" class="text-break">Class DefaultCommandDispatcher</h1>
   <div class="markdown level0 summary"><p>Responsible for routing incoming commands to the appropriate command handler.
 Maintains a registry of handlers and manages dispatch logic.</p>
 </div>
@@ -78,7 +78,11 @@ Maintains a registry of handlers and manages dispatch logic.</p>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-    <div class="level1"><span class="xref">CommandDispatcher</span></div>
+    <div class="level1"><span class="xref">DefaultCommandDispatcher</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="LunaFlow.Engine.ICommandDispatcher.html">ICommandDispatcher</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -106,45 +110,45 @@ Maintains a registry of handlers and manages dispatch logic.</p>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="LunaFlow.html">LunaFlow</a>.<a class="xref" href="LunaFlow.Engine.html">Engine</a></h6>
   <h6><strong>Assembly</strong>: LunaFlow.Engine.dll</h6>
-  <h5 id="LunaFlow_Engine_CommandDispatcher_syntax">Syntax</h5>
+  <h5 id="LunaFlow_Engine_DefaultCommandDispatcher_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class CommandDispatcher</code></pre>
+    <pre><code class="lang-csharp hljs">public class DefaultCommandDispatcher : ICommandDispatcher</code></pre>
   </div>
   <h3 id="constructors">Constructors
 </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/amkeyte/LunaFlow_A/new/docs/apiSpec/new?filename=LunaFlow_Engine_CommandDispatcher__ctor.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.CommandDispatcher.%23ctor%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+    <a href="https://github.com/amkeyte/LunaFlow_A/new/dev-Engine/apiSpec/new?filename=LunaFlow_Engine_DefaultCommandDispatcher__ctor.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.DefaultCommandDispatcher.%23ctor%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/amkeyte/LunaFlow_A/blob/docs/src/LunaFlow.Engine/Commands/CommandDispatcher.cs/#L14">View Source</a>
+    <a href="https://github.com/amkeyte/LunaFlow_A/blob/dev-Engine/src/LunaFlow.Engine/Commands/DefaultCommandDispatcher.cs/#L14">View Source</a>
   </span>
-  <a id="LunaFlow_Engine_CommandDispatcher__ctor_" data-uid="LunaFlow.Engine.CommandDispatcher.#ctor*"></a>
-  <h4 id="LunaFlow_Engine_CommandDispatcher__ctor" data-uid="LunaFlow.Engine.CommandDispatcher.#ctor">CommandDispatcher()</h4>
-  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="LunaFlow.Engine.CommandDispatcher.html">CommandDispatcher</a> class.</p>
+  <a id="LunaFlow_Engine_DefaultCommandDispatcher__ctor_" data-uid="LunaFlow.Engine.DefaultCommandDispatcher.#ctor*"></a>
+  <h4 id="LunaFlow_Engine_DefaultCommandDispatcher__ctor" data-uid="LunaFlow.Engine.DefaultCommandDispatcher.#ctor">DefaultCommandDispatcher()</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="LunaFlow.Engine.DefaultCommandDispatcher.html">DefaultCommandDispatcher</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CommandDispatcher()</code></pre>
+    <pre><code class="lang-csharp hljs">public DefaultCommandDispatcher()</code></pre>
   </div>
   <h3 id="methods">Methods
 </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/amkeyte/LunaFlow_A/new/docs/apiSpec/new?filename=LunaFlow_Engine_CommandDispatcher_Dispatch_LunaFlow_Engine_Command_.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.CommandDispatcher.Dispatch(LunaFlow.Engine.Command)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+    <a href="https://github.com/amkeyte/LunaFlow_A/new/dev-Engine/apiSpec/new?filename=LunaFlow_Engine_DefaultCommandDispatcher_Dispatch_LunaFlow_Engine_ICommand_.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.DefaultCommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/amkeyte/LunaFlow_A/blob/docs/src/LunaFlow.Engine/Commands/CommandDispatcher.cs/#L38">View Source</a>
+    <a href="https://github.com/amkeyte/LunaFlow_A/blob/dev-Engine/src/LunaFlow.Engine/Commands/DefaultCommandDispatcher.cs/#L38">View Source</a>
   </span>
-  <a id="LunaFlow_Engine_CommandDispatcher_Dispatch_" data-uid="LunaFlow.Engine.CommandDispatcher.Dispatch*"></a>
-  <h4 id="LunaFlow_Engine_CommandDispatcher_Dispatch_LunaFlow_Engine_Command_" data-uid="LunaFlow.Engine.CommandDispatcher.Dispatch(LunaFlow.Engine.Command)">Dispatch(Command)</h4>
+  <a id="LunaFlow_Engine_DefaultCommandDispatcher_Dispatch_" data-uid="LunaFlow.Engine.DefaultCommandDispatcher.Dispatch*"></a>
+  <h4 id="LunaFlow_Engine_DefaultCommandDispatcher_Dispatch_LunaFlow_Engine_ICommand_" data-uid="LunaFlow.Engine.DefaultCommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)">Dispatch(ICommand)</h4>
   <div class="markdown level1 summary"><p>Dispatches a command to the appropriate handler, if one is registered.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Dispatch(Command command)</code></pre>
+    <pre><code class="lang-csharp hljs">public void Dispatch(ICommand command)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-condensed">
@@ -157,7 +161,7 @@ Maintains a registry of handlers and manages dispatch logic.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="LunaFlow.Engine.Command.html">Command</a></td>
+        <td><a class="xref" href="LunaFlow.Engine.ICommand.html">ICommand</a></td>
         <td><span class="parametername">command</span></td>
         <td><p>The command to execute.</p>
 </td>
@@ -166,13 +170,13 @@ Maintains a registry of handlers and manages dispatch logic.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/amkeyte/LunaFlow_A/new/docs/apiSpec/new?filename=LunaFlow_Engine_CommandDispatcher_RegisterHandler_System_String_LunaFlow_Engine_ICommandHandler_.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.CommandDispatcher.RegisterHandler(System.String%2CLunaFlow.Engine.ICommandHandler)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
+    <a href="https://github.com/amkeyte/LunaFlow_A/new/dev-Engine/apiSpec/new?filename=LunaFlow_Engine_DefaultCommandDispatcher_RegisterHandler_System_String_LunaFlow_Engine_ICommandHandler_.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.DefaultCommandDispatcher.RegisterHandler(System.String%2CLunaFlow.Engine.ICommandHandler)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Edit this page</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/amkeyte/LunaFlow_A/blob/docs/src/LunaFlow.Engine/Commands/CommandDispatcher.cs/#L24">View Source</a>
+    <a href="https://github.com/amkeyte/LunaFlow_A/blob/dev-Engine/src/LunaFlow.Engine/Commands/DefaultCommandDispatcher.cs/#L24">View Source</a>
   </span>
-  <a id="LunaFlow_Engine_CommandDispatcher_RegisterHandler_" data-uid="LunaFlow.Engine.CommandDispatcher.RegisterHandler*"></a>
-  <h4 id="LunaFlow_Engine_CommandDispatcher_RegisterHandler_System_String_LunaFlow_Engine_ICommandHandler_" data-uid="LunaFlow.Engine.CommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)">RegisterHandler(string, ICommandHandler)</h4>
+  <a id="LunaFlow_Engine_DefaultCommandDispatcher_RegisterHandler_" data-uid="LunaFlow.Engine.DefaultCommandDispatcher.RegisterHandler*"></a>
+  <h4 id="LunaFlow_Engine_DefaultCommandDispatcher_RegisterHandler_System_String_LunaFlow_Engine_ICommandHandler_" data-uid="LunaFlow.Engine.DefaultCommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)">RegisterHandler(string, ICommandHandler)</h4>
   <div class="markdown level1 summary"><p>Registers a handler for the specified command name.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -204,6 +208,10 @@ Maintains a registry of handlers and manages dispatch logic.</p>
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="LunaFlow.Engine.ICommandDispatcher.html">ICommandDispatcher</a>
+  </div>
 
 </article>
           </div>
@@ -213,10 +221,10 @@ Maintains a registry of handlers and manages dispatch logic.</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/amkeyte/LunaFlow_A/new/docs/apiSpec/new?filename=LunaFlow_Engine_CommandDispatcher.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.CommandDispatcher%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
+                    <a href="https://github.com/amkeyte/LunaFlow_A/new/dev-Engine/apiSpec/new?filename=LunaFlow_Engine_DefaultCommandDispatcher.md&amp;value=---%0Auid%3A%20LunaFlow.Engine.DefaultCommandDispatcher%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Edit this page</a>
                   </li>
                   <li>
-                    <a href="https://github.com/amkeyte/LunaFlow_A/blob/docs/src/LunaFlow.Engine/Commands/CommandDispatcher.cs/#L7" class="contribution-link">View Source</a>
+                    <a href="https://github.com/amkeyte/LunaFlow_A/blob/dev-Engine/src/LunaFlow.Engine/Commands/DefaultCommandDispatcher.cs/#L7" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

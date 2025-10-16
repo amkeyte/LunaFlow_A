@@ -16,7 +16,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/IRuleParser.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: IRuleParser
     path: ../src/LunaFlow.Rules/GeneratorServices/IRuleParser.cs
@@ -43,7 +43,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/IRuleParser.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: Parse
     path: ../src/LunaFlow.Rules/GeneratorServices/IRuleParser.cs

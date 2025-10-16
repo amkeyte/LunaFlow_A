@@ -17,7 +17,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/StandingRuleAttribute.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: StandingRuleAttribute
     path: ../src/LunaFlow.Rules/GeneratorServices/StandingRuleAttribute.cs
@@ -108,7 +108,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/StandingRuleAttribute.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: NotType
     path: ../src/LunaFlow.Rules/GeneratorServices/StandingRuleAttribute.cs
@@ -139,7 +139,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Rules/GeneratorServices/StandingRuleAttribute.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: .ctor
     path: ../src/LunaFlow.Rules/GeneratorServices/StandingRuleAttribute.cs

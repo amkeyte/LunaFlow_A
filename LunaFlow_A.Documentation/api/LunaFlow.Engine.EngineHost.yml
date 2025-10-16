@@ -5,8 +5,8 @@ items:
   id: EngineHost
   parent: LunaFlow.Engine
   children:
-  - LunaFlow.Engine.EngineHost.#ctor
-  - LunaFlow.Engine.EngineHost.#ctor(LunaFlow.Engine.IGameEngine,LunaFlow.Engine.CommandDispatcher)
+  - LunaFlow.Engine.EngineHost.ConfigureCommand(System.Action{LunaFlow.Engine.CommandOptions})
+  - LunaFlow.Engine.EngineHost.ConfigureGameEngine(System.Action{LunaFlow.Engine.GameEngineOptions})
   - LunaFlow.Engine.EngineHost.Run
   langs:
   - csharp
@@ -18,11 +18,11 @@ items:
   source:
     remote:
       path: src/LunaFlow.Engine/EngineHost.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: EngineHost
     path: ../src/LunaFlow.Engine/EngineHost.cs
-    startLine: 6
+    startLine: 9
   assemblies:
   - LunaFlow.Engine
   namespace: LunaFlow.Engine
@@ -44,73 +44,78 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
-- uid: LunaFlow.Engine.EngineHost.#ctor(LunaFlow.Engine.IGameEngine,LunaFlow.Engine.CommandDispatcher)
-  commentId: M:LunaFlow.Engine.EngineHost.#ctor(LunaFlow.Engine.IGameEngine,LunaFlow.Engine.CommandDispatcher)
-  id: '#ctor(LunaFlow.Engine.IGameEngine,LunaFlow.Engine.CommandDispatcher)'
+- uid: LunaFlow.Engine.EngineHost.ConfigureGameEngine(System.Action{LunaFlow.Engine.GameEngineOptions})
+  commentId: M:LunaFlow.Engine.EngineHost.ConfigureGameEngine(System.Action{LunaFlow.Engine.GameEngineOptions})
+  id: ConfigureGameEngine(System.Action{LunaFlow.Engine.GameEngineOptions})
   parent: LunaFlow.Engine.EngineHost
   langs:
   - csharp
   - vb
-  name: EngineHost(IGameEngine, CommandDispatcher)
-  nameWithType: EngineHost.EngineHost(IGameEngine, CommandDispatcher)
-  fullName: LunaFlow.Engine.EngineHost.EngineHost(LunaFlow.Engine.IGameEngine, LunaFlow.Engine.CommandDispatcher)
-  type: Constructor
+  name: ConfigureGameEngine(Action<GameEngineOptions>)
+  nameWithType: EngineHost.ConfigureGameEngine(Action<GameEngineOptions>)
+  fullName: LunaFlow.Engine.EngineHost.ConfigureGameEngine(System.Action<LunaFlow.Engine.GameEngineOptions>)
+  type: Method
   source:
     remote:
       path: src/LunaFlow.Engine/EngineHost.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: .ctor
+    id: ConfigureGameEngine
     path: ../src/LunaFlow.Engine/EngineHost.cs
-    startLine: 16
+    startLine: 21
   assemblies:
   - LunaFlow.Engine
   namespace: LunaFlow.Engine
-  summary: Initializes a new instance of the <xref href="LunaFlow.Engine.EngineHost" data-throw-if-not-resolved="false"></xref> class.
+  summary: Configures engine-level options using fluent style.
   example: []
   syntax:
-    content: public EngineHost(IGameEngine engine, CommandDispatcher dispatcher)
+    content: public EngineHost ConfigureGameEngine(Action<GameEngineOptions> configure)
     parameters:
-    - id: engine
-      type: LunaFlow.Engine.IGameEngine
-      description: The core game engine to use for processing.
-    - id: dispatcher
-      type: LunaFlow.Engine.CommandDispatcher
-      description: The command dispatcher responsible for routing user commands.
-    content.vb: Public Sub New(engine As IGameEngine, dispatcher As CommandDispatcher)
-  overload: LunaFlow.Engine.EngineHost.#ctor*
-  nameWithType.vb: EngineHost.New(IGameEngine, CommandDispatcher)
-  fullName.vb: LunaFlow.Engine.EngineHost.New(LunaFlow.Engine.IGameEngine, LunaFlow.Engine.CommandDispatcher)
-  name.vb: New(IGameEngine, CommandDispatcher)
-- uid: LunaFlow.Engine.EngineHost.#ctor
-  commentId: M:LunaFlow.Engine.EngineHost.#ctor
-  id: '#ctor'
+    - id: configure
+      type: System.Action{LunaFlow.Engine.GameEngineOptions}
+    return:
+      type: LunaFlow.Engine.EngineHost
+    content.vb: Public Function ConfigureGameEngine(configure As Action(Of GameEngineOptions)) As EngineHost
+  overload: LunaFlow.Engine.EngineHost.ConfigureGameEngine*
+  nameWithType.vb: EngineHost.ConfigureGameEngine(Action(Of GameEngineOptions))
+  fullName.vb: LunaFlow.Engine.EngineHost.ConfigureGameEngine(System.Action(Of LunaFlow.Engine.GameEngineOptions))
+  name.vb: ConfigureGameEngine(Action(Of GameEngineOptions))
+- uid: LunaFlow.Engine.EngineHost.ConfigureCommand(System.Action{LunaFlow.Engine.CommandOptions})
+  commentId: M:LunaFlow.Engine.EngineHost.ConfigureCommand(System.Action{LunaFlow.Engine.CommandOptions})
+  id: ConfigureCommand(System.Action{LunaFlow.Engine.CommandOptions})
   parent: LunaFlow.Engine.EngineHost
   langs:
   - csharp
   - vb
-  name: EngineHost()
-  nameWithType: EngineHost.EngineHost()
-  fullName: LunaFlow.Engine.EngineHost.EngineHost()
-  type: Constructor
+  name: ConfigureCommand(Action<CommandOptions>)
+  nameWithType: EngineHost.ConfigureCommand(Action<CommandOptions>)
+  fullName: LunaFlow.Engine.EngineHost.ConfigureCommand(System.Action<LunaFlow.Engine.CommandOptions>)
+  type: Method
   source:
     remote:
       path: src/LunaFlow.Engine/EngineHost.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: .ctor
+    id: ConfigureCommand
     path: ../src/LunaFlow.Engine/EngineHost.cs
-    startLine: 22
+    startLine: 30
   assemblies:
   - LunaFlow.Engine
   namespace: LunaFlow.Engine
+  summary: Configures command input and dispatch behavior.
+  example: []
   syntax:
-    content: public EngineHost()
-    content.vb: Public Sub New()
-  overload: LunaFlow.Engine.EngineHost.#ctor*
-  nameWithType.vb: EngineHost.New()
-  fullName.vb: LunaFlow.Engine.EngineHost.New()
-  name.vb: New()
+    content: public EngineHost ConfigureCommand(Action<CommandOptions> configure)
+    parameters:
+    - id: configure
+      type: System.Action{LunaFlow.Engine.CommandOptions}
+    return:
+      type: LunaFlow.Engine.EngineHost
+    content.vb: Public Function ConfigureCommand(configure As Action(Of CommandOptions)) As EngineHost
+  overload: LunaFlow.Engine.EngineHost.ConfigureCommand*
+  nameWithType.vb: EngineHost.ConfigureCommand(Action(Of CommandOptions))
+  fullName.vb: LunaFlow.Engine.EngineHost.ConfigureCommand(System.Action(Of LunaFlow.Engine.CommandOptions))
+  name.vb: ConfigureCommand(Action(Of CommandOptions))
 - uid: LunaFlow.Engine.EngineHost.Run
   commentId: M:LunaFlow.Engine.EngineHost.Run
   id: Run
@@ -125,15 +130,15 @@ items:
   source:
     remote:
       path: src/LunaFlow.Engine/EngineHost.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: Run
     path: ../src/LunaFlow.Engine/EngineHost.cs
-    startLine: 29
+    startLine: 39
   assemblies:
   - LunaFlow.Engine
   namespace: LunaFlow.Engine
-  summary: Starts the engine and enters the main command-processing loop.
+  summary: Boots the engine and enters the interactive run loop.
   example: []
   syntax:
     content: public void Run()
@@ -399,35 +404,119 @@ references:
   name: System
   nameWithType: System
   fullName: System
+- uid: LunaFlow.Engine.EngineHost.ConfigureGameEngine*
+  commentId: Overload:LunaFlow.Engine.EngineHost.ConfigureGameEngine
+  href: LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost_ConfigureGameEngine_System_Action_LunaFlow_Engine_GameEngineOptions__
+  name: ConfigureGameEngine
+  nameWithType: EngineHost.ConfigureGameEngine
+  fullName: LunaFlow.Engine.EngineHost.ConfigureGameEngine
+- uid: System.Action{LunaFlow.Engine.GameEngineOptions}
+  commentId: T:System.Action{LunaFlow.Engine.GameEngineOptions}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<GameEngineOptions>
+  nameWithType: Action<GameEngineOptions>
+  fullName: System.Action<LunaFlow.Engine.GameEngineOptions>
+  nameWithType.vb: Action(Of GameEngineOptions)
+  fullName.vb: System.Action(Of LunaFlow.Engine.GameEngineOptions)
+  name.vb: Action(Of GameEngineOptions)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: LunaFlow.Engine.GameEngineOptions
+    name: GameEngineOptions
+    href: LunaFlow.Engine.GameEngineOptions.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LunaFlow.Engine.GameEngineOptions
+    name: GameEngineOptions
+    href: LunaFlow.Engine.GameEngineOptions.html
+  - name: )
 - uid: LunaFlow.Engine.EngineHost
   commentId: T:LunaFlow.Engine.EngineHost
+  parent: LunaFlow.Engine
   href: LunaFlow.Engine.EngineHost.html
   name: EngineHost
   nameWithType: EngineHost
   fullName: LunaFlow.Engine.EngineHost
-- uid: LunaFlow.Engine.EngineHost.#ctor*
-  commentId: Overload:LunaFlow.Engine.EngineHost.#ctor
-  href: LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost__ctor_LunaFlow_Engine_IGameEngine_LunaFlow_Engine_CommandDispatcher_
-  name: EngineHost
-  nameWithType: EngineHost.EngineHost
-  fullName: LunaFlow.Engine.EngineHost.EngineHost
-  nameWithType.vb: EngineHost.New
-  fullName.vb: LunaFlow.Engine.EngineHost.New
-  name.vb: New
-- uid: LunaFlow.Engine.IGameEngine
-  commentId: T:LunaFlow.Engine.IGameEngine
-  parent: LunaFlow.Engine
-  href: LunaFlow.Engine.IGameEngine.html
-  name: IGameEngine
-  nameWithType: IGameEngine
-  fullName: LunaFlow.Engine.IGameEngine
-- uid: LunaFlow.Engine.CommandDispatcher
-  commentId: T:LunaFlow.Engine.CommandDispatcher
-  parent: LunaFlow.Engine
-  href: LunaFlow.Engine.CommandDispatcher.html
-  name: CommandDispatcher
-  nameWithType: CommandDispatcher
-  fullName: LunaFlow.Engine.CommandDispatcher
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: LunaFlow.Engine.EngineHost.ConfigureCommand*
+  commentId: Overload:LunaFlow.Engine.EngineHost.ConfigureCommand
+  href: LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost_ConfigureCommand_System_Action_LunaFlow_Engine_CommandOptions__
+  name: ConfigureCommand
+  nameWithType: EngineHost.ConfigureCommand
+  fullName: LunaFlow.Engine.EngineHost.ConfigureCommand
+- uid: System.Action{LunaFlow.Engine.CommandOptions}
+  commentId: T:System.Action{LunaFlow.Engine.CommandOptions}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<CommandOptions>
+  nameWithType: Action<CommandOptions>
+  fullName: System.Action<LunaFlow.Engine.CommandOptions>
+  nameWithType.vb: Action(Of CommandOptions)
+  fullName.vb: System.Action(Of LunaFlow.Engine.CommandOptions)
+  name.vb: Action(Of CommandOptions)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: LunaFlow.Engine.CommandOptions
+    name: CommandOptions
+    href: LunaFlow.Engine.CommandOptions.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LunaFlow.Engine.CommandOptions
+    name: CommandOptions
+    href: LunaFlow.Engine.CommandOptions.html
+  - name: )
 - uid: LunaFlow.Engine.EngineHost.Run*
   commentId: Overload:LunaFlow.Engine.EngineHost.Run
   href: LunaFlow.Engine.EngineHost.html#LunaFlow_Engine_EngineHost_Run

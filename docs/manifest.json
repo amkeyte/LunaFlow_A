@@ -14,20 +14,60 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LunaFlow.Engine.Command.yml",
+      "source_relative_path": "api/LunaFlow.Engine.CommandOptions.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LunaFlow.Engine.Command.html"
+          "relative_path": "api/LunaFlow.Engine.CommandOptions.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LunaFlow.Engine.CommandDispatcher.yml",
+      "source_relative_path": "api/LunaFlow.Engine.Commands.DefaultCommandParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LunaFlow.Engine.CommandDispatcher.html"
+          "relative_path": "api/LunaFlow.Engine.Commands.DefaultCommandParser.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.Commands.ICommandParser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.Commands.ICommandParser.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.Commands.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.Commands.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.DefaultCommand.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.DefaultCommand.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.DefaultCommandDispatcher.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.DefaultCommandDispatcher.html"
         }
       },
       "version": ""
@@ -48,6 +88,36 @@
       "output": {
         ".html": {
           "relative_path": "api/LunaFlow.Engine.GameEngine.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.GameEngineOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.GameEngineOptions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.ICommand.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.ICommand.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Engine.ICommandDispatcher.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Engine.ICommandDispatcher.html"
         }
       },
       "version": ""
@@ -94,10 +164,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/LunaFlow.Rules.Class1.yml",
+      "source_relative_path": "api/LunaFlow.Rules.ARule.yml",
       "output": {
         ".html": {
-          "relative_path": "api/LunaFlow.Rules.Class1.html"
+          "relative_path": "api/LunaFlow.Rules.ARule.html"
         }
       },
       "version": ""
@@ -248,6 +318,56 @@
       "output": {
         ".html": {
           "relative_path": "api/LunaFlow.Rules.GeneratorServices.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.IGameSystem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.IGameSystem.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.IHasLunaFlowReference.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.IHasLunaFlowReference.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.ILunaFlowReference.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.ILunaFlowReference.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.IRuleBook.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.IRuleBook.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/LunaFlow.Rules.IRuleGroup.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/LunaFlow.Rules.IRuleGroup.html"
         }
       },
       "version": ""

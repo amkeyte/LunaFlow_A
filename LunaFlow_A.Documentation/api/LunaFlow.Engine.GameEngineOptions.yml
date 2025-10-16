@@ -1,35 +1,35 @@
 ### YamlMime:ManagedReference
 items:
-- uid: LunaFlow.Rules.Class1
-  commentId: T:LunaFlow.Rules.Class1
-  id: Class1
-  parent: LunaFlow.Rules
+- uid: LunaFlow.Engine.GameEngineOptions
+  commentId: T:LunaFlow.Engine.GameEngineOptions
+  id: GameEngineOptions
+  parent: LunaFlow.Engine
   children:
-  - LunaFlow.Rules.Class1.#ctor
-  - LunaFlow.Rules.Class1.boo
+  - LunaFlow.Engine.GameEngineOptions.EnableRulesEngine
+  - LunaFlow.Engine.GameEngineOptions.GameName
   langs:
   - csharp
   - vb
-  name: Class1
-  nameWithType: Class1
-  fullName: LunaFlow.Rules.Class1
+  name: GameEngineOptions
+  nameWithType: GameEngineOptions
+  fullName: LunaFlow.Engine.GameEngineOptions
   type: Class
   source:
     remote:
-      path: src/LunaFlow.Rules/Class1.cs
-      branch: docs
+      path: src/LunaFlow.Engine/EngineHost.cs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: Class1
-    path: ../src/LunaFlow.Rules/Class1.cs
-    startLine: 5
+    id: GameEngineOptions
+    path: ../src/LunaFlow.Engine/EngineHost.cs
+    startLine: 92
   assemblies:
-  - LunaFlow.Rules
-  namespace: LunaFlow.Rules
-  summary: Placeholder for DocFx
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Options for configuring the core game engine.
   example: []
   syntax:
-    content: public class Class1
-    content.vb: Public Class Class1
+    content: public class GameEngineOptions
+    content.vb: Public Class GameEngineOptions
   inheritance:
   - System.Object
   inheritedMembers:
@@ -40,87 +40,87 @@ items:
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
   - System.Object.ToString
-- uid: LunaFlow.Rules.Class1.boo
-  commentId: F:LunaFlow.Rules.Class1.boo
-  id: boo
-  parent: LunaFlow.Rules.Class1
+- uid: LunaFlow.Engine.GameEngineOptions.GameName
+  commentId: P:LunaFlow.Engine.GameEngineOptions.GameName
+  id: GameName
+  parent: LunaFlow.Engine.GameEngineOptions
   langs:
   - csharp
   - vb
-  name: boo
-  nameWithType: Class1.boo
-  fullName: LunaFlow.Rules.Class1.boo
-  type: Field
+  name: GameName
+  nameWithType: GameEngineOptions.GameName
+  fullName: LunaFlow.Engine.GameEngineOptions.GameName
+  type: Property
   source:
     remote:
-      path: src/LunaFlow.Rules/Class1.cs
-      branch: docs
+      path: src/LunaFlow.Engine/EngineHost.cs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: boo
-    path: ../src/LunaFlow.Rules/Class1.cs
-    startLine: 10
+    id: GameName
+    path: ../src/LunaFlow.Engine/EngineHost.cs
+    startLine: 94
   assemblies:
-  - LunaFlow.Rules
-  namespace: LunaFlow.Rules
-  summary: who cares
-  example: []
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
   syntax:
-    content: public static string boo
+    content: public string GameName { get; set; }
+    parameters: []
     return:
       type: System.String
-    content.vb: Public Shared boo As String
-- uid: LunaFlow.Rules.Class1.#ctor
-  commentId: M:LunaFlow.Rules.Class1.#ctor
-  id: '#ctor'
-  parent: LunaFlow.Rules.Class1
+    content.vb: Public Property GameName As String
+  overload: LunaFlow.Engine.GameEngineOptions.GameName*
+- uid: LunaFlow.Engine.GameEngineOptions.EnableRulesEngine
+  commentId: P:LunaFlow.Engine.GameEngineOptions.EnableRulesEngine
+  id: EnableRulesEngine
+  parent: LunaFlow.Engine.GameEngineOptions
   langs:
   - csharp
   - vb
-  name: Class1()
-  nameWithType: Class1.Class1()
-  fullName: LunaFlow.Rules.Class1.Class1()
-  type: Constructor
+  name: EnableRulesEngine
+  nameWithType: GameEngineOptions.EnableRulesEngine
+  fullName: LunaFlow.Engine.GameEngineOptions.EnableRulesEngine
+  type: Property
   source:
     remote:
-      path: src/LunaFlow.Rules/Class1.cs
-      branch: docs
+      path: src/LunaFlow.Engine/EngineHost.cs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: .ctor
-    path: ../src/LunaFlow.Rules/Class1.cs
-    startLine: 11
+    id: EnableRulesEngine
+    path: ../src/LunaFlow.Engine/EngineHost.cs
+    startLine: 97
   assemblies:
-  - LunaFlow.Rules
-  namespace: LunaFlow.Rules
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
   syntax:
-    content: public Class1()
-    content.vb: Public Sub New()
-  overload: LunaFlow.Rules.Class1.#ctor*
-  nameWithType.vb: Class1.New()
-  fullName.vb: LunaFlow.Rules.Class1.New()
-  name.vb: New()
+    content: public bool EnableRulesEngine { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property EnableRulesEngine As Boolean
+  overload: LunaFlow.Engine.GameEngineOptions.EnableRulesEngine*
 references:
-- uid: LunaFlow.Rules
-  commentId: N:LunaFlow.Rules
+- uid: LunaFlow.Engine
+  commentId: N:LunaFlow.Engine
   href: LunaFlow.html
-  name: LunaFlow.Rules
-  nameWithType: LunaFlow.Rules
-  fullName: LunaFlow.Rules
+  name: LunaFlow.Engine
+  nameWithType: LunaFlow.Engine
+  fullName: LunaFlow.Engine
   spec.csharp:
   - uid: LunaFlow
     name: LunaFlow
     href: LunaFlow.html
   - name: .
-  - uid: LunaFlow.Rules
-    name: Rules
-    href: LunaFlow.Rules.html
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
   spec.vb:
   - uid: LunaFlow
     name: LunaFlow
     href: LunaFlow.html
   - name: .
-  - uid: LunaFlow.Rules
-    name: Rules
-    href: LunaFlow.Rules.html
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
 - uid: System.Object
   commentId: T:System.Object
   parent: System
@@ -358,6 +358,12 @@ references:
   name: System
   nameWithType: System
   fullName: System
+- uid: LunaFlow.Engine.GameEngineOptions.GameName*
+  commentId: Overload:LunaFlow.Engine.GameEngineOptions.GameName
+  href: LunaFlow.Engine.GameEngineOptions.html#LunaFlow_Engine_GameEngineOptions_GameName
+  name: GameName
+  nameWithType: GameEngineOptions.GameName
+  fullName: LunaFlow.Engine.GameEngineOptions.GameName
 - uid: System.String
   commentId: T:System.String
   parent: System
@@ -369,12 +375,20 @@ references:
   nameWithType.vb: String
   fullName.vb: String
   name.vb: String
-- uid: LunaFlow.Rules.Class1.#ctor*
-  commentId: Overload:LunaFlow.Rules.Class1.#ctor
-  href: LunaFlow.Rules.Class1.html#LunaFlow_Rules_Class1__ctor
-  name: Class1
-  nameWithType: Class1.Class1
-  fullName: LunaFlow.Rules.Class1.Class1
-  nameWithType.vb: Class1.New
-  fullName.vb: LunaFlow.Rules.Class1.New
-  name.vb: New
+- uid: LunaFlow.Engine.GameEngineOptions.EnableRulesEngine*
+  commentId: Overload:LunaFlow.Engine.GameEngineOptions.EnableRulesEngine
+  href: LunaFlow.Engine.GameEngineOptions.html#LunaFlow_Engine_GameEngineOptions_EnableRulesEngine
+  name: EnableRulesEngine
+  nameWithType: GameEngineOptions.EnableRulesEngine
+  fullName: LunaFlow.Engine.GameEngineOptions.EnableRulesEngine
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean

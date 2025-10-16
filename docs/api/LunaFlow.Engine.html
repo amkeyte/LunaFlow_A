@@ -72,14 +72,22 @@
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
+    <h3 id="namespaces">
+Namespaces
+</h3>
+      <h4><a class="xref" href="LunaFlow.Engine.Commands.html">LunaFlow.Engine.Commands</a></h4>
+      <section></section>
     <h3 id="classes">
 Classes
 </h3>
-      <h4><a class="xref" href="LunaFlow.Engine.Command.html">Command</a></h4>
+      <h4><a class="xref" href="LunaFlow.Engine.CommandOptions.html">CommandOptions</a></h4>
+      <section><p>Options for parsing and dispatching input commands.</p>
+</section>
+      <h4><a class="xref" href="LunaFlow.Engine.DefaultCommand.html">DefaultCommand</a></h4>
       <section><p>Represents a user-issued command within the LunaFlow system.
 A command consists of a name and optional arguments that drive game behavior.</p>
 </section>
-      <h4><a class="xref" href="LunaFlow.Engine.CommandDispatcher.html">CommandDispatcher</a></h4>
+      <h4><a class="xref" href="LunaFlow.Engine.DefaultCommandDispatcher.html">DefaultCommandDispatcher</a></h4>
       <section><p>Responsible for routing incoming commands to the appropriate command handler.
 Maintains a registry of handlers and manages dispatch logic.</p>
 </section>
@@ -90,13 +98,19 @@ Initializes the engine environment and hosts the main run loop.</p>
       <h4><a class="xref" href="LunaFlow.Engine.GameEngine.html">GameEngine</a></h4>
       <section><p>Represents the core engine that processes game logic, player actions, and rule evaluation.</p>
 </section>
+      <h4><a class="xref" href="LunaFlow.Engine.GameEngineOptions.html">GameEngineOptions</a></h4>
+      <section><p>Options for configuring the core game engine.</p>
+</section>
       <h4><a class="xref" href="LunaFlow.Engine.RuleEngine.html">RuleEngine</a></h4>
-      <section><p>Provides a central rule evaluation engine for LunaFlow.
-All game actions and consequences are evaluated through this system.</p>
+      <section><p>Provides a simplified wrapper around the NRules engine for dynamic rule loading and execution.</p>
 </section>
     <h3 id="interfaces">
 Interfaces
 </h3>
+      <h4><a class="xref" href="LunaFlow.Engine.ICommand.html">ICommand</a></h4>
+      <section></section>
+      <h4><a class="xref" href="LunaFlow.Engine.ICommandDispatcher.html">ICommandDispatcher</a></h4>
+      <section></section>
       <h4><a class="xref" href="LunaFlow.Engine.ICommandHandler.html">ICommandHandler</a></h4>
       <section><p>Defines the interface for handling a specific type of command.
 Implementers execute logic in response to a matching command name.</p>

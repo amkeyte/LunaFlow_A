@@ -1,42 +1,36 @@
 ### YamlMime:ManagedReference
 items:
-- uid: LunaFlow.Engine.Command
-  commentId: T:LunaFlow.Engine.Command
-  id: Command
-  parent: LunaFlow.Engine
+- uid: LunaFlow.Engine.Commands.DefaultCommandParser
+  commentId: T:LunaFlow.Engine.Commands.DefaultCommandParser
+  id: DefaultCommandParser
+  parent: LunaFlow.Engine.Commands
   children:
-  - LunaFlow.Engine.Command.#ctor(System.String)
-  - LunaFlow.Engine.Command.Arguments
-  - LunaFlow.Engine.Command.Name
-  - LunaFlow.Engine.Command.ToString
+  - LunaFlow.Engine.Commands.DefaultCommandParser.Parse(System.Object)
   langs:
   - csharp
   - vb
-  name: Command
-  nameWithType: Command
-  fullName: LunaFlow.Engine.Command
+  name: DefaultCommandParser
+  nameWithType: DefaultCommandParser
+  fullName: LunaFlow.Engine.Commands.DefaultCommandParser
   type: Class
   source:
     remote:
-      path: src/LunaFlow.Engine/Commands/Command.cs
-      branch: docs
+      path: src/LunaFlow.Engine/Commands/DefaultCommandParser.cs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: Command
-    path: ../src/LunaFlow.Engine/Commands/Command.cs
-    startLine: 6
+    id: DefaultCommandParser
+    path: ../src/LunaFlow.Engine/Commands/DefaultCommandParser.cs
+    startLine: 2
   assemblies:
   - LunaFlow.Engine
-  namespace: LunaFlow.Engine
-  summary: >-
-    Represents a user-issued command within the LunaFlow system.
-
-    A command consists of a name and optional arguments that drive game behavior.
-  example: []
+  namespace: LunaFlow.Engine.Commands
   syntax:
-    content: public class Command
-    content.vb: Public Class Command
+    content: 'public class DefaultCommandParser : ICommandParser'
+    content.vb: Public Class DefaultCommandParser Implements ICommandParser
   inheritance:
   - System.Object
+  implements:
+  - LunaFlow.Engine.Commands.ICommandParser
   inheritedMembers:
   - System.Object.Equals(System.Object)
   - System.Object.Equals(System.Object,System.Object)
@@ -44,145 +38,51 @@ items:
   - System.Object.GetType
   - System.Object.MemberwiseClone
   - System.Object.ReferenceEquals(System.Object,System.Object)
-- uid: LunaFlow.Engine.Command.Name
-  commentId: P:LunaFlow.Engine.Command.Name
-  id: Name
-  parent: LunaFlow.Engine.Command
+  - System.Object.ToString
+- uid: LunaFlow.Engine.Commands.DefaultCommandParser.Parse(System.Object)
+  commentId: M:LunaFlow.Engine.Commands.DefaultCommandParser.Parse(System.Object)
+  id: Parse(System.Object)
+  parent: LunaFlow.Engine.Commands.DefaultCommandParser
   langs:
   - csharp
   - vb
-  name: Name
-  nameWithType: Command.Name
-  fullName: LunaFlow.Engine.Command.Name
-  type: Property
-  source:
-    remote:
-      path: src/LunaFlow.Engine/Commands/Command.cs
-      branch: docs
-      repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: Name
-    path: ../src/LunaFlow.Engine/Commands/Command.cs
-    startLine: 11
-  assemblies:
-  - LunaFlow.Engine
-  namespace: LunaFlow.Engine
-  summary: Gets the name of the command (e.g., "move", "look", "cast").
-  example: []
-  syntax:
-    content: public string Name { get; }
-    parameters: []
-    return:
-      type: System.String
-    content.vb: Public ReadOnly Property Name As String
-  overload: LunaFlow.Engine.Command.Name*
-- uid: LunaFlow.Engine.Command.Arguments
-  commentId: P:LunaFlow.Engine.Command.Arguments
-  id: Arguments
-  parent: LunaFlow.Engine.Command
-  langs:
-  - csharp
-  - vb
-  name: Arguments
-  nameWithType: Command.Arguments
-  fullName: LunaFlow.Engine.Command.Arguments
-  type: Property
-  source:
-    remote:
-      path: src/LunaFlow.Engine/Commands/Command.cs
-      branch: docs
-      repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: Arguments
-    path: ../src/LunaFlow.Engine/Commands/Command.cs
-    startLine: 16
-  assemblies:
-  - LunaFlow.Engine
-  namespace: LunaFlow.Engine
-  summary: Gets the raw arguments supplied with the command, if any.
-  example: []
-  syntax:
-    content: public string[] Arguments { get; }
-    parameters: []
-    return:
-      type: System.String[]
-    content.vb: Public ReadOnly Property Arguments As String()
-  overload: LunaFlow.Engine.Command.Arguments*
-- uid: LunaFlow.Engine.Command.#ctor(System.String)
-  commentId: M:LunaFlow.Engine.Command.#ctor(System.String)
-  id: '#ctor(System.String)'
-  parent: LunaFlow.Engine.Command
-  langs:
-  - csharp
-  - vb
-  name: Command(string)
-  nameWithType: Command.Command(string)
-  fullName: LunaFlow.Engine.Command.Command(string)
-  type: Constructor
-  source:
-    remote:
-      path: src/LunaFlow.Engine/Commands/Command.cs
-      branch: docs
-      repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: .ctor
-    path: ../src/LunaFlow.Engine/Commands/Command.cs
-    startLine: 23
-  assemblies:
-  - LunaFlow.Engine
-  namespace: LunaFlow.Engine
-  summary: >-
-    Initializes a new instance of the <xref href="LunaFlow.Engine.Command" data-throw-if-not-resolved="false"></xref> class using raw input.
-
-    Parses the first token as the command name and the rest as arguments.
-  example: []
-  syntax:
-    content: public Command(string input)
-    parameters:
-    - id: input
-      type: System.String
-      description: The raw user input string.
-    content.vb: Public Sub New(input As String)
-  overload: LunaFlow.Engine.Command.#ctor*
-  nameWithType.vb: Command.New(String)
-  fullName.vb: LunaFlow.Engine.Command.New(String)
-  name.vb: New(String)
-- uid: LunaFlow.Engine.Command.ToString
-  commentId: M:LunaFlow.Engine.Command.ToString
-  id: ToString
-  parent: LunaFlow.Engine.Command
-  langs:
-  - csharp
-  - vb
-  name: ToString()
-  nameWithType: Command.ToString()
-  fullName: LunaFlow.Engine.Command.ToString()
+  name: Parse(object)
+  nameWithType: DefaultCommandParser.Parse(object)
+  fullName: LunaFlow.Engine.Commands.DefaultCommandParser.Parse(object)
   type: Method
   source:
     remote:
-      path: src/LunaFlow.Engine/Commands/Command.cs
-      branch: docs
+      path: src/LunaFlow.Engine/Commands/DefaultCommandParser.cs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
-    id: ToString
-    path: ../src/LunaFlow.Engine/Commands/Command.cs
-    startLine: 34
+    id: Parse
+    path: ../src/LunaFlow.Engine/Commands/DefaultCommandParser.cs
+    startLine: 4
   assemblies:
   - LunaFlow.Engine
-  namespace: LunaFlow.Engine
-  summary: Returns a string representation of the command and its arguments.
+  namespace: LunaFlow.Engine.Commands
   example: []
   syntax:
-    content: public override string ToString()
+    content: public ICommand Parse(object input)
+    parameters:
+    - id: input
+      type: System.Object
     return:
-      type: System.String
-      description: A human-readable summary of the command.
-    content.vb: Public Overrides Function ToString() As String
-  overridden: System.Object.ToString
-  overload: LunaFlow.Engine.Command.ToString*
+      type: LunaFlow.Engine.ICommand
+    content.vb: Public Function Parse(input As Object) As ICommand
+  overload: LunaFlow.Engine.Commands.DefaultCommandParser.Parse*
+  implements:
+  - LunaFlow.Engine.Commands.ICommandParser.Parse(System.Object)
+  nameWithType.vb: DefaultCommandParser.Parse(Object)
+  fullName.vb: LunaFlow.Engine.Commands.DefaultCommandParser.Parse(Object)
+  name.vb: Parse(Object)
 references:
-- uid: LunaFlow.Engine
-  commentId: N:LunaFlow.Engine
+- uid: LunaFlow.Engine.Commands
+  commentId: N:LunaFlow.Engine.Commands
   href: LunaFlow.html
-  name: LunaFlow.Engine
-  nameWithType: LunaFlow.Engine
-  fullName: LunaFlow.Engine
+  name: LunaFlow.Engine.Commands
+  nameWithType: LunaFlow.Engine.Commands
+  fullName: LunaFlow.Engine.Commands
   spec.csharp:
   - uid: LunaFlow
     name: LunaFlow
@@ -191,6 +91,10 @@ references:
   - uid: LunaFlow.Engine
     name: Engine
     href: LunaFlow.Engine.html
+  - name: .
+  - uid: LunaFlow.Engine.Commands
+    name: Commands
+    href: LunaFlow.Engine.Commands.html
   spec.vb:
   - uid: LunaFlow
     name: LunaFlow
@@ -199,6 +103,10 @@ references:
   - uid: LunaFlow.Engine
     name: Engine
     href: LunaFlow.Engine.html
+  - name: .
+  - uid: LunaFlow.Engine.Commands
+    name: Commands
+    href: LunaFlow.Engine.Commands.html
 - uid: System.Object
   commentId: T:System.Object
   parent: System
@@ -210,6 +118,13 @@ references:
   nameWithType.vb: Object
   fullName.vb: Object
   name.vb: Object
+- uid: LunaFlow.Engine.Commands.ICommandParser
+  commentId: T:LunaFlow.Engine.Commands.ICommandParser
+  parent: LunaFlow.Engine.Commands
+  href: LunaFlow.Engine.Commands.ICommandParser.html
+  name: ICommandParser
+  nameWithType: ICommandParser
+  fullName: LunaFlow.Engine.Commands.ICommandParser
 - uid: System.Object.Equals(System.Object)
   commentId: M:System.Object.Equals(System.Object)
   parent: System.Object
@@ -405,75 +320,6 @@ references:
     isExternal: true
     href: https://learn.microsoft.com/dotnet/api/system.object
   - name: )
-- uid: System
-  commentId: N:System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system
-  name: System
-  nameWithType: System
-  fullName: System
-- uid: LunaFlow.Engine.Command.Name*
-  commentId: Overload:LunaFlow.Engine.Command.Name
-  href: LunaFlow.Engine.Command.html#LunaFlow_Engine_Command_Name
-  name: Name
-  nameWithType: Command.Name
-  fullName: LunaFlow.Engine.Command.Name
-- uid: System.String
-  commentId: T:System.String
-  parent: System
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.string
-  name: string
-  nameWithType: string
-  fullName: string
-  nameWithType.vb: String
-  fullName.vb: String
-  name.vb: String
-- uid: LunaFlow.Engine.Command.Arguments*
-  commentId: Overload:LunaFlow.Engine.Command.Arguments
-  href: LunaFlow.Engine.Command.html#LunaFlow_Engine_Command_Arguments
-  name: Arguments
-  nameWithType: Command.Arguments
-  fullName: LunaFlow.Engine.Command.Arguments
-- uid: System.String[]
-  isExternal: true
-  href: https://learn.microsoft.com/dotnet/api/system.string
-  name: string[]
-  nameWithType: string[]
-  fullName: string[]
-  nameWithType.vb: String()
-  fullName.vb: String()
-  name.vb: String()
-  spec.csharp:
-  - uid: System.String
-    name: string
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.string
-  - name: '['
-  - name: ']'
-  spec.vb:
-  - uid: System.String
-    name: String
-    isExternal: true
-    href: https://learn.microsoft.com/dotnet/api/system.string
-  - name: (
-  - name: )
-- uid: LunaFlow.Engine.Command
-  commentId: T:LunaFlow.Engine.Command
-  parent: LunaFlow.Engine
-  href: LunaFlow.Engine.Command.html
-  name: Command
-  nameWithType: Command
-  fullName: LunaFlow.Engine.Command
-- uid: LunaFlow.Engine.Command.#ctor*
-  commentId: Overload:LunaFlow.Engine.Command.#ctor
-  href: LunaFlow.Engine.Command.html#LunaFlow_Engine_Command__ctor_System_String_
-  name: Command
-  nameWithType: Command.Command
-  fullName: LunaFlow.Engine.Command.Command
-  nameWithType.vb: Command.New
-  fullName.vb: LunaFlow.Engine.Command.New
-  name.vb: New
 - uid: System.Object.ToString
   commentId: M:System.Object.ToString
   parent: System.Object
@@ -498,9 +344,76 @@ references:
     href: https://learn.microsoft.com/dotnet/api/system.object.tostring
   - name: (
   - name: )
-- uid: LunaFlow.Engine.Command.ToString*
-  commentId: Overload:LunaFlow.Engine.Command.ToString
-  href: LunaFlow.Engine.Command.html#LunaFlow_Engine_Command_ToString
-  name: ToString
-  nameWithType: Command.ToString
-  fullName: LunaFlow.Engine.Command.ToString
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LunaFlow.Engine.Commands.DefaultCommandParser.Parse*
+  commentId: Overload:LunaFlow.Engine.Commands.DefaultCommandParser.Parse
+  href: LunaFlow.Engine.Commands.DefaultCommandParser.html#LunaFlow_Engine_Commands_DefaultCommandParser_Parse_System_Object_
+  name: Parse
+  nameWithType: DefaultCommandParser.Parse
+  fullName: LunaFlow.Engine.Commands.DefaultCommandParser.Parse
+- uid: LunaFlow.Engine.Commands.ICommandParser.Parse(System.Object)
+  commentId: M:LunaFlow.Engine.Commands.ICommandParser.Parse(System.Object)
+  parent: LunaFlow.Engine.Commands.ICommandParser
+  isExternal: true
+  href: LunaFlow.Engine.Commands.ICommandParser.html#LunaFlow_Engine_Commands_ICommandParser_Parse_System_Object_
+  name: Parse(object)
+  nameWithType: ICommandParser.Parse(object)
+  fullName: LunaFlow.Engine.Commands.ICommandParser.Parse(object)
+  nameWithType.vb: ICommandParser.Parse(Object)
+  fullName.vb: LunaFlow.Engine.Commands.ICommandParser.Parse(Object)
+  name.vb: Parse(Object)
+  spec.csharp:
+  - uid: LunaFlow.Engine.Commands.ICommandParser.Parse(System.Object)
+    name: Parse
+    href: LunaFlow.Engine.Commands.ICommandParser.html#LunaFlow_Engine_Commands_ICommandParser_Parse_System_Object_
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: LunaFlow.Engine.Commands.ICommandParser.Parse(System.Object)
+    name: Parse
+    href: LunaFlow.Engine.Commands.ICommandParser.html#LunaFlow_Engine_Commands_ICommandParser_Parse_System_Object_
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: LunaFlow.Engine.ICommand
+  commentId: T:LunaFlow.Engine.ICommand
+  parent: LunaFlow.Engine
+  href: LunaFlow.Engine.ICommand.html
+  name: ICommand
+  nameWithType: ICommand
+  fullName: LunaFlow.Engine.ICommand
+- uid: LunaFlow.Engine
+  commentId: N:LunaFlow.Engine
+  href: LunaFlow.html
+  name: LunaFlow.Engine
+  nameWithType: LunaFlow.Engine
+  fullName: LunaFlow.Engine
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html

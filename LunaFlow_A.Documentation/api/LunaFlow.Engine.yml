@@ -4,13 +4,18 @@ items:
   commentId: N:LunaFlow.Engine
   id: LunaFlow.Engine
   children:
-  - LunaFlow.Engine.Command
-  - LunaFlow.Engine.CommandDispatcher
+  - LunaFlow.Engine.CommandOptions
+  - LunaFlow.Engine.DefaultCommand
+  - LunaFlow.Engine.DefaultCommandDispatcher
   - LunaFlow.Engine.EngineHost
   - LunaFlow.Engine.GameEngine
+  - LunaFlow.Engine.GameEngineOptions
+  - LunaFlow.Engine.ICommand
+  - LunaFlow.Engine.ICommandDispatcher
   - LunaFlow.Engine.ICommandHandler
   - LunaFlow.Engine.IGameEngine
   - LunaFlow.Engine.RuleEngine
+  - LunaFlow.Engine.Commands
   langs:
   - csharp
   - vb
@@ -21,20 +26,32 @@ items:
   assemblies:
   - LunaFlow.Engine
 references:
-- uid: LunaFlow.Engine.Command
-  commentId: T:LunaFlow.Engine.Command
+- uid: LunaFlow.Engine.DefaultCommand
+  commentId: T:LunaFlow.Engine.DefaultCommand
+  href: LunaFlow.Engine.DefaultCommand.html
+  name: DefaultCommand
+  nameWithType: DefaultCommand
+  fullName: LunaFlow.Engine.DefaultCommand
+- uid: LunaFlow.Engine.DefaultCommandDispatcher
+  commentId: T:LunaFlow.Engine.DefaultCommandDispatcher
+  href: LunaFlow.Engine.DefaultCommandDispatcher.html
+  name: DefaultCommandDispatcher
+  nameWithType: DefaultCommandDispatcher
+  fullName: LunaFlow.Engine.DefaultCommandDispatcher
+- uid: LunaFlow.Engine.ICommand
+  commentId: T:LunaFlow.Engine.ICommand
   parent: LunaFlow.Engine
-  href: LunaFlow.Engine.Command.html
-  name: Command
-  nameWithType: Command
-  fullName: LunaFlow.Engine.Command
-- uid: LunaFlow.Engine.CommandDispatcher
-  commentId: T:LunaFlow.Engine.CommandDispatcher
+  href: LunaFlow.Engine.ICommand.html
+  name: ICommand
+  nameWithType: ICommand
+  fullName: LunaFlow.Engine.ICommand
+- uid: LunaFlow.Engine.ICommandDispatcher
+  commentId: T:LunaFlow.Engine.ICommandDispatcher
   parent: LunaFlow.Engine
-  href: LunaFlow.Engine.CommandDispatcher.html
-  name: CommandDispatcher
-  nameWithType: CommandDispatcher
-  fullName: LunaFlow.Engine.CommandDispatcher
+  href: LunaFlow.Engine.ICommandDispatcher.html
+  name: ICommandDispatcher
+  nameWithType: ICommandDispatcher
+  fullName: LunaFlow.Engine.ICommandDispatcher
 - uid: LunaFlow.Engine.ICommandHandler
   commentId: T:LunaFlow.Engine.ICommandHandler
   parent: LunaFlow.Engine
@@ -44,10 +61,24 @@ references:
   fullName: LunaFlow.Engine.ICommandHandler
 - uid: LunaFlow.Engine.EngineHost
   commentId: T:LunaFlow.Engine.EngineHost
+  parent: LunaFlow.Engine
   href: LunaFlow.Engine.EngineHost.html
   name: EngineHost
   nameWithType: EngineHost
   fullName: LunaFlow.Engine.EngineHost
+- uid: LunaFlow.Engine.GameEngineOptions
+  commentId: T:LunaFlow.Engine.GameEngineOptions
+  parent: LunaFlow.Engine
+  href: LunaFlow.Engine.GameEngineOptions.html
+  name: GameEngineOptions
+  nameWithType: GameEngineOptions
+  fullName: LunaFlow.Engine.GameEngineOptions
+- uid: LunaFlow.Engine.CommandOptions
+  commentId: T:LunaFlow.Engine.CommandOptions
+  href: LunaFlow.Engine.CommandOptions.html
+  name: CommandOptions
+  nameWithType: CommandOptions
+  fullName: LunaFlow.Engine.CommandOptions
 - uid: LunaFlow.Engine.GameEngine
   commentId: T:LunaFlow.Engine.GameEngine
   href: LunaFlow.Engine.GameEngine.html
@@ -62,7 +93,6 @@ references:
   fullName: LunaFlow.Engine.RuleEngine
 - uid: LunaFlow.Engine.IGameEngine
   commentId: T:LunaFlow.Engine.IGameEngine
-  parent: LunaFlow.Engine
   href: LunaFlow.Engine.IGameEngine.html
   name: IGameEngine
   nameWithType: IGameEngine
@@ -89,3 +119,9 @@ references:
   - uid: LunaFlow.Engine
     name: Engine
     href: LunaFlow.Engine.html
+- uid: LunaFlow.Engine.Commands
+  commentId: N:LunaFlow.Engine.Commands
+  href: LunaFlow.Engine.Commands.html
+  name: Commands
+  nameWithType: Commands
+  fullName: LunaFlow.Engine.Commands

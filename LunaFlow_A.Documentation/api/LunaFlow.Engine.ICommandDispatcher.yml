@@ -1,0 +1,160 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Engine.ICommandDispatcher
+  commentId: T:LunaFlow.Engine.ICommandDispatcher
+  id: ICommandDispatcher
+  parent: LunaFlow.Engine
+  children:
+  - LunaFlow.Engine.ICommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)
+  - LunaFlow.Engine.ICommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)
+  langs:
+  - csharp
+  - vb
+  name: ICommandDispatcher
+  nameWithType: ICommandDispatcher
+  fullName: LunaFlow.Engine.ICommandDispatcher
+  type: Interface
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/ICommandDispatcher.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: ICommandDispatcher
+    path: ../src/LunaFlow.Engine/Commands/ICommandDispatcher.cs
+    startLine: 2
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  syntax:
+    content: public interface ICommandDispatcher
+    content.vb: Public Interface ICommandDispatcher
+- uid: LunaFlow.Engine.ICommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)
+  commentId: M:LunaFlow.Engine.ICommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)
+  id: Dispatch(LunaFlow.Engine.ICommand)
+  parent: LunaFlow.Engine.ICommandDispatcher
+  langs:
+  - csharp
+  - vb
+  name: Dispatch(ICommand)
+  nameWithType: ICommandDispatcher.Dispatch(ICommand)
+  fullName: LunaFlow.Engine.ICommandDispatcher.Dispatch(LunaFlow.Engine.ICommand)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/ICommandDispatcher.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Dispatch
+    path: ../src/LunaFlow.Engine/Commands/ICommandDispatcher.cs
+    startLine: 4
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  syntax:
+    content: void Dispatch(ICommand command)
+    parameters:
+    - id: command
+      type: LunaFlow.Engine.ICommand
+    content.vb: Sub Dispatch(command As ICommand)
+  overload: LunaFlow.Engine.ICommandDispatcher.Dispatch*
+- uid: LunaFlow.Engine.ICommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)
+  commentId: M:LunaFlow.Engine.ICommandDispatcher.RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)
+  id: RegisterHandler(System.String,LunaFlow.Engine.ICommandHandler)
+  parent: LunaFlow.Engine.ICommandDispatcher
+  langs:
+  - csharp
+  - vb
+  name: RegisterHandler(string, ICommandHandler)
+  nameWithType: ICommandDispatcher.RegisterHandler(string, ICommandHandler)
+  fullName: LunaFlow.Engine.ICommandDispatcher.RegisterHandler(string, LunaFlow.Engine.ICommandHandler)
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/ICommandDispatcher.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: RegisterHandler
+    path: ../src/LunaFlow.Engine/Commands/ICommandDispatcher.cs
+    startLine: 5
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  syntax:
+    content: void RegisterHandler(string commandName, ICommandHandler handler)
+    parameters:
+    - id: commandName
+      type: System.String
+    - id: handler
+      type: LunaFlow.Engine.ICommandHandler
+    content.vb: Sub RegisterHandler(commandName As String, handler As ICommandHandler)
+  overload: LunaFlow.Engine.ICommandDispatcher.RegisterHandler*
+  nameWithType.vb: ICommandDispatcher.RegisterHandler(String, ICommandHandler)
+  fullName.vb: LunaFlow.Engine.ICommandDispatcher.RegisterHandler(String, LunaFlow.Engine.ICommandHandler)
+  name.vb: RegisterHandler(String, ICommandHandler)
+references:
+- uid: LunaFlow.Engine
+  commentId: N:LunaFlow.Engine
+  href: LunaFlow.html
+  name: LunaFlow.Engine
+  nameWithType: LunaFlow.Engine
+  fullName: LunaFlow.Engine
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+- uid: LunaFlow.Engine.ICommandDispatcher.Dispatch*
+  commentId: Overload:LunaFlow.Engine.ICommandDispatcher.Dispatch
+  href: LunaFlow.Engine.ICommandDispatcher.html#LunaFlow_Engine_ICommandDispatcher_Dispatch_LunaFlow_Engine_ICommand_
+  name: Dispatch
+  nameWithType: ICommandDispatcher.Dispatch
+  fullName: LunaFlow.Engine.ICommandDispatcher.Dispatch
+- uid: LunaFlow.Engine.ICommand
+  commentId: T:LunaFlow.Engine.ICommand
+  parent: LunaFlow.Engine
+  href: LunaFlow.Engine.ICommand.html
+  name: ICommand
+  nameWithType: ICommand
+  fullName: LunaFlow.Engine.ICommand
+- uid: LunaFlow.Engine.ICommandDispatcher.RegisterHandler*
+  commentId: Overload:LunaFlow.Engine.ICommandDispatcher.RegisterHandler
+  href: LunaFlow.Engine.ICommandDispatcher.html#LunaFlow_Engine_ICommandDispatcher_RegisterHandler_System_String_LunaFlow_Engine_ICommandHandler_
+  name: RegisterHandler
+  nameWithType: ICommandDispatcher.RegisterHandler
+  fullName: LunaFlow.Engine.ICommandDispatcher.RegisterHandler
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: LunaFlow.Engine.ICommandHandler
+  commentId: T:LunaFlow.Engine.ICommandHandler
+  parent: LunaFlow.Engine
+  href: LunaFlow.Engine.ICommandHandler.html
+  name: ICommandHandler
+  nameWithType: ICommandHandler
+  fullName: LunaFlow.Engine.ICommandHandler
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System

@@ -1,0 +1,407 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Rules.ILunaFlowReference
+  commentId: T:LunaFlow.Rules.ILunaFlowReference
+  id: ILunaFlowReference
+  parent: LunaFlow.Rules
+  children:
+  - LunaFlow.Rules.ILunaFlowReference.ClassUID
+  - LunaFlow.Rules.ILunaFlowReference.FullPath
+  - LunaFlow.Rules.ILunaFlowReference.Identifier
+  - LunaFlow.Rules.ILunaFlowReference.Parent
+  - LunaFlow.Rules.ILunaFlowReference.Path
+  - LunaFlow.Rules.ILunaFlowReference.Subreferences
+  langs:
+  - csharp
+  - vb
+  name: ILunaFlowReference
+  nameWithType: ILunaFlowReference
+  fullName: LunaFlow.Rules.ILunaFlowReference
+  type: Interface
+  source:
+    remote:
+      path: src/LunaFlow.Rules/ILunaFlowReference.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: ILunaFlowReference
+    path: ../src/LunaFlow.Rules/ILunaFlowReference.cs
+    startLine: 6
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  summary: >-
+    Each Rule, Mechanic or Fact has a reference. (MyRuleBook.Chapter(A).Subsection(s)) or something similar. These are
+
+    for tracking throughout the system as well as
+  example: []
+  syntax:
+    content: public interface ILunaFlowReference
+    content.vb: Public Interface ILunaFlowReference
+- uid: LunaFlow.Rules.ILunaFlowReference.ClassUID
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.ClassUID
+  id: ClassUID
+  parent: LunaFlow.Rules.ILunaFlowReference
+  langs:
+  - csharp
+  - vb
+  name: ClassUID
+  nameWithType: ILunaFlowReference.ClassUID
+  fullName: LunaFlow.Rules.ILunaFlowReference.ClassUID
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Rules/ILunaFlowReference.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: ClassUID
+    path: ../src/LunaFlow.Rules/ILunaFlowReference.cs
+    startLine: 11
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  summary: unique class ID assigned at complie time
+  example: []
+  syntax:
+    content: string ClassUID { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property ClassUID As String
+  overload: LunaFlow.Rules.ILunaFlowReference.ClassUID*
+- uid: LunaFlow.Rules.ILunaFlowReference.Identifier
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.Identifier
+  id: Identifier
+  parent: LunaFlow.Rules.ILunaFlowReference
+  langs:
+  - csharp
+  - vb
+  name: Identifier
+  nameWithType: ILunaFlowReference.Identifier
+  fullName: LunaFlow.Rules.ILunaFlowReference.Identifier
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Rules/ILunaFlowReference.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Identifier
+    path: ../src/LunaFlow.Rules/ILunaFlowReference.cs
+    startLine: 15
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  summary: String identifier for this reference
+  example: []
+  syntax:
+    content: string Identifier { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property Identifier As String
+  overload: LunaFlow.Rules.ILunaFlowReference.Identifier*
+- uid: LunaFlow.Rules.ILunaFlowReference.FullPath
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.FullPath
+  id: FullPath
+  parent: LunaFlow.Rules.ILunaFlowReference
+  langs:
+  - csharp
+  - vb
+  name: FullPath
+  nameWithType: ILunaFlowReference.FullPath
+  fullName: LunaFlow.Rules.ILunaFlowReference.FullPath
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Rules/ILunaFlowReference.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: FullPath
+    path: ../src/LunaFlow.Rules/ILunaFlowReference.cs
+    startLine: 19
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  summary: String path including all reference (including top level data) information delimited by '.'
+  example: []
+  syntax:
+    content: string FullPath { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property FullPath As String
+  overload: LunaFlow.Rules.ILunaFlowReference.FullPath*
+- uid: LunaFlow.Rules.ILunaFlowReference.Path
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.Path
+  id: Path
+  parent: LunaFlow.Rules.ILunaFlowReference
+  langs:
+  - csharp
+  - vb
+  name: Path
+  nameWithType: ILunaFlowReference.Path
+  fullName: LunaFlow.Rules.ILunaFlowReference.Path
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Rules/ILunaFlowReference.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Path
+    path: ../src/LunaFlow.Rules/ILunaFlowReference.cs
+    startLine: 23
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  summary: String path including reference information from the Rulebook level down.
+  example: []
+  syntax:
+    content: string Path { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property Path As String
+  overload: LunaFlow.Rules.ILunaFlowReference.Path*
+- uid: LunaFlow.Rules.ILunaFlowReference.Parent
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.Parent
+  id: Parent
+  parent: LunaFlow.Rules.ILunaFlowReference
+  langs:
+  - csharp
+  - vb
+  name: Parent
+  nameWithType: ILunaFlowReference.Parent
+  fullName: LunaFlow.Rules.ILunaFlowReference.Parent
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Rules/ILunaFlowReference.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Parent
+    path: ../src/LunaFlow.Rules/ILunaFlowReference.cs
+    startLine: 27
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  summary: The reference to the parent container. Referencing the parent of the top container is an error.
+  example: []
+  syntax:
+    content: ILunaFlowReference Parent { get; }
+    parameters: []
+    return:
+      type: LunaFlow.Rules.ILunaFlowReference
+    content.vb: ReadOnly Property Parent As ILunaFlowReference
+  overload: LunaFlow.Rules.ILunaFlowReference.Parent*
+- uid: LunaFlow.Rules.ILunaFlowReference.Subreferences
+  commentId: P:LunaFlow.Rules.ILunaFlowReference.Subreferences
+  id: Subreferences
+  parent: LunaFlow.Rules.ILunaFlowReference
+  langs:
+  - csharp
+  - vb
+  name: Subreferences
+  nameWithType: ILunaFlowReference.Subreferences
+  fullName: LunaFlow.Rules.ILunaFlowReference.Subreferences
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Rules/ILunaFlowReference.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Subreferences
+    path: ../src/LunaFlow.Rules/ILunaFlowReference.cs
+    startLine: 31
+  assemblies:
+  - LunaFlow.Rules
+  namespace: LunaFlow.Rules
+  summary: A list of sub references (empty if none)
+  example: []
+  syntax:
+    content: IEnumerable<ILunaFlowReference> Subreferences { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IEnumerable{LunaFlow.Rules.ILunaFlowReference}
+    content.vb: ReadOnly Property Subreferences As IEnumerable(Of ILunaFlowReference)
+  overload: LunaFlow.Rules.ILunaFlowReference.Subreferences*
+references:
+- uid: LunaFlow.Rules
+  commentId: N:LunaFlow.Rules
+  href: LunaFlow.html
+  name: LunaFlow.Rules
+  nameWithType: LunaFlow.Rules
+  fullName: LunaFlow.Rules
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+- uid: LunaFlow.Rules.ILunaFlowReference.ClassUID*
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.ClassUID
+  href: LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_ClassUID
+  name: ClassUID
+  nameWithType: ILunaFlowReference.ClassUID
+  fullName: LunaFlow.Rules.ILunaFlowReference.ClassUID
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LunaFlow.Rules.ILunaFlowReference.Identifier*
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.Identifier
+  href: LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Identifier
+  name: Identifier
+  nameWithType: ILunaFlowReference.Identifier
+  fullName: LunaFlow.Rules.ILunaFlowReference.Identifier
+- uid: LunaFlow.Rules.ILunaFlowReference.FullPath*
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.FullPath
+  href: LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_FullPath
+  name: FullPath
+  nameWithType: ILunaFlowReference.FullPath
+  fullName: LunaFlow.Rules.ILunaFlowReference.FullPath
+- uid: LunaFlow.Rules.ILunaFlowReference.Path*
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.Path
+  href: LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Path
+  name: Path
+  nameWithType: ILunaFlowReference.Path
+  fullName: LunaFlow.Rules.ILunaFlowReference.Path
+- uid: LunaFlow.Rules.ILunaFlowReference.Parent*
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.Parent
+  href: LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Parent
+  name: Parent
+  nameWithType: ILunaFlowReference.Parent
+  fullName: LunaFlow.Rules.ILunaFlowReference.Parent
+- uid: LunaFlow.Rules.ILunaFlowReference
+  commentId: T:LunaFlow.Rules.ILunaFlowReference
+  parent: LunaFlow.Rules
+  href: LunaFlow.Rules.ILunaFlowReference.html
+  name: ILunaFlowReference
+  nameWithType: ILunaFlowReference
+  fullName: LunaFlow.Rules.ILunaFlowReference
+- uid: LunaFlow.Rules.ILunaFlowReference.Subreferences*
+  commentId: Overload:LunaFlow.Rules.ILunaFlowReference.Subreferences
+  href: LunaFlow.Rules.ILunaFlowReference.html#LunaFlow_Rules_ILunaFlowReference_Subreferences
+  name: Subreferences
+  nameWithType: ILunaFlowReference.Subreferences
+  fullName: LunaFlow.Rules.ILunaFlowReference.Subreferences
+- uid: System.Collections.Generic.IEnumerable{LunaFlow.Rules.ILunaFlowReference}
+  commentId: T:System.Collections.Generic.IEnumerable{LunaFlow.Rules.ILunaFlowReference}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<ILunaFlowReference>
+  nameWithType: IEnumerable<ILunaFlowReference>
+  fullName: System.Collections.Generic.IEnumerable<LunaFlow.Rules.ILunaFlowReference>
+  nameWithType.vb: IEnumerable(Of ILunaFlowReference)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of LunaFlow.Rules.ILunaFlowReference)
+  name.vb: IEnumerable(Of ILunaFlowReference)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: LunaFlow.Rules.ILunaFlowReference
+    name: ILunaFlowReference
+    href: LunaFlow.Rules.ILunaFlowReference.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: LunaFlow.Rules.ILunaFlowReference
+    name: ILunaFlowReference
+    href: LunaFlow.Rules.ILunaFlowReference.html
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic

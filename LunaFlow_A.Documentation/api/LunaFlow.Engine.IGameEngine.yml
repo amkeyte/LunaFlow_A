@@ -16,7 +16,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Engine/Interfaces/IGameEngine.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: IGameEngine
     path: ../src/LunaFlow.Engine/Interfaces/IGameEngine.cs
@@ -46,7 +46,7 @@ items:
   source:
     remote:
       path: src/LunaFlow.Engine/Interfaces/IGameEngine.cs
-      branch: docs
+      branch: dev-Engine
       repo: https://github.com/amkeyte/LunaFlow_A.git
     id: Initialize
     path: ../src/LunaFlow.Engine/Interfaces/IGameEngine.cs

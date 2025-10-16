@@ -4,7 +4,12 @@ items:
   commentId: N:LunaFlow.Rules
   id: LunaFlow.Rules
   children:
-  - LunaFlow.Rules.Class1
+  - LunaFlow.Rules.ARule
+  - LunaFlow.Rules.IGameSystem
+  - LunaFlow.Rules.IHasLunaFlowReference
+  - LunaFlow.Rules.ILunaFlowReference
+  - LunaFlow.Rules.IRuleBook
+  - LunaFlow.Rules.IRuleGroup
   - LunaFlow.Rules.GeneratorServices
   langs:
   - csharp
@@ -16,12 +21,66 @@ items:
   assemblies:
   - LunaFlow.Rules
 references:
-- uid: LunaFlow.Rules.Class1
-  commentId: T:LunaFlow.Rules.Class1
-  href: LunaFlow.Rules.Class1.html
-  name: Class1
-  nameWithType: Class1
-  fullName: LunaFlow.Rules.Class1
+- uid: LunaFlow.Rules.ARule
+  commentId: T:LunaFlow.Rules.ARule
+  href: LunaFlow.Rules.ARule.html
+  name: ARule
+  nameWithType: ARule
+  fullName: LunaFlow.Rules.ARule
+- uid: LunaFlow.Rules.IGameSystem
+  commentId: T:LunaFlow.Rules.IGameSystem
+  href: LunaFlow.Rules.IGameSystem.html
+  name: IGameSystem
+  nameWithType: IGameSystem
+  fullName: LunaFlow.Rules.IGameSystem
+- uid: LunaFlow.Rules.ILunaFlowReference
+  commentId: T:LunaFlow.Rules.ILunaFlowReference
+  parent: LunaFlow.Rules
+  href: LunaFlow.Rules.ILunaFlowReference.html
+  name: ILunaFlowReference
+  nameWithType: ILunaFlowReference
+  fullName: LunaFlow.Rules.ILunaFlowReference
+- uid: LunaFlow.Rules.IHasLunaFlowReference
+  commentId: T:LunaFlow.Rules.IHasLunaFlowReference
+  parent: LunaFlow.Rules
+  href: LunaFlow.Rules.IHasLunaFlowReference.html
+  name: IHasLunaFlowReference
+  nameWithType: IHasLunaFlowReference
+  fullName: LunaFlow.Rules.IHasLunaFlowReference
+- uid: LunaFlow.Rules.IRuleBook
+  commentId: T:LunaFlow.Rules.IRuleBook
+  href: LunaFlow.Rules.IRuleBook.html
+  name: IRuleBook
+  nameWithType: IRuleBook
+  fullName: LunaFlow.Rules.IRuleBook
+- uid: LunaFlow.Rules.IRuleGroup
+  commentId: T:LunaFlow.Rules.IRuleGroup
+  href: LunaFlow.Rules.IRuleGroup.html
+  name: IRuleGroup
+  nameWithType: IRuleGroup
+  fullName: LunaFlow.Rules.IRuleGroup
+- uid: LunaFlow.Rules
+  commentId: N:LunaFlow.Rules
+  href: LunaFlow.html
+  name: LunaFlow.Rules
+  nameWithType: LunaFlow.Rules
+  fullName: LunaFlow.Rules
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Rules
+    name: Rules
+    href: LunaFlow.Rules.html
 - uid: LunaFlow.Rules.GeneratorServices
   commentId: N:LunaFlow.Rules.GeneratorServices
   href: LunaFlow.Rules.GeneratorServices.html

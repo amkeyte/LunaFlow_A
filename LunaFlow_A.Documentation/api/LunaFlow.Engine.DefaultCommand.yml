@@ -1,0 +1,621 @@
+### YamlMime:ManagedReference
+items:
+- uid: LunaFlow.Engine.DefaultCommand
+  commentId: T:LunaFlow.Engine.DefaultCommand
+  id: DefaultCommand
+  parent: LunaFlow.Engine
+  children:
+  - LunaFlow.Engine.DefaultCommand.#ctor(System.Object)
+  - LunaFlow.Engine.DefaultCommand.Arguments
+  - LunaFlow.Engine.DefaultCommand.Name
+  - LunaFlow.Engine.DefaultCommand.ToString
+  langs:
+  - csharp
+  - vb
+  name: DefaultCommand
+  nameWithType: DefaultCommand
+  fullName: LunaFlow.Engine.DefaultCommand
+  type: Class
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/DefaultCommand.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: DefaultCommand
+    path: ../src/LunaFlow.Engine/Commands/DefaultCommand.cs
+    startLine: 6
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: >-
+    Represents a user-issued command within the LunaFlow system.
+
+    A command consists of a name and optional arguments that drive game behavior.
+  example: []
+  syntax:
+    content: 'public class DefaultCommand : ICommand'
+    content.vb: Public Class DefaultCommand Implements ICommand
+  inheritance:
+  - System.Object
+  implements:
+  - LunaFlow.Engine.ICommand
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: LunaFlow.Engine.DefaultCommand.Name
+  commentId: P:LunaFlow.Engine.DefaultCommand.Name
+  id: Name
+  parent: LunaFlow.Engine.DefaultCommand
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: DefaultCommand.Name
+  fullName: LunaFlow.Engine.DefaultCommand.Name
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/DefaultCommand.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Name
+    path: ../src/LunaFlow.Engine/Commands/DefaultCommand.cs
+    startLine: 11
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Gets the name of the command (e.g., "move", "look", "cast").
+  example: []
+  syntax:
+    content: public string Name { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property Name As String
+  overload: LunaFlow.Engine.DefaultCommand.Name*
+  implements:
+  - LunaFlow.Engine.ICommand.Name
+- uid: LunaFlow.Engine.DefaultCommand.Arguments
+  commentId: P:LunaFlow.Engine.DefaultCommand.Arguments
+  id: Arguments
+  parent: LunaFlow.Engine.DefaultCommand
+  langs:
+  - csharp
+  - vb
+  name: Arguments
+  nameWithType: DefaultCommand.Arguments
+  fullName: LunaFlow.Engine.DefaultCommand.Arguments
+  type: Property
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/DefaultCommand.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: Arguments
+    path: ../src/LunaFlow.Engine/Commands/DefaultCommand.cs
+    startLine: 16
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Gets the raw arguments supplied with the command, if any.
+  example: []
+  syntax:
+    content: public IEnumerable<string> Arguments { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IEnumerable{System.String}
+    content.vb: Public ReadOnly Property Arguments As IEnumerable(Of String)
+  overload: LunaFlow.Engine.DefaultCommand.Arguments*
+- uid: LunaFlow.Engine.DefaultCommand.#ctor(System.Object)
+  commentId: M:LunaFlow.Engine.DefaultCommand.#ctor(System.Object)
+  id: '#ctor(System.Object)'
+  parent: LunaFlow.Engine.DefaultCommand
+  langs:
+  - csharp
+  - vb
+  name: DefaultCommand(object)
+  nameWithType: DefaultCommand.DefaultCommand(object)
+  fullName: LunaFlow.Engine.DefaultCommand.DefaultCommand(object)
+  type: Constructor
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/DefaultCommand.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: .ctor
+    path: ../src/LunaFlow.Engine/Commands/DefaultCommand.cs
+    startLine: 25
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: >-
+    Initializes a new instance of the <xref href="LunaFlow.Engine.DefaultCommand" data-throw-if-not-resolved="false"></xref> class using raw input.
+
+    Parses the first token as the command name and the rest as arguments.
+  example: []
+  syntax:
+    content: public DefaultCommand(object input)
+    parameters:
+    - id: input
+      type: System.Object
+      description: The raw user input string.
+    content.vb: Public Sub New(input As Object)
+  overload: LunaFlow.Engine.DefaultCommand.#ctor*
+  nameWithType.vb: DefaultCommand.New(Object)
+  fullName.vb: LunaFlow.Engine.DefaultCommand.New(Object)
+  name.vb: New(Object)
+- uid: LunaFlow.Engine.DefaultCommand.ToString
+  commentId: M:LunaFlow.Engine.DefaultCommand.ToString
+  id: ToString
+  parent: LunaFlow.Engine.DefaultCommand
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: DefaultCommand.ToString()
+  fullName: LunaFlow.Engine.DefaultCommand.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/LunaFlow.Engine/Commands/DefaultCommand.cs
+      branch: dev-Engine
+      repo: https://github.com/amkeyte/LunaFlow_A.git
+    id: ToString
+    path: ../src/LunaFlow.Engine/Commands/DefaultCommand.cs
+    startLine: 38
+  assemblies:
+  - LunaFlow.Engine
+  namespace: LunaFlow.Engine
+  summary: Returns a string representation of the command and its arguments.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: A human-readable summary of the command.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.Object.ToString
+  overload: LunaFlow.Engine.DefaultCommand.ToString*
+  implements:
+  - LunaFlow.Engine.ICommand.ToString
+references:
+- uid: LunaFlow.Engine
+  commentId: N:LunaFlow.Engine
+  href: LunaFlow.html
+  name: LunaFlow.Engine
+  nameWithType: LunaFlow.Engine
+  fullName: LunaFlow.Engine
+  spec.csharp:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+  spec.vb:
+  - uid: LunaFlow
+    name: LunaFlow
+    href: LunaFlow.html
+  - name: .
+  - uid: LunaFlow.Engine
+    name: Engine
+    href: LunaFlow.Engine.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: LunaFlow.Engine.ICommand
+  commentId: T:LunaFlow.Engine.ICommand
+  parent: LunaFlow.Engine
+  href: LunaFlow.Engine.ICommand.html
+  name: ICommand
+  nameWithType: ICommand
+  fullName: LunaFlow.Engine.ICommand
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: LunaFlow.Engine.DefaultCommand.Name*
+  commentId: Overload:LunaFlow.Engine.DefaultCommand.Name
+  href: LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand_Name
+  name: Name
+  nameWithType: DefaultCommand.Name
+  fullName: LunaFlow.Engine.DefaultCommand.Name
+- uid: LunaFlow.Engine.ICommand.Name
+  commentId: P:LunaFlow.Engine.ICommand.Name
+  parent: LunaFlow.Engine.ICommand
+  href: LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_Name
+  name: Name
+  nameWithType: ICommand.Name
+  fullName: LunaFlow.Engine.ICommand.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: LunaFlow.Engine.DefaultCommand.Arguments*
+  commentId: Overload:LunaFlow.Engine.DefaultCommand.Arguments
+  href: LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand_Arguments
+  name: Arguments
+  nameWithType: DefaultCommand.Arguments
+  fullName: LunaFlow.Engine.DefaultCommand.Arguments
+- uid: System.Collections.Generic.IEnumerable{System.String}
+  commentId: T:System.Collections.Generic.IEnumerable{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<string>
+  nameWithType: IEnumerable<string>
+  fullName: System.Collections.Generic.IEnumerable<string>
+  nameWithType.vb: IEnumerable(Of String)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of String)
+  name.vb: IEnumerable(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: LunaFlow.Engine.DefaultCommand
+  commentId: T:LunaFlow.Engine.DefaultCommand
+  href: LunaFlow.Engine.DefaultCommand.html
+  name: DefaultCommand
+  nameWithType: DefaultCommand
+  fullName: LunaFlow.Engine.DefaultCommand
+- uid: LunaFlow.Engine.DefaultCommand.#ctor*
+  commentId: Overload:LunaFlow.Engine.DefaultCommand.#ctor
+  href: LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand__ctor_System_Object_
+  name: DefaultCommand
+  nameWithType: DefaultCommand.DefaultCommand
+  fullName: LunaFlow.Engine.DefaultCommand.DefaultCommand
+  nameWithType.vb: DefaultCommand.New
+  fullName.vb: LunaFlow.Engine.DefaultCommand.New
+  name.vb: New
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: LunaFlow.Engine.DefaultCommand.ToString*
+  commentId: Overload:LunaFlow.Engine.DefaultCommand.ToString
+  href: LunaFlow.Engine.DefaultCommand.html#LunaFlow_Engine_DefaultCommand_ToString
+  name: ToString
+  nameWithType: DefaultCommand.ToString
+  fullName: LunaFlow.Engine.DefaultCommand.ToString
+- uid: LunaFlow.Engine.ICommand.ToString
+  commentId: M:LunaFlow.Engine.ICommand.ToString
+  parent: LunaFlow.Engine.ICommand
+  href: LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_ToString
+  name: ToString()
+  nameWithType: ICommand.ToString()
+  fullName: LunaFlow.Engine.ICommand.ToString()
+  spec.csharp:
+  - uid: LunaFlow.Engine.ICommand.ToString
+    name: ToString
+    href: LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: LunaFlow.Engine.ICommand.ToString
+    name: ToString
+    href: LunaFlow.Engine.ICommand.html#LunaFlow_Engine_ICommand_ToString
+  - name: (
+  - name: )
