@@ -1,0 +1,1 @@
+We are using VS2022 for my side of this solution. importantly, I need to run git commands on my side to protect from lock issues.
