@@ -5,13 +5,12 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{396FB875-CAA5-4C54-B268-4AF6900C1120}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		assets\LunaFlow Logo.png = assets\LunaFlow Logo.png
 		version.json = version.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.Engine", "src\LunaFlow.Engine\LunaFlow.Engine.csproj", "{39AE83C7-469D-FA7B-F8A3-BFBE26AB09F8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow_A.Documentation", "LunaFlow_A.Documentation\LunaFlow_A.Documentation.csproj", "{9B7A5825-3FE6-413C-8812-FDB86C87B778}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.EngineTests", "tests\LunaFlow.EngineTests\LunaFlow.EngineTests.csproj", "{C8289A5F-DB98-CC4C-BCF6-74D8728978CA}"
 EndProject
@@ -27,10 +26,6 @@ Global
 		{39AE83C7-469D-FA7B-F8A3-BFBE26AB09F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39AE83C7-469D-FA7B-F8A3-BFBE26AB09F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39AE83C7-469D-FA7B-F8A3-BFBE26AB09F8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9B7A5825-3FE6-413C-8812-FDB86C87B778}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B7A5825-3FE6-413C-8812-FDB86C87B778}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9B7A5825-3FE6-413C-8812-FDB86C87B778}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9B7A5825-3FE6-413C-8812-FDB86C87B778}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C8289A5F-DB98-CC4C-BCF6-74D8728978CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C8289A5F-DB98-CC4C-BCF6-74D8728978CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8289A5F-DB98-CC4C-BCF6-74D8728978CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
