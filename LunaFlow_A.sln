@@ -17,6 +17,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.Rules", "src\LunaFlow.Rules\LunaFlow.Rules.csproj", "{142C3E7B-3E2C-4F29-47C9-B10EF9B40581}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLunaFlowServer", "src\MyLunaFlowServer\MyLunaFlowServer.csproj", "{255C9EFB-609A-7961-3A4D-41D67EE7980C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{142C3E7B-3E2C-4F29-47C9-B10EF9B40581} = {142C3E7B-3E2C-4F29-47C9-B10EF9B40581}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

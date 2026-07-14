@@ -1,6 +1,7 @@
 ﻿namespace LunaFlow.Engine.Commands
 {
-    public class ICommandParser
+    public interface ICommandParser
     {
+        public ICommand Parse(object input);
     }
 }
