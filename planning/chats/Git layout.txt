@@ -1,0 +1,29 @@
+﻿/YourRepoRoot
+│
+├── Src/
+│   ├── RPG.Core/               # Game state, actors, actions, turn logic
+│   ├── RPG.Engine/             # Game processing, main loop, rule/apply logic
+│   ├── RPG.Rules/              # NRules setup, rule loading, triggers
+│   ├── RPG.Scripting/          # MoonSharp integration and script host
+│   ├── RPG.Interface/          # Shared messaging contracts (DTOs)
+│   ├── RPG.Interface.Web/      # ASP.NET Core WebSocket server
+│   ├── RPG.Interface.CLI/      # Console host, wscat/dev tools
+│   ├── RPG.AI/                 # AI prompt manager, context handlers
+│   └── RPG.Infrastructure/     # Logging, config, file I/O helpers
+│
+├── Test/
+│   └── RPG.Tests/              # Unit + integration tests
+│
+├── Scripts/                   # Lua scripts for core events and behaviors
+│   └── core/
+│
+├── Data/                      # JSON files: characters, scenes, state
+│
+├── Doc/                       # DocFX project + API references
+│   ├── docfx.json
+│   ├── articles/
+│   └── api/
+│
+├── README.md
+├── .gitignore
+└── YourSolution.sln

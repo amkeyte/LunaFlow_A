@@ -1,0 +1,105 @@
+﻿Absolutely — this is evolving into a robust **layered RPG engine framework** that invites contribution while enforcing good separation of concerns. Below is the **updated table**, now reflecting your clarified hierarchy, the Rule Object Model (ROM), and scoped extensibility:
+
+---
+
+## 🧱 Expanded Audience/Role Breakdown with Rule Engine Access & Format
+
+| Role                 | Responsibilities                                                                                     | Access Scope                                                                                  | Rule Format / Tooling                                                |
+| -------------------- | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **Player**           | Experience the game. Optionally create cosmetic rules or minor self-expressions.                     | **PlayerRule** (subset of `BalancedRule`), safe sandboxed runtime API                         | In-game GUI, constrained scripting (e.g., `"onPet()" => purr`)       |
+| **Storyteller (GM)** | Modify the world state live. Add narrative-driven exceptions. Build or trigger events.               | `GMSceneScripts`, full read access to assets + local override access                          | Pre-game YAML + live scripting (e.g., Lua or in-engine editor)       |
+| **World-Builder**    | Create zones, enemies, dungeons, maps, factions, custom items.                                       | Define data via JSON/YAML + partial scripted extensions. Cannot change engine-level logic.    | `*.rules.json`, Lua-like scripts, or DSL-backed modules              |
+| **Rulebook Author**  | Build the core game system (classes, spells, combat, inventory, AI). Extend Rule Object Model (ROM). | Full write access to engine-level `RuleObjectModel` (Player, Item, Monster, CombatPhase, etc) | **C# + Templates + Factory APIs**, statically compiled for stability |
+| **Developer** (you)  | Maintain engine core (loop, session mgmt, performance, RuleStore, validation, debugging).            | The Library Layer (engine internals, versioning, system hooks)                                | C#, diagnostic layers, unit test scaffolds, serialization handlers   |
+
+---
+
+## 📐 Architecture Layering
+
+```
+╔════════════════════════════════════════════╗
+║                Core Library               ║ ← Core: Rule Engine, Loop, Fact Store, Runtime, ROM Base, IO , AI 
+╚════════════════════════════════════════════╝
+         ↑
+╔════════════════════════════════════════════╗
+║     Rule Object Model (ROM)               ║ ← Provided/Extended by Rulebook Authors (C#)
+║     - Player                              ║
+║     - WorldMap                            ║
+║     - CombatPhase                         ║
+╚════════════════════════════════════════════╝
+         ↑
+╔════════════════════════════════════════════╗
+║     World Modules                         ║ ← JSON/YAML + Lua + Event Scripts
+║     - Regions, Monsters, Factions         ║
+║     - Encounter definitions               ║
+╚════════════════════════════════════════════╝
+         ↑               ↑
+         |       ╔════════════════════════════════════════════╗
+         |       ║     GM Overlays + Live Rules              ║ ← Runtime editor: plot events, cutscene triggers, etc.
+         |       ╚════════════════════════════════════════════╝          
+         |
+╔════════════════════════════════════════════╗
+║     Player-Contributed Rules              ║ ← Cosmetic + sandboxed behavior (pets, gestures, etc.)
+╚════════════════════════════════════════════╝
+```
+
+---
+
+## 🧩 Rule Class Hierarchy (Example)
+
+```csharp
+public abstract class RuleBase { /* core runtime logic */ }
+
+public abstract class BalancedRule : RuleBase
+{
+    public abstract bool IsFair();
+    public abstract string[] ApplicableScopes { get; }
+}
+
+public class PlayerRule : BalancedRule
+{
+    public string CreatorId { get; set; }
+    public bool IsCosmeticOnly { get; set; }
+
+    public override bool IsFair() => IsCosmeticOnly || /* runtime limits */;
+    public override string[] ApplicableScopes => new[] { "self", "pet", "emote" };
+}
+```
+
+---
+
+## 🎯 Example Responsibilities by Role
+
+### 🔹 Player
+
+* Adds cosmetic rules (e.g., `"when I enter town, a trumpet plays"`).
+* Limited crafting or emote extensions (`PlayerRule`).
+* Cannot access combat, world structure, or balance-relevant facts.
+* Makes game requests and sends inputs: roll dice, get description, give character instructions
+
+### 🔹 GM
+
+* Toggles `"Goblin 3 is unkillable"` before or during a session.
+* Launches cutscene script `start_throne_room_scene.lua`.
+* Live-edit variables: `SetWeather("rain");` or `SetSpawn("none")`.
+* AI assistance
+
+### 🔹 World-Builder
+
+* Adds `"GoldenDragon"` to `MonsterRegistry`.
+* Defines `"SkyPillar"` region with environmental hazards and lore triggers.
+* Uses script: `OnEnter(SkyPillar) => Play("cutscene_intro.sky_pillar")`.
+
+### 🔹 Rulebook Author
+
+* Expands `Player` with `Spellbook`, `Stamina`, and `Faction` traits.
+* Implements `CombatPhaseManager`, `InventorySystem`, and `BalancedRule` constraints.
+* Instantiates `Monster.Dragon` as a class backing mod-defined `GoldenDragon`.
+
+### 🔹 Developer
+
+* Provides core infrastructure: `RuleSession`, `ScriptRunner`, `LogView`, etc.
+* Maintains `IRuleSource`, `IRuleValidator`, and hot-reload mechanisms.
+* Enables extensibility via metadata (e.g., `IRuleDescriptor`, `IRuleTypeConstraint`)
+
+---
