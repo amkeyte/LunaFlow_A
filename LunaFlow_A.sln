@@ -5,7 +5,7 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{396FB875-CAA5-4C54-B268-4AF6900C1120}"
 	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
+		CLAUDE.md = CLAUDE.md
 		assets\LunaFlow Logo.png = assets\LunaFlow Logo.png
 		version.json = version.json
 	EndProjectSection
@@ -17,9 +17,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.Rules", "src\LunaFlow.Rules\LunaFlow.Rules.csproj", "{142C3E7B-3E2C-4F29-47C9-B10EF9B40581}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLunaFlowServer", "src\MyLunaFlowServer\MyLunaFlowServer.csproj", "{255C9EFB-609A-7961-3A4D-41D67EE7980C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{142C3E7B-3E2C-4F29-47C9-B10EF9B40581} = {142C3E7B-3E2C-4F29-47C9-B10EF9B40581}
-	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents", "Documents\Documents.csproj", "{68D50D6A-09B0-4C85-96DB-50D39BE23871}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +42,10 @@ Global
 		{255C9EFB-609A-7961-3A4D-41D67EE7980C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{255C9EFB-609A-7961-3A4D-41D67EE7980C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{255C9EFB-609A-7961-3A4D-41D67EE7980C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68D50D6A-09B0-4C85-96DB-50D39BE23871}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68D50D6A-09B0-4C85-96DB-50D39BE23871}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68D50D6A-09B0-4C85-96DB-50D39BE23871}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68D50D6A-09B0-4C85-96DB-50D39BE23871}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
