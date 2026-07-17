@@ -4,6 +4,9 @@
 [`../design/nine-rooms.md`](../design/nine-rooms.md) (the concept doc) and
 [`../design/roadmap.md`](../design/roadmap.md) (Phase 1.5). Where this spec makes a call the
 concept doc left open, that's noted explicitly under [Decisions](#decisions-carried-over-from-nine-roomsmd).
+Its own "Engine wiring" section, item 1 below, is itself superseded by
+[`engine-host-spec.md`](engine-host-spec.md) — updated inline to reference `IEngineHost` rather
+than re-deriving the surface.
 
 ## Purpose
 
@@ -113,8 +116,10 @@ win lines are reachable (an earlier draft of this spec left room 5 challenge-les
 the 4 lines through the center — `[4,5,6]`, `[2,5,8]`, `[1,5,9]`, `[3,5,7]` — mathematically
 unwinnable; that's fixed now). One consequence: the challenge-prompt rule for room 5 is already
 satisfied the instant `PlayerPosition(5)` is seeded at startup, *before* any command runs — this
-is a general engine-startup concern, not specific to Nine Rooms, so it's tracked separately in
-[`../passdown.md`](../passdown.md) rather than as content-specific wiring here.
+is a general engine-startup concern, not specific to Nine Rooms, so it's tracked separately as the
+"initial settle" guarantee in
+[`../design/engine-core.md`](../design/engine-core.md#turn-loop-and-engine-guarantees) rather than
+as content-specific wiring here.
 
 **Boundary note:** the underlying risk here — a win/completion condition defined over a set of
 cells silently going dead if one of those cells has no way to become "solved" — is a real
@@ -188,7 +193,7 @@ public sealed class Room1ChallengeRule : ARule
             .Not<RoomSolved>(rs => rs.RoomId == 1)
             .Not<WinMarker>();
         Then()
-            .Do(ctx => Announce(room.ChallengePrompt!));
+            .Do(ctx => Engine.Host.Announce(room.ChallengePrompt!));
     }
 }
 ```
@@ -218,7 +223,7 @@ public sealed class WinLine123Rule : ARule
 **Game-end announcement** — one rule, fires once when `WinMarker` first appears, prints the
 win message (which line, per the decision below).
 
-`Announce(...)` above is new surface, not existing code — see next section.
+`Engine.Host.Announce(...)` above is new surface, not existing code — see next section.
 
 ## Engine wiring (new boundary)
 
@@ -227,25 +232,39 @@ lets a rule's `Then().Do(...)` produce player-visible output. Additions needed �
 as the contract, left unimplemented per your steer that we're defining boundaries, not building
 the internals yet:
 
-1. **`GameEngineCore` gains a `RuleEngine Rules` property**, populated at `Start()` from
-   `GameEngineOptions.Rules` — see [`GameEngineOptions` design](#gameengineoptions-design-mockup)
-   below for the shape.
+1. **Fact operations and player-visible output go through `IEngineHost`, not `GameEngineCore`
+   directly.** `GameEngineCore` is `internal sealed` — widening individual members to `public`
+   (the original plan here) doesn't help, because an internal *class* can't be named from
+   `LunaFlow.Rom`, a separate assembly with no `InternalsVisibleTo`, regardless of member
+   accessibility. [`engine-host-spec.md`](engine-host-spec.md) resolves this with a narrow public
+   interface reached through a static gateway:
 
-2. **`RuleEngine` gains a `Query<T>()` passthrough** (`_session.Query<T>()`), so handlers like
-   `LookCommandHandler`/`AnswerCommandHandler` can read the current `PlayerPosition`/`Room`
-   facts instead of only blind-inserting. Today `RuleEngine` only exposes
-   `Insert`/`Update`/`Retract`/`Fire` — none of them let a caller read current state back out.
+   ```csharp
+   public interface IEngineHost
+   {
+       RuleEngine Rules { get; }
+       void Announce(string message);
+   }
 
-3. **An `Announce(string)` path from inside a rule's `Then()` back out to the player.**
-   `GameEngineCore` already has exactly this channel for engine status text
-   (`private void Post(string)` → `MessagePosted` event → `ConsoleEngine`'s
-   `MessagePostedHandler` → `Console.WriteLine`). Decision: reuse it rather than build a second
-   one. Now that content lives in `LunaFlow.Rom` — a separate assembly from `LunaFlow.Engine` —
-   `internal` isn't reachable (no `InternalsVisibleTo` today), so `Post` needs to widen all the
-   way to `public`: `GameEngineCore.Instance.Post(...)` called from a rule's
-   `Then().Do(ctx => ...)` lambda.
+   public static class Engine
+   {
+       public static IEngineHost Host => GameEngineCore.Instance;
+   }
+   ```
 
-4. **`Fire()` runs after every dispatched command**, unconditionally, inside
+   `Engine.Host.Rules` gives handlers (`LookCommandHandler`/`AnswerCommandHandler`) the
+   `Query<T>()`/`Insert`/`Update`/`Retract`/`Fire` surface they need to read and write
+   `PlayerPosition`/`Room`/`RoomSolved` facts — `Query<T>()` itself is a new passthrough on
+   `RuleEngine` (`_session.Query<T>()`), since today it only exposes
+   `Insert`/`Update`/`Retract`/`Fire`. `Engine.Host.Announce(...)` is what a rule's
+   `Then().Do(ctx => ...)` calls to produce player-visible output — the content-facing name for
+   `GameEngineCore`'s existing internal `Post(string)` → `MessagePosted` → `ConsoleEngine`
+   channel, reused rather than duplicated. `GameEngineCore` implements `IEngineHost` explicitly
+   and stays `internal sealed`; content code never references it by name. See
+   `engine-host-spec.md` for the full reasoning, including why `FinishTurn`/`Stop`/`RequestStop`
+   are deliberately excluded from this surface.
+
+2. **`Fire()` runs after every dispatched command**, unconditionally, inside
    `DispatchGameCommand.Execute` right after `_dispatcher.Dispatch(_command)`. This is
    deliberately not wired through `FinishTurn()`/`TurnTick` — that gate is aimed at
    multi-client turn pacing (`engine-core.md`), which is explicitly out of scope
@@ -255,13 +274,16 @@ the internals yet:
    no-op).
 
    `Start()` also needs to fire once after initial seeding, before any command exists — but
-   that's a generic engine-core guarantee, not something Nine Rooms wires up itself. Tracked in
-   [`../passdown.md`](../passdown.md) as its own engine-level finding ("initial settle").
+   that's a generic engine-core guarantee, not something Nine Rooms wires up itself. Documented as
+   the "initial settle" guarantee in
+   [`../design/engine-core.md`](../design/engine-core.md#turn-loop-and-engine-guarantees).
 
-5. **Project references:** `LunaFlow.Rom` needs a reference to `LunaFlow.Rules` (for `ARule`).
-   `MyLunaFlowServer` currently references only `LunaFlow.Engine` (`CLAUDE.md`) and needs a new
-   reference to `LunaFlow.Rom` so `Program.cs` can point `GameEngineOptions.Rules` at its
-   assembly.
+3. **Project references:** `LunaFlow.Rom` needs references to both `LunaFlow.Rules` (for
+   `ARule`) and `LunaFlow.Engine` (for `IEngineHost`/`Engine.Host` — this second reference was
+   missing from an earlier draft of this item; `engine-host-spec.md` catches it, since Nine
+   Rooms' rules and handlers call `Engine.Host` members directly). `MyLunaFlowServer` currently
+   references only `LunaFlow.Engine` (`CLAUDE.md`) and needs a new reference to `LunaFlow.Rom` so
+   `Program.cs` can point `GameEngineOptions.Rules` at its assembly.
 
 **Where the content lives:** `src/LunaFlow.Rom/NineRooms/` (room table, fact records, rule
 classes, handler classes), per your new `LunaFlow.Rom` project. Namespace: flat
