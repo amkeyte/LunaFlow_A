@@ -8,12 +8,12 @@ Per the role breakdown in [`architecture.md`](architecture.md), the engine core 
 
 ## Current state vs. target
 
-The code today has **two independent, non-interoperating engine hosts**, which is the most important thing to resolve before building anything new on top of this layer:
+**Resolved:** the code used to have two independent, non-interoperating engine hosts (`EngineHost`+`GameEngine` vs. `ConsoleEngine`+`GameEngineCore`). `EngineHost` and `GameEngine` are deleted from the codebase; `ConsoleEngine` + `GameEngineCore` is the single host, wired up in `MyLunaFlowServer/Program.cs`, matching the target described below.
 
-- `EngineHost` + `GameEngine` — a synchronous `while (true)` loop over `ReadInput` → `Parser.Parse` → `Dispatcher.Dispatch`. `GameEngine` is marked `[Obsolete]`. This is what `MyLunaFlowServer/Program.cs` calls today, but neither `ReadInput` nor `GameEngine.Initialize`/`Execute` are implemented, so it doesn't run.
-- `ConsoleEngine` + `GameEngineCore` — a background-thread loop (`GameEngineCore.RunLoop`) driven by a command queue (`BlockingCollection<IGameCommand>`) and a manual turn gate (`FinishTurn()` / `TurnTick` event), with `GameEngineCore` as an internal singleton (`GameEngineCore.Instance`). This is closer to the target shape described below but is also incomplete (`ConsoleEngine.ReadInput` throws, its loop body is commented out).
+- `GameEngineCore` (in `Game/GameEngineCore.cs`) is an internal singleton (`GameEngineCore.Instance`) running a background-thread loop (`GameEngineCore.RunLoop`) driven by a command queue (`BlockingCollection<IGameCommand>`) and a manual turn gate (`FinishTurn()` / `TurnTick` event) — an explicit command queue plus an explicit turn-advance signal, rather than a tight synchronous loop, so it can serve more than one interface (CLI today, WebSocket later, per [`interfaces.md`](interfaces.md)) without those interfaces blocking each other on `Console.ReadLine()`-style calls.
+- `ConsoleEngine.Run()` is a working CLI translator: it reads input, parses it (`DefaultCommandParser.Parse` is implemented), and submits a `DispatchGameCommand` to `GameEngineCore`, blocking until that command completes before reading the next line.
 
-The target is a single host built around the `GameEngineCore` model — an explicit command queue plus an explicit turn-advance signal, rather than a tight synchronous loop — because it needs to serve more than one interface (CLI today, WebSocket later, per [`interfaces.md`](interfaces.md)) without those interfaces blocking each other on `Console.ReadLine()`-style calls. Consolidating onto that model, deleting `EngineHost`/`GameEngine`, and wiring `MyLunaFlowServer` to `ConsoleEngine` is the next concrete step here, not a rewrite.
+What's still open is the layer above this host, not the host itself: `nine-rooms-spec.md`'s "Engine wiring" section (a `GameEngineCore.Rules` property, `RuleEngine.Query<T>()`, a public `Post`, unconditional `Fire()` after each dispatched command) is declared as a target contract but not yet implemented — that's Phase 1.5 scope, tracked in [`roadmap.md`](roadmap.md).
 
 ## Translators
 
@@ -37,9 +37,81 @@ Once rule evaluation is wired into the turn advance, the engine is expected to p
 
 - **Settling markers** — once a marker fact like an end-of-game condition is present, further rule evaluation for that session stops. Rule authors shouldn't have to add `.Not<ExitGameMarker>()` to every rule by hand; see [`rule-pipeline.md`](rule-pipeline.md) for how the generator is expected to inject this automatically.
 - **One-time constraints** — a rule that should fire at most once per fact lifetime.
+- **Initial settle** — `GameEngineCore.Start()` seeds initial facts before any command is ever dispatched (per [`../Specs/nine-rooms-spec.md`](../Specs/nine-rooms-spec.md)'s `RuleEngineOptions.Seed`). If a rule's condition is already satisfied by those seed facts — Nine Rooms' start-room challenge is the concrete case — it needs a chance to fire before turn one, not just on the first command. This is a generic `Start()` guarantee (`Rules.Fire()` once, unconditionally, right after seeding completes), not something each ROM or Rulebook should have to remember to trigger itself.
 - **Evaluation phasing** — grouping rules into phases (e.g. via NRules agenda groups) so that, for example, all "reaction" rules resolve before the next command is accepted.
 
-None of this is implemented yet; `RuleEngine` (the direct NRules wrapper in `LunaFlow.Engine`) exposes raw `Insert`/`Update`/`Retract`/`Fire`, with no phasing or marker-injection on top. That's the gap between it and what `GeneratorServices` is meant to produce.
+None of this is implemented yet, but the shape of the first piece of it is no longer hypothetical: `nine-rooms-spec.md` specifies concrete additions — a `GameEngineCore.Rules` property populated from `GameEngineOptions.Rules` (a `RuleEngineOptions` with `FromAssembly`/`FromTypes`/`Seed`), a `RuleEngine.Query<T>()` passthrough so command handlers can read facts back out, and widening `GameEngineCore.Post` to `public` so a rule's `Then()` can announce output through the same channel translators already use. Those are declared as the target contract there, not yet built. Beyond that first slice, `RuleEngine` still exposes only raw `Insert`/`Update`/`Retract`/`Fire`, with no phasing or marker-injection on top — that's the gap between it and what `GeneratorServices` is meant to produce.
+
+## Component model: ROM, Rulebook, and the event bus
+
+**Status: general/future design, not what Nine Rooms uses.** [`nine-rooms-spec.md`](../Specs/nine-rooms-spec.md) deliberately loads its one rule assembly through `RuleEngineOptions.FromAssembly(...)` called directly in `Program.cs` — hardcoded, no registry, no abstraction — and [`nine-rooms.md`](nine-rooms.md) explicitly declines to extract a shared ROM contract on the strength of a single example. Everything below is where the ROM/Rulebook story grows *to*, once there's a second real ROM and dependency/ordering concerns between components stop being hypothetical. Building it now, against zero real consumers, would repeat the mistake already flagged in [`rule-pipeline.md`](rule-pipeline.md) about `GeneratorServices`.
+
+### Two interfaces, not one
+
+ROM and Rulebook (and eventually World Modules, GM Overlays, and network-facing Translators) all want to react to the same kinds of engine events, which makes a single shared "component" interface tempting. Worth resisting: a `Translator` and a ROM aren't peers. A `Translator` bridges an external, eventually-untrusted transport; a ROM is trusted, in-process code with real dependency relationships to other ROMs and to whatever Rulebook consumes it. One contract serving both would either carry fields the `Translator` doesn't need (`Tier`, `DependsOn`) or water down the ROM contract to fit a transport bridge.
+
+So, two contracts, one nested in the other:
+
+- **`IEngineEventSubscriber`** — small, widely implementable: "here are the events I care about" (`OnStartup`, `OnTurnAdvance`, `OnResultFeedback`). Anything that wants to observe the engine without being a governed game-logic component implements just this — a `Translator` relaying events to a socket, or eventually the AI GM assistant's narration layer (see [`ai-gm-assistant.md`](ai-gm-assistant.md)) listening for `OnResultFeedback` to narrate what just happened.
+- **`AEngineComponent : IHasLunaFlowReference, IEngineEventSubscriber`** — the fuller contract for governed game-logic components: adds a `Tier` and a `DependsOn` list. Only `ARom`, and eventually a Rulebook-level equivalent, derive from this. This is what a future registry would dependency-check and tier-order; a `Translator` never goes through it.
+
+```csharp
+public interface IEngineEventSubscriber
+{
+    void OnStartup(IEngineContext context) { }
+    void OnTurnAdvance(IEngineContext context) { }
+    void OnResultFeedback(IEngineContext context, ResultFeedback feedback) { }
+}
+
+public enum EngineTier
+{
+    Rom,
+    Rulebook,
+    WorldModule,
+    GmOverlay,
+    Player,
+}
+
+public abstract class AEngineComponent : IHasLunaFlowReference, IEngineEventSubscriber
+{
+    public abstract ILunaFlowReference Reference { get; }
+    public abstract EngineTier Tier { get; }
+    public virtual IEnumerable<Type> DependsOn => Array.Empty<Type>();
+
+    public virtual void OnStartup(IEngineContext context) { }
+    public virtual void OnTurnAdvance(IEngineContext context) { }
+    public virtual void OnResultFeedback(IEngineContext context, ResultFeedback feedback) { }
+}
+
+public abstract class ARom : AEngineComponent
+{
+    public override EngineTier Tier => EngineTier.Rom;
+}
+```
+
+`EngineTier` is deliberately sized for the full stack in [`architecture.md`](architecture.md#system-setting-and-session) (Core / ROM / Rulebook / World Module / GM Overlay / Player), not just Rom and Rulebook, even though only ROM exists as code today. That's what makes the tag useful for more than labeling: a future registry can reject a component whose `DependsOn` points at a *higher* tier than itself (a Rulebook may depend on a ROM; a ROM depending on a Rulebook is a registration error, not a warning), and event delivery for a given turn can process lower tiers before higher ones, so a Rulebook's rules never observe a half-updated ROM mid-`OnTurnAdvance`.
+
+One decision worth recording now even though neither side is built yet: `OnResultFeedback`'s structured payload is meant to eventually *supersede* Nine Rooms' plain-string `Post`/`Announce` channel, not run alongside it indefinitely. A rule announcing outcomes as raw text and a rule producing structured feedback (what fact, what rule, why) are the same underlying need with two different shapes — likely to end up as legacy-vs-current rather than two permanent parallel channels. When that reconciliation happens, favor the structured version.
+
+### Turn-ending: ordering, not arbitration
+
+A second ROM raises an obvious-sounding question — who gets to decide a turn is over? — that turns out to be the wrong question. `FinishTurn()` stays single-authority: one caller (the Rulebook or command layer, never a ROM) signals the action phase is done, exactly as it works today. Ending a turn was never a ROM-level concern — a ROM has no more say in when a turn ends than `Dice` has a say in when it gets rolled. No component votes on this, now or later.
+
+What a second component *does* make real is delivery order for `OnTurnAdvance`, and today's mechanism isn't ready for that: `TurnTick` is a plain C# `event EventHandler`, and multicast delegates invoke subscribers in subscription order — whatever order things happened to register in, not tier order. With one subscriber that's invisible. With two, it's a latent bug: if a Rulebook-tier handler happens to subscribe before a ROM-tier one, it observes last turn's ROM state instead of this turn's. Once `AEngineComponent` exists, `OnTurnAdvance` dispatch has to become a tier-and-dependency-ordered pass — `EngineTier` order first (ROM before Rulebook before World Module before GM Overlay before Player), then a topological sort on `DependsOn` within a tier (a Combat ROM depending on a Physics ROM runs after it) — rather than a bare multicast invocation. "The turn is over" just means that ordered pass completed; there's no vote because no component is competing for authority, each one gets a guaranteed slot.
+
+No quorum or "report in when you're done" protocol is needed for this, and it's worth being explicit about why: that pattern belongs to async/distributed coordination, where a participant might genuinely still be mid-work when you ask if it's finished. Nothing here works that way yet. `RuleEngine.Fire()` is synchronous — it runs the full NRules cascade to a fixed point before returning, so by the time a command handler's `Fire()` call returns, everything fact-driven that was going to happen already has. Even a multi-turn fuse timer (the arrow-in-the-keg scenario from earlier design discussion) doesn't need a "not done yet" signal — it's a fact with a turn-count, decremented once per `OnTurnAdvance`, not a background process. The one place genuine async, wait-for-completion semantics are likely to become necessary is the AI GM assistant (`ai-gm-assistant.md`) — a local LLM call takes real wall-clock time, and "has the assistant resolved Pass 1's fact requests yet" is a legitimate not-done-yet question in a way nothing else in this design currently is. That's the actual trigger for building real completion-gating later, not a second ROM.
+
+### ROM as the conduit to NRules
+
+A ROM's pure calculations (`Dice.Roll()`, a Physics ROM's intersection test) stay ordinary method calls — a Rulebook Author references the ROM assembly and calls them directly, same as any library. What should go through the ROM rather than being called directly is anything touching the live NRules session: inserting, updating, or retracting a fact. A Rulebook shouldn't call `RuleEngine`/NRules directly — it goes through the ROM's API for whatever fact types that ROM owns, and the ROM is what actually calls `RuleEngine.Insert`/`Update`/`Retract` underneath. That keeps NRules an implementation detail of the ROM layer, consistent with `non-goals.md`'s decision not to abstract over multiple rule engines — NRules stays a committed dependency, just not one a Rulebook Author touches directly — and gives the ROM one place to eventually stamp fact provenance for the "why did this happen" tracing flagged as an open question in `rule-pipeline.md`.
+
+Today, none of this indirection exists: Nine Rooms' hand-written `ARule`s call NRules facts directly (`Match<PlayerPosition>`, `ctx.Insert(new WinMarker(...))`), because there's no ROM-owned fact API to go through yet, and building one for a single disposable test rulebook isn't worth it. This section describes where that indirection goes once there's ROM content worth mediating.
+
+### Registration: hardcoded now, config-driven later
+
+Today, and for the near future, ROM (and rule) loading is exactly what `RuleEngineOptions.FromAssembly(...)` already is: one explicit call per assembly, written directly by whoever's configuring the engine (`Program.cs`, for Nine Rooms). No reflection-based discovery, no registry, no config file — deliberately, since there's no second real consumer yet to design a loader against, and a hardcoded call is trivially easy to change by hand while that's true.
+
+The point at which this should change is when Rulebook work starts in earnest (Roadmap Phase 2+): a Rulebook is meant to be swappable — "play D&D or Monopoly with the same engine" — which argues for loading it from a config-defined package manifest (which ROM assemblies a shipped game needs, which Rulebook assembly to load) rather than a hardcoded reference in `Program.cs`. ROM registration can likely move onto the same manifest at that point too, once there's an actual reason to — a second Rulebook needing a different ROM combination is the concrete trigger, not a date. Building the config/package system before then would be solving "how do we ship different combinations to different end users" before that problem exists. See `non-goals.md` for this as an explicit, named deferral.
 
 ## `GameState`, `GameWorld`, `Session`
 

@@ -9,16 +9,27 @@ This orders the design docs into a build sequence. It's dependency order, not a 
 - `LunaFlow.Rules.GeneratorServices` exists as interfaces/DTOs only — no implementation.
 - Design formalized into `docs/design/`.
 
-## Phase 1 — Engine core consolidation
+## Phase 1 — Engine core consolidation (done)
 
-Blocking everything else: right now there are two non-functional engine hosts, and nothing runs end to end. See [`engine-core.md`](engine-core.md) for the detail.
+See [`engine-core.md`](engine-core.md) for detail. `EngineHost` and the obsolete `GameEngine` are deleted; `ConsoleEngine` + `GameEngineCore` (the queue/turn-gate model) is the sole host, wired up in `MyLunaFlowServer/Program.cs`.
 
-- Pick one host. The recommendation in `engine-core.md` is `ConsoleEngine` + `GameEngineCore` (the queue/turn-gate model) over `EngineHost` + the obsolete `GameEngine`.
-- Delete the losing path rather than leaving it to rot alongside the winner.
-- Implement `DefaultCommandParser.Parse` and whichever `ReadInput` the surviving host needs, so a CLI session can accept a command and get a response.
-- Give `GameState`, `GameWorld`, and `Session` minimal real shape — just enough to hold "what turn is it" and "who's connected," not a full data model yet.
+- `DefaultCommandParser.Parse` and `ConsoleEngine`'s `ReadInput` (`Console.ReadLine()`) are implemented, so a CLI session accepts a command and gets a response.
+- `GameState`, `GameWorld`, and `Session` have minimal real shape — turn number, a session list, and per-connection id/translator/connect-time — just enough to hold "what turn is it" and "who's connected," not a full data model yet.
 
-**Done when:** running `MyLunaFlowServer` accepts a typed command and dispatches it to a handler, with no `NotImplementedException` in the path.
+**Done when:** running `MyLunaFlowServer` accepts a typed command and dispatches it to a handler, with no `NotImplementedException` in the path. — met; verified against code (no `EngineHost`/`GameEngine` remain, no `NotImplementedException` anywhere under `src/`).
+
+## Phase 1.5 — Nine Rooms test rulebook
+
+See [`nine-rooms.md`](nine-rooms.md) and [`../Specs/nine-rooms-spec.md`](../Specs/nine-rooms-spec.md). A small, deterministic, hand-authored rulebook (a 3×3 room grid with riddle/math challenges) that exercises Phase 1's plumbing against real content instead of a single synthetic command. Sits here rather than in Phase 1 or Phase 2 because it needs Phase 1's host/command work to be real but deliberately bypasses `GeneratorServices` — rules are hand-written `ARule` classes loaded the same way the existing test suite already loads its rules, so it doesn't block on Phase 2 at all.
+
+- Hardcoded C# room content (no JSON/scripting — that's Phase 4).
+- Hand-written rules for challenge prompts, answer checking, and win detection via `RoomSolved` facts.
+- Playable end to end through `ConsoleEngine` + `GameEngineCore`, the host Phase 1 settled on.
+- New engine surface named in `nine-rooms-spec.md`'s "Engine wiring" section: a `GameEngineCore.Rules` property, `RuleEngine.Query<T>()`, a public `GameEngineCore.Post`, and an unconditional `Fire()` after every dispatched command — plus new project references (`LunaFlow.Rom` → `LunaFlow.Rules`, `MyLunaFlowServer` → `LunaFlow.Rom`).
+
+**Expect a non-compiling stretch mid-phase.** Nine Rooms content in `LunaFlow.Rom` will reference engine surface (`Query<T>`, a public `Post`, the `Rules` property) that doesn't exist until the wiring above is built. The solution is not expected to build for the span between adding that content and landing the wiring — that's normal for this phase, not a regression to chase down.
+
+**Done when:** a full game — move between rooms, answer challenges, complete a tic-tac-toe line, see the game settle on a `WinMarker` — is playable via typed commands through the running console host.
 
 ## Phase 2 — Rule pipeline MVP
 
@@ -31,6 +42,8 @@ See [`rule-pipeline.md`](rule-pipeline.md). This is the highest-value design doc
 - Wire `RuleExport` as the actual entry point authors call.
 
 **Done when:** a hand-written `[RuleGroup]` class compiles through the pipeline into a class that loads and fires correctly through the existing `RuleRepository` path — provable as a test alongside the existing `RuleTests.cs`.
+
+Not in scope here: the general ROM/Rulebook component model (`engine-core.md`'s `IEngineEventSubscriber`/`AEngineComponent`/tiered registry) and config-driven package loading. Both are named non-goals until a second real ROM or Rulebook makes the hardcoded `RuleEngineOptions.FromAssembly(...)` call in `Program.cs` actually insufficient — see `non-goals.md`.
 
 ## Phase 3 — Vertical slice
 

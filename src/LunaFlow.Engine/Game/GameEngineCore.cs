@@ -14,6 +14,8 @@ namespace LunaFlow.Engine.Game
 
         // Options & state
         public GameEngineOptions Options { get; private set; } = new GameEngineOptions();
+        public GameState State { get; } = new();
+        public GameWorld World { get; } = new();
         public bool Running { get; private set; }
         public int TurnCounter { get; private set; }
         public volatile bool TurnFinished; // set this from clients/UI to advance exactly one turn
@@ -57,14 +59,20 @@ namespace LunaFlow.Engine.Game
 
         public bool Stop(bool force = false)
         {
-            if (!Running) return true;
+            if (_loopThread == null) return true;
+            if (Thread.CurrentThread == _loopThread)
+            {
+                // Called from inside a command's Execute() — that's this thread. Never self-join.
+                RequestStop();
+                return true;
+            }
             if (!force && _turnTickSubs > 1) return false;
 
             try
             {
-                _cts!.Cancel();
+                _cts?.Cancel();
                 _commands.CompleteAdding();
-                _loopThread!.Join();
+                _loopThread.Join();
                 Post("GameEngine loop stopped.");
                 return true;
             }
@@ -76,6 +84,17 @@ namespace LunaFlow.Engine.Game
                 _loopThread = null;
                 // keep queues/events for possible restart
             }
+        }
+
+        /// <summary>Non-blocking stop request. Safe to call from any thread, including from
+        /// within a command's Execute(), which runs on _loopThread — never Joins.</summary>
+        public void RequestStop()
+        {
+            if (_loopThread == null) return;
+            _cts?.Cancel();
+            _commands.CompleteAdding();
+            Running = false;
+            Post("GameEngine stop requested.");
         }
 
         /// <summary>Submit a command (admin or gameplay) from any client/thread.</summary>
@@ -117,48 +136,55 @@ namespace LunaFlow.Engine.Game
             // WaitHandles we’ll race: command available, turn finished, or cancel
             WaitHandle[] waits = { _turnAdvance.WaitHandle, token.WaitHandle };
 
-            while (!token.IsCancellationRequested)
+            try
             {
-                try
+                while (!token.IsCancellationRequested)
                 {
-                    // If nobody listens to ticks, still process commands, but do not advance turns.
-                    // We'll poll commands non-blocking first to keep admin UX snappy.
-                    DrainPendingCommands(token);
-
-                    // If we do have tick listeners, try to advance a turn when flagged.
-                    if (_turnTickSubs > 0)
+                    try
                     {
-                        if (TurnFinished)
+                        // If nobody listens to ticks, still process commands, but do not advance turns.
+                        // We'll poll commands non-blocking first to keep admin UX snappy.
+                        DrainPendingCommands(token);
+
+                        // If we do have tick listeners, try to advance a turn when flagged.
+                        if (_turnTickSubs > 0)
+                        {
+                            if (TurnFinished)
+                                AdvanceOneTurnSafe();
+                        }
+
+                        // Now block until *either* a command arrives *or* TurnFinished gets set *or* we’re cancelled.
+                        // We block on: commands via TryTake with timeout, and turn gate via WaitAny.
+                        IGameCommand? cmd;
+                        if (_commands.TryTake(out cmd, millisecondsTimeout: 250))
+                        {
+                            ExecuteCommandSafe(cmd);
+                            continue;
+                        }
+
+                        if (_turnTickSubs > 0 && _turnAdvance.Wait(millisecondsTimeout: 0))
+                        {
+                            // Turn signal already set — advance now.
                             AdvanceOneTurnSafe();
-                    }
+                            continue;
+                        }
 
-                    // Now block until *either* a command arrives *or* TurnFinished gets set *or* we’re cancelled.
-                    // We block on: commands via TryTake with timeout, and turn gate via WaitAny.
-                    IGameCommand? cmd;
-                    if (_commands.TryTake(out cmd, millisecondsTimeout: 250))
+                        // If nothing happened, optionally sleep a hair to reduce churn
+                        // (the 250ms TryTake already throttled us)
+                    }
+                    catch (OperationCanceledException)
                     {
-                        ExecuteCommandSafe(cmd);
-                        continue;
+                        break;
                     }
-
-                    if (_turnTickSubs > 0 && _turnAdvance.Wait(millisecondsTimeout: 0))
+                    catch (Exception ex)
                     {
-                        // Turn signal already set — advance now.
-                        AdvanceOneTurnSafe();
-                        continue;
+                        Post($"Engine loop error: {ex.GetType().Name}: {ex.Message}");
                     }
-
-                    // If nothing happened, optionally sleep a hair to reduce churn
-                    // (the 250ms TryTake already throttled us)
                 }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Post($"Engine loop error: {ex.GetType().Name}: {ex.Message}");
-                }
+            }
+            finally
+            {
+                Running = false;
             }
         }
 
@@ -192,6 +218,7 @@ namespace LunaFlow.Engine.Game
                 if (_turnTickSubs <= 0) return;
 
                 TurnCounter++;
+                State.TurnNumber = TurnCounter;
                 var handler = _turnTick;
                 handler?.Invoke(this, EventArgs.Empty);
             }

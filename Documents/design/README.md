@@ -9,10 +9,11 @@ This folder is the formalized system design for LunaFlow, distilled from earlier
 1. [`roadmap.md`](roadmap.md) — build order for everything below, in dependency-ordered phases with a "done" bar for each. Start here if you're picking up work, not just reading design.
 2. [`architecture.md`](architecture.md) — the layered architecture, the role/access model that drives it, and the target project layout.
 3. [`engine-core.md`](engine-core.md) — the game loop, engine hosting, and command pipeline. Covers the current dual-host situation in the code and what consolidating it should look like.
-4. [`rule-pipeline.md`](rule-pipeline.md) — the `GeneratorServices` rule-authoring pipeline: how C# rule declarations become NRules rule classes. The most fleshed-out design here.
-5. [`scripting-content.md`](scripting-content.md) — how world-builders author content in JSON/Lua without a C# compile step, and how that content becomes rules through the same pipeline as (4).
-6. [`ai-gm-assistant.md`](ai-gm-assistant.md) — the multi-pass AI assistant that helps a GM turn natural-language requests into rule-consistent outcomes.
-7. [`interfaces.md`](interfaces.md) — CLI and WebSocket interface projects, and the translator seam they plug into on the engine. The thinnest of these docs — mostly open questions.
+4. [`nine-rooms.md`](nine-rooms.md) — a small, deterministic test rulebook (Roadmap Phase 1.5) for proving the engine core works end to end against real content, without waiting on the rule pipeline.
+5. [`rule-pipeline.md`](rule-pipeline.md) — the `GeneratorServices` rule-authoring pipeline: how C# rule declarations become NRules rule classes. The most fleshed-out design here.
+6. [`scripting-content.md`](scripting-content.md) — how world-builders author content in JSON/Lua without a C# compile step, and how that content becomes rules through the same pipeline as (5).
+7. [`ai-gm-assistant.md`](ai-gm-assistant.md) — the multi-pass AI assistant that helps a GM turn natural-language requests into rule-consistent outcomes.
+8. [`interfaces.md`](interfaces.md) — CLI and WebSocket interface projects, and the translator seam they plug into on the engine. The thinnest of these docs — mostly open questions.
 
 ## Reference
 

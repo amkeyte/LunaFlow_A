@@ -30,16 +30,16 @@ Versioning is managed by Nerdbank.GitVersioning (`nbgv`, declared in `.config/do
 - `src/MyLunaFlowServer` — console entry point (`Program.cs`) that wires up and runs the engine. Only references `LunaFlow.Engine`, not `LunaFlow.Rules`.
 - `tests/LunaFlow.EngineTests` — MSTest project. Its rule tests build and fire NRules sessions directly against local test rule classes (`tests/LunaFlow.EngineTests/Rules`); they don't exercise `GeneratorServices`.
 
-### Two parallel engine hosts (in-progress state, be aware when editing)
+### Engine host (consolidated)
 
-The engine currently has two independent, non-interoperating "start the game" paths living side by side in `LunaFlow.Engine`:
+`LunaFlow.Engine` used to have two independent, non-interoperating "start the game" paths. That's resolved: `EngineHost` and `GameEngine` are gone from the codebase, and `ConsoleEngine` + `GameEngineCore` is the sole host, wired up in `MyLunaFlowServer/Program.cs`.
 
-- `EngineHost` + `GameEngine` — the original path. `GameEngine` is marked `[Obsolete]`. This is what `MyLunaFlowServer/Program.cs` currently calls, but `GameEngine.Initialize`/`Execute` are placeholder stubs and `EngineHost.ReadInput` throws `NotImplementedException`, so running the server does not reach a working loop.
-- `ConsoleEngine` + `GameEngineCore` — the newer path. `GameEngineCore` (in `Game/GameEngineCore.cs`) is an internal singleton (`GameEngineCore.Instance`) that runs a background thread loop (`RunLoop`) driven by a `BlockingCollection<IGameCommand>` command queue and a manual-reset turn gate (`FinishTurn`/`TurnTick`), rather than the simple synchronous while-loop in `EngineHost`. `ConsoleEngine` wraps this singleton but its own run loop is also incomplete (`ReadInput` throws, the main loop body is commented out).
+- `GameEngineCore` (in `Game/GameEngineCore.cs`) is an internal singleton (`GameEngineCore.Instance`) that runs a background thread loop (`RunLoop`) driven by a `BlockingCollection<IGameCommand>` command queue and a manual-reset turn gate (`FinishTurn`/`TurnTick`).
+- `ConsoleEngine.Run()` reads a line via `Console.ReadLine()`, parses it with `DefaultCommandParser.Parse` (implemented — splits input into `Name` + `Arguments` on whitespace, first token lowercased), and submits a `DispatchGameCommand` to `GameEngineCore`, blocking on completion before reading the next line.
+- `DefaultCommandDispatcher` routes a parsed `ICommand` to a registered `ICommandHandler` by name; `quit`/`exit`/`echo`/`help` are registered and functional in `Program.cs`.
+- `GameState` (`TurnNumber`), `GameWorld` (session list), and `Session` (id/translator name/connect time) hold minimal real shape — enough for "what turn is it" and "who's connected," not a full data model yet.
 
-When touching engine startup/hosting code, check which of these two paths is actually intended before extending it — don't assume `EngineHost` is current just because `Program.cs` uses it today.
-
-Supporting command types (`ICommand`, `ICommandParser`/`DefaultCommandParser`, `ICommandDispatcher`/`DefaultCommandDispatcher`, `ICommandHandler`) are shared by both hosts. `DefaultCommandParser.Parse` is currently an unimplemented stub.
+No `NotImplementedException` remains anywhere in this path. What's *not* built yet is the engine-wiring surface `Documents/Specs/nine-rooms-spec.md` calls for on top of this host (a `GameEngineCore.Rules` property, `RuleEngine.Query<T>()`, a public `Post`, unconditional `Fire()` after dispatch) — that's Phase 1.5 work, not a gap in the host consolidation itself.
 
 `Game/GameState.cs`, `Game/GameWorld.cs`, and `Game/Session.cs` are empty placeholder classes (internal, no members yet).
 

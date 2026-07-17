@@ -50,7 +50,7 @@ Optional caching layers sit alongside this: a scene-notes memory feeding the Sce
 
 ## Where this plugs into the rest of the system
 
-- The Fact Resolver's job — pulling character sheet, rulebook, and environment data — depends on `LunaFlow.ROM` and the engine's fact store existing in a queryable form; this can't be built meaningfully before [`engine-core.md`](engine-core.md)'s `GameState`/`GameWorld` types have real shape.
+- The Fact Resolver's job — pulling character sheet, rulebook, and environment data — depends on `LunaFlow.Rom` and the engine's fact store existing in a queryable form; this can't be built meaningfully before [`engine-core.md`](engine-core.md)'s `GameState`/`GameWorld` types have real shape.
 - Pass 2's output ("Lua, narration, or logic") overlaps directly with [`scripting-content.md`](scripting-content.md) — a generated script needs to go through the same validation/sandbox path as a human-authored one, not bypass it because the AI produced it.
 - The Suggestion Display Engine implies a GM-facing interface capable of showing a diff/preview before committing — this is an `LunaFlow.Interface`-layer concern (see [`interfaces.md`](interfaces.md)), not something the AI pipeline should own directly.
 

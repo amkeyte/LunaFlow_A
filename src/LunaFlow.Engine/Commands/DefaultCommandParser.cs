@@ -2,9 +2,6 @@
 {
     public class DefaultCommandParser : ICommandParser
     {
-        public ICommand Parse(object input)
-        {
-            throw new NotImplementedException();
-        }
+        public ICommand Parse(object input) => new DefaultCommand(input);
     }
 }

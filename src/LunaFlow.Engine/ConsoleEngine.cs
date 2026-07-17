@@ -77,25 +77,23 @@ namespace LunaFlow.Engine
             }
 
             // Initialize engine internals (world state, registries, services, etc.)
+            _engine.Start();
+            _engine.World.AddSession(new Session("console"));
 
+            while (_engine.Running)
+            {
+                var input = ReadInput();
+                if (input is null) break; // stdin closed
+                if (string.IsNullOrWhiteSpace(input)) continue;
 
+                var command = Parser.Parse(input);
 
-            // Basic console loop — should be abstracted for CLI/WebSocket/test environments.
-            //handling the tick
+                using var completed = new ManualResetEventSlim(false);
+                _engine.Submit(new DispatchGameCommand(command, Dispatcher, completed));
+                completed.Wait();
+            }
 
-
-
-            //while (_engine.Running ?? true)
-            //{
-            //    //handling the tick
-            //    string input = ReadInput();
-            //    if (string.IsNullOrWhiteSpace(input)) Console.Write("No Input");
-
-            //    var command = Parser.Parse(input);
-            //    Dispatcher.Dispatch(command);
-            //}
-
-            //_engine.Run();
+            _engine.Stop();
         }
 
         private void MessagePostedHandler(GameEngineMessagePostedEventArgs e)
@@ -113,12 +111,7 @@ namespace LunaFlow.Engine
         /// Reads input from the command source.
         /// Will need implementation depending on CLI vs WebSocket vs test harness.
         /// </summary>
-        private string ReadInput()
-        {
-            throw new NotImplementedException();
-            // Suggestion:
-            // return Console.ReadLine() in CLI mode
-        }
+        private string? ReadInput() => Console.ReadLine();
     }
 
 

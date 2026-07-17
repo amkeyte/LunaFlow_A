@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LunaFlow Documentation</title>
+<style>
+  :root{
+    --bg:#f7f7f5;
+    --panel:#ffffff;
+    --ink:#1c1d1f;
+    --ink-dim:#6b6f76;
+    --border:#e2e3e6;
+    --accent:#2563eb;
+    --accent-bg:#eaf1ff;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#15161a;
+      --panel:#1d1f24;
+      --ink:#eceef2;
+      --ink-dim:#9a9ea7;
+      --border:#2c2e34;
+      --accent:#7aa2ff;
+      --accent-bg:#1c2540;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.4);
+    }
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.5;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:40px 20px 80px;}
+  h1{font-size:1.7rem;margin:0 0 6px;letter-spacing:-.01em;}
+  p.lead{color:var(--ink-dim);max-width:70ch;margin:0 0 34px;}
+  h2{font-size:1.1rem;margin:0 0 4px;}
+  p.section-note{color:var(--ink-dim);font-size:.88rem;margin:0 0 16px;max-width:70ch;}
+
+  section{margin-bottom:38px;}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+  a.card{
+    display:block;
+    background:var(--panel); border:1px solid var(--border); border-radius:12px;
+    padding:16px 18px; text-decoration:none; color:inherit;
+    box-shadow:var(--shadow);
+    transition:transform .12s, box-shadow .12s;
+  }
+  a.card:hover{transform:translateY(-2px); box-shadow:0 4px 18px rgba(0,0,0,.09);}
+  a.card .title{font-weight:600; font-size:.98rem; display:flex; align-items:center; gap:8px;}
+  a.card .desc{color:var(--ink-dim); font-size:.83rem; margin-top:6px;}
+  a.card .tag{
+    display:inline-block; font-size:.68rem; font-weight:600; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--accent); background:var(--accent-bg); border-radius:5px; padding:2px 7px; margin-bottom:8px;
+  }
+
+  ul.doclist{list-style:none;margin:0;padding:0;border:1px solid var(--border);border-radius:12px;background:var(--panel);box-shadow:var(--shadow);overflow:hidden;}
+  ul.doclist li{border-bottom:1px solid var(--border);}
+  ul.doclist li:last-child{border-bottom:none;}
+  ul.doclist a{display:block;padding:12px 18px;text-decoration:none;color:inherit;}
+  ul.doclist a:hover{background:var(--accent-bg);}
+  ul.doclist .name{font-weight:600;font-size:.92rem;}
+  ul.doclist .desc{color:var(--ink-dim);font-size:.82rem;margin-top:2px;}
+
+  footer{color:var(--ink-dim); font-size:.82rem; border-top:1px solid var(--border); padding-top:16px; margin-top:10px;}
+  footer code{background:color-mix(in srgb, var(--ink) 7%, transparent); padding:0 4px; border-radius:4px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>LunaFlow Documentation</h1>
+  <p class="lead">
+    Entry point for diagrams and design docs. For what's actually implemented today, the source of truth
+    is <code>CLAUDE.md</code> at the repo root, not the design docs below — see the note in each section.
+  </p>
+
+  <section>
+    <h2>Diagrams</h2>
+    <p class="section-note">Visual walkthroughs of specific flows through the engine. Start here if you want to see how something behaves rather than read about it.</p>
+    <div class="cards">
+      <a class="card" href="diagrams/phase1-command-flow.html">
+        <span class="tag">Interactive</span>
+        <div class="title">Phase 1 Command Flow</div>
+        <div class="desc">Signal flow visualizer for a single console command: the two threads (<code>ConsoleEngine</code> foreground / <code>GameEngineCore</code> background), the command pipeline, and the queue-submit + completion-handshake signals that cross between them.</div>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Design docs</h2>
+    <p class="section-note">
+      Target-state design, not documentation of current behavior — each doc states its own implementation
+      status up front. Reading order below matches
+      <a href="../design/README.md">design/README.md</a>.
+    </p>
+    <ul class="doclist">
+      <li><a href="../design/roadmap.md"><div class="name">roadmap.md</div><div class="desc">Build order for everything below, in dependency-ordered phases with a "done" bar for each.</div></a></li>
+      <li><a href="../design/architecture.md"><div class="name">architecture.md</div><div class="desc">The layered architecture, the role/access model that drives it, and the target project layout.</div></a></li>
+      <li><a href="../design/engine-core.md"><div class="name">engine-core.md</div><div class="desc">The game loop, engine hosting, and command pipeline — covers the current dual-host situation. Background for the diagram above.</div></a></li>
+      <li><a href="../design/rule-pipeline.md"><div class="name">rule-pipeline.md</div><div class="desc">The GeneratorServices rule-authoring pipeline: how C# rule declarations become NRules rule classes.</div></a></li>
+      <li><a href="../design/scripting-content.md"><div class="name">scripting-content.md</div><div class="desc">How world-builders author content in JSON/Lua without a C# compile step.</div></a></li>
+      <li><a href="../design/ai-gm-assistant.md"><div class="name">ai-gm-assistant.md</div><div class="desc">The multi-pass AI assistant that helps a GM turn natural-language requests into rule-consistent outcomes.</div></a></li>
+      <li><a href="../design/interfaces.md"><div class="name">interfaces.md</div><div class="desc">CLI and WebSocket interface projects, and the translator seam they plug into on the engine.</div></a></li>
+      <li><a href="../design/glossary.md"><div class="name">glossary.md</div><div class="desc">Recurring domain terms, including a couple that collide with NRules/.NET terms.</div></a></li>
+      <li><a href="../design/non-goals.md"><div class="name">non-goals.md</div><div class="desc">What LunaFlow isn't trying to do yet, and what would change that.</div></a></li>
+    </ul>
+  </section>
+
+  <footer>
+    Add new diagrams under <code>Documents/html/diagrams/</code> and link them from the Diagrams section above.
+  </footer>
+
+</div>
+</body>
+</html>
