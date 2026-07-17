@@ -91,7 +91,7 @@ Rule and mod authorship splits along the same line as the role table: **ROM Deve
 
 ## Target project layout
 
-The current solution (`LunaFlow_A.sln`) has `LunaFlow.Engine`, `LunaFlow.Rules`, `MyLunaFlowServer`, and `LunaFlow.EngineTests`, plus an early-stub `LunaFlow.Rom` (not yet added to the `.sln`, and currently at the repo root rather than under `src/` — worth relocating when the layout gets tidied up), which correspond to the bottom of this layout. The target layout adds the pieces needed for scripting, multiple interfaces, and AI:
+The current solution (`LunaFlow_A.sln`) has `LunaFlow.Engine`, `LunaFlow.Rules`, `MyLunaFlowServer`, and `LunaFlow.EngineTests`, plus an early-stub `LunaFlow.Rom` at `src/LunaFlow.Rom/` and already registered in the `.sln`, which correspond to the bottom of this layout. The target layout adds the pieces needed for scripting, multiple interfaces, and AI:
 
 ```
 /LunaFlow_A

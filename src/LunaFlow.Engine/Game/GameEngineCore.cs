@@ -7,7 +7,7 @@ namespace LunaFlow.Engine.Game
         void Execute(GameEngineCore engine);
     }
 
-    internal sealed class GameEngineCore
+    internal sealed class GameEngineCore : IEngineHost
     {
         private static readonly Lazy<GameEngineCore> _lazy = new(() => new GameEngineCore());
         public static GameEngineCore Instance => _lazy.Value;
@@ -16,6 +16,7 @@ namespace LunaFlow.Engine.Game
         public GameEngineOptions Options { get; private set; } = new GameEngineOptions();
         public GameState State { get; } = new();
         public GameWorld World { get; } = new();
+        public RuleEngine Rules { get; private set; } = null!; // populated in Start(), per nine-rooms-spec.md item 1
         public bool Running { get; private set; }
         public int TurnCounter { get; private set; }
         public volatile bool TurnFinished; // set this from clients/UI to advance exactly one turn
@@ -232,6 +233,8 @@ namespace LunaFlow.Engine.Game
         {
             MessagePosted?.Invoke(this, new GameEngineMessagePostedEventArgs(message));
         }
+
+        void IEngineHost.Announce(string message) => Post(message);
     }
 
     public sealed class GameEngineMessagePostedEventArgs : EventArgs

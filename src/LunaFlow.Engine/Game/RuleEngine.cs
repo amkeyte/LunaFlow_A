@@ -87,6 +87,16 @@ namespace LunaFlow.Engine
             _session.Fire();
         }
         /// <summary>
+        /// Queries facts of the given type from the current rule session.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if the rule engine has not been initialized.</exception>
+        public IQueryable<T> Query<T>()
+        {
+            EnsureSessionInitialized();
+            return _session.Query<T>();
+        }
+
+        /// <summary>
         /// Clears the rule repository and disposes the current session.
         /// This can be used to reset the engine before reloading a new set of rules.
         /// </summary>

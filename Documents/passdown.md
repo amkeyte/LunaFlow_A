@@ -19,16 +19,6 @@ incompatible `MyGame.Room` types) collide at compile time instead of silently co
 that point, promote it into `design/architecture.md` as a real convention rather than leaving it
 here.
 
-## Engine core — `GameEngineCore` accessibility blocks Rom-side wiring — GRADUATED
-
-Resolved as [`Specs/engine-host-spec.md`](Specs/engine-host-spec.md): a minimal public
-`IEngineHost` (`Rules` + `Announce` only), reached via a new `Engine.Host` static gateway.
-`GameEngineCore` stays `internal sealed` — the earlier proposed fix here (widen the whole class
-to `public`) turned out to also expose `FinishTurn`/`Stop`/`RequestStop`, which contradicts
-`engine-core.md`'s "turn-ending is Rulebook authority, not ROM's." See the spec for the full
-reasoning and the excluded-members list. `nine-rooms-spec.md` items 1–3 are superseded by it;
-that spec still needs updating to reference `IEngineHost` instead of re-deriving the surface.
-
 ## Project scaffolding — `LunaFlow.Rom` isn't wired into the build yet — PARTIALLY DONE
 
 **For:** whoever starts Nine Rooms implementation.
