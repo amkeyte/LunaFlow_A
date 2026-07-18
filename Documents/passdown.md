@@ -19,20 +19,38 @@ incompatible `MyGame.Room` types) collide at compile time instead of silently co
 that point, promote it into `design/architecture.md` as a real convention rather than leaving it
 here.
 
-## Project scaffolding — `LunaFlow.Rom` isn't wired into the build yet — PARTIALLY DONE
+## Project scaffolding — DONE
 
-**For:** whoever starts Nine Rooms implementation.
+All three `ProjectReference`s (`LunaFlow.Rom → LunaFlow.Rules`, `LunaFlow.Rom → LunaFlow.Engine`,
+`MyLunaFlowServer → LunaFlow.Rom`) landed as part of Phase 1.5's first commit, as planned.
 
-**Checked against code:** `LunaFlow.Rom` is now correctly at `src/LunaFlow.Rom/` and is in
-`LunaFlow_A.sln` — that part's fixed. Still missing, verified against the actual `.csproj` files:
+## GameEngineCore unconditionally calls Fire() without validating rule initialization — FIXED
 
-- `LunaFlow.Rom.csproj` has no `ProjectReference` to `LunaFlow.Rules` (needed for `ARule`).
-- `LunaFlow.Rom.csproj` has no `ProjectReference` to `LunaFlow.Engine` either — this one wasn't
-  in the original finding, but `Specs/engine-host-spec.md` (new) confirms it's needed too, since
-  Nine Rooms content calls `Engine.Host`/`IEngineHost` members directly.
-- `MyLunaFlowServer.csproj` still only references `LunaFlow.Engine`, not `LunaFlow.Rom`.
+Added `RuleEngine.IsInitialized` (`src/LunaFlow.Engine/Game/RuleEngine.cs`) and guarded the
+"initial settle" call in `GameEngineCore.Start()`:
 
-**Remaining fix:** add `ProjectReference`s for `LunaFlow.Rom → LunaFlow.Rules`,
-`LunaFlow.Rom → LunaFlow.Engine`, and `MyLunaFlowServer → LunaFlow.Rom` — same first-commit
-timing as originally proposed.
+```csharp
+Rules = new RuleEngine();
+Options.Rules.ApplyTo(Rules);
+if (Rules.IsInitialized)
+    Rules.Fire();
+```
+
+`Fire()` itself still throws if called uninitialized elsewhere (rule `Then()` blocks,
+`DispatchGameCommand`) — only the automatic startup call now tolerates "no rules configured,"
+which is a legitimate state for a test harness or a bare host. Build is clean.
+
+**Not fully resolved:** fixing this unblocked the `RuleEngine.EnsureSessionInitialized` crash,
+but running `tests/LunaFlow.EngineTests/Core/*` afterward surfaced a further batch of failures
+unrelated to this specific bug. Test team is looking at strategy for those next — this entry can
+be deleted once that pass is done, but leaving it until then in case the remaining failures turn
+out to be related after all.
+
+## Turn gate semantics — GRADUATED
+
+Both decisions (no queueing on `FinishTurn()`; synchronous resubmit from inside a `TurnTick`
+handler is ignored via reset-after-invoke) are now written up as settled, tested semantics in
+[`design/engine-core.md`](design/engine-core.md#turn-ending-ordering-not-arbitration), including
+the `git log -p` provenance finding on the original comment/behavior mismatch. Nothing further
+pending here.
 

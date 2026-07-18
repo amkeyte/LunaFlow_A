@@ -1,6 +1,11 @@
 # Phase 1.5 — Nine Rooms test rulebook
 
-**Status:** pending
+**Status:** done — QA-signed-off 2026-07-17 ([`Documents/QA/phase-1.5-verdict.md`](../QA/phase-1.5-verdict.md)).
+Build green, 63/63 engine-fixture suite passes, full winning-line playthrough demonstrated.
+**Caveat, recorded not hidden:** the command-handler / `Announce` pipeline (including the 0001
+room-entry ordering) rests on the manual smoke playthrough, not automated regression — a deliberate
+call given Nine Rooms is disposable content. If these patterns get reused in real content, that gap
+needs an automated test.
 
 See [`Specs/nine-rooms-spec.md`](Specs/nine-rooms-spec.md), [`Specs/nine-rooms-facts.md`](Specs/nine-rooms-facts.md), and [`Specs/nine-rooms-gameplay.md`](Specs/nine-rooms-gameplay.md).
 
@@ -14,7 +19,7 @@ Sits here rather than in Phase 1 or Phase 2 because it needs Phase 1's host/comm
 
 - Hardcoded C# room content (no JSON/scripting — that's Phase 4)
 - Hand-written rules for challenge prompts, answer checking, and win detection via `RoomSolved` facts
-- Playable end to end through `ConsoleEngine` + `GameEngineCore`, reached via Phase 1.1's `IEngineHost`/`Engine.Host` surface
+- Playable end to end through `ConsoleEngine` + `GameEngineCore`, reached via Phase 1.1's `IEngineHost`/`LunaFlowEngine.Host` surface
 - Nine-Rooms-specific engine wiring: an unconditional `Fire()` after every dispatched command, and the three project references from Phase 1.1
 
 ## Done when

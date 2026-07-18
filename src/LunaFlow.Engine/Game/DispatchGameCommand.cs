@@ -15,7 +15,11 @@ namespace LunaFlow.Engine.Game
 
         public void Execute(GameEngineCore engine)
         {
-            try { _dispatcher.Dispatch(_command); }
+            try
+            {
+                _dispatcher.Dispatch(_command);
+                engine.Rules.Fire();
+            }
             finally { _completed?.Set(); }
         }
     }

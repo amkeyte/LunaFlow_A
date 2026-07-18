@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Playlist Version="2.0">
+  <!-- Phase 2: Lifecycle & Command Dispatch (MEDIUM RISK) -->
+  <!-- Individual test methods for precise TRX filtering and visual organization -->
+
+  <!-- Lifecycle Tests: Validates start/stop/restart, options, state initialization (20 tests) -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Start_InitializesEngineInRunningState" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Start_IsIdempotent" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Stop_StopsEngineGracefully" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Stop_CanRestartAfterStopping" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Stop_ReturnsFalseIfMultipleSubscribersExistAndNotForced" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Stop_SucceedsWhenForcedRegardlessOfSubscribers" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.RequestStop_StopsEngineWithoutBlocking" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.SetOptions_AppliesOptionsBeforeStart" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.SetOptions_NullOptionsCreatesDefault" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Start_AppliesRuleEngineOptionsCorrectly" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.MessagePosted_EventFiresOnStartup" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.MessagePosted_EventFiresOnStop" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.MessagePosted_EventFiresOnRequestStop" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.State_TurnNumberInitializesAtZero" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.TurnCounter_StartsAtZero" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.World_IsAvailableAfterStart" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.World_PersistsBetweenStarts" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Stop_BeforeStart_ReturnsTrueWithoutError" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Rules_BeforeStart_ThrowsWhenAccessed" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Options_CanBeModifiedAfterCreation" />
+
+  <!-- Command Dispatch Tests: Validates queue ordering, completion signals, exception handling (12 tests) -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.Submit_AcceptsCommandWhileEngineRunning" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.Submit_IgnoresNullCommand" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.Submit_QueuedCommandsExecuteInOrder" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.CommandCompletion_SignalFires" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.CommandCompletion_TimesOutIfCommandNeverExecutes" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.CommandCompletion_AllCommandsSignalCompletion" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.CommandException_IsCaughtAndPostedAsMessage" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.CommandException_DoesNotStopEngine" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.Submit_SafeFromMultipleThreads" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.Submit_WhileShuttingDown_FailsSilently" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.CommandExecution_RunsInEngineThread" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.Submit_HighFrequencyCommands_PreservesOrder" />
+</Playlist>

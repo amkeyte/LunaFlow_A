@@ -17,7 +17,7 @@ dotnet test --filter "FullyQualifiedName~RuleTests.Test2"     # run a single tes
 dotnet run --project src/MyLunaFlowServer                     # run the console host
 ```
 
-Tests use MSTest and run in parallel at method scope (`MSTestSettings.cs` sets `Parallelize(Scope = ExecutionScope.MethodLevel)`), so tests must not share mutable static state.
+Tests use MSTest. Execution model and conventions — parallelism, the `[DoNotParallelize]`-for-singleton rule, how to capture rule/handler output, and anti-patterns — live in `Documents/ClaudeWiki/Processes/testing.md` (which points on to `tests/LunaFlow.EngineTests/TEST_EXECUTION_STRATEGY.md`). Read that before writing tests rather than inferring the rules from a single line here.
 
 Versioning is managed by Nerdbank.GitVersioning (`nbgv`, declared in `.config/dotnet-tools.json`, driven by `version.json`). Run `dotnet tool restore` once if `nbgv` isn't available locally.
 

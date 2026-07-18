@@ -70,14 +70,16 @@ internal sealed class GameEngineCore : IEngineHost
 ```csharp
 namespace LunaFlow.Engine
 {
-    public static class Engine
+    public static class LunaFlowEngine
     {
         public static IEngineHost Host => GameEngineCore.Instance;
     }
 }
 ```
 
-Content code calls `Engine.Host.Rules.Query<Room>()` / `Engine.Host.Announce("...")`, never touching `GameEngineCore` by name. (Naming bikeshed: `Engine`/`Host` is a placeholder pairing, not load-bearing — rename freely if something reads better once it's actually being written against.)
+Content code calls `LunaFlowEngine.Host.Rules.Query<Room>()` / `LunaFlowEngine.Host.Announce("...")`, never touching `GameEngineCore` by name.
+
+**Naming, resolved (was a bikeshed caveat, now a compiler-verified fact):** the gateway class cannot be named `Engine`. A static class named `Engine` inside namespace `LunaFlow.Engine`, referenced from a sibling namespace like `LunaFlow.Rom.NineRooms`, fails with `CS0234` — enclosing-namespace lookup resolves the bare identifier `Engine` to the *namespace* `LunaFlow.Engine` before it considers the `using`-imported *class* of the same simple name, so `Engine.Host` parses as a namespace path and `Host` isn't found there. Built as `LunaFlowEngine` (`src/LunaFlow.Engine/Engine.cs`) instead, confirmed working in Nine Rooms.
 
 ## Deliberately excluded, and why
 
@@ -99,10 +101,10 @@ Everything on `GameEngineCore` not listed above is left off `IEngineHost` on pur
 
 ## Impact on `nine-rooms-spec.md`
 
-Items 1–3 of that spec's "Engine wiring" section (the `Rules` property, `Query<T>()` passthrough, and public `Post`/`Announce`) are superseded by this spec — `IEngineHost` is now the authoritative shape for that surface. Items 4 (unconditional `Fire()` after every dispatched command) and 5 (project references, now corrected above) remain Nine-Rooms-specific and unaffected. The Nine Rooms session should update its own spec to reference `IEngineHost`/`Engine.Host` rather than re-deriving the interface shape.
+Items 1–3 of that spec's "Engine wiring" section (the `Rules` property, `Query<T>()` passthrough, and public `Post`/`Announce`) are superseded by this spec — `IEngineHost` is now the authoritative shape for that surface. Items 4 (unconditional `Fire()` after every dispatched command) and 5 (project references, now corrected above) remain Nine-Rooms-specific and unaffected. The Nine Rooms session should update its own spec to reference `IEngineHost`/`LunaFlowEngine.Host` rather than re-deriving the interface shape.
 
 ## Acceptance criteria
 
-- `LunaFlow.Rom` compiles against `Engine.Host.Rules.Query<T>()` and `Engine.Host.Announce(string)` without referencing `GameEngineCore` by name (it can't — the type isn't visible outside `LunaFlow.Engine`).
+- `LunaFlow.Rom` compiles against `LunaFlowEngine.Host.Rules.Query<T>()` and `LunaFlowEngine.Host.Announce(string)` without referencing `GameEngineCore` by name (it can't — the type isn't visible outside `LunaFlow.Engine`). — met, verified in Nine Rooms' implementation.
 - `GameEngineCore` remains `internal sealed`; nothing outside `LunaFlow.Engine` can construct it, call `FinishTurn`/`Stop`/`RequestStop`/`Submit`, or read `TurnFinished`/`TurnCounter`/`Options`/`State`/`World` directly.
 - `ConsoleEngine` and other in-assembly translators are unaffected — they still use `GameEngineCore.Instance` directly, since they're in `LunaFlow.Engine` and were never blocked by this in the first place.

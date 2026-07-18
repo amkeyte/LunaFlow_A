@@ -27,9 +27,10 @@ namespace LunaFlow.Engine.Game
         // Loop infra
         private Thread? _loopThread;
         private CancellationTokenSource? _cts;
+        private readonly object _lifecycleLock = new(); // serializes Start/Stop/RequestStop/Submit against each other
 
         // Work sources: commands + turn gate
-        private readonly BlockingCollection<IGameCommand> _commands = new(new ConcurrentQueue<IGameCommand>());
+        private BlockingCollection<IGameCommand> _commands = new(new ConcurrentQueue<IGameCommand>());
         private readonly ManualResetEventSlim _turnAdvance = new(false);          // signaled when TurnFinished==true
         private readonly ManualResetEventSlim _hasTickSubscribers = new(false);    // idle when nobody cares
         private int _turnTickSubs;
@@ -46,64 +47,120 @@ namespace LunaFlow.Engine.Game
 
         public void Start()
         {
-            if (Running) return;
-            _cts = new CancellationTokenSource();
-            _loopThread = new Thread(() => RunLoop(_cts.Token))
+            lock (_lifecycleLock)
             {
-                IsBackground = true,
-                Name = "LunaFlow.GameEngineCore.Loop"
-            };
-            Running = true;
-            _loopThread.Start();
+                if (Running) return;
+
+                // A Start() is a new game, not a resume — turn state resets every time, the same
+                // way Rules already gets a fresh RuleEngine below. Also clears any turn-advance
+                // signal armed by a stray FinishTurn() call while the engine wasn't running (see
+                // FinishTurn_WhileEngineNotRunning_DoesNothing), so a new game doesn't inherit an
+                // already-triggered turn gate.
+                TurnCounter = 0;
+                State.TurnNumber = 0;
+                TurnFinished = false;
+                _turnAdvance.Reset();
+
+                Rules = new RuleEngine();
+                Options.Rules.ApplyTo(Rules);
+                if (Rules.IsInitialized)
+                    Rules.Fire(); // "initial settle": rules already satisfied by seeded facts get a chance to fire before turn one
+                // BlockingCollection can't un-complete itself — a prior Stop() leaves it permanently
+                // closed to additions, so a restart needs a fresh one.
+                if (_commands.IsAddingCompleted)
+                    _commands = new BlockingCollection<IGameCommand>(new ConcurrentQueue<IGameCommand>());
+                _cts = new CancellationTokenSource();
+                // Capture the token and queue as locals rather than reading _cts/_commands by field
+                // reference inside RunLoop: Thread.Start() only requests scheduling, so the OS may not
+                // actually run this lambda until after a later Stop() has nulled _cts (or a later Start()
+                // has swapped _commands) — reading the fields at that point would race. A captured local
+                // stays bound to the run it was created for.
+                var runToken = _cts.Token;
+                var runCommands = _commands;
+                _loopThread = new Thread(() => RunLoop(runToken, runCommands))
+                {
+                    IsBackground = true,
+                    Name = "LunaFlow.GameEngineCore.Loop"
+                };
+                Running = true;
+                _loopThread.Start();
+            }
             Post("GameEngine loop started (server mode, turn-based).");
         }
 
         public bool Stop(bool force = false)
         {
-            if (_loopThread == null) return true;
-            if (Thread.CurrentThread == _loopThread)
-            {
-                // Called from inside a command's Execute() — that's this thread. Never self-join.
-                RequestStop();
-                return true;
-            }
-            if (!force && _turnTickSubs > 1) return false;
+            bool selfJoin;
+            Thread? threadToJoin = null;
 
-            try
+            lock (_lifecycleLock)
             {
-                _cts?.Cancel();
-                _commands.CompleteAdding();
-                _loopThread.Join();
-                Post("GameEngine loop stopped.");
+                if (_loopThread == null) return true;
+                if (Thread.CurrentThread == _loopThread)
+                {
+                    // Called from inside a command's Execute() — that's this thread. Never self-join.
+                    RequestStopLocked();
+                    selfJoin = true;
+                }
+                else
+                {
+                    if (!force && _turnTickSubs > 1) return false;
+
+                    selfJoin = false;
+                    _cts?.Cancel();
+                    _commands.CompleteAdding();
+                    threadToJoin = _loopThread;
+                    Running = false;
+                    _cts?.Dispose();
+                    _cts = null;
+                    _loopThread = null;
+                    // keep queues/events for possible restart
+                }
+            }
+
+            if (selfJoin)
+            {
+                Post("GameEngine stop requested.");
                 return true;
             }
-            finally
-            {
-                Running = false;
-                _cts?.Dispose();
-                _cts = null;
-                _loopThread = null;
-                // keep queues/events for possible restart
-            }
+
+            threadToJoin!.Join();
+            Post("GameEngine loop stopped.");
+            return true;
         }
 
         /// <summary>Non-blocking stop request. Safe to call from any thread, including from
         /// within a command's Execute(), which runs on _loopThread — never Joins.</summary>
         public void RequestStop()
         {
+            lock (_lifecycleLock)
+            {
+                RequestStopLocked();
+            }
+            Post("GameEngine stop requested.");
+        }
+
+        /// <summary>Body of RequestStop(), for callers that already hold _lifecycleLock
+        /// (lock is reentrant per-thread, so this is safe to call from within Stop()'s lock too).</summary>
+        private void RequestStopLocked()
+        {
             if (_loopThread == null) return;
             _cts?.Cancel();
             _commands.CompleteAdding();
             Running = false;
-            Post("GameEngine stop requested.");
         }
 
         /// <summary>Submit a command (admin or gameplay) from any client/thread.</summary>
         public void Submit(IGameCommand cmd)
         {
             if (cmd == null) return;
-            // If CompleteAdding() was called, TryAdd will just fail silently; that’s fine for shutdown.
-            _commands.TryAdd(cmd);
+            lock (_lifecycleLock)
+            {
+                // If CompleteAdding() was called, TryAdd throws rather than failing silently —
+                // check first so a command racing a Stop()/RequestStop() is just dropped.
+                if (_commands.IsAddingCompleted) return;
+                _commands.TryAdd(cmd);
+            }
         }
 
         /// <summary>Signal that the current turn is finished; advances exactly one turn.</summary>
@@ -132,11 +189,8 @@ namespace LunaFlow.Engine.Game
             }
         }
 
-        private void RunLoop(CancellationToken token)
+        private void RunLoop(CancellationToken token, BlockingCollection<IGameCommand> commands)
         {
-            // WaitHandles we’ll race: command available, turn finished, or cancel
-            WaitHandle[] waits = { _turnAdvance.WaitHandle, token.WaitHandle };
-
             try
             {
                 while (!token.IsCancellationRequested)
@@ -145,7 +199,7 @@ namespace LunaFlow.Engine.Game
                     {
                         // If nobody listens to ticks, still process commands, but do not advance turns.
                         // We'll poll commands non-blocking first to keep admin UX snappy.
-                        DrainPendingCommands(token);
+                        DrainPendingCommands(commands);
 
                         // If we do have tick listeners, try to advance a turn when flagged.
                         if (_turnTickSubs > 0)
@@ -155,9 +209,8 @@ namespace LunaFlow.Engine.Game
                         }
 
                         // Now block until *either* a command arrives *or* TurnFinished gets set *or* we’re cancelled.
-                        // We block on: commands via TryTake with timeout, and turn gate via WaitAny.
                         IGameCommand? cmd;
-                        if (_commands.TryTake(out cmd, millisecondsTimeout: 250))
+                        if (commands.TryTake(out cmd, millisecondsTimeout: 250))
                         {
                             ExecuteCommandSafe(cmd);
                             continue;
@@ -189,9 +242,9 @@ namespace LunaFlow.Engine.Game
             }
         }
 
-        private void DrainPendingCommands(CancellationToken token)
+        private void DrainPendingCommands(BlockingCollection<IGameCommand> commands)
         {
-            while (_commands.TryTake(out var cmd))
+            while (commands.TryTake(out var cmd))
                 ExecuteCommandSafe(cmd);
         }
 
@@ -211,17 +264,33 @@ namespace LunaFlow.Engine.Game
         {
             try
             {
-                // Reset gate before firing to avoid double-advance if handlers set FinishTurn again synchronously.
-                TurnFinished = false;
-                _turnAdvance.Reset();
-
-                // Make sure someone cares; otherwise skip work
-                if (_turnTickSubs <= 0) return;
+                // Make sure someone cares; otherwise skip work, but still clear the gate.
+                if (_turnTickSubs <= 0)
+                {
+                    TurnFinished = false;
+                    _turnAdvance.Reset();
+                    return;
+                }
 
                 TurnCounter++;
                 State.TurnNumber = TurnCounter;
                 var handler = _turnTick;
-                handler?.Invoke(this, EventArgs.Empty);
+                try
+                {
+                    handler?.Invoke(this, EventArgs.Empty);
+                }
+                finally
+                {
+                    // Reset AFTER the handler runs, not before: FinishTurn() represents a
+                    // deliberate external turn-end decision (command/Rulebook layer), not
+                    // something the engine's own TurnTick notification should be able to trigger
+                    // on itself. Resetting first let a handler's synchronous FinishTurn() call
+                    // re-arm a fresh signal the next loop pass would honor, cascading turns
+                    // instead of suppressing the resubmit as originally intended. In `finally` so
+                    // the gate still clears if the handler throws.
+                    TurnFinished = false;
+                    _turnAdvance.Reset();
+                }
             }
             catch (Exception ex)
             {
@@ -247,5 +316,6 @@ namespace LunaFlow.Engine.Game
     {
         public string GameName { get; set; } = "Unnamed";
         public bool EnableRulesEngine { get; set; } = true;
+        public RuleEngineOptions Rules { get; } = new();
     }
 }

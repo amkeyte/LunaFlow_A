@@ -15,6 +15,13 @@ namespace LunaFlow.Engine
         private ISession _session;
 
         /// <summary>
+        /// True once rules have been loaded and a session compiled (<see cref="LoadRulesFromAssembly"/>
+        /// or <see cref="LoadRulesFromTypes"/>). Facts/session-mutating methods still throw when this
+        /// is false — this is for callers that need to check first rather than catch.
+        /// </summary>
+        public bool IsInitialized => _session != null;
+
+        /// <summary>
         /// Loads rules from the specified <see cref="Assembly"/>. All types that derive from <see cref="Rule"/> are included.
         /// </summary>
         /// <param name="assembly">The assembly containing rule types.</param>

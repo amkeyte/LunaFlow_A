@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Playlist Version="2.0">
+  <!-- Phase 1: Turn Loop & Concurrency (HIGH RISK) -->
+  <!-- Individual test methods for precise TRX filtering and visual organization -->
+
+  <!-- Turn Loop Tests: Validates turn counter, TurnTick events, gate behavior (14 tests) -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnCounter_StartsAtZero" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnCounter_IncrementAfterTurnAdvance" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnTick_DoesNotFireWithoutSubscribers" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnTick_FiresWhenSubscriberAttached" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnTick_FiresForMultipleSubscribers" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnTick_StopsFilingWhenLastSubscriberRemoved" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.FinishTurn_AdvancesExactlyOneTurn" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.FinishTurn_MultipleTimes_QueuesCorrectly" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnFinished_ResetsBetweenTurns" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.GameState_TurnNumberUpdatesWithTurns" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.FinishTurn_WhileEngineNotRunning_DoesNothing" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnTick_SubscribeUnsubscribeMultipleTimes" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnTick_HandlerException_DoesNotStopTurns" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnTick_SynchronousResubmit_IsIgnored" />
+
+  <!-- Thread Safety Tests: Validates race conditions under concurrent access (10 tests) -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.ConcurrentCommandSubmission_FromMultipleThreads_Completes" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.ConcurrentSubmission_MaintainsQueueOrder" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.TurnTick_SubscriptionFromMultipleThreads_IsSafe" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.MessagePosted_SubscriptionFromMultipleThreads_IsSafe" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.Submit_AndFinishTurn_Concurrently" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.Stop_FromCommandHandler_DoesNotDeadlock" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.RequestStop_FromMultipleThreads_IsSafe" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.FinishTurn_FromMultipleThreads_PreservesOrder" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.CommandArrivesDuringTurnAdvance" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.SimultaneousStopAndCommand" />
+</Playlist>

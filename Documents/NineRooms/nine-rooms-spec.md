@@ -62,15 +62,15 @@ Nothing today runs a `RuleEngine` inside `GameEngineCore`, and nothing lets a ru
        void Announce(string message);
    }
 
-   public static class Engine
+   public static class LunaFlowEngine
    {
        public static IEngineHost Host => GameEngineCore.Instance;
    }
    ```
 
    **In Nine Rooms, this surface is used by:**
-   - `MoveCommandHandler`, `AnswerCommandHandler`, `LookCommandHandler` — they call `Engine.Host.Rules.Query<T>()` to read facts (see [`nine-rooms-gameplay.md`](nine-rooms-gameplay.md#commands--handlers))
-   - Rule `Then()` blocks — they call `Engine.Host.Announce(...)` and `Engine.Host.Rules.Insert/Retract/Fire()` (see [`nine-rooms-gameplay.md`](nine-rooms-gameplay.md#rules-hand-written-arules))
+   - `MoveCommandHandler`, `AnswerCommandHandler`, `LookCommandHandler` — they call `LunaFlowEngine.Host.Rules.Query<T>()` to read facts (see [`nine-rooms-gameplay.md`](nine-rooms-gameplay.md#commands--handlers))
+   - Rule `Then()` blocks — they call `LunaFlowEngine.Host.Announce(...)` and `LunaFlowEngine.Host.Rules.Insert/Retract/Fire()` (see [`nine-rooms-gameplay.md`](nine-rooms-gameplay.md#rules-hand-written-arules))
 
    See [`engine-host-spec.md`](engine-host-spec.md) for the full design, including why
    `FinishTurn`/`Stop`/`RequestStop` are deliberately excluded from this surface.
@@ -90,7 +90,7 @@ Nothing today runs a `RuleEngine` inside `GameEngineCore`, and nothing lets a ru
    [`../design/engine-core.md`](../design/engine-core.md#turn-loop-and-engine-guarantees).
 
 3. **Project references:** `LunaFlow.Rom` needs references to both `LunaFlow.Rules` (for
-   `ARule`, used by the rule classes in [`nine-rooms-gameplay.md`](nine-rooms-gameplay.md#rules-hand-written-arules)) and `LunaFlow.Engine` (for `IEngineHost`/`Engine.Host`, used by those same rules and handlers). `MyLunaFlowServer` currently
+   `ARule`, used by the rule classes in [`nine-rooms-gameplay.md`](nine-rooms-gameplay.md#rules-hand-written-arules)) and `LunaFlow.Engine` (for `IEngineHost`/`LunaFlowEngine.Host`, used by those same rules and handlers). `MyLunaFlowServer` currently
    references only `LunaFlow.Engine` and needs a new reference to `LunaFlow.Rom` so
    `Program.cs` can point `GameEngineOptions.Rules` at its assembly (see section below).
 
@@ -165,9 +165,16 @@ public sealed class RuleEngineOptions
     opts.GameName = "Nine Rooms";
     opts.Rules
         .FromAssembly(typeof(NineRoomsRules).Assembly)   // one call per ROM assembly if more show up later
-        .Seed(() => NineRoomsContent.Rooms);              // the 9 Room facts
+        .Seed(() => NineRoomsContent.Rooms.Values)         // the 9 Room facts
+        .Seed(() => new object[] { new PlayerPosition(NineRoomsContent.StartRoomId) }); // initial player position
 })
 ```
+
+Two separate `.Seed(...)` calls, not one — `RuleEngineOptions` already supports chaining multiple, and
+`Room` content and the player's starting `PlayerPosition` are conceptually different seed sources. Without
+the second call, the room-5 "initial settle" story (`../design/engine-core.md#turn-loop-and-engine-guarantees`)
+has nothing to match against: the room-5 challenge-prompt rule needs a seeded `PlayerPosition(5)` to be present
+before `Start()`'s first `Fire()` for it to fire on startup at all.
 
 Why this shape over a bare `IEnumerable<Type>` field or a heavier builder:
 

@@ -1,0 +1,90 @@
+# Agent-Assisted Test Workflow
+
+How a Claude session and the user (Arryn) split test execution during bug-fixing, so neither side
+burns time or tokens on the wrong half of the job — and so the user stays hands-on with the test
+results rather than delegating the whole loop away.
+
+Sibling pages cover the other two concerns: [`test-runbook.md`](test-runbook.md) — what order to
+run tests in and how to run them; [`testing.md`](testing.md) — what's tested, the conventions, and
+coverage gaps. This page is the third thing: the human/agent division of labor.
+
+## Why split it this way
+
+Per `CLAUDE.md`, the user runs the solution from VS2022 and agent sessions don't run `git` against
+this repo, to avoid file-lock conflicts. The same reasoning extends to test runs: VS2022 already
+owns the build, so it's the natural place to execute tests. The agent's side is reading and
+triaging results — a raw `dotnet test` console run repeats a pass/fail line per test even when
+filtered, whereas a structured `.trx` report lets the agent skip straight to what failed.
+
+This also keeps the user in the loop by design: they run the pass and see the results first-hand,
+which is a deliberate way to stay on the pulse of the codebase rather than handing the whole cycle
+to an agent.
+
+## Division of labor
+
+- **User, via VS2022:** runs the actual test pass (Test Explorer, a playlist from
+  [`test-runbook.md`](test-runbook.md), or the integrated terminal) and produces a `.trx` report.
+- **Agent:** reads the `.trx`, extracts only the failed cases (name, message, stack trace), and
+  proposes a fix — or, mid-fix, runs a single narrow `dotnet test --filter` itself when it needs a
+  quick yes/no without interrupting the user.
+
+## Producing a report from VS
+
+`LunaFlow_A.runsettings` (repo root) pins this for both entry points — no flags to remember.
+`ResultsDirectory` is `tests/LunaFlow.EngineTests/TestResults`, and a `trx` logger always writes
+`latest.trx` there, overwriting on each run.
+
+**Terminal** — from VS2022's integrated terminal, or any shell in the repo root:
+
+```bash
+dotnet test tests/LunaFlow.EngineTests --settings LunaFlow_A.runsettings
+```
+
+Add a `--filter` exactly as in [`test-runbook.md`](test-runbook.md) to scope it to one phase or
+class, e.g.:
+
+```bash
+dotnet test tests/LunaFlow.EngineTests --settings LunaFlow_A.runsettings --filter "FullyQualifiedName~GameEngineCoreeTurnLoopTests"
+```
+
+**Test Explorer GUI** — Test menu → Configure Run Settings → Select Solution-Wide runsettings File
+→ `LunaFlow_A.runsettings`. After that, any Test Explorer run (including a playlist) writes to the
+same pinned path automatically — no separate export step.
+
+## Fixed path convention
+
+`tests/LunaFlow.EngineTests/TestResults/latest.trx`, always. A single known filename means the
+agent can go read it without being told the path every time. To keep a history instead of
+overwriting, override `LogFileName` for that one run (e.g.
+`--logger "trx;LogFileName=before-fix.trx"`) and tell the agent which file to read.
+
+## How the agent reads it
+
+A `.trx` is XML. Rather than dumping the whole file, the agent should:
+
+1. Grep for `outcome="Failed"` to find failing `<UnitTestResult>` entries.
+2. Pull each failure's `<Message>` and `<StackTrace>` — not the passing entries, not the raw
+   console mirror.
+3. Cross-reference failing test names against [`test-runbook.md`](test-runbook.md)'s diagnostic
+   red-flag table (timeout → deadlock, flaky → race condition, etc.) before proposing a fix.
+
+This keeps triage cost proportional to failures, not to total test count — the main win over
+either side running the full suite unfiltered.
+
+## Escalation ladder during a fix
+
+Same idea whether the agent or the user is driving the run — start narrow, widen only as
+confidence grows:
+
+1. Single failing test (`--filter "FullyQualifiedName~Class.Method"`).
+2. Its test class, or its [`test-runbook.md`](test-runbook.md) phase-mate class.
+3. The full `Core` namespace (matches the `GameEngineCoreAll.playlist` scope).
+4. Full unfiltered `dotnet test` — reserved for a final check before handing back to the user or
+   calling a fix done, not for in-progress iteration.
+
+## Related pages
+
+- [ClaudeWiki index](../index.md)
+- [Testing — conventions & workflow](testing.md)
+- [Test runbook — execution order & diagnostics](test-runbook.md)
+- [Test patterns — authoring concurrency-safe tests](test-patterns.md)

@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LunaFlow.Rules\LunaFlow.Rules.csproj" />
+    <ProjectReference Include="..\LunaFlow.Engine\LunaFlow.Engine.csproj" />
+  </ItemGroup>
+
 </Project>

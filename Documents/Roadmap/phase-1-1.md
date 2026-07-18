@@ -17,12 +17,12 @@ Pulled out ahead of Phase 1.5 rather than folded into it, since Nine Rooms' cont
 - `RuleEngine.Query<T>()` passthrough
 - `IEngineHost` interface (`Rules` property, `Announce` method)
 - `GameEngineCore` implements `IEngineHost` via explicit interface implementation
-- The public `LunaFlow.Engine.Engine.Host` static gateway (`Engine.Host.Rules`, `Engine.Host.Announce(...)`)
-- `nine-rooms-spec.md` updated to reference `IEngineHost`/`Engine.Host` instead of re-deriving
+- The public `LunaFlow.Engine.LunaFlowEngine.Host` static gateway (`LunaFlowEngine.Host.Rules`, `LunaFlowEngine.Host.Announce(...)`) — the class is `LunaFlowEngine`, not the spec's placeholder `Engine`, since a bare `Engine` resolves to the `LunaFlow.Engine` namespace first and won't compile from content assemblies
+- `nine-rooms-spec.md` updated to reference `IEngineHost`/`LunaFlowEngine.Host` instead of re-deriving
 
 ## Done when
 
-- Content code can call `Engine.Host.Rules.Query<T>()` and `Engine.Host.Announce(string)` without naming `GameEngineCore`
+- Content code can call `LunaFlowEngine.Host.Rules.Query<T>()` and `LunaFlowEngine.Host.Announce(string)` without naming `GameEngineCore`
 - `GameEngineCore` stays `internal sealed` with lifecycle control unreachable from outside `LunaFlow.Engine`
 - `ConsoleEngine` is unaffected
 - The three `ProjectReference` additions land together at Nine Rooms' first commit in Phase 1.5:
