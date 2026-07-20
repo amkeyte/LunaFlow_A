@@ -48,7 +48,8 @@ Neither role routes through the other; they meet at the seam via tickets.
 ## What the Game Designer does
 
 - Designs ROM modules and Rulebooks as buildable specs — precise enough that Baraka implements
-  without re-deriving intent (the `nine-rooms-spec.md` bar, but for real, non-disposable content).
+  without re-deriving intent (the `nine-rooms-spec.md` bar, but for real, non-disposable content),
+  structured per [`content-spec-template.md`](../Processes/content-spec-template.md).
 - Designs the Phase 4 scripting format's author-facing surface (ergonomics, what content it
   expresses); the parser/pipeline that consumes it stays Amara/Baraka's.
 - Insists content is *playable and coherent*, not merely implementable — the design lens engine
@@ -82,3 +83,4 @@ Neither role routes through the other; they meet at the seam via tickets.
 - [Dev — Implementation (Baraka)](dev.md)
 - [Supreme Leader (PM)](supreme-leader.md)
 - [Handoff ticket process](../Processes/handoff-tickets.md)
+- [Content Spec Template — buildable-spec shape](../Processes/content-spec-template.md)

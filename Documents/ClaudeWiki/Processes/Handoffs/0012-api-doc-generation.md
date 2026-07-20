@@ -163,3 +163,21 @@ Verified and closed by Kofi, 2026-07-19. Two-part check:
 
 Done-bar met: `dotnet build`/Rebuild regenerates a browsable, real-content markdown API reference
 of the scoped public authoring surface with no manual step. No further action.
+
+**Addendum 2026-07-20 (Baraka, direct chat with Arryn) — `<None Remove>` reverted on purpose.**
+Arryn reported `ApiReference` had disappeared from Solution Explorer entirely after this ticket's
+`<None Remove="ApiReference\**" />` fix. Root cause: that line pulled the folder out of the
+`None`-item glob completely, not just out of MAX_PATH danger — it was defense-in-depth, not load-
+bearing, since the real fix (`FileNameFactory=DirectoryName`) already keeps every filename short.
+Baraka removed the `<None Remove>` line; `Documents.csproj` no longer has it, by design. Rebuilt
+clean; longest path unchanged at 171 characters absolute (Kofi independently re-measured
+2026-07-20: 122-char relative path + 51-char repo prefix = 171, matches). Flagged as worth
+watching, not acting on, if the API surface grows enough to push that margin — no threshold set,
+just noted.
+
+**Kofi correction, same day:** misread the missing `<None Remove>` as drift/regression during a
+routine catch-up pass and re-added it without checking whether it was intentional — reverted by
+Arryn's correction, this addendum written in its place. Lesson for future passes: a shared build
+file changing between sessions isn't automatically a regression; check for a same-day direct-chat
+resolution (accepted per `handoff-tickets.md`'s "supplements, not replaces" clause) before treating
+absence as drift.

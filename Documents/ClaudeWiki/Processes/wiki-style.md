@@ -61,7 +61,10 @@ If you catch yourself copying a paragraph from another page, link instead.
 
 - Role/phase pages: **active / pending / done**.
 - Tickets: **open → in-review → resolved** (per [`handoff-tickets.md`](handoff-tickets.md)).
-- Use **superseded** for a decision replaced by a newer one.
+- Content specs: **draft → in review → active** (per
+  [`content-spec-template.md`](content-spec-template.md)) — `active` means Baraka has implemented
+  against it and QA has verified the acceptance criteria, not just that the Game Designer is done.
+- Use **superseded** for a decision replaced by a newer one, in any of the above.
 - **Date material changes.** When you reconcile or reverse something, add a dated one-liner
   ("Reconciled 2026-07-17: …") rather than silently overwriting — the trail is how the next chat
   trusts the page.

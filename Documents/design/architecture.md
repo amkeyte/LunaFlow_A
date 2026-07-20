@@ -110,11 +110,30 @@ The current solution (`LunaFlow_A.sln`) has `LunaFlow.Engine`, `LunaFlow.Rules`,
 ├── scripts/
 │   └── core/                     # Lua scripts for core events and behaviors
 ├── data/                         # JSON: characters, scenes, world state
-├── doc_project/                  # DocFX project + generated API reference
-└── docs/
+└── Documents/
     └── design/                   # This folder — hand-written design docs
 ```
 
-`LunaFlow.Rom` now exists as an early stub — an empty `NineRooms/` folder so far, no code yet. Don't confuse it with `GameState`/`GameWorld`/`Session` in `LunaFlow.Engine.Game`: those are Engine-owned turn/session bookkeeping (turn number, connected sessions, per-connection context), not ROM content. Nine Rooms' actual game-domain facts — `Room`, `PlayerPosition`, `RoomSolved`, `WinMarker` — live in `LunaFlow.Rom.NineRooms` instead, per [`nine-rooms-spec.md`](../Specs/nine-rooms-spec.md). Once ROM work grows past Nine Rooms, expect `LunaFlow.Rom` to hold multiple independent modules (a Physics ROM, a Combat ROM, and so on) that a Rulebook opts into individually — see [System, setting, and session](#system-setting-and-session) above — rather than one monolithic model. (Nine Rooms itself is a deliberate exception to that: per `nine-rooms.md`, it's disposable test content that doesn't get a reusable module boundary.)
+**Corrected 2026-07-20:** the `doc_project/`/DocFX line and the `docs/` path (this folder is actually
+at `Documents/design/`, not `docs/design/`) were stale. Ticket 0012 settled the generated-API-reference
+question differently than this sketch assumed: no `doc_project/`, no DocFX (rejected — "HTML-site-first;
+wrong shape for an LLM consumer") — instead `DefaultDocumentation.Console`, wired as a post-build target
+on each authoring-surface `.csproj`, generating markdown directly into `Documents/ApiReference/`
+(gitignored except a tracked banner `README.md`). See `Documents/ApiReference/README.md` and
+[handoff ticket 0012](../ClaudeWiki/Processes/Handoffs/0012-api-doc-generation.md).
+
+**Corrected 2026-07-20 (Amara doc pass):** `LunaFlow.Rom` is no longer an empty stub — it holds real,
+checked-in Nine Rooms content (`NineRoomsContent`, `MoveCommandHandler`/`LookCommandHandler`/
+`AnswerCommandHandler`, the challenge/win-line/game-end rule classes, `NineRoomsReference`), and,
+as of the 1.d20 work, is where its d20 System/Scenario content is expected to land too. Don't confuse
+it with `GameState`/`GameWorld`/`Session` in `LunaFlow.Engine.Game`: those are Engine-owned turn/session
+bookkeeping (turn number, connected sessions, per-connection context), not ROM content. Nine Rooms'
+actual game-domain facts — `Room`, `PlayerPosition`, `RoomSolved`, `WinMarker` — live in
+`LunaFlow.Rom.NineRooms` instead, per [`nine-rooms-spec.md`](../NineRooms/nine-rooms-spec.md). Once
+ROM work grows past Nine Rooms, expect `LunaFlow.Rom` to hold multiple independent modules (a Physics
+ROM, a Combat ROM, and so on) that a Rulebook opts into individually — see
+[System, setting, and session](#system-setting-and-session) above — rather than one monolithic model.
+(Nine Rooms itself is a deliberate exception to that: per `nine-rooms.md`, it's disposable test content
+that doesn't get a reusable module boundary.)
 
 Rulebooks (concrete games built on top of LunaFlow) are expected to live in their own solutions/`.csproj`s outside this repo, consuming `LunaFlow.Rules`, `LunaFlow.Engine`, and whichever `LunaFlow.Rom` modules they depend on as libraries. An internal `LunaFlow.Examples` project may be added here for testing and documentation purposes, but it is not a rulebook itself.

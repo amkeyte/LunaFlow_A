@@ -1,6 +1,6 @@
 # 1.d20 — Implementation Spec
 
-**Status:** draft
+**Status:** in review — handed to Baraka via [ticket 0016](../../ClaudeWiki/Processes/Handoffs/0016-implement-1-d20.md); moves to `active` once implemented and QA-verified against the Acceptance criteria below.
 **Companion to:** [`../../design/1-d20.md`](../../design/1-d20.md) — the concept doc; read that
 first for *why* these calls were made. This doc is about *what to build*.
 **Supersedes:** nothing

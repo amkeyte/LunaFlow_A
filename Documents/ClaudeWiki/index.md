@@ -42,6 +42,7 @@ that helps a session ramp up fast and stay in scope, without belonging in a desi
 | [Test Patterns — concurrency-safe authoring](Processes/test-patterns.md) | Processes | active |
 | [Agent-Assisted Test Workflow](Processes/agent-test-workflow.md) | Processes | active |
 | [Wiki Style — page conventions](Processes/wiki-style.md) | Processes | active |
+| [Content Spec Template — buildable-spec shape](Processes/content-spec-template.md) | Processes | active |
 | [Skill — `qa-verify`](Tools/qa-verify-skill.md) | Tools | active |
 
 ## Migration candidates

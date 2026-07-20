@@ -13,7 +13,15 @@ Per the role breakdown in [`architecture.md`](architecture.md), the engine core 
 - `GameEngineCore` (in `Game/GameEngineCore.cs`) is an internal singleton (`GameEngineCore.Instance`) running a background-thread loop (`GameEngineCore.RunLoop`) driven by a command queue (`BlockingCollection<IGameCommand>`) and a manual turn gate (`FinishTurn()` / `TurnTick` event) — an explicit command queue plus an explicit turn-advance signal, rather than a tight synchronous loop, so it can serve more than one interface (CLI today, WebSocket later, per [`interfaces.md`](interfaces.md)) without those interfaces blocking each other on `Console.ReadLine()`-style calls.
 - `ConsoleEngine.Run()` is a working CLI translator: it reads input, parses it (`DefaultCommandParser.Parse` is implemented), and submits a `DispatchGameCommand` to `GameEngineCore`, blocking until that command completes before reading the next line.
 
-What's still open is the layer above this host, not the host itself: a narrow `IEngineHost` (`Rules`, `Announce`) reached via a public `LunaFlowEngine.Host` gateway — see [`../Specs/engine-host-spec.md`](../Specs/engine-host-spec.md), which supersedes `nine-rooms-spec.md`'s original bare-`Rules`-property/public-`Post` proposal since `GameEngineCore` is `internal sealed` and can't be named from outside `LunaFlow.Engine` at all — plus `RuleEngine.Query<T>()`, are declared as target contracts but not yet implemented. Tracked in [`roadmap.md`](roadmap.md) as Phase 1.1 (the `IEngineHost` surface itself) and Phase 1.5 (Nine-Rooms-specific wiring: unconditional `Fire()` after each dispatched command).
+**Corrected 2026-07-20 (Amara doc pass):** this paragraph used to describe the layer above the host
+as not-yet-built. It's built: a narrow `IEngineHost` (`Rules`, `Announce`) is reached via a public
+`LunaFlowEngine.Host` gateway exactly as `../Specs/engine-host-spec.md` specifies — superseding
+`nine-rooms-spec.md`'s original bare-`Rules`-property/public-`Post` proposal since `GameEngineCore`
+is `internal sealed` and can't be named from outside `LunaFlow.Engine` at all — and `RuleEngine`
+has a working `Query<T>()` passthrough. Both are live and in real use today: `MoveCommandHandler`
+(`LunaFlow.Rom.NineRooms`) calls `LunaFlowEngine.Host.Rules.Query<PlayerPosition>()`/`.Insert`/
+`.Retract` and `LunaFlowEngine.Host.Announce(...)` directly. Tracked in
+[`../Roadmap/roadmap.md`](../Roadmap/roadmap.md) as Phase 1.1 and Phase 1.5 — both **done**.
 
 ## Translators
 
@@ -23,7 +31,7 @@ What's still open is the layer above this host, not the host itself: a narrow `I
 
 Commands flow through three roles, already scaffolded in `LunaFlow.Engine.Commands`:
 
-- `ICommandParser` turns raw input (a console line, a WebSocket message) into an `ICommand` (`Name` + `Arguments`). `DefaultCommandParser.Parse` is currently an unimplemented stub — this is the actual blocker for getting a CLI session running end to end, not the engine loop itself.
+- `ICommandParser` turns raw input (a console line, a WebSocket message) into an `ICommand` (`Name` + `Arguments`). `DefaultCommandParser.Parse` is implemented (splits on whitespace, first token lowercased as the command name) — this line previously contradicted the "Current state vs. target" section above, which had it right; corrected 2026-07-20.
 - `ICommandDispatcher` routes a parsed `ICommand` to a registered `ICommandHandler` by name. `DefaultCommandDispatcher` is implemented and works standalone.
 - `ICommandHandler` implementations do the actual game-state mutation for one command name.
 
@@ -35,12 +43,20 @@ This pipeline is shared by both hosts today and should stay host-agnostic — it
 
 Once rule evaluation is wired into the turn advance, the engine is expected to provide guarantees that individual rules shouldn't have to reimplement by hand:
 
-- **Settling markers** — once a marker fact like an end-of-game condition is present, further rule evaluation for that session stops. Rule authors shouldn't have to add `.Not<ExitGameMarker>()` to every rule by hand; see [`rule-pipeline.md`](rule-pipeline.md) for how the generator is expected to inject this automatically.
-- **One-time constraints** — a rule that should fire at most once per fact lifetime.
-- **Initial settle** — `GameEngineCore.Start()` seeds initial facts before any command is ever dispatched (per [`../Specs/nine-rooms-spec.md`](../Specs/nine-rooms-spec.md)'s `RuleEngineOptions.Seed`). If a rule's condition is already satisfied by those seed facts — Nine Rooms' start-room challenge is the concrete case — it needs a chance to fire before turn one, not just on the first command. This is a generic `Start()` guarantee (`Rules.Fire()` once, unconditionally, right after seeding completes), not something each ROM or Rulebook should have to remember to trigger itself.
-- **Evaluation phasing** — grouping rules into phases (e.g. via NRules agenda groups) so that, for example, all "reaction" rules resolve before the next command is accepted.
+- **Settling markers** — once a marker fact like an end-of-game condition is present, further rule evaluation for that session stops. Rule authors shouldn't have to add `.Not<ExitGameMarker>()` to every rule by hand. **Implemented** (corrected 2026-07-20): `[StandingRule(typeof(T))]` on a `RuleTemplate` does exactly this — `RuleCodeGenerator` emits `.Not<T>()` into the generated rule's `When()` automatically, verified in `RuleCodeGenerator.cs` and covered by Nadia's B1–B5 suite (property-level pickup, union across guards, dedup on the same type).
+- **One-time constraints** — a rule that should fire at most once per fact lifetime. Still open; no evidence either way found in a spot check, unlike the other three bullets here.
+- **Initial settle** — `GameEngineCore.Start()` seeds initial facts before any command is ever dispatched (per [`../Specs/nine-rooms-spec.md`](../Specs/nine-rooms-spec.md)'s `RuleEngineOptions.Seed`). If a rule's condition is already satisfied by those seed facts — Nine Rooms' start-room challenge is the concrete case — it needs a chance to fire before turn one, not just on the first command. **Implemented** (corrected 2026-07-20): `GameEngineCore.Start()` calls `Rules.Fire()` once, unconditionally, right after `Options.Rules.ApplyTo(Rules)` — the source comment on that line literally reads `"initial settle": rules already satisfied by seeded facts get a chance to fire before turn one`, word-for-word this guarantee.
+- **Evaluation phasing** — grouping rules into phases (e.g. via NRules agenda groups) so that, for example, all "reaction" rules resolve before the next command is accepted. Still open; no evidence found of agenda-group usage in a spot check.
 
-None of this is implemented yet, but the shape of the first piece of it is no longer hypothetical: `nine-rooms-spec.md` specifies a `GameEngineCore.Rules` property populated from `GameEngineOptions.Rules` (a `RuleEngineOptions` with `FromAssembly`/`FromTypes`/`Seed`) and a `RuleEngine.Query<T>()` passthrough so command handlers can read facts back out; `engine-host-spec.md` specifies the actual reachable surface for that and for announcing output — `IEngineHost` (`Rules`, `Announce`) via the public `LunaFlowEngine.Host` gateway, rather than widening `GameEngineCore.Post` to `public` directly, since `GameEngineCore` itself is `internal sealed` and unreachable from another assembly regardless of member accessibility. Those are declared as target contracts, not yet built (Phase 1.1/1.5 in [`roadmap.md`](roadmap.md)). Beyond that first slice, `RuleEngine` still exposes only raw `Insert`/`Update`/`Retract`/`Fire`, with no phasing or marker-injection on top — that's the gap between it and what `GeneratorServices` is meant to produce.
+**Corrected 2026-07-20:** this paragraph used to claim none of the above was implemented and that
+`IEngineHost`/`RuleEngine.Query<T>()` were undelivered target contracts. Both claims were stale —
+see the correction earlier in this doc under "Current state vs. target." Settling markers and
+initial settle are real, verified against source, not just IR-level plumbing. `RuleEngine` exposes
+`Insert`/`Update`/`Retract`/`Fire`/`Query<T>` (five members now, not four — `Query<T>` shipped with
+`IEngineHost`) plus `LoadRulesFromAssembly`/`LoadRulesFromType(s)`/`Clear`; still no phasing or
+marker-injection *on `RuleEngine` itself* — that logic lives in each generated rule's own `.Not<T>()`
+call, injected at generation time, not as a `RuleEngine`-level feature. One-time constraints and
+evaluation phasing remain genuinely open — no source evidence either way, not confirmed done.
 
 ## Component model: ROM, Rulebook, and the event bus
 

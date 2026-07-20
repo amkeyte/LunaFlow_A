@@ -65,5 +65,8 @@ deliberately left open rather than deleting Phase 3's doc.
 ## Related documents
 
 - [`design/1-d20.md`](../design/1-d20.md) — the concept doc this phase builds
+- [`Specs/1-d20/1-d20-spec.md`](../Specs/1-d20/1-d20-spec.md) — buildable spec, drafted (Juno) and
+  reviewed (Amara); splits rule-vs-handler scope for the `GeneratorServices` condition explicitly
+- [`Specs/1-d20/1-d20-flavor.md`](../Specs/1-d20/1-d20-flavor.md) — prose companion
 - [`NineRooms/nine-rooms.md`](../NineRooms/nine-rooms.md) — the Phase 1.5 precedent this phase's
   shape is modeled on
