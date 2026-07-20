@@ -1,0 +1,77 @@
+namespace LunaFlow.Rom.OneD20
+{
+    /// <summary>
+    /// The 1.d20 Department-7 mission content: the 3x3 room grid, the pregenerated PC and
+    /// monster, ability-score data, and the shared <see cref="D20ResolutionMechanic"/> instance.
+    /// </summary>
+    public static class OneD20Content
+    {
+        /// <summary>The nine rooms, keyed by <see cref="Room.Id"/>. Rooms 1, 5, 8 are Fight; the rest are SkillCheck.</summary>
+        public static readonly IReadOnlyDictionary<int, Room> Rooms = new Dictionary<int, Room>
+        {
+            [1] = new Room(1, 0, 0, RoomChallengeType.Fight, null, null, null, "room-1-desc"),
+            [2] = new Room(2, 0, 1, RoomChallengeType.SkillCheck, "Search", "Int", 10, "room-2-desc"),
+            [3] = new Room(3, 0, 2, RoomChallengeType.SkillCheck, "Climb", "Str", 12, "room-3-desc"),
+            [4] = new Room(4, 1, 0, RoomChallengeType.SkillCheck, "Listen", "Wis", 8, "room-4-desc"),
+            [5] = new Room(5, 1, 1, RoomChallengeType.Fight, null, null, null, "room-5-desc"),
+            [6] = new Room(6, 1, 2, RoomChallengeType.SkillCheck, "Swim", "Str", 10, "room-6-desc"),
+            [7] = new Room(7, 2, 0, RoomChallengeType.SkillCheck, "Disable Device", "Int", 12, "room-7-desc"),
+            [8] = new Room(8, 2, 1, RoomChallengeType.Fight, null, null, null, "room-8-desc"),
+            [9] = new Room(9, 2, 2, RoomChallengeType.SkillCheck, "Jump", "Str", 8, "room-9-desc"),
+        };
+
+        /// <summary>The room a new player starts in (the center of the grid — also a Fight room).</summary>
+        public const int StartRoomId = 5;
+
+        /// <summary>The pregenerated level-1 Strong-hero PC.</summary>
+        public static readonly PlayerCharacter PlayerCharacter =
+            new(new CombatantStats(Defense: 11, AttackBonus: 4, DamageDie: "1d8", DamageBonus: 3, MaxHp: 11));
+
+        /// <summary>The seedy man with a rapier — same monster in all three combat rooms.</summary>
+        public static readonly MonsterTemplate Monster =
+            new(new CombatantStats(Defense: 13, AttackBonus: 3, DamageDie: "1d6", DamageBonus: 1, MaxHp: 8));
+
+        /// <summary>The PC's six ability scores, per the Strong-hero sheet.</summary>
+        public static readonly IReadOnlyDictionary<string, int> PlayerAbilityScores = new Dictionary<string, int>
+        {
+            ["Str"] = 16,
+            ["Dex"] = 10,
+            ["Con"] = 16,
+            ["Int"] = 10,
+            ["Wis"] = 10,
+            ["Cha"] = 10,
+        };
+
+        /// <summary>The shared resolution Mechanic every <c>check</c>/<c>fight</c> roll goes through.</summary>
+        public static readonly D20ResolutionMechanic Mechanic = new();
+
+        /// <summary>The d20 System's ability modifier formula: <c>(score / 2) - 5</c>, rounded down.</summary>
+        public static int AbilityModifier(int score) => (int)Math.Floor(score / 2.0) - 5;
+
+        /// <summary>
+        /// Resolves moving from <paramref name="fromId"/> in <paramref name="direction"/> ("north"/"south"/"east"/"west").
+        /// Identical grid/adjacency to Nine Rooms.
+        /// </summary>
+        public static bool TryMove(int fromId, string direction, out int toId)
+        {
+            switch (direction.ToLowerInvariant())
+            {
+                case "north":
+                    toId = fromId - 3;
+                    return toId >= 1;
+                case "south":
+                    toId = fromId + 3;
+                    return toId <= 9;
+                case "east":
+                    toId = fromId + 1;
+                    return (fromId - 1) % 3 != 2;
+                case "west":
+                    toId = fromId - 1;
+                    return (fromId - 1) % 3 != 0;
+                default:
+                    toId = -1;
+                    return false;
+            }
+        }
+    }
+}
