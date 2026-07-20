@@ -22,6 +22,22 @@
         public List<Type> StandingRules { get; set; } = new();
 
         /// <summary>
+        /// Gets or sets the namespaces the generated file needs. Copied from
+        /// <c>RulePrototype.RequiredUsings</c> by the parser; the generator unions/dedups these
+        /// across every <see cref="RuleIR"/> in a group when it writes one file's using block.
+        /// </summary>
+        public List<string> RequiredUsings { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets the C# statements to emit before the When()/Then() blocks (typically
+        /// variable declarations for Match&lt;T&gt;(() => x, ...)). Joined from
+        /// <c>RulePrototype.PreambleStatements</c> by the parser, one statement per line,
+        /// verbatim — kept as an opaque string for the same reason as ConditionCode/ActionCode
+        /// below (see rule-pipeline.md's IR section).
+        /// </summary>
+        public string PreambleCode { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the string representation of the condition logic.
         /// This is emitted directly in the generated class.
         /// </summary>

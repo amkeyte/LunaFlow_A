@@ -21,6 +21,14 @@ Architect owns *how*.
   or resequencing the roadmap, is the PM's call (act-then-report to Arryn). If a design need
   pushes past the current phase's scope, that's a conversation with the PM, not a unilateral
   expansion.
+- **Boundary:** does not edit `src/` — that's [Dev](dev.md) territory (see its Territory
+  section). This holds even for mechanical, shape-only changes (a DTO gaining a field a design
+  decision just pinned down, an interface signature the decision requires) — the temptation to
+  "just make the tiny edit while I'm here" is exactly what causes the Dev to re-derive or
+  reconcile against code they didn't write. The spec is the Architect's deliverable; turning it
+  into code, however small, is the Dev's. (One exception on record: ticket 0007 touched
+  `GeneratorServices` DTOs directly, before this boundary was made explicit — see that ticket's
+  Response for what changed and why; not a precedent to repeat.)
 
 ## What the Architect does
 

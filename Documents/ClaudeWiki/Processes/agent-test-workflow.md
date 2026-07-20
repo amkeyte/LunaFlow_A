@@ -28,6 +28,26 @@ to an agent.
   proposes a fix — or, mid-fix, runs a single narrow `dotnet test --filter` itself when it needs a
   quick yes/no without interrupting the user.
 
+## When each side runs (hard rule)
+
+Arryn stays in the testing loop by design — it's a primary way he keeps a finger on the project
+pulse. So:
+
+- **Agent may run solo:** a **narrow one-off** `--filter` for a quick mid-work yes/no (one test, one
+  class, one component). Cheap, disposable, doesn't need the user.
+- **User runs (hands-on):** any **doneness verification** — "everything's done," "all green," a phase
+  sign-off, or anything claiming the suite passes — **and any troubleshooting/diagnosis session**.
+  These are exactly the moments that matter, so the user runs the pass (or is in it) and the agent
+  triages the resulting `.trx`.
+
+Rule of thumb: a throwaway check is the agent's; a claim about the suite's *state*, or a hunt for
+what's broken, is the user's to run.
+
+**QA touchpoint:** this reaches [Lothar (QA)](../Roles/qa.md)'s final verdicts. A phase-doneness
+verdict is the "everything's done" case above — so its suite run is **user-run**: Arryn runs it,
+QA/the agent reads the `.trx` and writes the verdict from it, rather than the agent running the full
+suite solo and reporting a number.
+
 ## Producing a report from VS
 
 `LunaFlow_A.runsettings` (repo root) pins this for both entry points — no flags to remember.

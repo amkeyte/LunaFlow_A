@@ -61,7 +61,10 @@ against scope creep and analysis paralysis. See [supreme-leader-persona.md](supr
 
 ## Team
 
-- [Architect](architect.md) — full technical authority; designs the specs the Dev builds against.
+- [Architect](architect.md) ("Amara") — owns the **abstract**: engine/framework technical design.
+- [Game Designer](game-designer.md) ("Juno") — owns the **concrete**: ROM/Rulebook/scripting-content
+  design and specs. Systems-vs-client split with Amara; meets her at the seam via tickets. Hands
+  finished specs to the C# devs.
 - [Dev — Implementation](dev.md) ("Baraka") — owns `src/`, turns specs into working code, files
   tickets. Also the reusable template for scaling to more devs.
 - [Dev — Test Suite](dev-test.md) ("Nadia", on Haiku) — owns `tests/`, MSTest specialty on

@@ -1,4 +1,6 @@
-﻿namespace LunaFlow.Rules.GeneratorServices
+﻿using System.Reflection;
+
+namespace LunaFlow.Rules.GeneratorServices
 {
     /// <summary>
     /// Coordinates the full rule generation pipeline, from parsing to code generation to output.
@@ -26,11 +28,12 @@
         /// Executes the pipeline on the given context, performing parse, generation, and compilation steps.
         /// </summary>
         /// <param name="context">The context describing which rule groups to process.</param>
-        public void Compile(RuleParseContext context)
+        /// <returns>The compiled assembly produced by the configured <see cref="IRuleCompiler"/>.</returns>
+        public Assembly Compile(RuleParseContext context)
         {
             var ir = _parser.Parse(context);
             var unit = _generator.Generate(ir);
-            _compiler.Compile(unit);
+            return _compiler.Compile(unit);
         }
     }
 }

@@ -14,6 +14,8 @@ Terms as used across the design docs in this folder, alphabetical. Where a term 
 
 **Fact** — NRules terminology, used as-is: an object inserted into a rule session (`session.Insert(fact)`) that rules can match against. Not a LunaFlow-specific type.
 
+**GeneratedRuleReference** — the `ILunaFlowReference` the rule-pipeline generator assigns to every generated rule (`LunaFlow.Rules.GeneratorServices`, `public`). Flat dotted-path `FullPath` (`GroupName.RuleName`), no real `Parent`/`Subreferences` chain — same simplicity tier as Nine Rooms' hand-written `NineRoomsReference`. See rule-pipeline.md's D3 decision.
+
 **GeneratorServices** — the `LunaFlow.Rules.GeneratorServices` namespace: the rule-authoring pipeline (parser → IR generator → compiler) described in `rule-pipeline.md`.
 
 **GM / Storyteller** — the role that runs a live session: modifies world state, triggers events, uses the AI assistant. See the role table in `architecture.md`.
@@ -46,7 +48,7 @@ Terms as used across the design docs in this folder, alphabetical. Where a term 
 
 **RuleIR / RuleIRGroup** — the parsed, engine-agnostic intermediate representation of one rule / one group of rules, produced by an `IRuleParser`. See `rule-pipeline.md`.
 
-**RuleCodeUnit / RuleCodeClass** — the generated-code stage of the pipeline: a `RuleCodeUnit` is one output file (namespace + classes + registry method), a `RuleCodeClass` is one generated rule class within it.
+**RuleCodeUnit / RuleCodeClass** — the generated-code stage of the pipeline: a `RuleCodeUnit` is one output file (namespace + using block + classes + registry method), a `RuleCodeClass` is one generated rule class within it.
 
 **RulePrototype** — the author-facing DTO for describing one rule (`Name`, `WhenStatements`, `ThenStatements`, etc.) before it's parsed into `RuleIR`.
 

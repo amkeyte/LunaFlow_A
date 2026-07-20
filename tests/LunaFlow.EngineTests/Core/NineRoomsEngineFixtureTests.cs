@@ -14,8 +14,8 @@ namespace LunaFlow.EngineTests.Core
     /// (Nine Rooms is disposable content), that pipeline is not given an automated regression test.
     /// </summary>
     [TestClass]
+    [TestCategory("Engine")]
     [TestCategory("Phase1.5")]
-    [TestCategory("EngineFixture")]
     public class NineRoomsEngineFixtureTests
     {
         private RuleEngine _engine = null!;

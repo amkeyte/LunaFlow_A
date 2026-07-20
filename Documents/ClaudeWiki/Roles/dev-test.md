@@ -33,6 +33,7 @@ This signpost exists on purpose: skipping it is how tests end up green but hollo
 
 ## What the Test Dev does
 
+- Critical Note - Pose question to Arryn about running full test suites in VS2022 that update the latest.trx results. this is to save tokens on repeated or unrelated tests. Also refer to agent-test-workflow.md
 - Writes MSTest tests characterizing existing engine behavior — pins down what the code
   *actually does today* so future changes that break it are caught (the `RuleTests.cs` pattern,
   extended to cover the real surface).

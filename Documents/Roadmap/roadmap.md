@@ -10,7 +10,7 @@ This orders the design docs into a build sequence. It's **dependency order, not 
 | Phase 1 | done | [Engine core consolidation](phase-1.md) |
 | Phase 1.1 | done | [Engine host interface](phase-1-1.md) |
 | Phase 1.5 | done | [Nine Rooms test rulebook](phase-1-5.md) |
-| Phase 2 | pending | [Rule pipeline MVP](phase-2.md) |
+| Phase 2 | done | [Rule pipeline MVP](phase-2.md) |
 | Phase 3 | pending | [Vertical slice](phase-3.md) |
 | Phase 4 | pending | [World content & scripting](phase-4.md) |
 | Phase 5 | pending | [Interface expansion](phase-5.md) (can start at Phase 1) |

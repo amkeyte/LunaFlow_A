@@ -9,8 +9,8 @@ namespace LunaFlow.EngineTests.Core
     /// Covers: Command submission, queue ordering, thread safety, completion signals, error handling.
     /// </summary>
     [TestClass]
-    [TestCategory("Phase2")]
-    [TestCategory("CommandDispatch")]
+    [TestCategory("Engine_Game")]
+    [TestCategory("Phase1")]
     [DoNotParallelize]  // GameEngineCore.Instance is a singleton; tests must run sequentially to match production model
     public class GameEngineCoreCommandDispatchTests
     {

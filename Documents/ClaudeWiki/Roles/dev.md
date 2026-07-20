@@ -13,11 +13,14 @@ holds context on *how it's verified* — two threads, two specialties.
 
 ## Territory
 
-Owns `src/`. The automated test suite in `tests/` belongs to the [Test Dev](dev-test.md) — the
-two threads don't edit each other's territory; that separation is the point of the split. The
-implementation Dev may write a quick throwaway check while working, but the maintained suite is
-the Test Dev's domain, and a defect surfaced by a test comes back as a ticket, not a
-cross-territory edit.
+Owns `src/`, exclusively — including mechanical shape changes (a DTO field, an interface
+signature) that a design decision has already pinned down exactly. The Architect specs the shape;
+turning it into code is always the Dev's, even when the change looks small enough to do in
+passing — see [`architect.md`](architect.md)'s matching boundary note. The automated test suite
+in `tests/` belongs to the [Test Dev](dev-test.md) — the two threads don't edit each other's
+territory; that separation is the point of the split. The implementation Dev may write a quick
+throwaway check while working, but the maintained suite is the Test Dev's domain, and a defect
+surfaced by a test comes back as a ticket, not a cross-territory edit.
 
 ## Authority
 

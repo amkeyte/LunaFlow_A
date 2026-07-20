@@ -10,8 +10,8 @@ namespace LunaFlow.EngineTests.Core
     /// shutdown safety, concurrent turn advancement.
     /// </summary>
     [TestClass]
+    [TestCategory("Engine_Game")]
     [TestCategory("Phase1")]
-    [TestCategory("ThreadSafety")]
     [DoNotParallelize]  // GameEngineCore.Instance is a singleton; tests must run sequentially to match production model
     public class GameEngineCoreThreadSafetyTests
     {

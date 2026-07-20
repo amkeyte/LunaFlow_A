@@ -9,8 +9,8 @@ namespace LunaFlow.EngineTests.Core
     /// Covers: Turn advancement, TurnFinished gate, TurnTick events, turn counter, state synchronization.
     /// </summary>
     [TestClass]
+    [TestCategory("Engine_Game")]
     [TestCategory("Phase1")]
-    [TestCategory("TurnLoop")]
     [DoNotParallelize]  // GameEngineCore.Instance is a singleton; tests must run sequentially to match production model
     public class GameEngineCoreeTurnLoopTests
     {

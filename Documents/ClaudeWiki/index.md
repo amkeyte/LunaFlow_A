@@ -31,6 +31,7 @@ that helps a session ramp up fast and stay in scope, without belonging in a desi
 | [Supreme Leader (PM)](Roles/supreme-leader.md) | Roles | active |
 | [Persona — "Kofi"](Roles/supreme-leader-persona.md) | Roles | active |
 | [Architect](Roles/architect.md) | Roles | active |
+| [Game Designer](Roles/game-designer.md) | Roles | active |
 | [Dev — Implementation](Roles/dev.md) | Roles | active |
 | [Dev — Test Suite](Roles/dev-test.md) | Roles | active |
 | [QA / Verification](Roles/qa.md) | Roles | active |

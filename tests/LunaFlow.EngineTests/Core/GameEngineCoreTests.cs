@@ -9,8 +9,8 @@ namespace LunaFlow.EngineTests.Core
     /// These tests form the foundation for all engine-dependent tests.
     /// </summary>
     [TestClass]
-    [TestCategory("Phase2")]
-    [TestCategory("Lifecycle")]
+    [TestCategory("Engine_Game")]
+    [TestCategory("Phase1")]
     [DoNotParallelize]  // GameEngineCore.Instance is a singleton; tests must run sequentially to match production model
     public class GameEngineCoreTests
     {
