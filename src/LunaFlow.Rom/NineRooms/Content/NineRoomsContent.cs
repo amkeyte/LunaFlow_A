@@ -1,7 +1,11 @@
 namespace LunaFlow.Rom.NineRooms
 {
+    /// <summary>
+    /// The Nine Rooms example ROM content: the 3x3 room grid and the movement rule it plays by.
+    /// </summary>
     public static class NineRoomsContent
     {
+        /// <summary>The nine rooms, keyed by <see cref="Room.Id"/>.</summary>
         public static readonly IReadOnlyDictionary<int, Room> Rooms = new Dictionary<int, Room>
         {
             [1] = new Room(1, 0, 0, "The Gatehouse", "The Gatehouse.", "What is 7 + 5?", "12"),
@@ -15,8 +19,16 @@ namespace LunaFlow.Rom.NineRooms
             [9] = new Room(9, 2, 2, "The Tower", "The Tower.", "What comes once in a minute, twice in a moment, but never in a thousand years?", "the letter m"),
         };
 
+        /// <summary>The room a new player starts in (the center of the grid).</summary>
         public const int StartRoomId = 5;
 
+        /// <summary>
+        /// Resolves moving from <paramref name="fromId"/> in <paramref name="direction"/> ("north"/"south"/"east"/"west").
+        /// </summary>
+        /// <param name="fromId">The room id to move from.</param>
+        /// <param name="direction">"north", "south", "east", or "west" (case-insensitive).</param>
+        /// <param name="toId">The destination room id if the move is valid; otherwise -1.</param>
+        /// <returns>True if the move stays on the grid.</returns>
         public static bool TryMove(int fromId, string direction, out int toId)
         {
             switch (direction.ToLowerInvariant())
@@ -39,6 +51,9 @@ namespace LunaFlow.Rom.NineRooms
             }
         }
 
+        /// <summary>
+        /// Throws if any win line isn't reachable given the current rooms' Challenge/Answer content.
+        /// </summary>
         public static void Validate()
         {
             var reachable = WinLineCatalog.ReachableLines(Rooms);

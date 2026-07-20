@@ -1,0 +1,23 @@
+{
+  "Markdown.Exclude": [
+    "^\\w:LunaFlow\\.Engine\\.IGameEngine(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.IGameEngineTranslator(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.ConsoleEngine(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.CommandOptions(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.ICommand(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.ICommandHandler(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.ICommandDispatcher(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.DefaultCommand(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.DefaultCommandDispatcher(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.Commands\\.ICommandParser(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.Commands\\.DefaultCommandParser(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.Commands\\.QuitCommandHandler(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.Commands\\.HelpCommandHandler(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.Commands\\.EchoCommandHandler(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.Game\\.GameEngineMessagePostedEventArgs(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.Game\\.GameEngineOptions(\\.|$)",
+    "^\\w:LunaFlow\\.Engine\\.Game\\.RuleEngineOptions(\\.|$)",
+    "^N:LunaFlow\\.Engine\\.Commands$",
+    "^N:LunaFlow\\.Engine\\.Game$"
+  ]
+}

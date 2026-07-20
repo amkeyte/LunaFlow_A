@@ -8,7 +8,7 @@ See [`design/scripting-content.md`](design/scripting-content.md).
 
 Extend the rule pipeline to support authored scripts, not just hand-written C#.
 
-Only worth starting once Phase 2's IR is stable, since this phase's whole point is feeding the same IR from a different parser.
+Only worth starting once Phase 2's IR is stable, since this phase's whole point is feeding the same IR from a different parser. Also gated on [Phase 2.5](phase-2-5.md) delivering a working `IMechanic` — scripted content can't reference a dice mechanic that doesn't exist in the engine yet.
 
 ## Deliverables
 
@@ -24,6 +24,7 @@ A rule authored in the script format (not C#) fires correctly in a running sessi
 
 ## Related phases
 
-- Previous: [Phase 3 — Vertical slice](phase-3.md)
+- Previous: [Phase 2.5 — d20 vertical slice & mechanic infrastructure](phase-2-5.md) (supersedes
+  [Phase 3](phase-3.md) as the immediate predecessor)
 - Parallel: [Phase 5 — Interface expansion](phase-5.md) (can start once Phase 1 is done)
 - Next: [Phase 6 — GM AI assistant](phase-6.md)

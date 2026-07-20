@@ -6,6 +6,7 @@
     /// </summary>
     public interface IGameEngine
     {
+        /// <summary>Prepares the engine for its run loop.</summary>
         public void Initialize();
     }
 }

@@ -7,7 +7,7 @@
     public interface ILunaFlowReference
     {
         /// <summary>
-        /// unique class ID assigned at complie time
+        /// unique class ID assigned at compile time
         /// </summary>
         string ClassUID { get; }
         /// <summary>
@@ -37,7 +37,7 @@
     /// </summary>
     public interface IHasLunaFlowReference
     {
-
+        /// <summary>This object's reference.</summary>
         ILunaFlowReference Reference { get; }
     }
 }

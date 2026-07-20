@@ -7,7 +7,10 @@ namespace LunaFlow.Engine
     /// </summary>
     public interface IEngineHost
     {
+        /// <summary>The rule engine content can insert facts into and fire.</summary>
         RuleEngine Rules { get; }
+
+        /// <summary>Posts <paramref name="message"/> to the engine's <c>MessagePosted</c> event for the host translator to display.</summary>
         void Announce(string message);
     }
 }

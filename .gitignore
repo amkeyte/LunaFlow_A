@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Generated API reference (regenerated on every build by xmldocmd — see Documents/ApiReference/README.md)
+Documents/ApiReference/*/

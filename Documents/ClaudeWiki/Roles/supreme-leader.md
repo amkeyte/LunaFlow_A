@@ -35,8 +35,11 @@ wired into the roadmap.
 
 - **Does** read source files directly to verify status claims — this role spot-checks code
   rather than trusting another chat's or QA's "done" without evidence.
-- **Does not** run builds or tests itself — delegates verification that needs a toolchain to
-  a role-chat that actually has `dotnet` available (this session's sandbox doesn't).
+- **Does not** run builds or tests itself — no toolchain in this session's sandbox. Asks Arryn
+  directly to run the check (this is the default path, not a fallback — it doubles as one of
+  the ways she keeps a hand on the project's pulse, rather than spinning up a separate dev-chat
+  for a one-line verification). Ask for a full rebuild, not an incremental build — an
+  up-to-date/skipped project proves nothing.
 - **Does not** do deep or line-by-line code review — delegates that to a review-focused chat
   or agent. This role checks shape and cross-doc consistency, not code quality.
 
@@ -73,6 +76,3 @@ against scope creep and analysis paralysis. See [supreme-leader-persona.md](supr
 - [QA / Verification](qa.md) — independent verifier; can block a phase from being marked done.
   The enforcement arm of this role's own anti-rubber-stamping rule.
 
-## Open items
-
-- _(none currently)_

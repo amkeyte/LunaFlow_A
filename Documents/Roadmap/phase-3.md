@@ -1,6 +1,9 @@
 # Phase 3 — Vertical slice
 
-**Status:** pending
+**Status:** superseded by [Phase 2.5](phase-2-5.md) — kept for reference, not deleted. 1.d20 is
+expected to prove this phase's done-bar as a side effect of proving the d20 mechanic
+infrastructure (see Phase 2.5's supersession note). If that turns out not to hold, revive this
+phase rather than reinventing it.
 
 ## Overview
 
@@ -18,4 +21,5 @@ You can type a command into the running console host and see a rule-driven respo
 ## Related phases
 
 - Previous: [Phase 2 — Rule pipeline MVP](phase-2.md)
-- Next: [Phase 4 — World content & scripting](phase-4.md)
+- Superseded by: [Phase 2.5 — d20 vertical slice & mechanic infrastructure](phase-2-5.md)
+- Next (if revived): [Phase 4 — World content & scripting](phase-4.md)

@@ -23,6 +23,7 @@ namespace LunaFlow.Rules.GeneratorServices
     /// </remarks>
     public sealed class GeneratedRuleReference : ILunaFlowReference
     {
+        /// <summary>Creates a flat reference identifying a generated rule by its group and rule name.</summary>
         public GeneratedRuleReference(string groupName, string ruleName)
         {
             Identifier = ruleName;
@@ -30,11 +31,17 @@ namespace LunaFlow.Rules.GeneratorServices
             FullPath = $"{groupName}.{ruleName}";
         }
 
+        /// <inheritdoc/>
         public string ClassUID { get; }
+        /// <inheritdoc/>
         public string Identifier { get; }
+        /// <inheritdoc/>
         public string FullPath { get; }
+        /// <inheritdoc/>
         public string Path => Identifier;
+        /// <inheritdoc/>
         public ILunaFlowReference Parent => null!;
+        /// <inheritdoc/>
         public IEnumerable<ILunaFlowReference> Subreferences => Array.Empty<ILunaFlowReference>();
     }
 }

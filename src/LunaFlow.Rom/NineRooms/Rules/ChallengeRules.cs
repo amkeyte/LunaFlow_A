@@ -3,10 +3,15 @@ using LunaFlow.Rules;
 
 namespace LunaFlow.Rom.NineRooms
 {
+    /// <summary>
+    /// Announces Room 1's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// </summary>
     public sealed class Room1ChallengeRule : ARule
     {
+        /// <inheritdoc/>
         public override ILunaFlowReference Reference { get; } = new NineRoomsReference("Room1Challenge");
 
+        /// <inheritdoc/>
         public override void Define()
         {
             Room room = null!;
@@ -20,10 +25,15 @@ namespace LunaFlow.Rom.NineRooms
         }
     }
 
+    /// <summary>
+    /// Announces Room 2's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// </summary>
     public sealed class Room2ChallengeRule : ARule
     {
+        /// <inheritdoc/>
         public override ILunaFlowReference Reference { get; } = new NineRoomsReference("Room2Challenge");
 
+        /// <inheritdoc/>
         public override void Define()
         {
             Room room = null!;
@@ -37,10 +47,15 @@ namespace LunaFlow.Rom.NineRooms
         }
     }
 
+    /// <summary>
+    /// Announces Room 3's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// </summary>
     public sealed class Room3ChallengeRule : ARule
     {
+        /// <inheritdoc/>
         public override ILunaFlowReference Reference { get; } = new NineRoomsReference("Room3Challenge");
 
+        /// <inheritdoc/>
         public override void Define()
         {
             Room room = null!;
@@ -54,10 +69,15 @@ namespace LunaFlow.Rom.NineRooms
         }
     }
 
+    /// <summary>
+    /// Announces Room 4's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// </summary>
     public sealed class Room4ChallengeRule : ARule
     {
+        /// <inheritdoc/>
         public override ILunaFlowReference Reference { get; } = new NineRoomsReference("Room4Challenge");
 
+        /// <inheritdoc/>
         public override void Define()
         {
             Room room = null!;
@@ -71,10 +91,15 @@ namespace LunaFlow.Rom.NineRooms
         }
     }
 
+    /// <summary>
+    /// Announces Room 5's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// </summary>
     public sealed class Room5ChallengeRule : ARule
     {
+        /// <inheritdoc/>
         public override ILunaFlowReference Reference { get; } = new NineRoomsReference("Room5Challenge");
 
+        /// <inheritdoc/>
         public override void Define()
         {
             Room room = null!;
@@ -88,10 +113,15 @@ namespace LunaFlow.Rom.NineRooms
         }
     }
 
+    /// <summary>
+    /// Announces Room 6's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// </summary>
     public sealed class Room6ChallengeRule : ARule
     {
+        /// <inheritdoc/>
         public override ILunaFlowReference Reference { get; } = new NineRoomsReference("Room6Challenge");
 
+        /// <inheritdoc/>
         public override void Define()
         {
             Room room = null!;
@@ -105,10 +135,15 @@ namespace LunaFlow.Rom.NineRooms
         }
     }
 
+    /// <summary>
+    /// Announces Room 7's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// </summary>
     public sealed class Room7ChallengeRule : ARule
     {
+        /// <inheritdoc/>
         public override ILunaFlowReference Reference { get; } = new NineRoomsReference("Room7Challenge");
 
+        /// <inheritdoc/>
         public override void Define()
         {
             Room room = null!;
@@ -122,10 +157,15 @@ namespace LunaFlow.Rom.NineRooms
         }
     }
 
+    /// <summary>
+    /// Announces Room 8's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// </summary>
     public sealed class Room8ChallengeRule : ARule
     {
+        /// <inheritdoc/>
         public override ILunaFlowReference Reference { get; } = new NineRoomsReference("Room8Challenge");
 
+        /// <inheritdoc/>
         public override void Define()
         {
             Room room = null!;
@@ -139,10 +179,15 @@ namespace LunaFlow.Rom.NineRooms
         }
     }
 
+    /// <summary>
+    /// Announces Room 9's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// </summary>
     public sealed class Room9ChallengeRule : ARule
     {
+        /// <inheritdoc/>
         public override ILunaFlowReference Reference { get; } = new NineRoomsReference("Room9Challenge");
 
+        /// <inheritdoc/>
         public override void Define()
         {
             Room room = null!;

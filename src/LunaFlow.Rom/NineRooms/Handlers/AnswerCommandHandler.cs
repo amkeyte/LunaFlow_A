@@ -2,8 +2,13 @@ using LunaFlow.Engine;
 
 namespace LunaFlow.Rom.NineRooms
 {
+    /// <summary>
+    /// Handles the <c>answer</c> command: checks the player's answer against the current room's
+    /// challenge and marks the room solved if it matches.
+    /// </summary>
     public sealed class AnswerCommandHandler : ICommandHandler
     {
+        /// <summary>Compares <paramref name="command"/>'s arguments (joined) against the current room's answer.</summary>
         public void Handle(ICommand command)
         {
             var answer = string.Join(' ', command.Arguments).Trim();

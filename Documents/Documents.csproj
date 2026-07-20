@@ -10,7 +10,6 @@
     <Folder Include="ClaudeWiki\" />
     <Folder Include="html\" />
     <Folder Include="QA\" />
-    <Folder Include="Specs\d20\" />
   </ItemGroup>
 
 </Project>

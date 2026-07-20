@@ -2,8 +2,12 @@ using LunaFlow.Engine;
 
 namespace LunaFlow.Rom.NineRooms
 {
+    /// <summary>
+    /// Handles the <c>move</c> command: moves the player one step in a cardinal direction if the grid allows it.
+    /// </summary>
     public sealed class MoveCommandHandler : ICommandHandler
     {
+        /// <summary>Moves the player per <paramref name="command"/>'s direction argument, or announces the move is invalid.</summary>
         public void Handle(ICommand command)
         {
             var direction = command.Arguments.FirstOrDefault()?.ToString() ?? "";

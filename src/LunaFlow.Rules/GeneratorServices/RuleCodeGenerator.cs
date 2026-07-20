@@ -8,6 +8,9 @@ namespace LunaFlow.Rules.GeneratorServices
     /// </summary>
     public sealed class RuleCodeGenerator : IRuleIRGenerator
     {
+        /// <summary>
+        /// Generates the <see cref="RuleCodeUnit"/> for <paramref name="ir"/>: one rule class per <see cref="RuleIR"/>, plus the group's registry class.
+        /// </summary>
         public RuleCodeUnit Generate(RuleIRGroup ir)
         {
             var unit = new RuleCodeUnit

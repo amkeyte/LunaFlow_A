@@ -1,8 +1,8 @@
 # Nine Rooms — Implementation Spec
 
 **Status:** draft, for review. Supersedes nothing — this is the concrete companion to
-[`../design/nine-rooms.md`](../design/nine-rooms.md) (the concept doc) and
-[`../design/roadmap.md`](../design/roadmap.md) (Phase 1.5). Where this spec makes a call the
+[`nine-rooms.md`](nine-rooms.md) (the concept doc) and
+[`../Roadmap/roadmap.md`](../Roadmap/roadmap.md) (Phase 1.5). Where this spec makes a call the
 concept doc left open, that's noted explicitly in [`nine-rooms-gameplay.md`](nine-rooms-gameplay.md).
 Its own "Engine wiring" section, item 1 below, is itself superseded by
 [`engine-host-spec.md`](engine-host-spec.md) — referenced inline to use `IEngineHost` rather

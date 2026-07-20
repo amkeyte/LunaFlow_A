@@ -13,7 +13,7 @@ namespace LunaFlow.Engine
 
 
 
-        // Configuration containers for game-specific and command-related settings.
+        /// <summary>The underlying game engine's configuration, shared with the running <see cref="GameEngineCore"/> instance.</summary>
         public GameEngineOptions GameOptions => _engine.Options;
         private CommandOptions _commandOptions = new();
 
@@ -106,6 +106,7 @@ namespace LunaFlow.Engine
 
         }
 
+        /// <summary>True while the engine's run loop is active.</summary>
         public bool Running => _engine.Running;
         /// <summary>
         /// Reads input from the command source.
@@ -122,7 +123,10 @@ namespace LunaFlow.Engine
     public class CommandOptions
     {
         // Suggest making these nullable with proper null guards, or use required properties in .NET 8
+        /// <summary>The parser used to turn raw input into an <see cref="ICommand"/>. Defaults to <see cref="DefaultCommandParser"/>.</summary>
         public ICommandParser CommandParser { get; set; } = new DefaultCommandParser();
+
+        /// <summary>The dispatcher used to route parsed commands to their handlers. Defaults to <see cref="DefaultCommandDispatcher"/>.</summary>
         public ICommandDispatcher CommandDispatcher { get; set; } = new DefaultCommandDispatcher();
     }
 }

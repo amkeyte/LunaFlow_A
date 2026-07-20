@@ -10,6 +10,12 @@ namespace LunaFlow.Rules.GeneratorServices
     /// </summary>
     public sealed class ReflectionRuleParser : IRuleParser
     {
+        /// <summary>
+        /// Parses the single rule-group type in <paramref name="context"/> into a <see cref="RuleIRGroup"/>.
+        /// </summary>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="context"/> has zero or more than one rule-group type, or its type is missing <see cref="RuleGroupAttribute"/>.
+        /// </exception>
         public RuleIRGroup Parse(RuleParseContext context)
         {
             if (context.RuleGroupTypes.Count == 0)

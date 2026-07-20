@@ -306,16 +306,26 @@ namespace LunaFlow.Engine.Game
         void IEngineHost.Announce(string message) => Post(message);
     }
 
+    /// <summary>Event data for <see cref="GameEngineCore.MessagePosted"/>, carrying a single announcement string.</summary>
     public sealed class GameEngineMessagePostedEventArgs : EventArgs
     {
+        /// <summary>The announced message text.</summary>
         public string Message { get; }
+
+        /// <summary>Creates event data carrying <paramref name="message"/>.</summary>
         public GameEngineMessagePostedEventArgs(string message) => Message = message;
     }
 
+    /// <summary>Startup configuration for a <see cref="GameEngineCore"/> instance.</summary>
     public sealed class GameEngineOptions
     {
+        /// <summary>The display name for the running game. Defaults to "Unnamed".</summary>
         public string GameName { get; set; } = "Unnamed";
+
+        /// <summary>Whether the NRules-backed rule engine is active. Defaults to true.</summary>
         public bool EnableRulesEngine { get; set; } = true;
+
+        /// <summary>Which rule types and seed facts the rule engine loads at startup.</summary>
         public RuleEngineOptions Rules { get; } = new();
     }
 }

@@ -12,6 +12,10 @@ namespace LunaFlow.Rules.GeneratorServices
     /// </summary>
     public sealed class RoslynRuleCompiler : IRuleCompiler
     {
+        /// <summary>
+        /// Compiles <paramref name="codeUnit"/>'s source in memory and loads the resulting assembly.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The generated source failed to compile.</exception>
         public Assembly Compile(RuleCodeUnit codeUnit)
         {
             var source = BuildSource(codeUnit);

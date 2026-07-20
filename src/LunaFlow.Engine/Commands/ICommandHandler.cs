@@ -6,6 +6,7 @@
     /// </summary>
     public interface ICommandHandler
     {
+        /// <summary>Executes this handler's logic for <paramref name="command"/>.</summary>
         void Handle(ICommand command);
     }
 }

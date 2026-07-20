@@ -14,6 +14,7 @@ namespace LunaFlow.Engine
     /// </summary>
     public static class LunaFlowEngine
     {
+        /// <summary>The running engine, exposed through its content-facing <see cref="IEngineHost"/> surface.</summary>
         public static IEngineHost Host => GameEngineCore.Instance;
     }
 }

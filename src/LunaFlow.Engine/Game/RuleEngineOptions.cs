@@ -12,18 +12,21 @@ namespace LunaFlow.Engine.Game
         private readonly List<Type> _types = new();
         private readonly List<Func<IEnumerable<object>>> _seedProviders = new();
 
+        /// <summary>Loads every rule type found in <paramref name="assembly"/>.</summary>
         public RuleEngineOptions FromAssembly(Assembly assembly)
         {
             _assemblies.Add(assembly);
             return this;
         }
 
+        /// <summary>Loads the given rule <paramref name="types"/> explicitly.</summary>
         public RuleEngineOptions FromTypes(params Type[] types)
         {
             _types.AddRange(types);
             return this;
         }
 
+        /// <summary>Registers <paramref name="factsProvider"/> to seed initial facts into the rule engine at startup.</summary>
         public RuleEngineOptions Seed(Func<IEnumerable<object>> factsProvider)
         {
             _seedProviders.Add(factsProvider);
