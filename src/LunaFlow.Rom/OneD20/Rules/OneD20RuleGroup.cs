@@ -28,19 +28,20 @@ namespace LunaFlow.Rom.OneD20
 
         /// <summary>
         /// Builds a room's challenge-prompt <see cref="RulePrototype"/>: announces the room's
-        /// description while the player is there and it's neither solved nor failed, and no win
-        /// has fired yet. Combat rooms additionally announce <c>monster-desc</c> under the same
-        /// guard — no separate first-visit tracking fact, per 1-d20-spec.md.
+        /// prompt while the player is there and it's neither solved nor failed, and no win has
+        /// fired yet. Skill-check rooms announce their own <c>PromptKey</c>; combat rooms announce
+        /// the fixed <c>monster-desc</c> key instead (<c>PromptKey</c> is null for them).
+        /// <c>DescriptionKey</c> is never announced here — that's <c>MoveCommandHandler</c>'s job,
+        /// unconditionally, the fix for the double-announce ticket 0018 recodes.
         /// </summary>
         private static RulePrototype ChallengeRule(int roomId)
         {
-            // NRules' Then().Do() takes an Expression<Action<IContext>> — a statement-bodied
-            // lambda ({ a; b; }) can't convert to an expression tree, so a combat room's second
-            // Announce is a second chained .Do() (each one a single-expression lambda), not one
-            // block-bodied Do().
-            var thenStatements = new List<string> { "Do(ctx => LunaFlowEngine.Host.Announce(OneD20Flavor.Text[room.DescriptionKey]))" };
-            if (CombatRoomIds.Contains(roomId))
-                thenStatements.Add("Do(ctx => LunaFlowEngine.Host.Announce(OneD20Flavor.Text[\"monster-desc\"]))");
+            var thenStatements = new List<string>
+            {
+                CombatRoomIds.Contains(roomId)
+                    ? "Do(ctx => LunaFlowEngine.Host.Announce(OneD20Flavor.Text[\"monster-desc\"]))"
+                    : "Do(ctx => LunaFlowEngine.Host.Announce(OneD20Flavor.Text[room.PromptKey!]))",
+            };
 
             return new RulePrototype
             {

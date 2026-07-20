@@ -4,9 +4,11 @@ namespace LunaFlow.Rom.OneD20
 {
     /// <summary>
     /// Handles the <c>fight</c> command: one round of attack-resolution against the current
-    /// combat room's monster. Starts a fresh <see cref="CombatRound"/> if none is active, resolves
-    /// the PC's attack, then (unless that ends the fight) the monster's counterattack, then the
-    /// 3-round clock. No-ops silently outside a fight room or once the room is solved/failed.
+    /// combat room's monster. Starts a fresh <see cref="CombatRound"/> (both combatants at full
+    /// HP) if none is active, resolves the PC's attack — narrating every roll, hit or miss — then
+    /// (unless that ends the fight) the monster's counterattack, then the 3-round clock. Losing a
+    /// fight fails the room (<see cref="RoomFailed"/>), same as the timeout; it never ends the
+    /// session. No-ops silently outside a fight room or once the room is solved/failed.
     /// </summary>
     public sealed class FightCommandHandler : ICommandHandler
     {
@@ -14,9 +16,6 @@ namespace LunaFlow.Rom.OneD20
         public void Handle(ICommand command)
         {
             var rules = LunaFlowEngine.Host.Rules;
-            if (rules.Query<PlayerDown>().Any())
-                return;
-
             var current = rules.Query<PlayerPosition>().First();
             var room = OneD20Content.Rooms[current.RoomId];
 
@@ -33,13 +32,23 @@ namespace LunaFlow.Rom.OneD20
 
             var existingRound = rules.Query<CombatRound>().FirstOrDefault(cr => cr.RoomId == room.Id);
             var monsterHp = existingRound?.MonsterHp ?? monster.Stats.MaxHp;
+            var playerHp = existingRound?.PlayerHp ?? pc.Stats.MaxHp;
             var roundsElapsed = existingRound?.RoundsElapsed ?? 0;
             if (existingRound is not null)
                 rules.Retract(existingRound);
 
             // 1. PC attack.
-            if (mechanic.ResolveCheck(pc.Stats.AttackBonus, monster.Stats.Defense))
-                monsterHp -= mechanic.Roll(pc.Stats.DamageDie) + pc.Stats.DamageBonus;
+            var pcAttack = mechanic.ResolveCheck(pc.Stats.AttackBonus, monster.Stats.Defense);
+            if (pcAttack.Success)
+            {
+                var damage = mechanic.Roll(pc.Stats.DamageDie) + pc.Stats.DamageBonus;
+                monsterHp -= damage;
+                LunaFlowEngine.Host.Announce(OneD20Flavor.HitNarration("pc-hit", damage, Math.Max(monsterHp, 0)));
+            }
+            else
+            {
+                LunaFlowEngine.Host.Announce(OneD20Flavor.Text["pc-miss"]);
+            }
 
             if (monsterHp <= 0)
             {
@@ -49,19 +58,22 @@ namespace LunaFlow.Rom.OneD20
             }
 
             // 2. Monster counterattack (only reached if the PC's hit didn't finish the fight).
-            var playerHp = rules.Query<PlayerHp>().First();
-            if (mechanic.ResolveCheck(monster.Stats.AttackBonus, pc.Stats.Defense))
+            var monsterAttack = mechanic.ResolveCheck(monster.Stats.AttackBonus, pc.Stats.Defense);
+            if (monsterAttack.Success)
             {
-                var updatedHp = new PlayerHp(playerHp.Current - (mechanic.Roll(monster.Stats.DamageDie) + monster.Stats.DamageBonus));
-                rules.Retract(playerHp);
-                rules.Insert(updatedHp);
-                playerHp = updatedHp;
+                var damage = mechanic.Roll(monster.Stats.DamageDie) + monster.Stats.DamageBonus;
+                playerHp -= damage;
+                LunaFlowEngine.Host.Announce(OneD20Flavor.HitNarration("monster-hit", damage, Math.Max(playerHp, 0)));
+            }
+            else
+            {
+                LunaFlowEngine.Host.Announce(OneD20Flavor.Text["monster-miss"]);
             }
 
-            if (playerHp.Current <= 0)
+            if (playerHp <= 0)
             {
-                rules.Insert(new PlayerDown());
-                LunaFlowEngine.Host.Announce(OneD20Flavor.Text["pc-down"]);
+                rules.Insert(new RoomFailed(room.Id));
+                LunaFlowEngine.Host.Announce(OneD20Flavor.Text["pc-lost"]);
                 return;
             }
 
@@ -74,7 +86,7 @@ namespace LunaFlow.Rom.OneD20
             }
             else
             {
-                rules.Insert(new CombatRound(room.Id, monsterHp, roundsElapsed));
+                rules.Insert(new CombatRound(room.Id, monsterHp, playerHp, roundsElapsed));
             }
         }
     }

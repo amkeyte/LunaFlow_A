@@ -13,9 +13,6 @@ namespace LunaFlow.Rom.OneD20
         public void Handle(ICommand command)
         {
             var rules = LunaFlowEngine.Host.Rules;
-            if (rules.Query<PlayerDown>().Any())
-                return;
-
             var current = rules.Query<PlayerPosition>().First();
             var round = rules.Query<CombatRound>().FirstOrDefault(cr => cr.RoomId == current.RoomId);
             if (round is null)
@@ -26,9 +23,8 @@ namespace LunaFlow.Rom.OneD20
 
             // No PreviousRoomId exists if the very first fight (room 5, the start room) is fled
             // before any move has ever happened — nowhere defined to retreat to, so the PC just
-            // stays put. Not covered by 1-d20-spec.md's Open questions section; flagging as a
-            // Baraka's-judgment call the same way the spec already delegates the solved/failed
-            // check-and-fight messaging decision.
+            // stays put. Formalized in 1-d20-spec.md's Open questions section (was a disclosed
+            // judgment call in ticket 0016).
             var previous = rules.Query<PreviousRoomId>().FirstOrDefault();
             if (previous is null)
                 return;

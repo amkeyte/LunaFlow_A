@@ -9,15 +9,15 @@ namespace LunaFlow.Rom.OneD20
         /// <summary>The nine rooms, keyed by <see cref="Room.Id"/>. Rooms 1, 5, 8 are Fight; the rest are SkillCheck.</summary>
         public static readonly IReadOnlyDictionary<int, Room> Rooms = new Dictionary<int, Room>
         {
-            [1] = new Room(1, 0, 0, RoomChallengeType.Fight, null, null, null, "room-1-desc"),
-            [2] = new Room(2, 0, 1, RoomChallengeType.SkillCheck, "Search", "Int", 10, "room-2-desc"),
-            [3] = new Room(3, 0, 2, RoomChallengeType.SkillCheck, "Climb", "Str", 12, "room-3-desc"),
-            [4] = new Room(4, 1, 0, RoomChallengeType.SkillCheck, "Listen", "Wis", 8, "room-4-desc"),
-            [5] = new Room(5, 1, 1, RoomChallengeType.Fight, null, null, null, "room-5-desc"),
-            [6] = new Room(6, 1, 2, RoomChallengeType.SkillCheck, "Swim", "Str", 10, "room-6-desc"),
-            [7] = new Room(7, 2, 0, RoomChallengeType.SkillCheck, "Disable Device", "Int", 12, "room-7-desc"),
-            [8] = new Room(8, 2, 1, RoomChallengeType.Fight, null, null, null, "room-8-desc"),
-            [9] = new Room(9, 2, 2, RoomChallengeType.SkillCheck, "Jump", "Str", 8, "room-9-desc"),
+            [1] = new Room(1, 0, 0, RoomChallengeType.Fight, null, null, null, "room-1-desc", null, null, null),
+            [2] = new Room(2, 0, 1, RoomChallengeType.SkillCheck, "Search", "Int", 10, "room-2-desc", "check-2-success", "check-2-failure", "room-2-prompt"),
+            [3] = new Room(3, 0, 2, RoomChallengeType.SkillCheck, "Climb", "Str", 12, "room-3-desc", "check-3-success", "check-3-failure", "room-3-prompt"),
+            [4] = new Room(4, 1, 0, RoomChallengeType.SkillCheck, "Listen", "Wis", 8, "room-4-desc", "check-4-success", "check-4-failure", "room-4-prompt"),
+            [5] = new Room(5, 1, 1, RoomChallengeType.Fight, null, null, null, "room-5-desc", null, null, null),
+            [6] = new Room(6, 1, 2, RoomChallengeType.SkillCheck, "Swim", "Str", 10, "room-6-desc", "check-6-success", "check-6-failure", "room-6-prompt"),
+            [7] = new Room(7, 2, 0, RoomChallengeType.SkillCheck, "Disable Device", "Int", 12, "room-7-desc", "check-7-success", "check-7-failure", "room-7-prompt"),
+            [8] = new Room(8, 2, 1, RoomChallengeType.Fight, null, null, null, "room-8-desc", null, null, null),
+            [9] = new Room(9, 2, 2, RoomChallengeType.SkillCheck, "Jump", "Str", 8, "room-9-desc", "check-9-success", "check-9-failure", "room-9-prompt"),
         };
 
         /// <summary>The room a new player starts in (the center of the grid — also a Fight room).</summary>

@@ -29,7 +29,6 @@ var engine = new ConsoleEngine()
                 new PlayerPosition(OneD20Content.StartRoomId),
                 OneD20Content.PlayerCharacter,
                 OneD20Content.Monster,
-                new PlayerHp(OneD20Content.PlayerCharacter.Stats.MaxHp),
             });
     })
     .ConfigureCommand(opts =>

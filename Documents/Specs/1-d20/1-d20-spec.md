@@ -1,19 +1,50 @@
 # 1.d20 — Implementation Spec
 
-**Status:** in review — handed to Baraka via [ticket 0016](../../ClaudeWiki/Processes/Handoffs/0016-implement-1-d20.md); moves to `active` once implemented and QA-verified against the Acceptance criteria below.
+**Status:** in review — revised after a playtest of ticket 0016's build (see revision notes below).
+Recode handed to Baraka via [ticket 0018](../../ClaudeWiki/Processes/Handoffs/0018-recode-1-d20-per-revised-spec.md);
+moves to `active` once implemented and QA-verified against the Acceptance criteria below.
 **Companion to:** [`../../design/1-d20.md`](../../design/1-d20.md) — the concept doc; read that
 first for *why* these calls were made. This doc is about *what to build*.
 **Supersedes:** nothing
 **Flavor companion:** [`1-d20-flavor.md`](1-d20-flavor.md) — every prose field below is a key into
 that file, never literal text here.
 
-**Revised 2026-07-20:** Amara's review caught the spec conflating declarative rules with command
-handlers — `check`/`fight`/`flee` are handler-shaped (branching, multi-fact mutation, early
-returns), not rule-shaped, and an earlier draft's Framework Dependencies section read as if the
-`GeneratorServices` load-bearing condition covered them too. Fixed: [Mechanics / rules](#mechanics--rules)
-now splits declarative rules from command handlers explicitly, and the removed `MissionFailedRule`
-turned out to be redundant once framed correctly — its one real job (blocking further `check`/
-`fight` once `PlayerDown` exists) is a handler-level guard, not a rule at all.
+**Revised 2026-07-20 (Amara's review):** conflated declarative rules with command handlers —
+`check`/`fight`/`flee` are handler-shaped (branching, multi-fact mutation, early returns), not
+rule-shaped. Fixed: [Mechanics / rules](#mechanics--rules) splits declarative rules from command
+handlers explicitly; the removed `MissionFailedRule` turned out to be redundant once framed
+correctly.
+
+**Revised 2026-07-20 (playtest pass, after ticket 0016's build):** Arryn ran the actual console
+build and surfaced four real content-spec gaps, confirmed against `OneD20RuleGroup`/
+`FightCommandHandler`/`CheckCommandHandler` source, not guessed:
+
+1. **Double-announced room text** — `MoveCommandHandler` and the challenge-prompt rule both
+   announced the same `DescriptionKey`. Nine Rooms never hit this because it has two distinct
+   fields (`Description` always, `ChallengePrompt` only while unsolved); this spec had collapsed
+   them into one. Fixed: `Room` gains a `PromptKey`, separate from `DescriptionKey` — see
+   [Fact / marker vocabulary](#fact--marker-vocabulary).
+2. **Silent `fight` rounds** — only 3 of the (many) possible outcomes ever called `Announce()`;
+   an inconclusive round produced no output at all, reading as broken. Fixed: every roll narrates.
+3. **No HP visibility, anywhere** — neither combatant's HP was ever surfaced. Fixed: combat
+   narration states remaining HP, and `look` reports it while a fight is active.
+4. **Generic `check` messages** — one shared success/failure pair across all 6 different skill
+   checks. Fixed: each room gets its own pair, plus a mechanical roll/DC readout.
+
+One more, found by design review rather than reported directly: **PC HP never recovered between
+fights**, including after a `flee` — meaning a session's difficulty silently ratcheted with no
+way to see it coming, and losing a fight was a full session-ending `PlayerDown` state with no way
+to continue toward a different win line. Redesigned: `CombatRound` now seeds the PC's HP fresh
+(same moment it seeds the monster's), matching `flee`'s existing "fresh fight" language, and
+losing a fight now inserts `RoomFailed` — same as the 3-round timeout — instead of ending the
+whole session. `PlayerDown` is removed. This also resolves an asymmetry that was never a deliberate
+choice: two of combat's three outcomes already only failed the room; the third shouldn't have been
+different by accident.
+
+Ticket 0016's build matched this spec's *previous* revision faithfully — Baraka disclosed the
+double-announce as a cosmetic quirk rather than silently patching around it, which is exactly
+right and is how this got caught. [Ticket 0018](../../ClaudeWiki/Processes/Handoffs/0018-recode-1-d20-per-revised-spec.md)
+asks for a recode against this revision.
 
 ## Purpose
 
@@ -68,7 +99,13 @@ public sealed record Room(
     string? Skill,          // key ability's skill name, e.g. "Search" — null for Fight rooms
     string? SkillAbility,   // "Str" | "Dex" | "Con" | "Int" | "Wis" | "Cha" — null for Fight rooms
     int? DC,                // null for Fight rooms
-    string DescriptionKey); // → 1-d20-flavor.md
+    string DescriptionKey,  // → 1-d20-flavor.md; announced by MoveCommandHandler, always
+    string? SuccessKey,     // → 1-d20-flavor.md; SkillCheck rooms only, null for Fight rooms
+    string? FailureKey,     // → 1-d20-flavor.md; SkillCheck rooms only, null for Fight rooms
+    string? PromptKey);     // → 1-d20-flavor.md; announced by the challenge-prompt rule while
+                             // unsolved/unfailed — SkillCheck rooms only. Fight rooms use the
+                             // fixed `monster-desc` key instead (see Declarative rules below),
+                             // so PromptKey is null for them.
 
 public sealed record CombatantStats(
     int Defense,
@@ -84,21 +121,26 @@ public sealed record MonsterTemplate(CombatantStats Stats);  // singleton — sa
 New — mutable session state:
 
 ```csharp
-public sealed record PlayerHp(int Current);                          // singleton, updated not replaced-per-point
-public sealed record CombatRound(int RoomId, int MonsterHp, int RoundsElapsed); // one at a time; retracted when a fight ends
-public sealed record RoomFailed(int RoomId);                          // monster fled after 3 rounds — permanent
-public sealed record PreviousRoomId(int RoomId);                      // updated by Move, read by flee
-public sealed record PlayerDown();                                    // mission-ending marker
+public sealed record CombatRound(int RoomId, int MonsterHp, int PlayerHp, int RoundsElapsed);
+    // one at a time; both HP values seeded fresh from PlayerCharacter/MonsterTemplate MaxHp
+    // whenever a new CombatRound is created — no HP persists across separate fights, including
+    // a retry after `flee`. Retracted when a fight ends (win, loss, timeout, or flee).
+public sealed record RoomFailed(int RoomId);      // 3-round timeout OR PC HP reaches 0 — permanent
+public sealed record PreviousRoomId(int RoomId);  // updated by Move, read by flee
 ```
 
 Notes, mirroring `nine-rooms-facts.md`'s own notes where they still apply:
 
-- `PlayerPosition`, `PlayerHp`, `PreviousRoomId` — exactly one of each at a time; a change retracts
-  the old fact and inserts a new one, not `Update`, same reasoning Nine Rooms gives.
+- `PlayerPosition`, `PreviousRoomId` — exactly one of each at a time; a change retracts the old
+  fact and inserts a new one, not `Update`, same reasoning Nine Rooms gives. `CombatRound` follows
+  the same replace-not-update pattern for its `MonsterHp`/`PlayerHp`/`RoundsElapsed` fields as a
+  fight progresses.
 - `RoomSolved` and `RoomFailed` both accumulate and never retract — a room's outcome, once decided,
-  is permanent for the session.
+  is permanent for the session. **No PC-HP-based session-ending state exists anymore** — losing a
+  fight fails that room, same as the timeout; it never ends the session. See the revision note
+  above for why.
 - `CombatRound` exists only while a fight is in progress in the PC's current room; retracted on
-  win, on the 3-round timeout, or on `flee`.
+  win, on loss, on the 3-round timeout, or on `flee`.
 - No `SessionId` — same single-session assumption Nine Rooms makes, same reasoning.
 
 ## Mechanics / rules
@@ -108,12 +150,16 @@ Split per [Purpose](#purpose): declarative rules go through the pipeline, comman
 ### Declarative rules (via `GeneratorServices`/`RulePrototype` — Phase 2.5's condition applies)
 
 **Challenge-prompt rules** (one per room, or a generated equivalent — 9 total, same shape as Nine
-Rooms' `Room1ChallengeRule`...`Room9ChallengeRule`): announce the room's `DescriptionKey` text while
-`PlayerPosition` is that room and neither `RoomSolved` nor `RoomFailed` exists for it yet — same
-guard/activation pattern Nine Rooms already relies on, not a new one. For combat rooms, the same
-rule also announces `monster-desc` under the same guard (no separate "first visit" tracking fact —
-matching Nine Rooms' existing repeat-while-unsolved behavior rather than inventing a once-only
-variant).
+Rooms' `Room1ChallengeRule`...`Room9ChallengeRule`): while `PlayerPosition` is that room and
+neither `RoomSolved` nor `RoomFailed` exists for it yet — same guard/activation pattern Nine Rooms
+already relies on, not a new one — announce:
+
+- **Skill-check rooms:** the room's `PromptKey` (not `DescriptionKey` — that's the handler's job,
+  see below). This is the fix for the double-announce: `DescriptionKey` and `PromptKey` are now
+  different text, announced by two different call sites, the same separation Nine Rooms' own
+  `Description`/`ChallengePrompt` fields already had.
+- **Combat rooms:** the fixed `monster-desc` key (not room-specific — same monster, same line,
+  every combat room). `PromptKey` is null for these rooms; unused.
 
 **Win-line rules** (8 total, reused shape from `WinLineTopRowRule` etc.): unchanged from Nine Rooms
 — fire off the same three-`RoomSolved` pattern per line, insert `WinMarker(Line)`.
@@ -123,41 +169,67 @@ exists. Single condition, single action — the shape this rule family is proven
 
 ### Command handlers (hand-written `ICommandHandler`, same tier as `Move`/`Look` — not subject to the pipeline condition)
 
-**Reused verbatim:** `MoveCommandHandler`/`LookCommandHandler` and their adjacency rules — identical
-grid, no changes. `MoveCommandHandler` additionally updates `PreviousRoomId` (retract old, insert
-new) on every successful move, which Nine Rooms didn't need and this does (for `flee`).
+**Reused verbatim:** `MoveCommandHandler`'s adjacency rules — identical grid, no changes. It
+additionally updates `PreviousRoomId` (retract old, insert new) on every successful move, which
+Nine Rooms didn't need and this does (for `flee`), and announces the destination room's
+`DescriptionKey` unconditionally — same as Nine Rooms' `Description` behavior, and now the *only*
+call site that announces it (see the challenge-prompt rule above for the fix).
 
-Every handler below starts with the same guard, checked in code, not via an NRules `.Not<T>()`
-clause (there's no rule here to attach one to): if `PlayerDown` exists, do nothing.
+**`look`**: reused shape (announces the current room's `DescriptionKey` on demand, no fact
+changes), plus one addition — if a `CombatRound` is active for the current room, also announce
+both combatants' current HP (e.g. "You're at 8/11 HP. He's at 3/8 HP."). This is the fix for HP
+being invisible: `look` is the on-demand way to check status mid-fight, no new command needed.
 
 **`check`** (skill-check rooms only): valid only when `PlayerPosition` is a `SkillCheck` room with
 no `RoomSolved` yet. Rolls `1d20 + ability modifier` (per the room's `SkillAbility`) against the
-room's `DC` — via `IMechanic`'s generic check-resolution operation once it exists (see
-[Framework dependencies](#framework-dependencies)), not hand-rolled arithmetic in the handler.
+room's `DC` — via `D20ResolutionMechanic.ResolveCheck(modifier, targetNumber)`, the concrete
+`IMechanic` [ticket 0015](../../ClaudeWiki/Processes/Handoffs/0015-imechanic-dice-resolution.md)
+ruled on and [ticket 0016](../../ClaudeWiki/Processes/Handoffs/0016-implement-1-d20.md) already
+built — see [Framework dependencies](#framework-dependencies).
 
-- Success: insert `RoomSolved(RoomId)`, announce `check-success`.
-- Failure: announce `check-failure`, no state change — freely retryable, no clock, no penalty.
+- Success: insert `RoomSolved(RoomId)`, announce the room's `SuccessKey` (room-specific — see
+  `1-d20-flavor.md`), plus a handler-constructed mechanical readout: skill name, roll, DC (e.g.
+  "Search: rolled 14 vs. DC 10.").
+- Failure: announce the room's `FailureKey` plus the same mechanical readout. No state change —
+  freely retryable, no clock, no penalty.
+- Re-issuing `check` on an already-`RoomSolved` room: silent no-op. (Formalizes Baraka's disclosed
+  judgment call from ticket 0016 — sensible, adopted as specified behavior rather than left open.)
 
 **`fight`** (combat rooms only): valid only when `PlayerPosition` is a `Fight` room with no
-`RoomSolved`/`RoomFailed` yet. All rolls below go through the same `IMechanic` operation as `check`.
+`RoomSolved`/`RoomFailed` yet. All rolls go through `D20ResolutionMechanic`, same as `check`.
 
-1. If no `CombatRound` exists for this room, insert one (`MonsterHp` = monster's `MaxHp`,
-   `RoundsElapsed` = 0) — a fresh fight, whether this is the first attempt or a retry after an
-   earlier `flee`.
-2. PC attack: `1d20 + PlayerCharacter.AttackBonus` vs. `MonsterTemplate.Defense`. On a hit, reduce
-   `CombatRound.MonsterHp` by `DamageDie + DamageBonus`.
+1. If no `CombatRound` exists for this room, insert one — `MonsterHp` = monster's `MaxHp`,
+   `PlayerHp` = the PC's `MaxHp`, `RoundsElapsed` = 0. **Both combatants start every fight at full
+   HP**, whether this is the first attempt or a retry after an earlier `flee` or a prior loss in a
+   *different* room — no HP carries over between separate `CombatRound`s, ever.
+2. PC attack: `1d20 + PlayerCharacter.AttackBonus` vs. `MonsterTemplate.Defense`.
+   - Hit: reduce `CombatRound.MonsterHp` by `DamageDie + DamageBonus`; announce `pc-hit` plus the
+     damage dealt and the monster's remaining HP.
+   - Miss: announce `pc-miss`. No damage.
 3. If `MonsterHp ≤ 0`: insert `RoomSolved(RoomId)`, retract `CombatRound`, announce
    `monster-defeated`. Stop — no counterattack on the round that ends the fight.
 4. Otherwise, monster attack: `1d20 + MonsterTemplate.AttackBonus` vs. `PlayerCharacter.Defense`.
-   On a hit, reduce `PlayerHp.Current` by `DamageDie + DamageBonus`.
-5. If `PlayerHp.Current ≤ 0`: insert `PlayerDown()`, retract `CombatRound`, announce `pc-down`.
-   Stop. (This is the only place `PlayerDown` gets announced — no separate rule duplicates it.)
+   - Hit: reduce `CombatRound.PlayerHp` by `DamageDie + DamageBonus`; announce `monster-hit` plus
+     the damage taken and the PC's remaining HP.
+   - Miss: announce `monster-miss`. No damage.
+5. If `CombatRound.PlayerHp ≤ 0`: insert `RoomFailed(RoomId)` (not a session-ending state — see
+   the revision note and [Fact / marker vocabulary](#fact--marker-vocabulary)), retract
+   `CombatRound`, announce `pc-lost`. Stop.
 6. Otherwise increment `CombatRound.RoundsElapsed`. If it now equals 3: insert `RoomFailed(RoomId)`,
    retract `CombatRound`, announce `monster-fled`.
+7. Re-issuing `fight` on an already-`RoomSolved`/`RoomFailed` room: silent no-op (same formalized
+   call as `check`, above).
+
+Every step's `Announce()` combines a flavor key (the words) with handler-constructed dynamic
+values (the numbers — damage, HP, roll, DC). Flavor keys never contain numbers; numbers are never
+hardcoded into flavor text. Keeps the localization-style split intact even for dynamic content.
 
 **`flee`** (combat rooms only, `CombatRound` active): retract `CombatRound` (no
 `RoomSolved`/`RoomFailed` — reversible), announce `pc-flee`, move `PlayerPosition` to
-`PreviousRoomId`'s value. No roll, no `IMechanic` involvement.
+`PreviousRoomId`'s value. No roll, no `IMechanic` involvement. If `PreviousRoomId` doesn't exist
+yet (only reachable by fleeing room 5's fight before any `move` has happened this session):
+retract `CombatRound` and announce `pc-flee` without moving — stay put, encounter abandoned.
+(Formalizes Baraka's disclosed judgment call from ticket 0016.)
 
 ## Commands & handlers
 
@@ -167,56 +239,63 @@ All five are hand-written `ICommandHandler`s, same tier as Nine Rooms' checked-i
 | Command | Args | Valid when | Reads | Writes |
 | --- | --- | --- | --- | --- |
 | `move` | direction | always (grid rules apply) | `PlayerPosition` | `PlayerPosition`, `PreviousRoomId` |
-| `look` | — | always | `PlayerPosition`, `Room` | — |
+| `look` | — | always | `PlayerPosition`, `Room`, `CombatRound` (if active) | — |
 | `check` | — | in a `SkillCheck` room, unsolved | `Room`, ability mod | `RoomSolved` |
-| `fight` | — | in a `Fight` room, unsolved/unfailed | `PlayerCharacter`, `MonsterTemplate`, `CombatRound` | `CombatRound`, `RoomSolved`, `RoomFailed`, `PlayerHp`, `PlayerDown` |
+| `fight` | — | in a `Fight` room, unsolved/unfailed | `PlayerCharacter`, `MonsterTemplate`, `CombatRound` | `CombatRound`, `RoomSolved`, `RoomFailed` |
 | `flee` | — | `CombatRound` active | `PreviousRoomId` | `CombatRound`, `PlayerPosition` |
 
 ## Acceptance criteria
 
 - [ ] `move`/`look` behave identically to Nine Rooms on the same grid (adjacency, rejection at
       edges, room 5 start).
+- [ ] Entering any unsolved/unfailed room announces `DescriptionKey` exactly once (from the
+      handler) and its `PromptKey`/`monster-desc` exactly once (from the rule) — never the same
+      text twice, and never both a description and a prompt with identical content.
 - [ ] Each of the 6 skill-check rooms resolves `check` using its own skill/ability/DC from the
-      table in `1-d20.md`; a failed `check` leaves the room unsolved and retryable with no penalty.
+      table in `1-d20.md`, announces that room's specific `SuccessKey`/`FailureKey` (not a shared
+      generic message), and includes the mechanical roll/DC readout. A failed `check` leaves the
+      room unsolved and retryable with no penalty.
 - [ ] A successful `check` inserts exactly one `RoomSolved` for that room and never re-triggers the
       challenge-prompt announcement afterward.
-- [ ] `fight` in a fresh combat room seeds a `CombatRound` at the monster's full HP, not carried
-      over from a prior visit.
+- [ ] `fight` in a fresh `CombatRound` seeds *both* the monster's and the PC's HP at full `MaxHp`
+      — never carried over from a prior visit to this room or from a different room's fight.
+- [ ] Every `fight` round announces something — a hit/miss line plus damage and remaining HP on a
+      connect — even when the round doesn't end the encounter (no more silent rounds).
+- [ ] `look` while a `CombatRound` is active reports both combatants' current HP.
 - [ ] A `fight` round that drops the monster to 0 HP or below solves the room and skips the
       counterattack step (verify via a transcript where the last hit is lethal).
-- [ ] A `fight` round where the PC drops to 0 HP or below inserts `PlayerDown` and blocks all
-      further `check`/`fight` commands session-wide.
+- [ ] A `fight` round where the PC's `CombatRound.PlayerHp` drops to 0 or below inserts
+      `RoomFailed` for that room (not a session-ending state) and retracts `CombatRound` — verify
+      the session continues normally afterward and other rooms remain playable.
 - [ ] Three rounds of `fight` with neither combatant reduced to 0 inserts `RoomFailed`, retracts
       `CombatRound`, and makes `RoomSolved` permanently unreachable for that room — verify a later
       `fight` in the same room is rejected (nothing to fight).
 - [ ] `flee` during an active `CombatRound` retracts it without inserting `RoomSolved` or
       `RoomFailed`, and moves the PC to `PreviousRoomId`; a later `fight` in that same room starts a
-      fresh `CombatRound` at full monster HP.
+      fresh `CombatRound` at full HP for both combatants.
+- [ ] Fleeing room 5's fight with no prior `move` this session doesn't move the PC (no
+      `PreviousRoomId` exists yet) and doesn't throw.
 - [ ] Completing all three rooms in column `[3,6,9]` (skill checks only, no combat) fires
       `WinMarker`/`GameEndRule` — the combat-free win path is real, not just claimed.
 - [ ] Completing a line that includes a combat room (e.g. `[1,2,3]`) also fires `WinMarker`
       correctly when that room was solved via `fight`.
 - [ ] `RoomFailed` on any room in a given win line permanently removes that line as a win path for
       the session (verify no `WinMarker` fires for a line with a `RoomFailed` member, regardless of
-      the other two rooms' state).
+      the other two rooms' state) — check this for both causes of `RoomFailed` (timeout and a lost
+      fight).
 
 ## Framework dependencies
 
-- **`IMechanic`** needs real members to back two things the `check`/`fight` command handlers need
-  as first-class operations, not hand-rolled per-handler arithmetic: (1) rolling a die (`1d20`,
-  plus the PC's and monster's damage dice) and (2) resolving a `d20 + modifier vs. target number`
-  check generically, since both commands are the same underlying operation with different inputs.
-  This is close to the glossary's own canonical Mechanic example ("a `Dice` object and how to roll
-  it") — ticketed to Amara per [Phase 2.5](../../Roadmap/phase-2-5.md), not something this spec
-  builds. The handlers call it directly, the same way `MoveCommandHandler` calls
-  `LunaFlowEngine.Host.Rules` directly today — no pipeline involvement for handlers.
-- **`IMechanic`'s visibility/assembly home is an open seam, not assumed here.** `IMechanic` is
-  `internal` to `LunaFlow.Rules` today; if its concrete resolution Mechanic ends up living in
-  `LunaFlow.Rom` (which fits this spec's own System/Scenario framing — a resolution Mechanic is
-  exactly `architecture.md`'s "Dice object" example, ROM-tier by that precedent), that's a
-  cross-assembly reference needing the same treatment ticket 0014 gave `IEngineHost`. This spec
-  doesn't presume an answer — the command handlers above just need one call signature to hit,
-  wherever it resolves to. Amara's call, flagged here so it's not lost between chat and doc.
+- **`IMechanic` — resolved, no longer an open dependency.**
+  [Ticket 0015](../../ClaudeWiki/Processes/Handoffs/0015-imechanic-dice-resolution.md) ruled:
+  dice/check-resolution members don't go on `IMechanic` itself (that would bake one Mechanic's
+  shape into a shared contract); `IMechanic` grows only `IHasLunaFlowReference`, and goes `public`
+  — confirmed ROM-tier, same reasoning as ticket 0014's `IEngineHost` ruling. The concrete
+  implementation, `D20ResolutionMechanic` (`src/LunaFlow.Rom/OneD20/`), exists as of
+  [ticket 0016](../../ClaudeWiki/Processes/Handoffs/0016-implement-1-d20.md): `Roll(string die)`
+  and `ResolveCheck(int modifier, int targetNumber)`. `check`/`fight` call it directly — no
+  pipeline involvement for handlers, same as `MoveCommandHandler` calling `LunaFlowEngine.Host`
+  directly. This spec now names the concrete type instead of pointing at an open question.
 - **Rule authoring via `GeneratorServices`** — scoped narrowly to the
   [Declarative rules](#declarative-rules-via-generatorservicesruleprototype--phase-25s-condition-applies)
   subsection only (challenge-prompt, win-line, `GameEndRule`): those need to reach the engine as
@@ -229,16 +308,19 @@ All five are hand-written `ICommandHandler`s, same tier as Nine Rooms' checked-i
 
 ## Open questions / edge cases
 
-- **Soft-lock detection:** if enough `RoomFailed`s accumulate that no win line is reachable, the
-  session doesn't currently detect or announce this — the player just keeps playing a game they
-  can no longer win. Not solved here; flagging rather than silently deciding. Candidate for a small
-  follow-up rule (check reachable lines the way `WinLineCatalog` does, announce if none remain) if
-  playtesting shows this is a real dead end rather than a rare edge case.
-- **`check`/`fight` on a solved/failed room:** should re-issuing the command say something
-  (`"already handled"`) or just silently fail? Left to Baraka's judgment — no player-facing
-  behavior was specified because it doesn't affect any acceptance criterion above.
+- **Soft-lock detection — more likely to matter now than in the previous revision.**
+  `RoomFailed` now has two causes (timeout *and* a lost fight) instead of one, so it's reachable
+  more often. If enough accumulate that no win line is reachable, the session still doesn't detect
+  or announce this — the player just keeps playing a game they can no longer win. Still not solved
+  here; still flagging rather than silently deciding. Candidate for a small follow-up rule (check
+  reachable lines the way `WinLineCatalog` does, announce if none remain) — worth prioritizing this
+  time given the redesign makes it easier to hit.
 - **Weapon/proficiency fiat:** already decided in `1-d20.md` (both combatants treated as proficient
   by content-design fiat) — restated here only as a pointer, not re-litigated.
+
+Resolved since the last revision (formalized into the spec proper rather than left open):
+re-issuing `check`/`fight` on a solved/failed room is a silent no-op (Baraka's disclosed call from
+ticket 0016, adopted); fleeing room 5 before any `move` leaves the PC in place (same source).
 
 ## Related documents
 
@@ -249,3 +331,11 @@ All five are hand-written `ICommandHandler`s, same tier as Nine Rooms' checked-i
 - [`../../Roadmap/phase-2-5.md`](../../Roadmap/phase-2-5.md) — the phase this closes, and the
   `GeneratorServices` load-bearing condition
 - [`../../ClaudeWiki/Processes/content-spec-template.md`](../../ClaudeWiki/Processes/content-spec-template.md) — the template this follows
+- [Ticket 0015](../../ClaudeWiki/Processes/Handoffs/0015-imechanic-dice-resolution.md) — `IMechanic`
+  shape/visibility ruling
+- [Ticket 0016](../../ClaudeWiki/Processes/Handoffs/0016-implement-1-d20.md) — first build, against
+  the pre-playtest revision of this spec; disclosed the double-announce quirk this revision fixes
+- [Ticket 0017](../../ClaudeWiki/Processes/Handoffs/0017-1-d20-test-suite.md) — Nadia's automated
+  suite, filed against the same pre-playtest revision — will need to move with this one
+- [Ticket 0018](../../ClaudeWiki/Processes/Handoffs/0018-recode-1-d20-per-revised-spec.md) — recode
+  against this revision

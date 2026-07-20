@@ -30,6 +30,23 @@ namespace LunaFlow.Rom.OneD20
         }
 
         /// <summary>Rolls 1d20 + <paramref name="modifier"/> and reports whether it meets or beats <paramref name="targetNumber"/>.</summary>
-        public bool ResolveCheck(int modifier, int targetNumber) => Roll("1d20") + modifier >= targetNumber;
+        public CheckResult ResolveCheck(int modifier, int targetNumber)
+        {
+            var d20 = Roll("1d20");
+            var total = d20 + modifier;
+            return new CheckResult(d20, modifier, total, targetNumber, total >= targetNumber);
+        }
     }
+
+    /// <summary>
+    /// The outcome of a <see cref="D20ResolutionMechanic.ResolveCheck"/> call — carries the raw
+    /// roll and total alongside the pass/fail verdict so callers can build a mechanical readout
+    /// (1-d20-spec.md's "skill name, roll, DC" for <c>check</c>) without re-rolling.
+    /// </summary>
+    /// <param name="D20">The raw 1d20 die result, before <paramref name="Modifier"/>.</param>
+    /// <param name="Modifier">The modifier applied.</param>
+    /// <param name="Total"><paramref name="D20"/> + <paramref name="Modifier"/> — what's actually compared to <paramref name="TargetNumber"/>.</param>
+    /// <param name="TargetNumber">The DC or Defense this check was resolved against.</param>
+    /// <param name="Success">Whether <paramref name="Total"/> met or beat <paramref name="TargetNumber"/>.</param>
+    public readonly record struct CheckResult(int D20, int Modifier, int Total, int TargetNumber, bool Success);
 }
