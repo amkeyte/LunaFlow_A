@@ -3,7 +3,7 @@ namespace LunaFlow.Rom.D20System
     /// <summary>
     /// The d20 System's runtime registration point for Scenario-supplied data: room definitions,
     /// combatant stats, ability scores, and flavor text. Populated once by the composition root
-    /// (<c>Program.cs</c>) via <see cref="Configure"/> before rules compile/fire, per Phase 2.6's
+    /// (<c>Program.cs</c>) via <c>Configure</c> before rules compile/fire, per Phase 2.6's
     /// "direct system access" split — Rulebook content never touches <c>LunaFlow.Engine</c>, so it
     /// can't itself call <c>RuleExport.Compile</c> or wire handlers; it only ever hands data across
     /// this boundary.

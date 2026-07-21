@@ -4,10 +4,15 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LunaFlow.Rom\LunaFlow.Rom.csproj" />
   </ItemGroup>
+
+  <Target Name="GenerateApiReference" AfterTargets="Build">
+    <Exec Command="dotnet defaultdocumentation --AssemblyFilePath &quot;$(TargetPath)&quot; --OutputDirectoryPath &quot;$(MSBuildThisFileDirectory)..\..\Documents\ApiReference\$(MSBuildProjectName)&quot; --GeneratedAccessModifiers Public --IncludeUndocumentedItems --FileNameFactory DirectoryName" WorkingDirectory="$(MSBuildThisFileDirectory)" />
+  </Target>
 
 </Project>

@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ClaudeWiki\" />
     <Folder Include="html\" />
     <Folder Include="QA\" />
   </ItemGroup>

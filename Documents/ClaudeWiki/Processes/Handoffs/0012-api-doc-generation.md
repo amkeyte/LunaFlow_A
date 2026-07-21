@@ -181,3 +181,16 @@ Arryn's correction, this addendum written in its place. Lesson for future passes
 file changing between sessions isn't automatically a regression; check for a same-day direct-chat
 resolution (accepted per `handoff-tickets.md`'s "supplements, not replaces" clause) before treating
 absence as drift.
+
+**Addendum 2026-07-20 (Baraka, direct chat with Arryn) — the MAX_PATH margin got pushed, recurred
+during ticket 0022.** The "worth watching, no threshold set" note above wasn't enough to prevent a
+recurrence: Phase 2.6's `D20SystemContent.Configure(...)` (7 params, several nested generics) blew
+past the 260-char limit again. Root cause this time was two-fold — `LunaFlow.Rom.csproj`'s doc
+target was missing the `--ConfigurationFilePath` flag entirely (so a freshly-added
+`DefaultDocumentation.json` had zero effect until wired), and once fixed, the offending method was
+excluded via `Markdown.Exclude` as composition-root plumbing, same lever as ticket 0014. Full
+writeup, the actual failure mechanics, current measured margin (46 chars, down from this ticket's
+89), and a repeatable fix playbook now live at
+[`api-doc-generation.md`](../api-doc-generation.md) — **that page is now the canonical reference
+for this failure mode**; this ticket stays the historical origin record, not the place to keep
+re-deriving the fix.

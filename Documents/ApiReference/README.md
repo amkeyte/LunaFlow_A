@@ -34,7 +34,19 @@ Start at `<Project>/index.md` and drill down; every page links to its parent and
 
 - `LunaFlow.Rules/` — the rule-authoring surface (`ARule`, `ILunaFlowReference`,
   `GeneratorServices` attributes/`RulePrototype`/`RuleExport`, etc.)
-- `LunaFlow.Rom/` — ROM/content types (currently the Nine Rooms example content)
+- `LunaFlow.Rom/` — ROM/content types: `NineRooms` (disposable example content) and `D20System`
+  (the d20 System ROM Phase 2.6 retrofitted out of 1.d20 — six ability scores, resolution, attack
+  math, the five 1.d20 command handlers, and their fact shapes). One member,
+  `D20SystemContent.Configure(...)`, is deliberately excluded via `src/LunaFlow.Rom/DefaultDocumentation.json`
+  — it's composition-root wiring (`Program.cs` calls it once at startup), not authoring-surface
+  content, and its long parameter list was blowing past Windows' `MAX_PATH`. See
+  [`api-doc-generation.md`](../ClaudeWiki/Processes/api-doc-generation.md) if this pattern needs to
+  recur for another member.
+- `LunaFlow.Rulebook/` — Rulebook content: currently `OneD20` (Phase 2.6's split-out Scenario
+  data — the 9 rooms' specific skill/DC/flavor assignments, the monster stat block, the
+  pregenerated PC, and all flavor text). Pure data, no logic — added to this reference 2026-07-20
+  once Phase 2.6 gave it real content to document; before that it was an empty scaffold project not
+  worth wiring in.
 - `LunaFlow.Engine/` — scoped to just `LunaFlowEngine` (the content-facing entry point),
   `IEngineHost`, and `RuleEngine` — the actual content-authoring surface, per
   [handoff ticket 0014](../ClaudeWiki/Processes/Handoffs/0014-engine-api-surface-scope.md). Host
@@ -48,7 +60,7 @@ Start at `<Project>/index.md` and drill down; every page links to its parent and
   covered. *(Noted 2026-07-19, ticket 0014 close-out.)*
 
 Every public member is included (`--IncludeUndocumentedItems`), documented or not — nothing's
-silently dropped for lacking a comment. As of 2026-07-19 every public member across all three
+silently dropped for lacking a comment. As of 2026-07-20 every public member across all four
 projects does have one.
 
 The subfolders themselves are gitignored — they regenerate locally on every build. Only this

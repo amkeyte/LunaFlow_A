@@ -175,6 +175,14 @@ readouts, and combat narration as before the split.
 `architecture.md`/`engine-core.md`'s "no Rulebook touches engine primitives" rule, and
 `1-d20-spec.md` — all Amara's/Juno's.
 
+**Addendum, same day:** `D20SystemContent.Configure(...)`'s 7-parameter signature retriggered the
+`DefaultDocumentation` MAX_PATH failure first hit in ticket 0012 — VS2022 errored on the
+`Documents` project again. Fixed (excluded the method as composition-root plumbing via
+`LunaFlow.Rom`'s `DefaultDocumentation.json`, plus a real bug found in the process: that project's
+doc target was missing `--ConfigurationFilePath` entirely) and written up properly this time at
+[`api-doc-generation.md`](../api-doc-generation.md) so it's a lookup, not a re-derivation, next
+time. Rebuilt clean and re-ran the full suite after — still 96/96.
+
 ## Resolution
 
 _(Opener to fill in on close.)_
