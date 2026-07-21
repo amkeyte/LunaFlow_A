@@ -1,6 +1,6 @@
 # 0021 — Phase 2.6: confirm the System/Scenario split, then reconcile 1-d20-spec.md
 
-**Status:** open
+**Status:** resolved (item 1 only — see Resolution for item 2's disposition)
 **Opened by:** Supreme Leader (Kofi)
 **Opened:** 2026-07-20
 **For:** Game Designer (Juno)
@@ -77,4 +77,45 @@ implementation, not yet ticketed.
 
 ## Resolution
 
-_(Opener to fill in on close.)_
+Verified and closed by Kofi, 2026-07-20 — item 1 only; item 2 spun out separately, see below.
+
+Independently checked both of Juno's claims against `1-d20.md` directly rather than accepting the
+diff on her word:
+- **Down-state collapse:** confirmed at line 137, inside the "System keeps" list (starts line 121).
+  Real, not invented — her "implicit in attack resolution, no gap" call is reasonable; not
+  disputing it.
+- **Fight/flee/3-round clock:** confirmed as its own section ("Combat: `fight`, `flee`, and a hard
+  clock," line 90) sitting entirely *before* the "Scope split" section — genuinely never classified
+  either System or Scenario in the original doc, not something she missed. Her ruling (Scenario —
+  round-tracking and the clock-out consequence are this mission's pacing choice; System's
+  contribution stops at the attack-resolution primitive) is consistent with the project's own
+  System/Scenario framing elsewhere and doesn't need a bounce.
+
+`phase-2-6.md`'s deliverables independently confirmed to mention neither item, matching her claim
+of the gap. No contradiction with Amara's doc — correctly not escalated as a ticket, correctly
+left as a flagged note for whoever scopes deliverable 2's fact API instead.
+
+Item 1 fully satisfied: real diff performed, two genuine gaps found and ruled rather than
+rubber-stamped, no scope creep into item 2 or premature 2.d20 work.
+
+**Item 2 (`1-d20-spec.md` reconciliation) is not resolved by this ticket** — it was never
+actionable here, blocked on Baraka's Phase 2.6 implementation, which isn't ticketed yet. Closing
+this ticket for the part that's actually done rather than leaving it open indefinitely with no
+trigger; a fresh ticket to Juno will follow once that implementation lands, referencing this one
+and her fight/flee-ownership note for whoever picks it up.
+
+**Addendum 2026-07-20 — the design item 1 confirmed has since been superseded.** Further design
+discussion between Amara and Arryn sharpened `phase-2-6.md`'s dividing line: it's now
+"direct system access, not genericness" — a Rulebook can't author an `ICommandHandler` at all,
+full stop. The doc explicitly calls the old genericness-based split (the one this ticket reviewed:
+`check`/`fight` System-tier, `move`/`look`/`flee` Scenario-tier with fight/flee/`CombatRound`
+staying Scenario-owned) wrong. Under the new principle, all five handlers — including `fight`/
+`flee` — move to ROM, and `CombatRound` moves with them as ROM vocabulary.
+
+This doesn't reopen item 1 — the review Juno did was correct against what it was reviewing at the
+time, and the correction is an architecture-authority call (Amara's lane), not a content-design
+one needing her formal re-approval. Recorded here purely so this ticket doesn't read as current
+guidance to anyone who finds it later — the fight/flee-ownership ruling above no longer holds.
+[Ticket 0022](0022-implement-phase-2-6.md) (Baraka's implementation ask) has been rewritten to the
+current design; it was still unanswered when this was caught, so nothing downstream was built
+against the stale version.

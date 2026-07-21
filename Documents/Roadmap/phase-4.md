@@ -8,7 +8,7 @@ See [`design/scripting-content.md`](design/scripting-content.md).
 
 Extend the rule pipeline to support authored scripts, not just hand-written C#.
 
-Only worth starting once Phase 2's IR is stable, since this phase's whole point is feeding the same IR from a different parser. Also gated on [Phase 2.5](phase-2-5.md) delivering a working `IMechanic` — scripted content can't reference a dice mechanic that doesn't exist in the engine yet. And on [Phase 2.6](phase-2-6.md) proving a real ROM/Rulebook boundary — a World-Builder script can't be fenced out of "Rulebook- or ROM-level logic" (`architecture.md`'s role table) that isn't distinguishable in code yet.
+Only worth starting once Phase 2's IR is stable, since this phase's whole point is feeding the same IR from a different parser. Also gated on [Phase 2.5](phase-2-5.md) delivering a working `IMechanic` — scripted content can't reference a dice mechanic that doesn't exist in the engine yet. And on [Phase 2.8](phase-2-8.md) proving a real World Module tier — a World-Builder script is meant to author *that* tier specifically, which only makes sense once it's proven genuinely separable from Rulebook and ROM (and, per that phase, addable alongside other World Modules rather than exclusive of them), not just conventionally organized that way.
 
 ## Deliverables
 
@@ -24,7 +24,8 @@ A rule authored in the script format (not C#) fires correctly in a running sessi
 
 ## Related phases
 
-- Previous: [Phase 2.6 — ROM/Rulebook boundary fortification](phase-2-6.md) (which follows
-  [Phase 2.5](phase-2-5.md), itself superseding [Phase 3](phase-3.md))
+- Previous: [Phase 2.8 — World Module extraction](phase-2-8.md) (which follows
+  [Phase 2.7](phase-2-7.md), [Phase 2.6](phase-2-6.md), and [Phase 2.5](phase-2-5.md), the last of
+  which superseded [Phase 3](phase-3.md))
 - Parallel: [Phase 5 — Interface expansion](phase-5.md) (can start once Phase 1 is done)
 - Next: [Phase 6 — GM AI assistant](phase-6.md)
