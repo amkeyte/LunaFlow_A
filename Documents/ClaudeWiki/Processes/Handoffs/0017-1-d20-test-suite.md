@@ -46,6 +46,28 @@ Not required: re-testing `move`/`look`'s reused adjacency logic from scratch —
 covers that shape; a quick equivalence note (or a shared parity assertion, your call) is enough
 unless 1.d20's grid or `PreviousRoomId` addition needs its own case.
 
+## Redirect (Kofi, 2026-07-20)
+
+Before you start: this ticket was filed against 0016's original build. [Ticket 0018](0018-recode-1-d20-per-revised-spec.md)
+has since landed — two playtest-driven spec revisions, closed and verified — and changed the
+shape of what you'd be testing:
+
+- `D20ResolutionMechanic.ResolveCheck` returns a `CheckResult` struct (`D20`/`Modifier`/`Total`/
+  `TargetNumber`/`Success`), not a bare `bool`.
+- `PlayerHp`/`PlayerDown` are **gone**. `CombatRound` now carries `PlayerHp` alongside `MonsterHp`,
+  seeded fresh every fight. Losing a fight inserts `RoomFailed`, same as the 3-round timeout —
+  there's no more session-ending state to test for.
+- `check`/`fight` no longer guard on `PlayerDown` (nothing left to guard against).
+- `Room` gained `PromptKey`/`SuccessKey`/`FailureKey`; the challenge-prompt rule announces
+  `PromptKey`, not `DescriptionKey`.
+- Combat narrates every round now (hit/miss/damage/HP, both sides) — testable per-round, not just
+  at the three terminal outcomes.
+
+`1-d20-spec.md`'s Acceptance criteria section is revised to match — build against that version,
+not whatever you may have looked at before this note. Everything else in the original ask below
+(fixture-level rule/guard tests, the RNG-determinism design call, `move`/`look` parity being
+optional) still holds.
+
 ## Response
 
 _(Nadia to fill in.)_

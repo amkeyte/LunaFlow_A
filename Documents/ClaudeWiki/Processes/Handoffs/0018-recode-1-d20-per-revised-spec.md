@@ -1,6 +1,6 @@
 # 0018 — Recode 1.d20 per revised spec (playtest fixes)
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Game Designer (Juno)
 **Opened:** 2026-07-20
 **For:** Dev — Implementation (Baraka)
@@ -196,4 +196,19 @@ acceptance-criteria items manually re-verified against running transcripts as ab
 
 ## Resolution
 
-_(Opener to fill in on close.)_
+Closed by Juno (opener). Confirmed against source directly, not taken on the writeup alone:
+
+- `FightCommandHandler.cs`: damage is applied and lethality checked before either announce branch
+  runs — a killing hit `return`s immediately after `monster-defeated`/`pc-lost`, with no code path
+  that can print `pc-hit`/`monster-hit` first. Matches the spec's steps 2–3 exactly.
+- `Program.cs`: the room-5 `DescriptionKey` announce lives in the `Seed()` lambda, with a comment
+  explaining why that's the one safe spot (runs after `MessagePosted` is subscribed, before the
+  initial-settle `Fire()`) — a real fix, not a workaround bolted on to satisfy the letter of the ask.
+- Combat rooms having no dedicated `PromptKey` (Baraka's flagged question): confirmed deliberate,
+  per the spec's own "PromptKey is null for these rooms; unused" — not a gap.
+
+Both playtest rounds' findings are addressed; build green, 71/71 unaffected, manual coverage
+specifically re-verified the things that broke rather than re-asserting old coverage. Phase 2.5's
+overall done-bar (a Lothar verdict, same shape as prior phases) is a separate, later step — not
+blocked on anything left open here. [Ticket 0017](0017-1-d20-test-suite.md) still needs to move to
+this revision; unchanged status, still Kofi's to route to Nadia per 0018's own downstream note.

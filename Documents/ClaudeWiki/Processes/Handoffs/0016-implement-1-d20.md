@@ -1,6 +1,6 @@
 # 0016 — Implement 1.d20 (Phase 2.5)
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Supreme Leader (Kofi)
 **Opened:** 2026-07-20
 **For:** Dev — Implementation (Baraka)
@@ -128,4 +128,37 @@ Ready for Nadia to build the maintained automated suite (ticket
 
 ## Resolution
 
-_(Opener to fill in on close.)_
+Verified and closed by Kofi, 2026-07-20 — code-verified, not build-reverified independently
+(Arryn's call: "enough iteration on this one for a review").
+
+At last check-in I'd read the original build's source (`D20ResolutionMechanic`, `OneD20RuleGroup`,
+`FightCommandHandler`/`CheckCommandHandler`/`FleeCommandHandler`) and confirmed it matched
+0016's response line for line. Before this close, discovered [ticket 0018](0018-recode-1-d20-per-revised-spec.md)
+had since landed — Juno ran the actual playtest, found real content-spec gaps, revised the spec
+twice, and had Baraka recode significant parts of this ticket's build (per-round combat narration,
+room-specific check text, `PlayerHp`/`PlayerDown` deleted in favor of `CombatRound`-scoped HP, the
+lethal-hit narration-order bug, the room-5 startup-description bug) — all opened, built, and
+closed by Juno without routing through me. Re-read the *current* source fresh rather than trusting
+either writeup: `FightCommandHandler.cs`, `CheckCommandHandler.cs`, `Facts.cs`, `Program.cs` all
+match 0018's claims exactly, including the lethal-hit reordering (damage/threshold check happens
+strictly before either narration branch — no code path prints both) and the `Seed()`-lambda
+placement for the room-5 announce timing bug.
+
+0016's original ask is satisfied — 1.d20 exists, pipeline-authored declarative rules + hand-written
+handlers per the load-bearing condition, `IMechanic` ruling implemented correctly — but the
+literal 0016-era code no longer exists in the repo; 0018 superseded most of the handler layer
+before I closed this. Closing 0016 on that basis rather than re-litigating build evidence for code
+that's already been replaced. Neither 0016 nor 0018 individually re-ran an Arryn-witnessed fresh
+rebuild the way earlier tickets did — accepted here per Arryn's explicit call to stop iterating,
+disclosed rather than silently skipped.
+
+**Process note for the record:** 0018 shipped a real, verified improvement, and Juno closing her
+own opened ticket after Baraka's response was correct per the ownership rule. But it touched code
+this ticket was still open against, and I only found out by checking the ticket queue, not by
+being looped in. Nothing to fix process-wise — direct role-to-role tickets not routing through the
+PM is by design — just noting it as a reason to check the full queue routinely, not only the
+ticket I'm expecting to look at.
+
+Phase 2.5's overall done-bar is a Lothar verdict, same shape as prior phases — separate, later
+step, not blocked on anything here. [Ticket 0017](0017-1-d20-test-suite.md) redirected to target
+the current (post-0018) shape — see that ticket.
