@@ -1,10 +1,13 @@
-namespace LunaFlow.Rom.OneD20
+using LunaFlow.Rom.D20System;
+
+namespace LunaFlow.Rulebook.OneD20
 {
     /// <summary>
-    /// The 1.d20 Department-7 mission content: the 3x3 room grid, the pregenerated PC and
-    /// monster, ability-score data, and the shared <see cref="D20ResolutionMechanic"/> instance.
+    /// The 1.d20 Department-7 mission's Scenario data: the 9 rooms' specific skill/DC/flavor-key
+    /// assignments, the pregenerated PC's sheet, and the monster's stat block — instances of the
+    /// <c>D20System</c> ROM's fact shapes, nothing more. Pure data; no logic, no fact-store access.
     /// </summary>
-    public static class OneD20Content
+    public static class OneD20RulebookContent
     {
         /// <summary>The nine rooms, keyed by <see cref="Room.Id"/>. Rooms 1, 5, 8 are Fight; the rest are SkillCheck.</summary>
         public static readonly IReadOnlyDictionary<int, Room> Rooms = new Dictionary<int, Room>
@@ -41,37 +44,5 @@ namespace LunaFlow.Rom.OneD20
             ["Wis"] = 10,
             ["Cha"] = 10,
         };
-
-        /// <summary>The shared resolution Mechanic every <c>check</c>/<c>fight</c> roll goes through.</summary>
-        public static readonly D20ResolutionMechanic Mechanic = new();
-
-        /// <summary>The d20 System's ability modifier formula: <c>(score / 2) - 5</c>, rounded down.</summary>
-        public static int AbilityModifier(int score) => (int)Math.Floor(score / 2.0) - 5;
-
-        /// <summary>
-        /// Resolves moving from <paramref name="fromId"/> in <paramref name="direction"/> ("north"/"south"/"east"/"west").
-        /// Identical grid/adjacency to Nine Rooms.
-        /// </summary>
-        public static bool TryMove(int fromId, string direction, out int toId)
-        {
-            switch (direction.ToLowerInvariant())
-            {
-                case "north":
-                    toId = fromId - 3;
-                    return toId >= 1;
-                case "south":
-                    toId = fromId + 3;
-                    return toId <= 9;
-                case "east":
-                    toId = fromId + 1;
-                    return (fromId - 1) % 3 != 2;
-                case "west":
-                    toId = fromId - 1;
-                    return (fromId - 1) % 3 != 0;
-                default:
-                    toId = -1;
-                    return false;
-            }
-        }
     }
 }

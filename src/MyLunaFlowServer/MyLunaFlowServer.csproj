@@ -11,6 +11,7 @@
     <ProjectReference Include="..\LunaFlow.Engine\LunaFlow.Engine.csproj" />
     <ProjectReference Include="..\LunaFlow.Rules\LunaFlow.Rules.csproj" />
     <ProjectReference Include="..\LunaFlow.Rom\LunaFlow.Rom.csproj" />
+    <ProjectReference Include="..\LunaFlow.Rulebook\LunaFlow.Rulebook.csproj" />
   </ItemGroup>
 
 </Project>

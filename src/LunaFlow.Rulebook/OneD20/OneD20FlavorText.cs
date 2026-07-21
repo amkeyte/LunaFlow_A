@@ -1,13 +1,14 @@
-namespace LunaFlow.Rom.OneD20
+namespace LunaFlow.Rulebook.OneD20
 {
     /// <summary>
     /// The 1.d20 flavor-text table, keyed exactly as in <c>1-d20-flavor.md</c>. The only place
-    /// this prose is allowed to live — rules and handlers look text up by key, never inline it.
-    /// Flavor keys never contain numbers; the numeric readouts (damage, HP, roll, DC) are always
-    /// handler-constructed and combined with flavor text via this class's narration helpers, never
-    /// hardcoded into the flavor text itself.
+    /// this prose is allowed to live — the <c>D20System</c> ROM's rules and handlers look text up
+    /// by key (via the configured <c>D20SystemContent.FlavorText</c>), never inline it. Flavor keys
+    /// never contain numbers; the numeric readouts (damage, HP, roll, DC) are always
+    /// handler-constructed and combined with flavor text via <c>D20SystemNarration</c>'s helpers,
+    /// never hardcoded into the flavor text itself.
     /// </summary>
-    public static class OneD20Flavor
+    public static class OneD20FlavorText
     {
         /// <summary>Flavor text, keyed per <c>1-d20-flavor.md</c>.</summary>
         public static readonly IReadOnlyDictionary<string, string> Text = new Dictionary<string, string>
@@ -51,21 +52,5 @@ namespace LunaFlow.Rom.OneD20
             ["check-9-success"] = "You clear the gap easily.",
             ["check-9-failure"] = "You pull up short at the edge. No harm — just try again.",
         };
-
-        /// <summary>Builds the <c>GameEndRule</c> announcement: the win-announce text plus the winning line's room ids.</summary>
-        public static string WinAnnouncement(IReadOnlyList<int> line) =>
-            $"{Text["win-announce"]} (rooms {string.Join(", ", line)})";
-
-        /// <summary>Builds a <c>check</c> outcome's announcement: the room-specific flavor text plus the mechanical roll/DC readout.</summary>
-        public static string CheckNarration(string key, string skill, int total, int dc) =>
-            $"{Text[key]} ({skill}: rolled {total} vs. DC {dc}.)";
-
-        /// <summary>Builds a <c>fight</c> hit's announcement: the flavor text plus damage dealt and the target's remaining HP.</summary>
-        public static string HitNarration(string key, int damage, int remainingHp) =>
-            $"{Text[key]} ({damage} damage — {remainingHp} HP remaining.)";
-
-        /// <summary>Builds <c>look</c>'s mid-fight status line: both combatants' current/max HP.</summary>
-        public static string CombatStatus(int playerHp, int playerMaxHp, int monsterHp, int monsterMaxHp) =>
-            $"You're at {playerHp}/{playerMaxHp} HP. He's at {monsterHp}/{monsterMaxHp} HP.";
     }
 }

@@ -103,7 +103,77 @@ Repo convention (`CLAUDE.md`): no state-changing git commands.
 
 ## Response
 
-_(Baraka to fill in.)_
+Implemented per the rewritten ticket. Summary, then the details worth flagging.
+
+**Structural split, as asked:**
+
+- All five handlers (`move`/`look`/`check`/`fight`/`flee`) moved to `LunaFlow.Rom.D20System`
+  (replacing flat `LunaFlow.Rom.OneD20`), along with the fact shapes (`Room`, `CombatantStats`,
+  `PlayerCharacter`, `MonsterTemplate`, `PlayerPosition`, `RoomSolved`, `WinMarker`, `CombatRound`,
+  `RoomFailed`, `PreviousRoomId`), `D20ResolutionMechanic`, and the declarative rule group (renamed
+  `D20SystemRuleGroup`, `[RuleGroup("D20System")]`).
+- `src/LunaFlow.Rulebook/` is wired into real use: `LunaFlow.Rulebook.OneD20` holds the 9 room
+  instances, the pregenerated PC/monster stat blocks, ability scores, and all flavor text
+  (`OneD20RulebookContent`/`OneD20FlavorText`) — pure data, zero logic, zero `LunaFlow.Engine`
+  references (verified by grep: the only match in the whole project is a doc-comment that names the
+  assembly, not a using/reference). `OneD20RuleBook : IRuleBook` declares its one ROM dependency
+  (`D20System`).
+- No fact-API-mediation layer was built — confirmed by construction, since Rulebook has no
+  fact-touching code path at all once the handlers moved.
+- `IRuleBook` grew from an empty marker to `IHasLunaFlowReference` + `IReadOnlyList<string>
+  DependsOnRoms`, mirroring `IMechanic`'s ticket-0015 treatment.
+
+**One real design decision beyond a mechanical move, flagging per the ticket's own "if anything's
+ambiguous, don't build around it silently" instruction:** NRules' declarative rule group is compiled
+and instantiated by NRules itself (via `RuleExport.Compile`), not by application code — it can't
+take constructor arguments the way a hand-written `ICommandHandler` can. So Scenario data reaches
+ROM two different ways depending on what's structurally possible:
+
+- The five handlers take optional constructor parameters (`Room` dictionary, PC, monster,
+  mechanic, ability scores), falling back to a new registry when omitted — exact mirror of the
+  existing `D20ResolutionMechanic? mechanic = null` seam from ticket 0019.
+- The rule group's generated code, and the handlers' fallback, both read from a new
+  `D20SystemContent` static class in ROM — populated once by the composition root
+  (`Program.cs`/tests' `ClassSetup`) via `D20SystemContent.Configure(...)` before rules compile or
+  fire. This isn't a new mechanism: `OneD20Content`/`OneD20Flavor` were already static content
+  holders that the generated rule code reached into directly; this just relocates the data source
+  to the Rulebook side and adds an explicit registration step, rather than inventing a DI container
+  NRules-compiled code has no way to use.
+
+**Also done, smaller items:**
+
+- `D20SystemNarration` (new, ROM) holds the four narration-formatting helpers
+  (`CheckNarration`/`HitNarration`/`CombatStatus`/`WinAnnouncement`) lifted out of the old
+  `OneD20Flavor` — pure format shape, no prose; they read the actual strings via
+  `D20SystemContent.FlavorText[key]`. The fixed event-slot keys (`"pc-hit"`, `"monster-defeated"`,
+  etc.) stay as literals in ROM code — same key-indirection pattern `Room.DescriptionKey`/
+  `PromptKey`/`SuccessKey`/`FailureKey` already used between ROM structure and Rulebook text.
+- Renamed the internal `OneD20Reference` → `D20SystemReference` (internal-only, not requested
+  verbatim but kept consistent with the namespace move — flagging since it wasn't literally asked
+  for, though low-risk).
+- `CombatRoomIds`/`WinLines` inside `D20SystemRuleGroup` were left as-is (not re-derived from
+  `Room.ChallengeType`) — the win-line room-id combinations are already-established grid-geometry
+  ROM content (per `phase-2-7.md`'s own "grid/win-line navigation" framing), and `CombatRoomIds` is
+  a private generation-time detail, redundant with but not contradicting `Room.ChallengeType`.
+  Touching it risked turning this into a logic rewrite instead of a structural move, against the
+  "if a test needs to change, that's a red flag" bar.
+
+**Fact shapes unchanged** — nothing here should require touching `1-d20-spec.md`'s documented fact
+vocabulary; only namespaces/ownership moved, not shapes. Flagging that conclusion here per the
+ticket's ask, for whoever files Juno's follow-up reconciliation ticket.
+
+**Verification:** `dotnet build LunaFlow_A.sln` — 0 errors. `grep -rn "LunaFlow.Engine"
+src/LunaFlow.Rulebook` — one match, a doc-comment, not a reference. `dotnet test
+tests/LunaFlow.EngineTests` — fresh run, 96/96 (including the 25 handler/fixture tests, relocated
+to `Rom/D20System/` and renamed `D20SystemHandlerTests`/`D20SystemRuleFixtureTests`, logic/assertions
+untouched — only namespaces, usings, and a `D20SystemContent.Configure(...)` setup call changed).
+Also ran a live manual transcript through `MyLunaFlowServer` (`move`/`look`/`check`/`move`/`fight`)
+confirming the runtime wiring — not just tests — produces the same room descriptions, roll/DC
+readouts, and combat narration as before the split.
+
+**Not touched, per the ticket's explicit exclusions:** `IEngineHost`'s doc comment,
+`architecture.md`/`engine-core.md`'s "no Rulebook touches engine primitives" rule, and
+`1-d20-spec.md` — all Amara's/Juno's.
 
 ## Resolution
 

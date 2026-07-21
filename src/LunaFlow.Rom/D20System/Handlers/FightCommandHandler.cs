@@ -1,6 +1,6 @@
 using LunaFlow.Engine;
 
-namespace LunaFlow.Rom.OneD20
+namespace LunaFlow.Rom.D20System
 {
     /// <summary>
     /// Handles the <c>fight</c> command: one round of attack-resolution against the current
@@ -13,11 +13,21 @@ namespace LunaFlow.Rom.OneD20
     public sealed class FightCommandHandler : ICommandHandler
     {
         private readonly D20ResolutionMechanic _mechanic;
+        private readonly IReadOnlyDictionary<int, Room> _rooms;
+        private readonly PlayerCharacter _pc;
+        private readonly MonsterTemplate _monster;
 
-        /// <summary>Uses <paramref name="mechanic"/> if given, else the shared <see cref="OneD20Content.Mechanic"/> — the seam ticket 0019 asked for.</summary>
-        public FightCommandHandler(D20ResolutionMechanic? mechanic = null)
+        /// <summary>Uses the given arguments if supplied, else the configured <see cref="D20SystemContent"/> data — the seam ticket 0019 asked for, widened to cover Scenario data.</summary>
+        public FightCommandHandler(
+            D20ResolutionMechanic? mechanic = null,
+            IReadOnlyDictionary<int, Room>? rooms = null,
+            PlayerCharacter? pc = null,
+            MonsterTemplate? monster = null)
         {
-            _mechanic = mechanic ?? OneD20Content.Mechanic;
+            _mechanic = mechanic ?? D20SystemContent.Mechanic;
+            _rooms = rooms ?? D20SystemContent.Rooms;
+            _pc = pc ?? D20SystemContent.PlayerCharacter;
+            _monster = monster ?? D20SystemContent.Monster;
         }
 
         /// <inheritdoc/>
@@ -25,7 +35,7 @@ namespace LunaFlow.Rom.OneD20
         {
             var rules = LunaFlowEngine.Host.Rules;
             var current = rules.Query<PlayerPosition>().First();
-            var room = OneD20Content.Rooms[current.RoomId];
+            var room = _rooms[current.RoomId];
 
             if (room.ChallengeType != RoomChallengeType.Fight)
                 return;
@@ -35,8 +45,8 @@ namespace LunaFlow.Rom.OneD20
                 return;
 
             var mechanic = _mechanic;
-            var pc = OneD20Content.PlayerCharacter;
-            var monster = OneD20Content.Monster;
+            var pc = _pc;
+            var monster = _monster;
 
             var existingRound = rules.Query<CombatRound>().FirstOrDefault(cr => cr.RoomId == room.Id);
             var monsterHp = existingRound?.MonsterHp ?? monster.Stats.MaxHp;
@@ -56,14 +66,14 @@ namespace LunaFlow.Rom.OneD20
                 if (monsterHp <= 0)
                 {
                     rules.Insert(new RoomSolved(room.Id));
-                    LunaFlowEngine.Host.Announce(OneD20Flavor.Text["monster-defeated"]);
+                    LunaFlowEngine.Host.Announce(D20SystemContent.FlavorText["monster-defeated"]);
                     return;
                 }
-                LunaFlowEngine.Host.Announce(OneD20Flavor.HitNarration("pc-hit", damage, monsterHp));
+                LunaFlowEngine.Host.Announce(D20SystemNarration.HitNarration("pc-hit", damage, monsterHp));
             }
             else
             {
-                LunaFlowEngine.Host.Announce(OneD20Flavor.Text["pc-miss"]);
+                LunaFlowEngine.Host.Announce(D20SystemContent.FlavorText["pc-miss"]);
             }
 
             // 2. Monster counterattack (only reached if the PC's attack didn't end the fight).
@@ -76,14 +86,14 @@ namespace LunaFlow.Rom.OneD20
                 if (playerHp <= 0)
                 {
                     rules.Insert(new RoomFailed(room.Id));
-                    LunaFlowEngine.Host.Announce(OneD20Flavor.Text["pc-lost"]);
+                    LunaFlowEngine.Host.Announce(D20SystemContent.FlavorText["pc-lost"]);
                     return;
                 }
-                LunaFlowEngine.Host.Announce(OneD20Flavor.HitNarration("monster-hit", damage, playerHp));
+                LunaFlowEngine.Host.Announce(D20SystemNarration.HitNarration("monster-hit", damage, playerHp));
             }
             else
             {
-                LunaFlowEngine.Host.Announce(OneD20Flavor.Text["monster-miss"]);
+                LunaFlowEngine.Host.Announce(D20SystemContent.FlavorText["monster-miss"]);
             }
 
             // 3. The 3-round clock.
@@ -91,7 +101,7 @@ namespace LunaFlow.Rom.OneD20
             if (roundsElapsed == 3)
             {
                 rules.Insert(new RoomFailed(room.Id));
-                LunaFlowEngine.Host.Announce(OneD20Flavor.Text["monster-fled"]);
+                LunaFlowEngine.Host.Announce(D20SystemContent.FlavorText["monster-fled"]);
             }
             else
             {

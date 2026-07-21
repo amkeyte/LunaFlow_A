@@ -1,0 +1,5 @@
+{
+  "Markdown.Exclude": [
+    "^M:LunaFlow\\.Rom\\.D20System\\.D20SystemContent\\.Configure"
+  ]
+}

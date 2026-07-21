@@ -1,25 +1,26 @@
 using LunaFlow.Engine;
 using LunaFlow.Engine.Game;
-using LunaFlow.Rom.OneD20;
+using LunaFlow.Rom.D20System;
+using LunaFlow.Rulebook.OneD20;
 using LunaFlow.Rules.GeneratorServices;
 
-namespace LunaFlow.EngineTests.Rom.OneD20
+namespace LunaFlow.EngineTests.Rom.D20System
 {
     /// <summary>
-    /// Fixture-level coverage for 1.d20's declarative rules (<see cref="OneD20RuleGroup"/>),
+    /// Fixture-level coverage for 1.d20's declarative rules (<see cref="D20SystemRuleGroup"/>),
     /// compiled through the real <see cref="RuleExport.Compile"/> pipeline exactly like
     /// <c>Program.cs</c> does. Facts (<see cref="RoomSolved"/>/<see cref="RoomFailed"/>/
     /// <see cref="WinMarker"/>) are inserted directly, never through a handler — this class is
     /// pure rule-engine semantics: challenge-prompt guards, win-line firing, and the
     /// <see cref="RoomFailed"/>-permanently-blocks-a-line behavior that falls out of the fact
-    /// model with no extra guard (see <see cref="OneD20RuleGroup.WinLineRule"/>'s own doc comment).
+    /// model with no extra guard (see <see cref="D20SystemRuleGroup.WinLineRule"/>'s own doc comment).
     /// Handler-driven behavior (announcements' exact wording tied to real command flow, RNG-backed
-    /// outcomes) is <see cref="OneD20HandlerTests"/>'s job, not this class's.
+    /// outcomes) is <see cref="D20SystemHandlerTests"/>'s job, not this class's.
     /// </summary>
     [TestClass]
     [TestCategory("Rom_OneD20")]
     [TestCategory("Phase2.5")]
-    public class OneD20RuleFixtureTests
+    public class D20SystemRuleFixtureTests
     {
         private static System.Reflection.Assembly _compiledRules = null!;
         private RuleEngine _engine = null!;
@@ -35,7 +36,18 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             _ = typeof(NRules.RuleModel.IContext).Assembly;
             _ = typeof(NRules.ISession).Assembly;
 
-            _compiledRules = RuleExport.Compile(typeof(OneD20RuleGroup));
+            // Register the Rulebook's data with the ROM registry before compiling — the generated
+            // rule group's Announce() calls read flavor text from D20SystemContent, same as
+            // Program.cs does.
+            D20SystemContent.Configure(
+                OneD20RulebookContent.Rooms,
+                OneD20FlavorText.Text,
+                OneD20RulebookContent.PlayerCharacter,
+                OneD20RulebookContent.Monster,
+                OneD20RulebookContent.PlayerAbilityScores,
+                OneD20RulebookContent.StartRoomId);
+
+            _compiledRules = RuleExport.Compile(typeof(D20SystemRuleGroup));
         }
 
         [TestInitialize]
@@ -43,7 +55,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
         {
             _engine = new RuleEngine();
             _engine.LoadRulesFromAssembly(_compiledRules);
-            foreach (var room in OneD20Content.Rooms.Values)
+            foreach (var room in OneD20RulebookContent.Rooms.Values)
                 _engine.Insert(room);
 
             _messages.Clear();
@@ -82,7 +94,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             _engine.Fire();
 
             Assert.AreEqual(1, _messages.Count, "Only room 2's challenge-prompt rule should fire");
-            Assert.AreEqual(OneD20Flavor.Text["room-2-prompt"], _messages[0]);
+            Assert.AreEqual(OneD20FlavorText.Text["room-2-prompt"], _messages[0]);
         }
 
         [TestMethod]
@@ -93,7 +105,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             _engine.Fire();
 
             Assert.AreEqual(1, _messages.Count, "Only room 1's challenge-prompt rule should fire");
-            Assert.AreEqual(OneD20Flavor.Text["monster-desc"], _messages[0]);
+            Assert.AreEqual(OneD20FlavorText.Text["monster-desc"], _messages[0]);
         }
 
         [TestMethod]
@@ -128,7 +140,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
 
             // GameEndRule itself fires (Not<WinMarker>() isn't on it), so filter to the win-announce
             // text and confirm room 4's own prompt specifically never shows up alongside it.
-            Assert.IsFalse(_messages.Contains(OneD20Flavor.Text["room-4-prompt"]),
+            Assert.IsFalse(_messages.Contains(OneD20FlavorText.Text["room-4-prompt"]),
                 "Not<WinMarker>() should block every remaining challenge-prompt rule once any line is won");
         }
 
@@ -151,7 +163,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
         {
             // Top row [1,2,3] routes through combat room 1 — at the fact level a RoomSolved(1) is
             // indistinguishable whether it came from `fight` or direct insertion; the real
-            // fight-driven path is OneD20HandlerTests' job.
+            // fight-driven path is D20SystemHandlerTests' job.
             _engine.Insert(new RoomSolved(1));
             _engine.Insert(new RoomSolved(2));
             _engine.Insert(new RoomSolved(3));
@@ -192,7 +204,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
 
             _engine.Fire();
 
-            Assert.IsTrue(_messages.Contains(OneD20Flavor.WinAnnouncement(new[] { 3, 6, 9 })),
+            Assert.IsTrue(_messages.Contains(D20SystemNarration.WinAnnouncement(new[] { 3, 6, 9 })),
                 "GameEndRule should announce the win text plus the winning line's rooms");
         }
     }

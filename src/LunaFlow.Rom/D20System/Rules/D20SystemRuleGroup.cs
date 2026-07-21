@@ -1,16 +1,16 @@
 using LunaFlow.Rules.GeneratorServices;
 
-namespace LunaFlow.Rom.OneD20
+namespace LunaFlow.Rom.D20System
 {
     /// <summary>
-    /// 1.d20's declarative rules — challenge-prompt (9), win-line (8), and <c>GameEnd</c> — authored
-    /// as <see cref="RulePrototype"/>s through <see cref="RuleExport"/> per Phase 2.5's load-bearing
-    /// condition (see 1-d20-spec.md's Purpose section). <c>check</c>/<c>fight</c>/<c>flee</c>/
-    /// <c>move</c>/<c>look</c> are hand-written <c>ICommandHandler</c>s instead — see the
-    /// <c>Handlers</c> folder — and are not part of this group.
+    /// The d20 System's declarative rules — challenge-prompt (9), win-line (8), and <c>GameEnd</c> —
+    /// authored as <see cref="RulePrototype"/>s through <see cref="RuleExport"/> per Phase 2.5's
+    /// load-bearing condition (see 1-d20-spec.md's Purpose section). <c>check</c>/<c>fight</c>/
+    /// <c>flee</c>/<c>move</c>/<c>look</c> are hand-written <c>ICommandHandler</c>s instead — see
+    /// the <c>Handlers</c> folder — and are not part of this group.
     /// </summary>
-    [RuleGroup("OneD20")]
-    public static partial class OneD20RuleGroup
+    [RuleGroup("D20System")]
+    public static partial class D20SystemRuleGroup
     {
         private static readonly int[] CombatRoomIds = { 1, 5, 8 };
 
@@ -39,15 +39,15 @@ namespace LunaFlow.Rom.OneD20
             var thenStatements = new List<string>
             {
                 CombatRoomIds.Contains(roomId)
-                    ? "Do(ctx => LunaFlowEngine.Host.Announce(OneD20Flavor.Text[\"monster-desc\"]))"
-                    : "Do(ctx => LunaFlowEngine.Host.Announce(OneD20Flavor.Text[room.PromptKey!]))",
+                    ? "Do(ctx => LunaFlowEngine.Host.Announce(D20SystemContent.FlavorText[\"monster-desc\"]))"
+                    : "Do(ctx => LunaFlowEngine.Host.Announce(D20SystemContent.FlavorText[room.PromptKey!]))",
             };
 
             return new RulePrototype
             {
                 Name = $"Room{roomId}Challenge",
                 Description = $"Announces room {roomId}'s challenge prompt while unsolved/unfailed and no win yet.",
-                RequiredUsings = new() { "LunaFlow.Engine", "LunaFlow.Rom.OneD20" },
+                RequiredUsings = new() { "LunaFlow.Engine", "LunaFlow.Rom.D20System" },
                 PreambleStatements = new() { "Room room = null;" },
                 WhenStatements = new()
                 {
@@ -91,7 +91,7 @@ namespace LunaFlow.Rom.OneD20
         {
             Name = name,
             Description = $"Inserts a WinMarker once rooms {string.Join(", ", line)} are all solved.",
-            RequiredUsings = new() { "LunaFlow.Rom.OneD20" },
+            RequiredUsings = new() { "LunaFlow.Rom.D20System" },
             WhenStatements = line
                 .Select(id => $"Match<RoomSolved>(rs => rs.RoomId == {id})")
                 .Append("Not<WinMarker>()")
@@ -122,10 +122,10 @@ namespace LunaFlow.Rom.OneD20
         {
             Name = "GameEnd",
             Description = "Announces win-announce plus the winning line's rooms once any WinMarker exists.",
-            RequiredUsings = new() { "LunaFlow.Engine", "LunaFlow.Rom.OneD20" },
+            RequiredUsings = new() { "LunaFlow.Engine", "LunaFlow.Rom.D20System" },
             PreambleStatements = new() { "WinMarker marker = null;" },
             WhenStatements = new() { "Match<WinMarker>(() => marker)" },
-            ThenStatements = new() { "Do(ctx => LunaFlowEngine.Host.Announce(OneD20Flavor.WinAnnouncement(marker.Line)))" },
+            ThenStatements = new() { "Do(ctx => LunaFlowEngine.Host.Announce(D20SystemNarration.WinAnnouncement(marker.Line)))" },
         };
     }
 }

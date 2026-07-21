@@ -1,4 +1,4 @@
-namespace LunaFlow.Rom.OneD20
+namespace LunaFlow.Rom.D20System
 {
     /// <summary>Distinguishes a room's obstacle: a skill check against a DC, or a fight against a monster.</summary>
     public enum RoomChallengeType
@@ -18,11 +18,11 @@ namespace LunaFlow.Rom.OneD20
     /// <param name="Skill">The key ability's skill name (e.g. "Search"), or null for Fight rooms.</param>
     /// <param name="SkillAbility">"Str" | "Dex" | "Con" | "Int" | "Wis" | "Cha", or null for Fight rooms.</param>
     /// <param name="DC">The skill check's target number, or null for Fight rooms.</param>
-    /// <param name="DescriptionKey">Key into <see cref="OneD20Flavor"/>, announced by <c>MoveCommandHandler</c>/<c>look</c>, always.</param>
-    /// <param name="SuccessKey">Key into <see cref="OneD20Flavor"/> for a successful <c>check</c>, SkillCheck rooms only, else null.</param>
-    /// <param name="FailureKey">Key into <see cref="OneD20Flavor"/> for a failed <c>check</c>, SkillCheck rooms only, else null.</param>
+    /// <param name="DescriptionKey">Key into the configured flavor text, announced by <c>MoveCommandHandler</c>/<c>look</c>, always.</param>
+    /// <param name="SuccessKey">Key into the configured flavor text for a successful <c>check</c>, SkillCheck rooms only, else null.</param>
+    /// <param name="FailureKey">Key into the configured flavor text for a failed <c>check</c>, SkillCheck rooms only, else null.</param>
     /// <param name="PromptKey">
-    /// Key into <see cref="OneD20Flavor"/>, announced by the challenge-prompt rule while
+    /// Key into the configured flavor text, announced by the challenge-prompt rule while
     /// unsolved/unfailed — SkillCheck rooms only. Fight rooms use the fixed <c>monster-desc</c> key
     /// instead, so this is null for them.
     /// </param>

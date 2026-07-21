@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LunaFlow.Rom\LunaFlow.Rom.csproj" />
+  </ItemGroup>
+
 </Project>

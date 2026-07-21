@@ -1,6 +1,6 @@
 using LunaFlow.Engine;
 
-namespace LunaFlow.Rom.OneD20
+namespace LunaFlow.Rom.D20System
 {
     /// <summary>
     /// Handles the <c>flee</c> command: auto-success escape from an active <see cref="CombatRound"/>,
@@ -19,7 +19,7 @@ namespace LunaFlow.Rom.OneD20
                 return;
 
             rules.Retract(round);
-            LunaFlowEngine.Host.Announce(OneD20Flavor.Text["pc-flee"]);
+            LunaFlowEngine.Host.Announce(D20SystemContent.FlavorText["pc-flee"]);
 
             // No PreviousRoomId exists if the very first fight (room 5, the start room) is fled
             // before any move has ever happened — nowhere defined to retreat to, so the PC just

@@ -1,9 +1,10 @@
 using LunaFlow.Engine;
 using LunaFlow.Engine.Game;
-using LunaFlow.Rom.OneD20;
+using LunaFlow.Rom.D20System;
+using LunaFlow.Rulebook.OneD20;
 using LunaFlow.Rules.GeneratorServices;
 
-namespace LunaFlow.EngineTests.Rom.OneD20
+namespace LunaFlow.EngineTests.Rom.D20System
 {
     /// <summary>
     /// Handler-level coverage for 1.d20's <c>move</c>/<c>look</c>/<c>check</c>/<c>fight</c>/
@@ -21,7 +22,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
     [TestCategory("Rom_OneD20")]
     [TestCategory("Phase2.5")]
     [DoNotParallelize] // GameEngineCore.Instance is a singleton; tests must run sequentially
-    public class OneD20HandlerTests
+    public class D20SystemHandlerTests
     {
         private GameEngineCore _engine = null!;
         private DefaultCommandDispatcher _dispatcher = null!;
@@ -35,6 +36,17 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             _ = typeof(System.Linq.Expressions.Expression).Assembly;
             _ = typeof(NRules.RuleModel.IContext).Assembly;
             _ = typeof(NRules.ISession).Assembly;
+
+            // Register the Rulebook's data with the ROM registry once — the generated rule group
+            // and the handlers' no-arg constructor fallbacks both read from here, same as
+            // Program.cs's composition-root wiring.
+            D20SystemContent.Configure(
+                OneD20RulebookContent.Rooms,
+                OneD20FlavorText.Text,
+                OneD20RulebookContent.PlayerCharacter,
+                OneD20RulebookContent.Monster,
+                OneD20RulebookContent.PlayerAbilityScores,
+                OneD20RulebookContent.StartRoomId);
         }
 
         [TestInitialize]
@@ -58,7 +70,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
         }
 
         /// <summary>
-        /// Registers the OneD20 handlers (optionally with seeded mechanics for determinism),
+        /// Registers the D20System handlers (optionally with seeded mechanics for determinism),
         /// subscribes to <c>MessagePosted</c> <em>before</em> <c>Start()</c> (per test-patterns.md
         /// — needed to observe the initial-settle <c>Fire()</c>'s announcements), and starts a
         /// fresh session, replicating Program.cs's own seed-lambda shape exactly (including the
@@ -77,16 +89,16 @@ namespace LunaFlow.EngineTests.Rom.OneD20
 
             var options = new GameEngineOptions();
             options.Rules
-                .FromAssembly(RuleExport.Compile(typeof(OneD20RuleGroup)))
-                .Seed(() => OneD20Content.Rooms.Values)
+                .FromAssembly(RuleExport.Compile(typeof(D20SystemRuleGroup)))
+                .Seed(() => D20SystemContent.Rooms.Values)
                 .Seed(() =>
                 {
-                    LunaFlowEngine.Host.Announce(OneD20Flavor.Text[OneD20Content.Rooms[OneD20Content.StartRoomId].DescriptionKey]);
+                    LunaFlowEngine.Host.Announce(D20SystemContent.FlavorText[D20SystemContent.Rooms[D20SystemContent.StartRoomId].DescriptionKey]);
                     return new object[]
                     {
-                        new PlayerPosition(OneD20Content.StartRoomId),
-                        OneD20Content.PlayerCharacter,
-                        OneD20Content.Monster,
+                        new PlayerPosition(D20SystemContent.StartRoomId),
+                        D20SystemContent.PlayerCharacter,
+                        D20SystemContent.Monster,
                     };
                 });
             _engine.SetOptions(options);
@@ -118,7 +130,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             Submit("move north"); // 5 -> 2 (row-1 to row-0)
 
             Assert.AreEqual(2, _engine.Rules.Query<PlayerPosition>().First().RoomId);
-            Assert.IsTrue(MessagesSince(baseline).Contains(OneD20Flavor.Text["room-2-desc"]));
+            Assert.IsTrue(MessagesSince(baseline).Contains(OneD20FlavorText.Text["room-2-desc"]));
 
             baseline = _messages.Count;
             Submit("move north"); // off-grid from row 0: rejected
@@ -151,11 +163,11 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             Submit("move north"); // 5 -> 2, a SkillCheck room
 
             var entered = MessagesSince(baseline);
-            Assert.AreEqual(1, entered.Count(m => m == OneD20Flavor.Text["room-2-desc"]),
+            Assert.AreEqual(1, entered.Count(m => m == OneD20FlavorText.Text["room-2-desc"]),
                 "DescriptionKey should announce exactly once, from the handler");
-            Assert.AreEqual(1, entered.Count(m => m == OneD20Flavor.Text["room-2-prompt"]),
+            Assert.AreEqual(1, entered.Count(m => m == OneD20FlavorText.Text["room-2-prompt"]),
                 "PromptKey should announce exactly once, from the rule");
-            Assert.AreNotEqual(OneD20Flavor.Text["room-2-desc"], OneD20Flavor.Text["room-2-prompt"],
+            Assert.AreNotEqual(OneD20FlavorText.Text["room-2-desc"], OneD20FlavorText.Text["room-2-prompt"],
                 "Description and prompt must never be identical text");
         }
 
@@ -166,8 +178,8 @@ namespace LunaFlow.EngineTests.Rom.OneD20
         {
             StartSession();
 
-            var descIndex = _messages.IndexOf(OneD20Flavor.Text["room-5-desc"]);
-            var monsterIndex = _messages.IndexOf(OneD20Flavor.Text["monster-desc"]);
+            var descIndex = _messages.IndexOf(OneD20FlavorText.Text["room-5-desc"]);
+            var monsterIndex = _messages.IndexOf(OneD20FlavorText.Text["monster-desc"]);
 
             Assert.AreNotEqual(-1, descIndex, "Room 5's description should be announced at startup");
             Assert.AreNotEqual(-1, monsterIndex, "Room 5 is a Fight room; monster-desc should be announced at startup too");
@@ -188,10 +200,10 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             Submit("fight"); // room 5, fresh combat
 
             var round = MessagesSince(baseline);
-            Assert.IsTrue(round.Contains(OneD20Flavor.Text["monster-defeated"]));
-            Assert.IsFalse(round.Any(m => m.Contains(OneD20Flavor.Text["pc-hit"])),
+            Assert.IsTrue(round.Contains(OneD20FlavorText.Text["monster-defeated"]));
+            Assert.IsFalse(round.Any(m => m.Contains(OneD20FlavorText.Text["pc-hit"])),
                 "A lethal PC hit must never announce pc-hit first");
-            Assert.IsFalse(round.Any(m => m.Contains(OneD20Flavor.Text["monster-miss"]) || m.Contains(OneD20Flavor.Text["monster-hit"])),
+            Assert.IsFalse(round.Any(m => m.Contains(OneD20FlavorText.Text["monster-miss"]) || m.Contains(OneD20FlavorText.Text["monster-hit"])),
                 "Counterattack step must be skipped entirely when the PC's hit ends the fight");
             Assert.IsTrue(_engine.Rules.Query<RoomSolved>().Any(rs => rs.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<CombatRound>().Any(cr => cr.RoomId == 5));
@@ -218,8 +230,8 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             Submit("fight"); // round 2: PC misses, monster's hit drops PlayerHp to 0
 
             var round2 = MessagesSince(baseline);
-            Assert.IsTrue(round2.Contains(OneD20Flavor.Text["pc-lost"]));
-            Assert.IsFalse(round2.Any(m => m.Contains(OneD20Flavor.Text["monster-hit"])),
+            Assert.IsTrue(round2.Contains(OneD20FlavorText.Text["pc-lost"]));
+            Assert.IsFalse(round2.Any(m => m.Contains(OneD20FlavorText.Text["monster-hit"])),
                 "A lethal monster hit must never announce monster-hit first");
             Assert.IsTrue(_engine.Rules.Query<RoomFailed>().Any(rf => rf.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<CombatRound>().Any(cr => cr.RoomId == 5));
@@ -249,7 +261,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             var baseline = _messages.Count;
             Submit("fight"); // round 3 -> timeout
 
-            Assert.IsTrue(MessagesSince(baseline).Contains(OneD20Flavor.Text["monster-fled"]));
+            Assert.IsTrue(MessagesSince(baseline).Contains(OneD20FlavorText.Text["monster-fled"]));
             Assert.IsTrue(_engine.Rules.Query<RoomFailed>().Any(rf => rf.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<RoomSolved>().Any(rs => rs.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<CombatRound>().Any(cr => cr.RoomId == 5));
@@ -314,7 +326,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
 
             Submit("look");
 
-            Assert.IsTrue(MessagesSince(baseline).Contains(OneD20Flavor.CombatStatus(7, 11, 8, 8)));
+            Assert.IsTrue(MessagesSince(baseline).Contains(D20SystemNarration.CombatStatus(7, 11, 8, 8)));
         }
 
         // ---- check: success + readout, solves once, no re-prompt (criteria 5, 6) ----
@@ -331,14 +343,14 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             Submit("check");
 
             var afterCheck = MessagesSince(baseline);
-            Assert.IsTrue(afterCheck.Contains(OneD20Flavor.CheckNarration("check-2-success", "Search", 15, 10)));
+            Assert.IsTrue(afterCheck.Contains(D20SystemNarration.CheckNarration("check-2-success", "Search", 15, 10)));
             Assert.AreEqual(1, _engine.Rules.Query<RoomSolved>().Count(rs => rs.RoomId == 2));
 
             baseline = _messages.Count;
             Submit("check"); // already solved: no-op
 
             Assert.AreEqual(0, MessagesSince(baseline).Count, "A solved room's check must be rejected");
-            Assert.AreEqual(1, _messages.Count(m => m == OneD20Flavor.Text["room-2-prompt"]),
+            Assert.AreEqual(1, _messages.Count(m => m == OneD20FlavorText.Text["room-2-prompt"]),
                 "Solving must not re-trigger the challenge-prompt announcement");
         }
 
@@ -354,7 +366,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
 
             Submit("check");
 
-            Assert.IsTrue(MessagesSince(baseline).Contains(OneD20Flavor.CheckNarration("check-2-failure", "Search", 5, 10)));
+            Assert.IsTrue(MessagesSince(baseline).Contains(D20SystemNarration.CheckNarration("check-2-failure", "Search", 5, 10)));
             Assert.IsFalse(_engine.Rules.Query<RoomSolved>().Any(rs => rs.RoomId == 2));
 
             _dispatcher.RegisterHandler("check", new CheckCommandHandler(new D20ResolutionMechanic(new Random(0))));
@@ -377,7 +389,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             Submit("flee");
 
             var afterFlee = MessagesSince(baseline);
-            Assert.IsTrue(afterFlee.Contains(OneD20Flavor.Text["pc-flee"]));
+            Assert.IsTrue(afterFlee.Contains(OneD20FlavorText.Text["pc-flee"]));
             Assert.IsFalse(_engine.Rules.Query<CombatRound>().Any(cr => cr.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<RoomSolved>().Any(rs => rs.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<RoomFailed>().Any(rf => rf.RoomId == 5));
@@ -395,7 +407,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
 
             Submit("flee"); // must not throw — Submit() itself asserts completion within the timeout
 
-            Assert.IsTrue(MessagesSince(baseline).Contains(OneD20Flavor.Text["pc-flee"]));
+            Assert.IsTrue(MessagesSince(baseline).Contains(OneD20FlavorText.Text["pc-flee"]));
             Assert.AreEqual(5, _engine.Rules.Query<PlayerPosition>().First().RoomId, "No PreviousRoomId to retreat to — PC stays put");
             Assert.IsFalse(_engine.Rules.Query<CombatRound>().Any(cr => cr.RoomId == 5));
         }
@@ -424,7 +436,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
 
             var markers = _engine.Rules.Query<WinMarker>().ToList();
             Assert.IsTrue(markers.Any(m => m.Line.SequenceEqual(new[] { 3, 6, 9 })));
-            Assert.IsTrue(_messages.Contains(OneD20Flavor.WinAnnouncement(new[] { 3, 6, 9 })));
+            Assert.IsTrue(_messages.Contains(D20SystemNarration.WinAnnouncement(new[] { 3, 6, 9 })));
         }
 
         // ---- win: combat-inclusive line (criterion 15, second half) ----
@@ -449,7 +461,7 @@ namespace LunaFlow.EngineTests.Rom.OneD20
             var markers = _engine.Rules.Query<WinMarker>().ToList();
             Assert.IsTrue(markers.Any(m => m.Line.SequenceEqual(new[] { 1, 2, 3 })),
                 "Top-row line, which required room 1 solved via fight, should fire");
-            Assert.IsTrue(_messages.Contains(OneD20Flavor.WinAnnouncement(new[] { 1, 2, 3 })));
+            Assert.IsTrue(_messages.Contains(D20SystemNarration.WinAnnouncement(new[] { 1, 2, 3 })));
         }
     }
 }

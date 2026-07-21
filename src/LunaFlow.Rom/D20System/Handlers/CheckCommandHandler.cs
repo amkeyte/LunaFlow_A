@@ -1,6 +1,6 @@
 using LunaFlow.Engine;
 
-namespace LunaFlow.Rom.OneD20
+namespace LunaFlow.Rom.D20System
 {
     /// <summary>
     /// Handles the <c>check</c> command: resolves the current skill-check room's obstacle via
@@ -11,11 +11,18 @@ namespace LunaFlow.Rom.OneD20
     public sealed class CheckCommandHandler : ICommandHandler
     {
         private readonly D20ResolutionMechanic _mechanic;
+        private readonly IReadOnlyDictionary<int, Room> _rooms;
+        private readonly IReadOnlyDictionary<string, int> _abilityScores;
 
-        /// <summary>Uses <paramref name="mechanic"/> if given, else the shared <see cref="OneD20Content.Mechanic"/> — the seam ticket 0019 asked for.</summary>
-        public CheckCommandHandler(D20ResolutionMechanic? mechanic = null)
+        /// <summary>Uses the given arguments if supplied, else the configured <see cref="D20SystemContent"/> data — the seam ticket 0019 asked for, widened to cover Scenario data.</summary>
+        public CheckCommandHandler(
+            D20ResolutionMechanic? mechanic = null,
+            IReadOnlyDictionary<int, Room>? rooms = null,
+            IReadOnlyDictionary<string, int>? abilityScores = null)
         {
-            _mechanic = mechanic ?? OneD20Content.Mechanic;
+            _mechanic = mechanic ?? D20SystemContent.Mechanic;
+            _rooms = rooms ?? D20SystemContent.Rooms;
+            _abilityScores = abilityScores ?? D20SystemContent.PlayerAbilityScores;
         }
 
         /// <inheritdoc/>
@@ -23,24 +30,24 @@ namespace LunaFlow.Rom.OneD20
         {
             var rules = LunaFlowEngine.Host.Rules;
             var current = rules.Query<PlayerPosition>().First();
-            var room = OneD20Content.Rooms[current.RoomId];
+            var room = _rooms[current.RoomId];
 
             if (room.ChallengeType != RoomChallengeType.SkillCheck)
                 return;
             if (rules.Query<RoomSolved>().Any(rs => rs.RoomId == room.Id))
                 return;
 
-            var abilityMod = OneD20Content.AbilityModifier(OneD20Content.PlayerAbilityScores[room.SkillAbility!]);
+            var abilityMod = D20SystemContent.AbilityModifier(_abilityScores[room.SkillAbility!]);
             var result = _mechanic.ResolveCheck(abilityMod, room.DC!.Value);
 
             if (result.Success)
             {
                 rules.Insert(new RoomSolved(room.Id));
-                LunaFlowEngine.Host.Announce(OneD20Flavor.CheckNarration(room.SuccessKey!, room.Skill!, result.Total, room.DC.Value));
+                LunaFlowEngine.Host.Announce(D20SystemNarration.CheckNarration(room.SuccessKey!, room.Skill!, result.Total, room.DC.Value));
             }
             else
             {
-                LunaFlowEngine.Host.Announce(OneD20Flavor.CheckNarration(room.FailureKey!, room.Skill!, result.Total, room.DC.Value));
+                LunaFlowEngine.Host.Announce(D20SystemNarration.CheckNarration(room.FailureKey!, room.Skill!, result.Total, room.DC.Value));
             }
         }
     }

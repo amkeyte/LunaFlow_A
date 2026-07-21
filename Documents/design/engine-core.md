@@ -142,4 +142,29 @@ These three types in `LunaFlow.Engine.Game` are currently empty placeholders and
 - `GameState` — a snapshot of engine state at a point in time, with an eye toward rollback/replay.
 - `GameWorld` — persistent, cross-session world data: locations, entities, and other domain-level constructs that outlive a single `Session`.
 
+### Three kinds of "state" — don't conflate them
+
+**Added 2026-07-20**, after a wiring question (how does a Rulebook's room/combatant data reach a ROM
+handler at runtime) surfaced that this hadn't been written down anywhere. "Game state" gets used
+loosely; in practice there are three distinct things, only one of which is actually still open:
+
+1. **Mutable, in-play state** — `PlayerPosition`, `RoomSolved`, `CombatRound`, HP, anything that
+   changes turn to turn. This already has a formal system: NRules facts, through `RuleEngine`
+   (`Insert`/`Update`/`Retract`/`Query<T>()`), consistent since Phase 1.5. This is also the state
+   that would actually need to cross a network in a multi-client future — and it's already
+   centralized, not something each ROM invents its own answer for.
+2. **Static seed/content data** — room definitions, combatant stat blocks, anything seeded once and
+   read-only for the rest of the session (per `1-d20-spec.md`'s own framing: "static content, seeded
+   once at session start"). This isn't game state in the sense above — it never changes, so it never
+   needs network-sync machinery; every client already has it, compiled in. It reaches ROM handlers by
+   plain constructor injection (same pattern as ticket 0019's `Random` seam) — a composition root
+   (`Program.cs`/host-wiring) constructs ROM handler instances with whichever Rulebook/World Module
+   data they need. No registry, no new mechanism; this is the existing pattern, just named.
+3. **Engine-level bookkeeping** — `GameState`/`GameWorld`/`Session` above. This is the one genuinely
+   still open, and it's deliberately deferred, not neglected: `non-goals.md` names no concurrent-
+   session isolation and no persistence backend as explicit non-goals until a real interface layer
+   (Roadmap Phase 5) exists to design against. Nothing about (1) or (2) forces that trigger — don't
+   let a wiring question for static content talk you into building session/persistence
+   infrastructure ahead of a real network interface to design it against.
+
 Their current emptiness is a placeholder, not a design decision — no shape has been agreed for them yet beyond the doc comments already on the classes.

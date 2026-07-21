@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\LunaFlow.Engine\LunaFlow.Engine.csproj" />
     <ProjectReference Include="..\..\src\LunaFlow.Rom\LunaFlow.Rom.csproj" />
+    <ProjectReference Include="..\..\src\LunaFlow.Rulebook\LunaFlow.Rulebook.csproj" />
   </ItemGroup>
 
   <ItemGroup>

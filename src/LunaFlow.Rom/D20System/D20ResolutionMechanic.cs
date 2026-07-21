@@ -1,6 +1,6 @@
 using LunaFlow.Rules;
 
-namespace LunaFlow.Rom.OneD20
+namespace LunaFlow.Rom.D20System
 {
     /// <summary>
     /// The concrete <see cref="IMechanic"/> backing 1.d20's dice rolling and generic
@@ -29,7 +29,7 @@ namespace LunaFlow.Rom.OneD20
         }
 
         /// <inheritdoc/>
-        public ILunaFlowReference Reference { get; } = new OneD20Reference("D20ResolutionMechanic");
+        public ILunaFlowReference Reference { get; } = new D20SystemReference("D20ResolutionMechanic");
 
         /// <summary>Rolls dice per <paramref name="die"/>'s "NdM" notation (e.g. "1d20", "1d8") and returns the sum.</summary>
         public int Roll(string die)

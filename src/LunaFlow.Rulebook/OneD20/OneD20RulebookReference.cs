@@ -1,15 +1,14 @@
 using LunaFlow.Rules;
 
-namespace LunaFlow.Rom.OneD20
+namespace LunaFlow.Rulebook.OneD20
 {
     /// <summary>
-    /// Minimal ILunaFlowReference for 1.d20's hand-written types (the resolution Mechanic).
-    /// Flat and disposable, same shape as Nine Rooms' <c>NineRoomsReference</c> — not a shared
-    /// ROM-level reference scheme.
+    /// Minimal ILunaFlowReference for the 1.d20 Rulebook. Flat and disposable, same shape as
+    /// <c>D20SystemReference</c>/Nine Rooms' <c>NineRoomsReference</c> — not a shared scheme.
     /// </summary>
-    internal sealed class OneD20Reference : ILunaFlowReference
+    internal sealed class OneD20RulebookReference : ILunaFlowReference
     {
-        public OneD20Reference(string identifier)
+        public OneD20RulebookReference(string identifier)
         {
             Identifier = identifier;
             ClassUID = identifier;
@@ -17,7 +16,7 @@ namespace LunaFlow.Rom.OneD20
 
         public string ClassUID { get; }
         public string Identifier { get; }
-        public string FullPath => $"OneD20.{Identifier}";
+        public string FullPath => $"OneD20Rulebook.{Identifier}";
         public string Path => Identifier;
         public ILunaFlowReference Parent => null!;
         public IEnumerable<ILunaFlowReference> Subreferences => Array.Empty<ILunaFlowReference>();

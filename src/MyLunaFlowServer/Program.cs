@@ -1,7 +1,8 @@
 // See https://aka.ms/new-console-template for more information
 using LunaFlow.Engine;
 using LunaFlow.Engine.Commands;
-using LunaFlow.Rom.OneD20;
+using LunaFlow.Rom.D20System;
+using LunaFlow.Rulebook.OneD20;
 using LunaFlow.Rules.GeneratorServices;
 
 Console.WriteLine("Welcome to MyLunaFlowServer, powered by LunaFlow_A");
@@ -16,14 +17,26 @@ _ = typeof(System.Linq.Expressions.Expression).Assembly;
 _ = typeof(NRules.RuleModel.IContext).Assembly;
 _ = typeof(NRules.ISession).Assembly;
 
+// Register the current Rulebook's data with the D20System ROM before anything reads it — the
+// declarative rule group's generated code and the command handlers' no-arg constructors both fall
+// back to this registry (Phase 2.6's ROM/Rulebook boundary: Rulebook is pure data, so it can't
+// call RuleExport.Compile or wire handlers itself).
+D20SystemContent.Configure(
+    OneD20RulebookContent.Rooms,
+    OneD20FlavorText.Text,
+    OneD20RulebookContent.PlayerCharacter,
+    OneD20RulebookContent.Monster,
+    OneD20RulebookContent.PlayerAbilityScores,
+    OneD20RulebookContent.StartRoomId);
+
 var engine = new ConsoleEngine()
     .ConfigureGameEngine(opts =>
     {
         opts.GameName = "My LunaFlow Game";
         opts.EnableRulesEngine = true;
         opts.Rules
-            .FromAssembly(RuleExport.Compile(typeof(OneD20RuleGroup)))
-            .Seed(() => OneD20Content.Rooms.Values)
+            .FromAssembly(RuleExport.Compile(typeof(D20SystemRuleGroup)))
+            .Seed(() => D20SystemContent.Rooms.Values)
             .Seed(() =>
             {
                 // GameEngineCore.Start() runs every Seed() provider (ApplyTo) before the initial-
@@ -32,12 +45,12 @@ var engine = new ConsoleEngine()
                 // content code can guarantee it prints before Fire()'s challenge-prompt rule fires
                 // monster-desc for room 5. Program.cs itself runs entirely before engine.Run(), so
                 // an Announce() call there would fire with nobody subscribed yet and be lost.
-                LunaFlowEngine.Host.Announce(OneD20Flavor.Text[OneD20Content.Rooms[OneD20Content.StartRoomId].DescriptionKey]);
+                LunaFlowEngine.Host.Announce(D20SystemContent.FlavorText[D20SystemContent.Rooms[D20SystemContent.StartRoomId].DescriptionKey]);
                 return new object[]
                 {
-                    new PlayerPosition(OneD20Content.StartRoomId),
-                    OneD20Content.PlayerCharacter,
-                    OneD20Content.Monster,
+                    new PlayerPosition(D20SystemContent.StartRoomId),
+                    D20SystemContent.PlayerCharacter,
+                    D20SystemContent.Monster,
                 };
             });
     })
