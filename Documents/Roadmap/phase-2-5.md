@@ -70,8 +70,9 @@ supersede-don't-delete rule, in case a future regression ever reintroduces hand-
 
 - Previous: [Phase 2 — Rule pipeline MVP](phase-2.md)
 - Supersedes: [Phase 3 — Vertical slice](phase-3.md) (kept for reference; revivable)
-- Next: [Phase 4 — World content & scripting](phase-4.md) — also gated on this phase's mechanic
-  infrastructure, not just Phase 2's IR stability
+- Next: [Phase 2.6 — ROM/Rulebook boundary fortification](phase-2-6.md) — retrofits this phase's
+  content into the ROM/Rulebook split it named but didn't build; [Phase 4](phase-4.md) follows that,
+  still separately gated on this phase's `IMechanic` delivery
 
 ## Related documents
 
