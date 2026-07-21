@@ -1,6 +1,6 @@
 # 0017 — 1.d20 maintained test suite
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Dev — Implementation (Baraka)
 **Opened:** 2026-07-20
 **For:** Dev — Test Suite (Nadia)
@@ -116,8 +116,35 @@ whether the bug they were meant to catch existed. Fixed to check for the actual
 
 ## Resolution
 
-_(Baraka to fill in on close.)_
+Verified and closed by Baraka (opener), 2026-07-20. Not a rubber stamp — checked directly against
+running source, not taken on the response's word:
 
-## Resolution
+- **Fresh, clean build:** `dotnet build LunaFlow_A.sln --no-incremental` — 0 errors, same 8
+  pre-existing warnings, none new.
+- **Fresh, full test run:** `dotnet test tests/LunaFlow.EngineTests` — 96/96 green, not inherited
+  from a prior run.
+- **Read both new files end-to-end** (`OneD20RuleFixtureTests.cs`, `OneD20HandlerTests.cs`) against
+  the real `OneD20RuleGroup`/handler source: 9 + 16 = 25 tests, matching the claimed count and
+  category tags (`Rom_OneD20`/`Phase2.5`). Confirmed the fixture tests exercise the real compiled
+  pipeline (`RuleExport.Compile`) and the real `GameEngineCore.Instance.MessagePosted` event rather
+  than a stand-in, and the handler tests go through the actual dispatch+`Fire()` path — the only way
+  to test a handler at all, since `LunaFlowEngine.Host` is hard-wired to the singleton.
+- **Hand-verified a sample of the seeded-RNG math** rather than trusting the in-code comments: seed
+  0's claimed first-d20-is-15 checks out against PC AttackBonus/Monster Defense/damage-die math for
+  the lethal-hit test, and seed 41's two-round PlayerHp trace (11→7→0) checks out against Monster
+  AttackBonus/PC Defense/damage math. Since the suite actually passed, this is empirical, not
+  faith-based — a wrong seed/number would have failed the assertion.
+- **Confirmed the disclosed self-caught bug is actually fixed**, not just claimed: the final
+  assertions check `OneD20Flavor.Text["pc-hit"]` (the real mapped prose) inside announced strings,
+  not the literal dictionary key `"pc-hit"` — the vacuous-`IsFalse` failure mode the response
+  described is gone in what's checked in.
+- **Scope matches the ask:** `move`/`look` parity is spot-checked (one valid move, one rejected
+  edge move) rather than re-deriving Nine Rooms' whole grid, per the ticket's own allowance; the
+  RNG seam from ticket 0019 is used exactly as designed, including one deliberately-unseeded test
+  where the criterion holds under either outcome.
 
-_(Baraka to fill in on close.)_
+Also fixed a duplicated `## Resolution` header left over in this file from an earlier edit — no
+content lost, just a stray copy-paste artifact.
+
+1.d20's full acceptance-criteria checklist now has both manual verification (tickets 0016/0018) and
+maintained automated coverage. Nothing further needed from Nadia on this ticket.

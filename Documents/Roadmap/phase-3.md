@@ -1,9 +1,10 @@
 # Phase 3 — Vertical slice
 
-**Status:** superseded by [Phase 2.5](phase-2-5.md) — kept for reference, not deleted. 1.d20 is
-expected to prove this phase's done-bar as a side effect of proving the d20 mechanic
-infrastructure (see Phase 2.5's supersession note). If that turns out not to hold, revive this
-phase rather than reinventing it.
+**Status:** superseded by [Phase 2.5](phase-2-5.md) (done, 2026-07-20) — kept for reference, not
+deleted. 1.d20 proved this phase's done-bar as a side effect of proving the d20 mechanic
+infrastructure, confirmed by QA and independently re-verified by the PM (see Phase 2.5's
+supersession note) — not just expected to, as originally written. Revive this phase only if a
+future regression breaks the `GeneratorServices` condition that made the supersession valid.
 
 ## Overview
 

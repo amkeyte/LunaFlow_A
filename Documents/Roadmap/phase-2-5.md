@@ -1,6 +1,8 @@
 # Phase 2.5 — d20 vertical slice & mechanic infrastructure
 
-**Status:** pending
+**Status:** done. QA verdict: **PASS** — [`Documents/QA/phase-2-5-verdict.md`](../QA/phase-2-5-verdict.md),
+via [ticket 0020](../ClaudeWiki/Processes/Handoffs/0020-phase-2-5-final-verdict.md). Marked done
+2026-07-20.
 
 ## Overview
 
@@ -50,10 +52,19 @@ through the CLI.
 
 ## Supersession note
 
-If 1.d20 ends up built by hand instead of through the pipeline (breaking the load-bearing
-condition above), it no longer proves Phase 3's original bar, and Phase 3 should be revived as a
-separate, smaller step rather than treated as closed by this phase. Not expected, but the door's
-deliberately left open rather than deleting Phase 3's doc.
+**Resolved 2026-07-20 — condition confirmed held, not just expected.** The load-bearing condition
+(1.d20's declarative rules genuinely pipeline-authored, not hand-written `ARule`) was verified
+against source independently twice: once by QA (Lothar, [ticket 0020](../ClaudeWiki/Processes/Handoffs/0020-phase-2-5-final-verdict.md))
+and again by the PM (Kofi, on that ticket's close) — both read `OneD20RuleGroup.cs` directly and
+confirmed all 18 declarative rules are `[RuleTemplate]` `RulePrototype`s with zero hand-written
+`ARule` anywhere in `LunaFlow.Rom.OneD20`. Phase 3 stays superseded; the door named below is
+closed, not just left ajar. Original text kept below for the record of what was being guarded
+against before verification.
+
+If 1.d20 had ended up built by hand instead of through the pipeline, it wouldn't have proven
+Phase 3's original bar, and Phase 3 would have needed reviving as a separate, smaller step. That
+didn't happen — but the door remains documented rather than deleted, per `wiki-style.md`'s
+supersede-don't-delete rule, in case a future regression ever reintroduces hand-written rules here.
 
 ## Related phases
 

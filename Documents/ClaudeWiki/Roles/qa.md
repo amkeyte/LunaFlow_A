@@ -29,10 +29,10 @@ checked.
   plays through").
 - Runs / inspects the tests and build where the toolchain allows; where it can't, reads the
   code directly and says so rather than assuming.
-- **A phase-doneness verdict's suite run is user-run** (Arryn runs the pass, QA reads the `.trx` and
-  writes the verdict from it) — not a solo agent full-suite run. See the "hard rule" in
-  [`agent-test-workflow.md`](../Processes/agent-test-workflow.md). A narrow one-off during triage is
-  still fine to run solo.
+- **A phase-doneness verdict's suite run is user-run** (Arryn runs the pass, QA reads the `.trx` at
+  `tests/LunaFlow.EngineTests/TestResults/latest.trx` and writes the verdict from it) — not a solo
+  agent full-suite run. See the "hard rule" in [`agent-test-workflow.md`](../Processes/agent-test-workflow.md).
+  A narrow one-off during triage is still fine to run solo.
 - Produces a pass/fail verdict **with the evidence attached** — what was checked, what proved
   it, what's still unproven. A bare "looks good" is not a QA sign-off.
 - Files [handoff tickets](../Processes/handoff-tickets.md) back to the Dev (defect) or Architect
