@@ -24,11 +24,21 @@ var engine = new ConsoleEngine()
         opts.Rules
             .FromAssembly(RuleExport.Compile(typeof(OneD20RuleGroup)))
             .Seed(() => OneD20Content.Rooms.Values)
-            .Seed(() => new object[]
+            .Seed(() =>
             {
-                new PlayerPosition(OneD20Content.StartRoomId),
-                OneD20Content.PlayerCharacter,
-                OneD20Content.Monster,
+                // GameEngineCore.Start() runs every Seed() provider (ApplyTo) before the initial-
+                // settle Fire() — and MessagePosted is already subscribed by the time Start() runs
+                // (ConsoleEngine.Run() wires it up first) — so an Announce() here is the one place
+                // content code can guarantee it prints before Fire()'s challenge-prompt rule fires
+                // monster-desc for room 5. Program.cs itself runs entirely before engine.Run(), so
+                // an Announce() call there would fire with nobody subscribed yet and be lost.
+                LunaFlowEngine.Host.Announce(OneD20Flavor.Text[OneD20Content.Rooms[OneD20Content.StartRoomId].DescriptionKey]);
+                return new object[]
+                {
+                    new PlayerPosition(OneD20Content.StartRoomId),
+                    OneD20Content.PlayerCharacter,
+                    OneD20Content.Monster,
+                };
             });
     })
     .ConfigureCommand(opts =>

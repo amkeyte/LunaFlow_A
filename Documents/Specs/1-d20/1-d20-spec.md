@@ -44,7 +44,23 @@ different by accident.
 Ticket 0016's build matched this spec's *previous* revision faithfully — Baraka disclosed the
 double-announce as a cosmetic quirk rather than silently patching around it, which is exactly
 right and is how this got caught. [Ticket 0018](../../ClaudeWiki/Processes/Handoffs/0018-recode-1-d20-per-revised-spec.md)
-asks for a recode against this revision.
+asked for a recode against this revision; 0018 is what the two fixes below apply on top of.
+
+**Revised 2026-07-20 (second playtest, after 0018's build):** two more, both confirmed against
+`FightCommandHandler.cs`/`Program.cs` before concluding they were spec bugs, not execution bugs:
+
+1. **A lethal hit narrated its own contradiction** — "he staggers but he's still on his feet" (the
+   `pc-hit` line) immediately followed by "he drops the rapier and doesn't get up"
+   (`monster-defeated`), because this spec's steps 2/3 said "announce the hit, then separately
+   check if it was lethal" — a literal read always announces `pc-hit` before the death check runs.
+   Fixed: lethality is now checked *before* choosing which line to announce, both directions
+   (`pc-hit`/`monster-defeated` and `monster-hit`/`pc-lost`).
+2. **Room 5 never announced its `DescriptionKey` at startup** — a side effect of the previous
+   revision's own fix. The old (buggy) challenge-prompt rule used to announce `DescriptionKey` too,
+   so it accidentally showed at startup via the initial-settle `Fire()`; correctly narrowing that
+   rule to `PromptKey`-only removed the only thing that had been showing it, since
+   `MoveCommandHandler` — the sole remaining `DescriptionKey` announcer — never runs for a seeded
+   starting position. Fixed: startup now explicitly announces it once.
 
 ## Purpose
 
@@ -175,6 +191,18 @@ Nine Rooms didn't need and this does (for `flee`), and announces the destination
 `DescriptionKey` unconditionally — same as Nine Rooms' `Description` behavior, and now the *only*
 call site that announces it (see the challenge-prompt rule above for the fix).
 
+**Startup must also announce the start room's `DescriptionKey` once, explicitly — not left to fall
+out of the two call sites above.** `PlayerPosition(5)` is seeded directly, not reached via `move`,
+so `MoveCommandHandler` never runs for it; the challenge-prompt rule's initial-settle `Fire()` only
+covers `PromptKey`/`monster-desc` now that the double-announce fix took `DescriptionKey` out of its
+hands. Without an explicit startup announcement, room 5's description never shows at all — a real
+gap surfaced by playtest, not a hypothetical. Fix: content seeding (`Program.cs`, wherever the
+initial `Announce()` calls already happen for this ROM) makes one synthetic "arrived in room 5"
+announcement of `DescriptionKey` before the loop starts, in addition to whatever `Fire()`'s initial
+settle already handles. This is a content-seeding-level fix, not a new engine capability — no
+ticket to Amara needed. (Nine Rooms has the same latent gap, apparently never noticed; not this
+spec's problem to fix, noted only for context.)
+
 **`look`**: reused shape (announces the current room's `DescriptionKey` on demand, no fact
 changes), plus one addition — if a `CombatRound` is active for the current room, also announce
 both combatants' current HP (e.g. "You're at 8/11 HP. He's at 3/8 HP."). This is the fix for HP
@@ -203,21 +231,28 @@ built — see [Framework dependencies](#framework-dependencies).
    HP**, whether this is the first attempt or a retry after an earlier `flee` or a prior loss in a
    *different* room — no HP carries over between separate `CombatRound`s, ever.
 2. PC attack: `1d20 + PlayerCharacter.AttackBonus` vs. `MonsterTemplate.Defense`.
-   - Hit: reduce `CombatRound.MonsterHp` by `DamageDie + DamageBonus`; announce `pc-hit` plus the
-     damage dealt and the monster's remaining HP.
-   - Miss: announce `pc-miss`. No damage.
-3. If `MonsterHp ≤ 0`: insert `RoomSolved(RoomId)`, retract `CombatRound`, announce
-   `monster-defeated`. Stop — no counterattack on the round that ends the fight.
-4. Otherwise, monster attack: `1d20 + MonsterTemplate.AttackBonus` vs. `PlayerCharacter.Defense`.
-   - Hit: reduce `CombatRound.PlayerHp` by `DamageDie + DamageBonus`; announce `monster-hit` plus
-     the damage taken and the PC's remaining HP.
-   - Miss: announce `monster-miss`. No damage.
-5. If `CombatRound.PlayerHp ≤ 0`: insert `RoomFailed(RoomId)` (not a session-ending state — see
-   the revision note and [Fact / marker vocabulary](#fact--marker-vocabulary)), retract
-   `CombatRound`, announce `pc-lost`. Stop.
-6. Otherwise increment `CombatRound.RoundsElapsed`. If it now equals 3: insert `RoomFailed(RoomId)`,
-   retract `CombatRound`, announce `monster-fled`.
-7. Re-issuing `fight` on an already-`RoomSolved`/`RoomFailed` room: silent no-op (same formalized
+   - **Hit:** reduce `CombatRound.MonsterHp` by `DamageDie + DamageBonus`, *then check lethality
+     before announcing anything* — the two are not independent steps:
+     - If the result is `≤ 0`: insert `RoomSolved(RoomId)`, retract `CombatRound`, announce
+       `monster-defeated` **only**. Stop — no `pc-hit` narration on the killing blow (it reads as
+       "he's still on his feet" immediately followed by "he drops dead," a real contradiction a
+       playtest caught — this is the fix), and no counterattack.
+     - Otherwise: announce `pc-hit` plus the damage dealt and the monster's remaining HP. Continue.
+   - **Miss:** announce `pc-miss`. No damage. Continue.
+3. Monster attack (only reached if the PC's attack didn't end the fight):
+   `1d20 + MonsterTemplate.AttackBonus` vs. `PlayerCharacter.Defense`.
+   - **Hit:** reduce `CombatRound.PlayerHp` by `DamageDie + DamageBonus`, same lethality-first
+     order as the PC's attack:
+     - If the result is `≤ 0`: insert `RoomFailed(RoomId)` (not a session-ending state — see the
+       revision note and [Fact / marker vocabulary](#fact--marker-vocabulary)), retract
+       `CombatRound`, announce `pc-lost` **only** — no `monster-hit` narration first, same
+       contradiction, same fix. Stop.
+     - Otherwise: announce `monster-hit` plus the damage taken and the PC's remaining HP. Continue.
+   - **Miss:** announce `monster-miss`. No damage. Continue.
+4. Neither combatant reached 0: increment `CombatRound.RoundsElapsed`. If it now equals 3: insert
+   `RoomFailed(RoomId)`, retract `CombatRound`, announce `monster-fled`. Otherwise persist the
+   updated `CombatRound` (new `MonsterHp`/`PlayerHp`/`RoundsElapsed`) for the next `fight` call.
+5. Re-issuing `fight` on an already-`RoomSolved`/`RoomFailed` room: silent no-op (same formalized
    call as `check`, above).
 
 Every step's `Announce()` combines a flavor key (the words) with handler-constructed dynamic
@@ -251,6 +286,12 @@ All five are hand-written `ICommandHandler`s, same tier as Nine Rooms' checked-i
 - [ ] Entering any unsolved/unfailed room announces `DescriptionKey` exactly once (from the
       handler) and its `PromptKey`/`monster-desc` exactly once (from the rule) — never the same
       text twice, and never both a description and a prompt with identical content.
+- [ ] Session startup announces room 5's `DescriptionKey` once, explicitly — verify a fresh
+      transcript shows the description *before* `monster-desc`, not just `monster-desc` alone.
+- [ ] A lethal PC hit announces `monster-defeated` only — never `pc-hit` first. Same for a lethal
+      monster hit: `pc-lost` only, never `monster-hit` first. (Verify via a transcript where the
+      killing blow's damage number is checked against the pre-hit HP to confirm it really was
+      lethal, not just asserting the right string appeared.)
 - [ ] Each of the 6 skill-check rooms resolves `check` using its own skill/ability/DC from the
       table in `1-d20.md`, announces that room's specific `SuccessKey`/`FailureKey` (not a shared
       generic message), and includes the mechanical roll/DC readout. A failed `check` leaves the

@@ -37,44 +37,45 @@ namespace LunaFlow.Rom.OneD20
             if (existingRound is not null)
                 rules.Retract(existingRound);
 
-            // 1. PC attack.
+            // 1. PC attack. Lethality is checked before choosing which line to announce — a
+            // killing blow announces monster-defeated only, never pc-hit first (that read as a
+            // contradiction: "he's still on his feet" immediately followed by "he drops dead").
             var pcAttack = mechanic.ResolveCheck(pc.Stats.AttackBonus, monster.Stats.Defense);
             if (pcAttack.Success)
             {
                 var damage = mechanic.Roll(pc.Stats.DamageDie) + pc.Stats.DamageBonus;
                 monsterHp -= damage;
-                LunaFlowEngine.Host.Announce(OneD20Flavor.HitNarration("pc-hit", damage, Math.Max(monsterHp, 0)));
+                if (monsterHp <= 0)
+                {
+                    rules.Insert(new RoomSolved(room.Id));
+                    LunaFlowEngine.Host.Announce(OneD20Flavor.Text["monster-defeated"]);
+                    return;
+                }
+                LunaFlowEngine.Host.Announce(OneD20Flavor.HitNarration("pc-hit", damage, monsterHp));
             }
             else
             {
                 LunaFlowEngine.Host.Announce(OneD20Flavor.Text["pc-miss"]);
             }
 
-            if (monsterHp <= 0)
-            {
-                rules.Insert(new RoomSolved(room.Id));
-                LunaFlowEngine.Host.Announce(OneD20Flavor.Text["monster-defeated"]);
-                return;
-            }
-
-            // 2. Monster counterattack (only reached if the PC's hit didn't finish the fight).
+            // 2. Monster counterattack (only reached if the PC's attack didn't end the fight).
+            // Same lethality-first order as the PC's attack, same reason.
             var monsterAttack = mechanic.ResolveCheck(monster.Stats.AttackBonus, pc.Stats.Defense);
             if (monsterAttack.Success)
             {
                 var damage = mechanic.Roll(monster.Stats.DamageDie) + monster.Stats.DamageBonus;
                 playerHp -= damage;
-                LunaFlowEngine.Host.Announce(OneD20Flavor.HitNarration("monster-hit", damage, Math.Max(playerHp, 0)));
+                if (playerHp <= 0)
+                {
+                    rules.Insert(new RoomFailed(room.Id));
+                    LunaFlowEngine.Host.Announce(OneD20Flavor.Text["pc-lost"]);
+                    return;
+                }
+                LunaFlowEngine.Host.Announce(OneD20Flavor.HitNarration("monster-hit", damage, playerHp));
             }
             else
             {
                 LunaFlowEngine.Host.Announce(OneD20Flavor.Text["monster-miss"]);
-            }
-
-            if (playerHp <= 0)
-            {
-                rules.Insert(new RoomFailed(room.Id));
-                LunaFlowEngine.Host.Announce(OneD20Flavor.Text["pc-lost"]);
-                return;
             }
 
             // 3. The 3-round clock.
