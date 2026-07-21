@@ -18,33 +18,33 @@ that helps a session ramp up fast and stay in scope, without belonging in a desi
 
 ## Structure
 
-| Section | Purpose | Status |
-| --- | --- | --- |
-| [`Roles/`](Roles/) | One page per chat-session role: scope, authority, communication protocol | started |
-| [`Processes/`](Processes/) | Team workflows — handoffs, review requests, escalation paths | started |
-| [`Tools/`](Tools/) | Skills, scripts, and utilities inventory, with usage notes | started |
+| Section | Purpose |
+| --- | --- |
+| [`Roles/`](Roles/) | One page per chat-session role: scope, authority, communication protocol |
+| [`Processes/`](Processes/) | Team workflows — handoffs, review requests, escalation paths |
+| [`Tools/`](Tools/) | Skills, scripts, and utilities inventory, with usage notes |
 
 ## Pages
 
-| Page | Section | Status |
-| --- | --- | --- |
-| [Supreme Leader (PM)](Roles/supreme-leader.md) | Roles | active |
-| [Persona — "Kofi"](Roles/supreme-leader-persona.md) | Roles | active |
-| [Architect](Roles/architect.md) | Roles | active |
-| [Game Designer](Roles/game-designer.md) | Roles | active |
-| [Dev — Implementation](Roles/dev.md) | Roles | active |
-| [Dev — Test Suite](Roles/dev-test.md) | Roles | active |
-| [QA / Verification](Roles/qa.md) | Roles | active |
-| [Handoff Tickets](Processes/handoff-tickets.md) | Processes | active |
-| [Handoff Ticket Index](Processes/Handoffs/index.md) | Processes | active |
-| [Testing — conventions & workflow](Processes/testing.md) | Processes | active |
-| [Test Runbook — execution & diagnostics](Processes/test-runbook.md) | Processes | active |
-| [Test Patterns — concurrency-safe authoring](Processes/test-patterns.md) | Processes | active |
-| [Agent-Assisted Test Workflow](Processes/agent-test-workflow.md) | Processes | active |
-| [Wiki Style — page conventions](Processes/wiki-style.md) | Processes | active |
-| [Content Spec Template — buildable-spec shape](Processes/content-spec-template.md) | Processes | active |
-| [API Doc Generation — `DefaultDocumentation` wiring & MAX_PATH](Processes/api-doc-generation.md) | Processes | active |
-| [Skill — `qa-verify`](Tools/qa-verify-skill.md) | Tools | active |
+| Page | Section |
+| --- | --- |
+| [Supreme Leader (PM)](Roles/supreme-leader.md) | Roles |
+| [Persona — "Kofi"](Roles/supreme-leader-persona.md) | Roles |
+| [Architect](Roles/architect.md) | Roles |
+| [Game Designer](Roles/game-designer.md) | Roles |
+| [Dev — Implementation](Roles/dev.md) | Roles |
+| [Dev — Test Suite](Roles/dev-test.md) | Roles |
+| [QA / Verification](Roles/qa.md) | Roles |
+| [Handoff Tickets](Processes/handoff-tickets.md) | Processes |
+| [Handoff Ticket Index](Processes/Handoffs/index.md) | Processes |
+| [Testing — conventions & workflow](Processes/testing.md) | Processes |
+| [Test Runbook — execution & diagnostics](Processes/test-runbook.md) | Processes |
+| [Test Patterns — concurrency-safe authoring](Processes/test-patterns.md) | Processes |
+| [Agent-Assisted Test Workflow](Processes/agent-test-workflow.md) | Processes |
+| [Wiki Style — page conventions](Processes/wiki-style.md) | Processes |
+| [Content Spec Template — buildable-spec shape](Processes/content-spec-template.md) | Processes |
+| [API Doc Generation — `DefaultDocumentation` wiring & MAX_PATH](Processes/api-doc-generation.md) | Processes |
+| [Skill — `qa-verify`](Tools/qa-verify-skill.md) | Tools |
 
 ## Migration candidates
 

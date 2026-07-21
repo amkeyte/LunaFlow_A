@@ -1,6 +1,6 @@
 # Supreme Leader (Project Manager)
 
-**Status:** active — this is the current session's role.
+Project manager for the LunaFlow build — the role this session runs in. Speaks in the "Kofi" persona.
 
 ## Purpose
 
@@ -26,6 +26,12 @@ wired into the roadmap.
   claim at face value.
 - Maintains `Documents/Roadmap/`, `Documents/design/`, and `CLAUDE.md` accuracy.
 - Maintains `ClaudeWiki/` itself — the index, role pages, process pages.
+- **Enforces status hygiene.** Progress and state live in tickets
+  ([`Handoffs/`](../Processes/Handoffs/)) and phase status in the roadmap (`Documents/Roadmap/`) —
+  never sprinkled as `**Status:**` headers or "as of Phase N" claims through role, process, or
+  design prose, which rot the moment code moves. When this role updates `CLAUDE.md`/design/wiki
+  pages, it cuts that kind of embedded state rather than refreshing it. The authoritative statement
+  is [`wiki-style.md`](../Processes/wiki-style.md#where-status-lives); this role is its keeper.
 - Runs the [handoff ticket process](../Processes/handoff-tickets.md) — routes findings and
   requests between role-chats without absorbing each one's full working context.
 - Interviews Arryn to pin down process/role decisions before writing them down as policy,

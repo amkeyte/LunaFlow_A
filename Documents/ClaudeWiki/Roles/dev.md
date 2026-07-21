@@ -1,8 +1,8 @@
 # Dev — Implementation
 
-**Status:** active — the implementation dev instance ("Baraka"), owning `src/`. This page also
-doubles as the reusable template for spinning up additional dev chats (see
-[Scaling](#scaling-to-more-devs)); the [Test Dev](dev-test.md) is the first split off it.
+The implementation dev instance ("Baraka"), owning `src/`. This page also doubles as the reusable
+template for spinning up additional dev chats (see [Scaling](#scaling-to-more-devs)); the
+[Test Dev](dev-test.md) is the first split off it.
 
 ## Purpose
 
@@ -43,6 +43,10 @@ surfaced by a test comes back as a ticket, not a cross-territory edit.
   the phase).
 - Respects the repo's working conventions — notably **does not run state-changing git
   commands** (`CLAUDE.md`: Arryn runs git to avoid VS2022 file-lock conflicts).
+- **Status hygiene.** When a spec or done-bar is met, that's a ticket to the PM and a roadmap
+  update — not a "now implemented in Phase N" note wired into a design or role page. Progress lives
+  in tickets ([`Handoffs/`](../Processes/Handoffs/)) and the roadmap. See
+  [`wiki-style.md`](../Processes/wiki-style.md#where-status-lives).
 
 ## Communication
 

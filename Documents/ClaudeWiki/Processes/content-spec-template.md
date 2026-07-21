@@ -1,9 +1,6 @@
 # Content Spec Template — what a buildable spec contains
 
-**Status:** active. Registered in the [wiki index](../index.md) and cross-linked from
-[`game-designer.md`](../Roles/game-designer.md) and [`wiki-style.md`](wiki-style.md) — wired in
-by Kofi, 2026-07-20. Owned by the [Game Designer](../Roles/game-designer.md) role. Defines the
-required shape of a
+Owned by the [Game Designer](../Roles/game-designer.md) role. Defines the required shape of a
 content-design spec (ROM mechanics, a Rulebook, a scripting-format surface) handed to
 [Baraka](../Roles/dev.md) for implementation, so "precise enough to build blind" means the same
 thing every time instead of being re-derived per spec.

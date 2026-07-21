@@ -31,9 +31,10 @@ loadable in isolation — a chat pulls exactly the page it needs, not a monolith
 Every page has, in order:
 
 1. **`# H1 title`** — matches what the index calls it.
-2. **A purpose/status line up top** — one or two sentences on what the page is and (for
-   role/ticket/phase pages) its status. A reader should know in the first three lines whether this
-   is the page they want.
+2. **A purpose line up top** — one or two sentences on what the page is, so a reader knows in the
+   first three lines whether this is the page they want. Descriptive pages (roles, processes, tools)
+   do **not** carry a `**Status:**` header — see [Where status lives](#where-status-lives). Tickets,
+   content specs, and roadmap phases do, because that's where a real lifecycle is tracked.
 3. **Body** — sectioned with `##` headings.
 4. **`## Related pages`** footer — relative links to the index and adjacent pages, so navigation
    never dead-ends.
@@ -57,17 +58,30 @@ concern, one owning doc.
 
 If you catch yourself copying a paragraph from another page, link instead.
 
-## Status and lifecycle vocabulary
+## Where status lives
 
-- Role/phase pages: **active / pending / done**.
-- Tickets: **open → in-review → resolved** (per [`handoff-tickets.md`](handoff-tickets.md)).
-- Content specs: **draft → in review → active** (per
-  [`content-spec-template.md`](content-spec-template.md)) — `active` means Baraka has implemented
-  against it and QA has verified the acceptance criteria, not just that the Game Designer is done.
-- Use **superseded** for a decision replaced by a newer one, in any of the above.
-- **Date material changes.** When you reconcile or reverse something, add a dated one-liner
-  ("Reconciled 2026-07-17: …") rather than silently overwriting — the trail is how the next chat
-  trusts the page.
+Progress and state are tracked in exactly three places, and nowhere else:
+
+- **Ticket status** — **open → in-review → resolved**, in [`Handoffs/`](Handoffs/) (per
+  [`handoff-tickets.md`](handoff-tickets.md)).
+- **Phase status** — **pending → done** (and **superseded**), in the roadmap
+  (`Documents/Roadmap/`).
+- **Content-spec status** — **draft → in review → active**, on the spec itself (per
+  [`content-spec-template.md`](content-spec-template.md); `active` means Baraka has implemented
+  against it and QA has verified the acceptance criteria, not just that the Game Designer is done).
+
+Role, process, and tool pages describe **stable shape** — what a role *is*, how a process *works* —
+and carry **no** `**Status:**` header and no embedded progress claims ("implemented in Phase 2,"
+"fixed post-2.6," "very little exists yet," "not yet wired"). Those rot the moment code moves, then
+either get hand-maintained forever or quietly start lying. To find out whether something is built,
+read the roadmap and the tickets — not a role page. **Design docs (`Documents/design/`) follow the
+same rule**: they describe intended shape; the roadmap says what's real. A design doc should not open
+with a "how much of this exists yet" status line.
+
+Use **superseded** for a decision replaced by a newer one, on the tickets/specs/phases where the
+lifecycle actually lives. Date material reversals there too ("Reconciled 2026-07-17: …") rather than
+silently overwriting — the trail is how the next chat trusts the record. Don't reproduce that trail
+as running commentary in a descriptive page.
 
 ## Supersede, don't delete
 
@@ -86,10 +100,12 @@ preserves it.
 ## Checklist for any wiki edit
 
 1. Right section folder, kebab-case filename, one concern.
-2. H1 + purpose/status line + `## Related pages` footer.
+2. H1 + purpose line + `## Related pages` footer. No `**Status:**` header on a role/process/tool
+   page — see [Where status lives](#where-status-lives).
 3. Registered in the index (and any section index).
 4. No duplicated content — linked to the owner instead.
-5. Status/date conventions applied; superseded content marked, not deleted.
+5. No embedded progress/state claims; superseded decisions marked (not deleted) on the ticket/spec/
+   phase that owns the lifecycle.
 
 ## Related pages
 

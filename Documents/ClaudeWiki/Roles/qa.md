@@ -1,7 +1,7 @@
 # QA / Verification
 
-**Status:** active — a QA chat has already been operating in practice (it signed off Phase 1.1);
-this page formalizes it.
+The project's independent verifier — confirms "done" claims against code and tests before a phase or
+ticket is allowed to close.
 
 ## Purpose
 
@@ -51,6 +51,11 @@ never silently deleted.
 - Ticket to Dev: "acceptance criterion X fails, here's the repro."
 - Ticket to Architect: "spec claims Y but the code/tests can't demonstrate it."
 - Verdict to PM: pass/fail + evidence, so the PM can mark (or refuse to mark) the phase.
+
+**Status hygiene.** A verdict is tracked status — it lives as a file in `Documents/QA/` (with an
+`index.md` pointing at the authoritative one per phase) and drives the roadmap's phase status. That's
+where "is this verified" belongs, not as a claim embedded in a role or design page. See
+[`wiki-style.md`](../Processes/wiki-style.md#where-status-lives).
 
 ## Persona — "Lothar"
 

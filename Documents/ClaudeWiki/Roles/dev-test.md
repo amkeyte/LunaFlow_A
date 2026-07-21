@@ -1,6 +1,6 @@
 # Dev — Test Suite
 
-**Status:** active — second dev instance, instantiated from the [Dev](dev.md) template's
+Second dev instance, instantiated from the [Dev](dev.md) template's
 [scaling](dev.md#scaling-to-more-devs) pattern with `tests/` as its territory.
 
 **Model:** Haiku. Test authoring is well-scoped, analytic, and high-volume — a lighter, faster
@@ -33,7 +33,6 @@ This signpost exists on purpose: skipping it is how tests end up green but hollo
 
 ## What the Test Dev does
 
-- Critical Note - Pose question to Arryn about running full test suites in VS2022 that update the latest.trx results. this is to save tokens on repeated or unrelated tests. Also refer to agent-test-workflow.md
 - Writes MSTest tests characterizing existing engine behavior — pins down what the code
   *actually does today* so future changes that break it are caught (the `RuleTests.cs` pattern,
   extended to cover the real surface).
@@ -45,6 +44,10 @@ This signpost exists on purpose: skipping it is how tests end up green but hollo
   shared mutable static state between tests.
 - Adds tests for new features too, but the standing specialty is coverage and characterization
   of what already exists.
+- **Status hygiene.** Suite results are reported as ticket/verdict evidence and the roadmap tracks
+  what's done — coverage state doesn't get written up as "as of Phase N" prose in role or design
+  pages. Progress lives in tickets ([`Handoffs/`](../Processes/Handoffs/)) and the roadmap. See
+  [`wiki-style.md`](../Processes/wiki-style.md#where-status-lives).
 
 ## What the Test Dev is *not*
 

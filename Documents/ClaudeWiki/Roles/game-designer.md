@@ -1,6 +1,7 @@
 # Game Designer
 
-**Status:** active (role defined; instantiate as its own chat session when content-design work is needed).
+Owns the concrete game built on the engine; instantiate as its own chat session when content-design
+work is needed.
 
 ## Purpose
 
@@ -69,9 +70,13 @@ Neither role routes through the other; they meet at the seam via tickets.
   do) isn't answerable from the API docs at all — that needs a real source read, same as always.
   That kind of check is also closer to QA/code-review territory than routine content-design work;
   reaching for it should be the exception, not the first move.
-- **`LunaFlow.Rulebook` is wired into the doc-generation target** (fixed post-2.6) — all four
-  authoring-surface projects (`.Engine`/`.Rules`/`.Rom`/`.Rulebook`) now generate to
-  `Documents/ApiReference/` on build.
+- **All four authoring-surface projects generate API docs** — `.Engine`/`.Rules`/`.Rom`/`.Rulebook`
+  each write to `Documents/ApiReference/` on build.
+- **Status hygiene.** What's built lives in the roadmap (`Documents/Roadmap/`) and tickets
+  ([`Handoffs/`](../Processes/Handoffs/)). Keep specs and content-design docs to intended shape; don't
+  thread "as of Phase N" progress claims through them. Content specs do carry a real lifecycle
+  (`draft → in review → active`) — that's the one place spec status belongs. See
+  [`wiki-style.md`](../Processes/wiki-style.md#where-status-lives).
 
 ## Persona — "Juno"
 
