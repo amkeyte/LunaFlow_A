@@ -2,7 +2,10 @@ using LunaFlow.Engine;
 
 namespace LunaFlow.Rom.NineRooms
 {
-    /// <summary>Handles the <c>look</c> command by announcing the current room's description.</summary>
+    /// <summary>
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Handles the <c>look</c>
+    /// command by announcing the current room's description.
+    /// </summary>
     public sealed class LookCommandHandler : ICommandHandler
     {
         /// <summary>Announces the description of the room the player currently occupies.</summary>

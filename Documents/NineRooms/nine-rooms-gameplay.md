@@ -1,5 +1,10 @@
 # Nine Rooms — Gameplay: Commands, Rules & Decisions
 
+**DEPRECATED as design guidance (2026-07-20)** — see [`nine-rooms.md`](nine-rooms.md)'s Status
+line. Kept for the implemented engine-fixture test coverage; not current ROM/Rulebook design
+guidance. See `LunaFlow.Rom.D20System` / `LunaFlow.Rulebook.OneD20` and
+[Phase 2.6](../Roadmap/phase-2-6.md) for the current pattern.
+
 **Reference chain:**
 - [`nine-rooms-spec.md`](nine-rooms-spec.md) (main spec)
   - *Describes the engine surface* (Engine wiring item 1) that these handlers and rules use

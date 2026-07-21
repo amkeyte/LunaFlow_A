@@ -1,5 +1,10 @@
 # Nine Rooms — Implementation Spec
 
+**DEPRECATED as design guidance (2026-07-20)** — see [`nine-rooms.md`](nine-rooms.md)'s Status
+line. Kept for the implemented engine-fixture test coverage; not current ROM/Rulebook design
+guidance. See `LunaFlow.Rom.D20System` / `LunaFlow.Rulebook.OneD20` and
+[Phase 2.6](../Roadmap/phase-2-6.md) for the current pattern.
+
 **Status:** draft, for review. Supersedes nothing — this is the concrete companion to
 [`nine-rooms.md`](nine-rooms.md) (the concept doc) and
 [`../Roadmap/roadmap.md`](../Roadmap/roadmap.md) (Phase 1.5). Where this spec makes a call the

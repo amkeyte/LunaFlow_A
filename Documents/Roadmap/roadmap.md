@@ -12,7 +12,7 @@ This orders the design docs into a build sequence. It's **dependency order, not 
 | Phase 1.5 | done | [Nine Rooms test rulebook](phase-1-5.md) |
 | Phase 2 | done | [Rule pipeline MVP](phase-2.md) |
 | Phase 2.5 | done | [d20 vertical slice & mechanic infrastructure](phase-2-5.md) |
-| Phase 2.6 | pending | [ROM/Rulebook boundary fortification](phase-2-6.md) |
+| Phase 2.6 | impl-complete, QA-deferred | [ROM/Rulebook boundary fortification](phase-2-6.md) |
 | Phase 2.7 | pending | [Multi-ROM composition](phase-2-7.md) |
 | Phase 2.8 | pending | [World Module extraction](phase-2-8.md) |
 | Phase 3 | superseded (confirmed) | [Vertical slice](phase-3.md) — superseded by Phase 2.5; the load-bearing condition held, verified by QA |

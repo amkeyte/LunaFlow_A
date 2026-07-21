@@ -4,7 +4,9 @@ using LunaFlow.Rules;
 namespace LunaFlow.Rom.NineRooms
 {
     /// <summary>
-    /// Announces Room 1's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Announces Room 1's
+    /// challenge prompt while the player is there, the room is unsolved, and no win line has
+    /// fired yet.
     /// </summary>
     public sealed class Room1ChallengeRule : ARule
     {
@@ -26,7 +28,9 @@ namespace LunaFlow.Rom.NineRooms
     }
 
     /// <summary>
-    /// Announces Room 2's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Announces Room 2's
+    /// challenge prompt while the player is there, the room is unsolved, and no win line has
+    /// fired yet.
     /// </summary>
     public sealed class Room2ChallengeRule : ARule
     {
@@ -48,7 +52,9 @@ namespace LunaFlow.Rom.NineRooms
     }
 
     /// <summary>
-    /// Announces Room 3's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Announces Room 3's
+    /// challenge prompt while the player is there, the room is unsolved, and no win line has
+    /// fired yet.
     /// </summary>
     public sealed class Room3ChallengeRule : ARule
     {
@@ -70,7 +76,9 @@ namespace LunaFlow.Rom.NineRooms
     }
 
     /// <summary>
-    /// Announces Room 4's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Announces Room 4's
+    /// challenge prompt while the player is there, the room is unsolved, and no win line has
+    /// fired yet.
     /// </summary>
     public sealed class Room4ChallengeRule : ARule
     {
@@ -92,7 +100,9 @@ namespace LunaFlow.Rom.NineRooms
     }
 
     /// <summary>
-    /// Announces Room 5's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Announces Room 5's
+    /// challenge prompt while the player is there, the room is unsolved, and no win line has
+    /// fired yet.
     /// </summary>
     public sealed class Room5ChallengeRule : ARule
     {
@@ -114,7 +124,9 @@ namespace LunaFlow.Rom.NineRooms
     }
 
     /// <summary>
-    /// Announces Room 6's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Announces Room 6's
+    /// challenge prompt while the player is there, the room is unsolved, and no win line has
+    /// fired yet.
     /// </summary>
     public sealed class Room6ChallengeRule : ARule
     {
@@ -136,7 +148,9 @@ namespace LunaFlow.Rom.NineRooms
     }
 
     /// <summary>
-    /// Announces Room 7's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Announces Room 7's
+    /// challenge prompt while the player is there, the room is unsolved, and no win line has
+    /// fired yet.
     /// </summary>
     public sealed class Room7ChallengeRule : ARule
     {
@@ -158,7 +172,9 @@ namespace LunaFlow.Rom.NineRooms
     }
 
     /// <summary>
-    /// Announces Room 8's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Announces Room 8's
+    /// challenge prompt while the player is there, the room is unsolved, and no win line has
+    /// fired yet.
     /// </summary>
     public sealed class Room8ChallengeRule : ARule
     {
@@ -180,7 +196,9 @@ namespace LunaFlow.Rom.NineRooms
     }
 
     /// <summary>
-    /// Announces Room 9's challenge prompt while the player is there, the room is unsolved, and no win line has fired yet.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Announces Room 9's
+    /// challenge prompt while the player is there, the room is unsolved, and no win line has
+    /// fired yet.
     /// </summary>
     public sealed class Room9ChallengeRule : ARule
     {

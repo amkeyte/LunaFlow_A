@@ -1,8 +1,18 @@
 namespace LunaFlow.Rom.NineRooms
 {
     /// <summary>
-    /// The Nine Rooms example ROM content: the 3x3 room grid and the movement rule it plays by.
+    /// Deprecated — see Remarks. The Nine Rooms example ROM content: the 3x3 room grid and the
+    /// movement rule it plays by.
     /// </summary>
+    /// <remarks>
+    /// <note type="warning">
+    /// Deprecated. Nine Rooms is disposable Phase 1.5 test content, kept only for engine-fixture
+    /// regression coverage — not scheduled for removal, but not current ROM/Rulebook design
+    /// guidance either. See the <c>LunaFlow.Rom.D20System</c> namespace for the current
+    /// System/Scenario-split pattern, and <c>Documents/NineRooms/nine-rooms.md</c> for why this
+    /// module stays flat and disposable.
+    /// </note>
+    /// </remarks>
     public static class NineRoomsContent
     {
         /// <summary>The nine rooms, keyed by <see cref="Room.Id"/>.</summary>

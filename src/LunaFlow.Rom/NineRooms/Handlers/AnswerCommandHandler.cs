@@ -3,8 +3,9 @@ using LunaFlow.Engine;
 namespace LunaFlow.Rom.NineRooms
 {
     /// <summary>
-    /// Handles the <c>answer</c> command: checks the player's answer against the current room's
-    /// challenge and marks the room solved if it matches.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Handles the <c>answer</c>
+    /// command: checks the player's answer against the current room's challenge and marks the
+    /// room solved if it matches.
     /// </summary>
     public sealed class AnswerCommandHandler : ICommandHandler
     {

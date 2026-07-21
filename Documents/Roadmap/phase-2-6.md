@@ -1,6 +1,10 @@
 # Phase 2.6 — ROM/Rulebook boundary fortification
 
-**Status:** pending
+**Status:** implementation-complete, QA-deferred — retrofit landed and verified against source
+(ticket [0022](../ClaudeWiki/Processes/Handoffs/0022-implement-phase-2-6.md)); build 7/7, regression
+96/96 unchanged (2026-07-20). Formal Lothar final-verdict is **deferred to post-2.7 per Arryn** —
+a one-ROM boundary proves less than the two-ROM shape 2.7 introduces, so the QA spend is held until
+the boundary firms. Not "done" in the fully-signed sense phases 1.5/2/2.5 carry.
 
 ## Overview
 

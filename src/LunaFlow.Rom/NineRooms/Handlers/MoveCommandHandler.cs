@@ -3,7 +3,8 @@ using LunaFlow.Engine;
 namespace LunaFlow.Rom.NineRooms
 {
     /// <summary>
-    /// Handles the <c>move</c> command: moves the player one step in a cardinal direction if the grid allows it.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Handles the <c>move</c>
+    /// command: moves the player one step in a cardinal direction if the grid allows it.
     /// </summary>
     public sealed class MoveCommandHandler : ICommandHandler
     {

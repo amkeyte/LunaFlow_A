@@ -1,6 +1,16 @@
 # Nine Rooms (Test Rulebook)
 
-**Status:** concept doc — covers *why* Nine Rooms exists and why it's sequenced where it is.
+**Status:** DEPRECATED as design guidance (2026-07-20) — disposable Phase 1.5 test content, kept
+only for the engine-fixture regression coverage in
+`tests/LunaFlow.EngineTests/Core/NineRoomsEngineFixtureTests.cs` (not scheduled for removal). This
+doc still covers *why* Nine Rooms exists and why it's sequenced where it is, but **do not treat it
+or `LunaFlow.Rom.NineRooms` as a current ROM/Rulebook design pattern** — it predates the
+ROM/Rulebook split entirely (see [ROM vs. Rulebook layering](#rom-vs-rulebook-layering) below,
+itself now superseded by Phase 2.6). For the current pattern, look at `LunaFlow.Rom.D20System` /
+`LunaFlow.Rulebook.OneD20` instead, and
+[Phase 2.6 — ROM/Rulebook boundary fortification](../Roadmap/phase-2-6.md) for why that split
+looks the way it does.
+
 For the actual fact shapes, rules, commands, and engine wiring, see
 [`../Specs/nine-rooms-spec.md`](../Specs/nine-rooms-spec.md) — that's the buildable version of
 this concept and the one that stays current as implementation decisions get made.
@@ -23,6 +33,13 @@ today per [`CLAUDE.md`](../../CLAUDE.md) — Nine Rooms only needs Phase 1's hos
 be real, not Phase 2's generator.
 
 ## ROM vs. Rulebook layering
+
+**Superseded 2026-07-20:** this section's reasoning (why Nine Rooms specifically doesn't get its
+own ROM module) still holds, but the broader premise it was written against — that no ROM/Rulebook
+split had been proven yet — no longer does. Phase 2.6 proved the split for real against 1.d20
+(`LunaFlow.Rom.D20System` / `LunaFlow.Rulebook.OneD20`). Read this section as historical context
+for Nine Rooms' own layering only, not as current guidance on whether/how to draw that line for new
+content.
 
 `architecture.md` draws a real distinction between ROM (the game system — fact vocabulary and
 mechanics, meant to be reusable across Rulebooks) and Rulebook (a specific compiled game built

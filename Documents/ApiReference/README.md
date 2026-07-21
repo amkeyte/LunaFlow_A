@@ -34,9 +34,12 @@ Start at `<Project>/index.md` and drill down; every page links to its parent and
 
 - `LunaFlow.Rules/` — the rule-authoring surface (`ARule`, `ILunaFlowReference`,
   `GeneratorServices` attributes/`RulePrototype`/`RuleExport`, etc.)
-- `LunaFlow.Rom/` — ROM/content types: `NineRooms` (disposable example content) and `D20System`
-  (the d20 System ROM Phase 2.6 retrofitted out of 1.d20 — six ability scores, resolution, attack
-  math, the five 1.d20 command handlers, and their fact shapes). One member,
+- `LunaFlow.Rom/` — ROM/content types: `NineRooms` (**deprecated** — disposable Phase 1.5 test
+  content, kept only for engine-fixture regression coverage; every type in that namespace carries a
+  "Deprecated" note pointing at `NineRoomsContent`'s Remarks, added 2026-07-20 after it got mistaken
+  for current design guidance) and `D20System` (the d20 System ROM Phase 2.6 retrofitted out of
+  1.d20 — six ability scores, resolution, attack math, the five 1.d20 command handlers, and their
+  fact shapes; this is the current pattern to look at instead). One member,
   `D20SystemContent.Configure(...)`, is deliberately excluded via `src/LunaFlow.Rom/DefaultDocumentation.json`
   — it's composition-root wiring (`Program.cs` calls it once at startup), not authoring-surface
   content, and its long parameter list was blowing past Windows' `MAX_PATH`. See

@@ -4,7 +4,8 @@ using LunaFlow.Rules;
 namespace LunaFlow.Rom.NineRooms
 {
     /// <summary>
-    /// Announces the win-line name and its rooms once any <see cref="WinMarker"/> is inserted.
+    /// Deprecated — see <see cref="NineRoomsContent"/>'s Remarks. Announces the win-line
+    /// name and its rooms once any <see cref="WinMarker"/> is inserted.
     /// </summary>
     public sealed class GameEndRule : ARule
     {

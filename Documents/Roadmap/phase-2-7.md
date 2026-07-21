@@ -62,6 +62,18 @@ general answer for cross-ROM coordination.
   is standard NuGet/SemVer versioning, using `nbgv` (already wired into this solution) — not a
   bespoke system. Considered and explicitly parked, not forgotten.
 
+## Carried-in watch item from 2.6
+
+- **`D20SystemContent.Configure(...)` — the static, mutable ROM content holder.** Phase 2.6's retrofit
+  routes Scenario data into ROM through a static holder the composition root populates before rules
+  compile, because NRules-compiled rule code has no constructor/DI seam (ticket
+  [0022](../ClaudeWiki/Processes/Handoffs/0022-implement-phase-2-6.md), close notes). It works and
+  relocates an existing pattern rather than inventing one, but a static mutable content source is the
+  first thing a *second* ROM stresses — two ROMs sharing/colliding on one static holder is exactly
+  this phase's territory. Re-examine it here; if the two-ROM composition proves it clean, leave it,
+  otherwise it's a ticket to Amara at that point. Deliberately not ticketed in 2.6 to avoid churning a
+  seam this phase reshapes.
+
 ## Done when
 
 One Rulebook genuinely depends on and coordinates two independently-loadable ROMs. Neither ROM

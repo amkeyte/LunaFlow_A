@@ -1,6 +1,6 @@
 # 0022 — Implement Phase 2.6 (ROM/Rulebook boundary fortification)
 
-**Status:** open
+**Status:** resolved
 **Opened by:** Supreme Leader (Kofi)
 **Opened:** 2026-07-20
 **For:** Dev — Implementation (Baraka)
@@ -60,8 +60,17 @@ stale picture. Not blocking you — noted here for the record.
    confirmed by grep, zero matches. Add it to the solution as part of this work, don't assume it's
    already wired. Scenario content becomes `LunaFlow.Rulebook.OneD20` there: the 9 rooms' specific
    skill/DC/flavor assignments, the monster's stats, the pregenerated PC's sheet, flavor text — data
-   only. References `LunaFlow.Rom` (for the fact shapes and ROM types it instantiates) but never
-   `LunaFlow.Engine`, directly or transitively.
+   only. References `LunaFlow.Rom` (for the fact shapes and ROM types it instantiates) but no
+   `LunaFlow.Rulebook` **source** uses a `LunaFlow.Engine` primitive — no `ICommandHandler`, no
+   `LunaFlowEngine.Host`, no `RuleEngine`.
+
+   **Correction (Kofi, on close):** the original wording here said "never `LunaFlow.Engine`, directly
+   or transitively." That clause is wrong and unsatisfiable. ROM legitimately references Engine — it
+   *is* the conduit, that's the whole point of the tier — so anything depending on ROM pulls
+   `LunaFlow.Engine.dll` transitively by construction, and the retrofit correctly does exactly that
+   (`LunaFlow.Rulebook.csproj` → `LunaFlow.Rom` → `LunaFlow.Engine`; `Engine.dll` lands in Rulebook's
+   `bin/` as a transitive copy). The real bar — and what `phase-2-6.md` and this ticket's own Done-when
+   actually state — is source-level: no Rulebook source touches an Engine primitive. That is met.
 4. **No separate fact-API-mediation layer.** Once handlers live entirely in ROM, Scenario has no
    code path that touches facts at all — this falls out of item 1, it isn't its own piece of work.
    If you find yourself building one, stop — that's a sign item 1 isn't actually done.
@@ -185,4 +194,50 @@ time. Rebuilt clean and re-ran the full suite after — still 96/96.
 
 ## Resolution
 
-_(Opener to fill in on close.)_
+Closed by Kofi 2026-07-20. Structural retrofit verified against source; behavioral regression green;
+formal QA verdict deliberately deferred (see below).
+
+**Verified against evidence, not the response's word:**
+
+- **Handlers moved to ROM.** All five (`move`/`look`/`check`/`fight`/`flee`) live under
+  `src/LunaFlow.Rom/D20System/` (`Handlers/`), alongside `Facts.cs`, `D20ResolutionMechanic`,
+  `D20SystemContent`, `D20SystemNarration`, `D20SystemReference`, and `Rules/`. No `OneD20/`
+  directory remains in `LunaFlow.Rom` — the flat namespace is gone, as asked.
+- **Rulebook is source-clean of Engine.** `src/LunaFlow.Rulebook/` has exactly four `.cs` files
+  (`OneD20RuleBook`, `OneD20RulebookContent`, `OneD20FlavorText`, `OneD20RulebookReference`); the only
+  `LunaFlow.Engine` string in Rulebook source is a doc-comment asserting the absence of a reference.
+  `.csproj` references only `LunaFlow.Rom`. Transitive `Engine.dll` presence via ROM is expected and
+  correct — see the Ask item-3 correction above; it is **not** a violation.
+- **`IRuleBook` grew minimal real shape.** `IRuleBook : IHasLunaFlowReference` + `IReadOnlyList<string>
+  DependsOnRoms`, exactly the "smallest interface that does the job" discipline ticket 0015 set for
+  `IMechanic`. Read directly, matches the response.
+- **`LunaFlow.Rulebook` is in the solution.** `LunaFlow_A.sln` now names it (was zero matches when the
+  ticket was filed).
+- **No fact-API layer** — confirmed by construction; Rulebook has no fact-touching code path.
+- **Build:** fresh full rebuild 7/7, 0 errors (Arryn-run, 2026-07-20 23:22). Pre-existing nullable
+  warnings in `RuleEngine.cs` and unused-variable warnings in test files are unrelated to this work.
+- **Regression:** `latest.trx` from the same run — **96/96 passed, 0 failed**. The done-bar's
+  "96/96 unchanged" is met *today*; no test needed changing to pass (only namespace/using/setup
+  relocations, per the response).
+
+**One design decision flagged, not blocking close — `D20SystemContent.Configure(...)`.** Baraka
+introduced a static, mutable content holder in ROM that the composition root populates before rules
+compile/fire, because NRules-compiled rule code can't take constructor args. He disclosed it honestly.
+It sits adjacent to the "avoid global mutable state" reasoning ticket 0019 used when it chose
+constructor injection — but it's a defensible answer to a real constraint (generated rules have no DI
+seam), and it relocates an already-existing static-holder pattern (`OneD20Content`) rather than
+inventing one. **Not ticketed to Amara now, on purpose:** this is exactly the ROM/Rulebook
+data-plumbing seam Phase 2.7 reshapes when a second ROM enters. Opening an architecture ticket against
+a seam about to move would be churn. Recorded as a **2.7 watch item** instead (also noted in
+`phase-2-7.md`). Revisit then; if 2.7 doesn't touch it, ticket it to Amara at that point.
+
+**Spec follow-up:** fact shapes unchanged, so `1-d20-spec.md` needs no reconciliation for shape — only
+namespace/ownership moved. Juno's spec-reconcile ticket (deferred per 0021 item 2) can proceed on that
+basis when filed.
+
+**QA status:** formal Lothar final-verdict for the Phase 2.6 done-bar is **deferred to post-2.7 per
+Arryn** (2026-07-20) — verifying a one-ROM boundary proves less than verifying the two-ROM shape 2.7
+introduces, so the QA spend is held until the boundary firms. This close rests on structural
+verification + the green build/regression above, not on a QA verdict. Phase 2.6 is marked
+**implementation-complete, QA-deferred** on the roadmap accordingly — not "done" in the fully-signed
+sense phases 1.5/2/2.5 carry.

@@ -57,6 +57,22 @@ Neither role routes through the other; they meet at the seam via tickets.
 - Files tickets to Amara when the concrete needs a new abstract capability; hands finished specs to
   Baraka for implementation; surfaces scope tension to the PM rather than quietly expanding.
 
+## Session hygiene
+
+- **First stop for shapes/signatures: `Documents/ApiReference/`, not raw `src/`.** Generated via
+  `DefaultDocumentation` ([ticket 0012](../Processes/Handoffs/0012-api-doc-generation.md), built
+  specifically for this role) on every build of the authoring-surface projects. Public class/record
+  shapes, constructor signatures, and doc-comment intent — the bulk of what a spec-alignment review
+  or a fact-vocabulary check needs — are faster to confirm there than by reading full source.
+- **Know its limit:** signatures + XML doc comments only, no method bodies. A question about
+  *implementation logic* (is this value hardcoded vs. parameterized, what does this branch actually
+  do) isn't answerable from the API docs at all — that needs a real source read, same as always.
+  That kind of check is also closer to QA/code-review territory than routine content-design work;
+  reaching for it should be the exception, not the first move.
+- **`LunaFlow.Rulebook` is wired into the doc-generation target** (fixed post-2.6) — all four
+  authoring-surface projects (`.Engine`/`.Rules`/`.Rom`/`.Rulebook`) now generate to
+  `Documents/ApiReference/` on build.
+
 ## Persona — "Juno"
 
 *(Placeholder name — veto and rename freely, same as Vic → Kofi.)*
