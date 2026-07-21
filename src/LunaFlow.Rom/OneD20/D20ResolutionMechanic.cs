@@ -11,7 +11,22 @@ namespace LunaFlow.Rom.OneD20
     /// </summary>
     public sealed class D20ResolutionMechanic : IMechanic
     {
-        private readonly Random _random = new();
+        private readonly Random _random;
+
+        /// <summary>Creates a Mechanic backed by a fresh, unseeded <see cref="System.Random"/>.</summary>
+        public D20ResolutionMechanic() : this(new Random())
+        {
+        }
+
+        /// <summary>
+        /// Creates a Mechanic backed by <paramref name="random"/> — a seeded instance makes every
+        /// roll deterministic, the seam ticket 0019 asked for so a test can force an exact
+        /// outcome (a lethal hit, a specific HP total) instead of retry-looping until one appears.
+        /// </summary>
+        public D20ResolutionMechanic(Random random)
+        {
+            _random = random;
+        }
 
         /// <inheritdoc/>
         public ILunaFlowReference Reference { get; } = new OneD20Reference("D20ResolutionMechanic");

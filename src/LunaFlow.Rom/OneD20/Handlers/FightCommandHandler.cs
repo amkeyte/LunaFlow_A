@@ -12,6 +12,14 @@ namespace LunaFlow.Rom.OneD20
     /// </summary>
     public sealed class FightCommandHandler : ICommandHandler
     {
+        private readonly D20ResolutionMechanic _mechanic;
+
+        /// <summary>Uses <paramref name="mechanic"/> if given, else the shared <see cref="OneD20Content.Mechanic"/> — the seam ticket 0019 asked for.</summary>
+        public FightCommandHandler(D20ResolutionMechanic? mechanic = null)
+        {
+            _mechanic = mechanic ?? OneD20Content.Mechanic;
+        }
+
         /// <inheritdoc/>
         public void Handle(ICommand command)
         {
@@ -26,7 +34,7 @@ namespace LunaFlow.Rom.OneD20
             if (rules.Query<RoomFailed>().Any(rf => rf.RoomId == room.Id))
                 return;
 
-            var mechanic = OneD20Content.Mechanic;
+            var mechanic = _mechanic;
             var pc = OneD20Content.PlayerCharacter;
             var monster = OneD20Content.Monster;
 

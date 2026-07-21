@@ -1,6 +1,6 @@
 # 0017 — 1.d20 maintained test suite
 
-**Status:** open
+**Status:** in-review
 **Opened by:** Dev — Implementation (Baraka)
 **Opened:** 2026-07-20
 **For:** Dev — Test Suite (Nadia)
@@ -70,7 +70,53 @@ optional) still holds.
 
 ## Response
 
-_(Nadia to fill in.)_
+Built against the revised (post-0018) shape, two tiers, `tests/LunaFlow.EngineTests/Rom/OneD20/`,
+tagged `Rom_OneD20`/`Phase2.5`:
+
+- **`OneD20RuleFixtureTests.cs`** (9 tests) — bare `RuleEngine` loaded from
+  `RuleExport.Compile(typeof(OneD20RuleGroup))`, facts inserted directly (never through a handler),
+  same shape as `NineRoomsEngineFixtureTests`. Covers challenge-prompt guards (fires when
+  unsolved/unfailed, blocked by `RoomSolved`/`RoomFailed`/`WinMarker`), win-line firing (combat-free
+  and combat-room-inclusive lines, at the fact level), `RoomFailed` permanently blocking a line with
+  no extra guard while an unrelated line is unaffected, and `GameEndRule`'s announcement.
+- **`OneD20HandlerTests.cs`** (16 tests) — the real `GameEngineCore` singleton +
+  `DispatchGameCommand` pipeline (dispatch, then `Fire()`), since `LunaFlowEngine.Host` is
+  hard-wired to the singleton and there's no way to unit-test a handler in isolation. First
+  handler-level tests in the suite. Covers all 15 acceptance criteria: move/look parity plus
+  `PreviousRoomId`'s own case, description-once/prompt-once, the room-5 startup announcement,
+  lethal-hit ordering both directions, fresh-HP seeding with no carryover across `flee`, every-round
+  narration, `look` mid-fight HP, room-specific `check` text + readout with retry-on-failure, `flee`
+  cleanup, flee-room-5-no-prior-move, and both win-line shapes (combat-free and
+  combat-inclusive).
+
+**RNG:** ticket [0019](0019-d20-rng-test-seam.md)'s seam (`D20ResolutionMechanic(Random)` +
+constructor-injected handlers) is used everywhere an exact outcome matters — the 4 criteria that
+were blocked before that ticket landed (lethal-hit ordering both directions, monster-to-0, PC-to-0,
+the 3-round timeout) are now forced deterministically instead of retry-looped. Seeds weren't
+hand-computed — I wrote a throwaway search script against the real `D20ResolutionMechanic` class
+(not a reimplementation) to find and verify them, then documented the roll breakdown for each as a
+comment at its test. One incidental finding, reused throughout: a fresh `new Random(0)`'s first d20
+roll is always 15, which comfortably clears every room's DC/Defense in this content — one seed
+covers most of the "force a success" cases. One test (`Fight_EveryRound_AnnouncesSomething`)
+deliberately uses real unseeded randomness, since criterion 8 holds for either outcome.
+
+**Not duplicated:** `move`/`look`'s adjacency math itself isn't re-derived from scratch — the
+handler tests spot-check parity (a valid move, a rejected edge move) rather than re-walking the
+whole grid, per the ticket's own note that Nine Rooms already covers that shape.
+
+**Caught in review:** an early draft had two `IsFalse` assertions checking for the flavor-text
+*dictionary key* (e.g. `"pc-hit"`) inside announced strings — but the announced text is the mapped
+prose, which never contains that literal key, so the assertions were vacuously true regardless of
+whether the bug they were meant to catch existed. Fixed to check for the actual
+`OneD20Flavor.Text[...]` substring before running anything.
+
+**Verification:** `dotnet build LunaFlow_A.sln` — 0 errors, 0 warnings. Narrow filtered run
+(`--filter "TestCategory=Rom_OneD20"`) — 25/25 green. Full `dotnet test tests/LunaFlow.EngineTests`
+— 96/96 green (71 pre-existing + 25 new), no regressions.
+
+## Resolution
+
+_(Baraka to fill in on close.)_
 
 ## Resolution
 

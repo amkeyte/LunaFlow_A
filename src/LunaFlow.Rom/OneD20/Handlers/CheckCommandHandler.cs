@@ -10,6 +10,14 @@ namespace LunaFlow.Rom.OneD20
     /// </summary>
     public sealed class CheckCommandHandler : ICommandHandler
     {
+        private readonly D20ResolutionMechanic _mechanic;
+
+        /// <summary>Uses <paramref name="mechanic"/> if given, else the shared <see cref="OneD20Content.Mechanic"/> — the seam ticket 0019 asked for.</summary>
+        public CheckCommandHandler(D20ResolutionMechanic? mechanic = null)
+        {
+            _mechanic = mechanic ?? OneD20Content.Mechanic;
+        }
+
         /// <inheritdoc/>
         public void Handle(ICommand command)
         {
@@ -23,7 +31,7 @@ namespace LunaFlow.Rom.OneD20
                 return;
 
             var abilityMod = OneD20Content.AbilityModifier(OneD20Content.PlayerAbilityScores[room.SkillAbility!]);
-            var result = OneD20Content.Mechanic.ResolveCheck(abilityMod, room.DC!.Value);
+            var result = _mechanic.ResolveCheck(abilityMod, room.DC!.Value);
 
             if (result.Success)
             {
