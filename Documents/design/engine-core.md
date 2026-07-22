@@ -109,6 +109,22 @@ public abstract class ARom : AEngineComponent
 
 One decision worth recording now even though neither side is built yet: `OnResultFeedback`'s structured payload is meant to eventually *supersede* Nine Rooms' plain-string `Post`/`Announce` channel, not run alongside it indefinitely. A rule announcing outcomes as raw text and a rule producing structured feedback (what fact, what rule, why) are the same underlying need with two different shapes — likely to end up as legacy-vs-current rather than two permanent parallel channels. When that reconciliation happens, favor the structured version.
 
+**Superseded in part, 2026-07-21 ([Phase 2.6.5](../Roadmap/phase-2-6-5.md) design):** the sketch
+above is no longer purely hypothetical, but what actually got built is narrower than this section,
+and lands in different places than sketched. Real, in `LunaFlow.Engine.Components`: `EngineTier`
+and tier-ordering enforcement (a component depending on a higher tier is a load-time error, exactly
+as described above), plus `Capability`/`IHasDependencies` — a `Provides`/`Requires` contract, not
+the single `DependsOn: IEnumerable<Type>` shown above. `IRom`/`IInteropRom` (implementing
+`IHasDependencies`) live in `LunaFlow.Rom`, not as a generic `ARom : AEngineComponent` sketched
+here — Phase 2.6.5 rejected a single shared base class in favor of each tier project owning its own
+identity type, all implementing the same minimal Engine-defined contract. Peer-tier dependencies
+(ROM-to-ROM) resolve through `IInteropRom` as a capability broker, not through `DependsOn` naming a
+concrete type directly. Still not built, still deferred, non-goal as originally stated:
+`IEngineEventSubscriber` and the tier-and-dependency-ordered `OnTurnAdvance` dispatch pass described
+below — 2.6.5 only validates dependencies at load time, it doesn't touch turn-by-turn event
+delivery. Treat the `AEngineComponent`/`ARom` code block above as historical (the design's first
+draft), and `phase-2-6-5.md` as the authoritative shape for identity and dependency declaration.
+
 ### Turn-ending: ordering, not arbitration
 
 A second ROM raises an obvious-sounding question — who gets to decide a turn is over? — that turns out to be the wrong question. `FinishTurn()` stays single-authority: one caller (the Rulebook or command layer, never a ROM) signals the action phase is done, exactly as it works today. Ending a turn was never a ROM-level concern — a ROM has no more say in when a turn ends than `Dice` has a say in when it gets rolled. No component votes on this, now or later.

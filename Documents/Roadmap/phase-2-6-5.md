@@ -170,8 +170,11 @@ mechanism. `IScript` exists as an unused, unimplemented placeholder type.
   what an external Rulebook consumes is stale once `IRuleBook` lives in `LunaFlow.Rulebook` — it
   currently only lists `LunaFlow.Rules`/`Engine`/`Rom`; needs `LunaFlow.Rulebook` added
 - [`design/non-goals.md`](../design/non-goals.md) — "Not building the general ROM/Rulebook
-  component model yet" and "Not building config-driven ROM/Rulebook packaging yet," both actively
-  triggered by this phase, need reconciling once it lands
+  component model yet" is partially triggered by this phase (identity and dependency
+  declaration/validation, not the `IEngineEventSubscriber`/turn-dispatch-ordering half, which stays
+  genuinely deferred). "Not building config-driven ROM/Rulebook packaging yet" is **not** triggered
+  — registration stays hardcoded in `Program.cs` — correcting an earlier draft of this doc, which
+  claimed both were triggered.
 - [`phase-2-7.md`](phase-2-7.md) — the Done-When bar this phase's mechanism will require rewording;
   also carries the now-struck-through `Configure` watch item this phase resolves by deprecation
 - [Handoff ticket 0023](../ClaudeWiki/Processes/Handoffs/0023-cross-rom-fact-mediation.md) — the

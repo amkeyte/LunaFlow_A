@@ -136,4 +136,10 @@ ROM, a Combat ROM, and so on) that a Rulebook opts into individually — see
 (Nine Rooms itself is a deliberate exception to that: per `nine-rooms.md`, it's disposable test content
 that doesn't get a reusable module boundary.)
 
-Rulebooks (concrete games built on top of LunaFlow) are expected to live in their own solutions/`.csproj`s outside this repo, consuming `LunaFlow.Rules`, `LunaFlow.Engine`, and whichever `LunaFlow.Rom` modules they depend on as libraries. An internal `LunaFlow.Examples` project may be added here for testing and documentation purposes, but it is not a rulebook itself.
+Rulebooks (concrete games built on top of LunaFlow) are expected to live in their own solutions/`.csproj`s outside this repo, consuming `LunaFlow.Rules`, `LunaFlow.Engine`, `LunaFlow.Rulebook` (for `IRuleBook` and the Rulebook-tier identity/dependency contracts, relocated there in Phase 2.6.5 — see `engine-core.md`), and whichever `LunaFlow.Rom` modules they depend on as libraries. An internal `LunaFlow.Examples` project may be added here for testing and documentation purposes, but it is not a rulebook itself.
+
+**Corrected 2026-07-21 (Phase 2.6.5 design):** this line previously omitted `LunaFlow.Rulebook`
+entirely, back when the project held only example content (`OneD20`) and `IRuleBook` lived in
+`LunaFlow.Rules`. Since `IRuleBook` moved to `LunaFlow.Rulebook` — the project *is* the Rulebook
+tier, not an example holder that happens to also be usable for more — a real external Rulebook
+needs it too.
