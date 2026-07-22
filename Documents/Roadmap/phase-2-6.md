@@ -1,10 +1,15 @@
 # Phase 2.6 — ROM/Rulebook boundary fortification
 
-**Status:** implementation-complete, QA-deferred — retrofit landed and verified against source
-(ticket [0022](../ClaudeWiki/Processes/Handoffs/0022-implement-phase-2-6.md)); build 7/7, regression
-96/96 unchanged (2026-07-20). Formal Lothar final-verdict is **deferred to post-2.7 per Arryn** —
-a one-ROM boundary proves less than the two-ROM shape 2.7 introduces, so the QA spend is held until
-the boundary firms. Not "done" in the fully-signed sense phases 1.5/2/2.5 carry.
+**Status:** done — administrative close (2026-07-21, Arryn's call). Retrofit landed and verified
+against source (ticket [0022](../ClaudeWiki/Processes/Handoffs/0022-implement-phase-2-6.md)); build
+7/7, regression 96/96 unchanged (2026-07-20). The originally-planned Lothar final-verdict, deferred
+to post-2.7 so a two-ROM shape could be evaluated instead of a one-ROM one, is **waived, not
+fulfilled** — recorded here so the gap is honest, not silently dropped. Closing now rather than
+holding the phase open: [Phase 2.6.5](phase-2-6-5.md) sits between this phase and 2.7 and reworks
+part of what 2.6 shipped in its own right (`D20SystemContent.Configure`, the static mutable content
+holder from ticket 0022, is **deprecated as of 2.6.5**, superseded by `IInteropRom`) — evaluating
+2.6 against a two-ROM boundary it no longer fully represents stopped making sense once that was
+true. Unlike phases 1.5/2/2.5, this is not a fully-signed QA close.
 
 ## Overview
 

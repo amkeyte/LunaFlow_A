@@ -1,7 +1,7 @@
 # Phase 2.6.5 — ROM identity & cross-ROM interop
 
-**Status:** designing — mechanism agreed in a design conversation between Arryn and Amara
-(2026-07-21); several shape questions still open (see below). No code written yet.
+**Status:** design complete (2026-07-21, Arryn + Amara). Mechanism, placement, and naming all
+decided — see Deliverables below. No code written yet.
 
 ## Overview
 
@@ -26,9 +26,15 @@ resurfaces at every tier once Phase 4 scripting exists. `non-goals.md` currently
 general ROM/Rulebook component model" and "config-driven ROM/Rulebook packaging" until a second
 real ROM needs them; this phase is that trigger firing, not a preemptive build.
 
+A second realization during design: `LunaFlow.Rom` and `LunaFlow.Rulebook` are the architectural
+layers, not example-content holders that happen to also be usable for more — the fact that today
+they hold only D20System/NineRooms and OneD20 is incidental, not their scope. That shaped where
+everything below actually lives.
+
 Numbered 2.6.5 rather than folded into 2.7: this is infrastructure Phase 2.7 depends on to close
 ticket 0023, not a follow-on to it. 2.7's actual content split (Grid ROM + trimmed D20System) is
-blocked on this phase's mechanism existing.
+blocked on this phase's mechanism existing. Phase 2.6 itself was administratively closed
+(2026-07-21) rather than held open pending this phase — see `phase-2-6.md`'s Status note.
 
 ## Ownership
 
@@ -40,24 +46,55 @@ blocked on this phase's mechanism existing.
 
 ## Deliverables
 
-- **`IRom`** — real type identity for ROMs. Carries publishing metadata (name, version, credits)
-  plus declared `Provides`/`Requires` capability lists.
-- **`Capability`** — `record Capability(string Name, Type ContractType)`. `Name` is enforced-unique
-  per capability; `ContractType` required, not optional. Deliberately small, with room to grow more
-  metadata (version constraints, description) later without a redesign.
+**In `LunaFlow.Rom`:**
+- **`IRom`** — real type identity for ROMs, replacing the current folder-and-namespace-only
+  convention. Carries publishing metadata (name, version, credits) plus declared
+  `Provides`/`Requires` capability lists (via `IHasDependencies`, below).
 - **`IInteropRom : IRom`** — explicit marker for a ROM acting as a capability broker: aggregates
   advertised capabilities across loaded ROMs, resolves a peer's `Requires` against them. Kept as
   its own named interface rather than folded into plain `IRom` — any `IRom` could technically play
   this role, but a named interface is a discoverability win for content authors, same reasoning
   ticket 0015 used to keep `IMechanic` separate from `IHasLunaFlowReference` despite being
   structurally identical to it.
-- **Tier-ordering enforcement** — dependencies must flow downward through `EngineTier` (Rom <
-  Rulebook < WorldModule < GmOverlay < Player); a component declaring a dependency on a higher tier
-  is a load-time error, not a warning. Formalizes the rule `engine-core.md`'s `AEngineComponent`
-  sketch already proposed but never enforced. Peers (same tier) may depend on each other, but only
-  through `Capability`/`IInteropRom` — never a direct project reference. This is the mechanism that
-  actually closes ticket 0023: Grid ROM and D20System stay peers, mediated by a capability, zero
-  assembly reference between them.
+
+**In `LunaFlow.Rulebook`:**
+- **`IRuleBook`** (and its direct associations, e.g. `DependsOnRoms`) relocates here from
+  `LunaFlow.Rules` — it only lived in Rules because `LunaFlow.Rulebook` didn't exist yet when it
+  was conceived. **`IRuleGroup` stays in `LunaFlow.Rules`** — unlike `IRuleBook`, it's used by
+  ROM-tier rule authoring too (`D20SystemRuleGroup` already lives in `LunaFlow.Rom`), so it belongs
+  with the tier-agnostic NRules-authoring surface, not with one tier's identity type. Don't conflate
+  the two moves.
+- Implementing `IHasDependencies` (an `LunaFlow.Engine.Components` type, below) from
+  `LunaFlow.Rulebook` code is **not** a violation of Phase 2.6's "a Rulebook never touches
+  `LunaFlow.Engine` primitives directly" rule. That rule is about *authored content* — what a
+  Rulebook Author writes into `OneD20RuleBookContent` — not about the tier's own infrastructure
+  type (`IRuleBook` itself) participating in the engine's module system. Worth recording next to
+  the original rule in `engine-core.md` so a future session doesn't over-read it as a blanket ban.
+
+**In `LunaFlow.Engine.Components`** (new namespace; not `LunaFlow.Rules` — Rules stays scoped to
+NRules authoring, this is core/meta, "literally standing up the modular system that IS the game";
+not `.Modules` — collides with `EngineTier.WorldModule`, an already-named, unrelated concept):
+- **`Capability`** — `record Capability(string Name, Type ContractType)`. `Name` is enforced-unique
+  per capability; `ContractType` required, not optional. Deliberately small, with room to grow more
+  metadata (version constraints, description) later without a redesign.
+- **`IHasDependencies`** — `{ IReadOnlyList<Capability> Provides { get; } IReadOnlyList<Capability>
+  Requires { get; } }`. `IRom` and `IRuleBook` each implement it from their own projects (Rom is
+  already Engine-visible; Rulebook's participation is the case the note above covers).
+- **`EngineTier`** and tier-ordering enforcement — dependencies must flow downward (Rom < Rulebook <
+  WorldModule < GmOverlay < Player); a component declaring a dependency on a higher tier is a
+  load-time error, not a warning. Formalizes the rule `engine-core.md`'s `AEngineComponent` sketch
+  already proposed but never enforced. Peers (same tier) may depend on each other, but only through
+  `Capability`/`IInteropRom` — never a direct project reference. This is the mechanism that actually
+  closes the case ticket 0023 raised: Grid ROM and D20System stay peers, mediated by a capability,
+  zero assembly reference between them.
+- **The registry/validator** — explicit, hardcoded registration only (modules listed in
+  `Program.cs`, same as today's `RuleEngineOptions.FromAssembly(...)` calls; no reflection-based
+  discovery). Runs **two-phase**: collect every registered module's `Provides`/`Requires` first
+  (registration order doesn't matter for this phase), then validate the complete graph as a unit —
+  clash detection (two providers for the same capability), missing-requirement detection, and a
+  cycle check, all against the whole picture rather than incrementally. This is a deliberate,
+  hardcoded design choice, not a placeholder — see "Explicitly not this phase" below for why an
+  NRules-based version was considered and dropped.
 - **Clash handling** — v1 is a hard load-time error when two ROMs advertise the same capability.
   Arbitration between competing providers is named and explicitly deferred; no design commitment
   made toward it.
@@ -65,59 +102,78 @@ blocked on this phase's mechanism existing.
   no further than the marker itself — no behavior, no parallel component-manifest type — so Phase 4
   has a slot to land in without this system's shape being relitigated or rebuilt around a stub
   later. Not used anywhere until Phase 4 exists.
-- **Record the coupling-discipline split in `engine-core.md`**: compiled ROM/Rulebook tiers get the
-  strict discipline (capability-mediated only, no direct peer reference) because that tier is where
-  it's actually enforceable; script-authored tiers (World Module/GM Overlay/Player, once Phase 4
-  exists) are expected to reference each other directly — the unified system still tracks/promotes
-  those dependencies for bookkeeping, but doesn't gate the coupling underneath. Deliberate, not an
-  oversight — matches the trust gradient `architecture.md`'s role table already describes.
+
+**Deprecation:**
+- **`D20SystemContent.Configure(...)`** — the static, mutable ROM content holder from Phase 2.6
+  (ticket 0022 close notes), carried into 2.7 as a watch item — is **deprecated outright as of this
+  phase**, not conditionally re-examined as originally planned. `IInteropRom` supersedes it: Scenario
+  data reaching ROM content becomes a capability-mediated concern instead of a static field the
+  composition root pokes before rule compilation. `phase-2-7.md`'s watch-item bullet is struck
+  through with a pointer here, not deleted, so the original reasoning stays legible.
+
+**Coupling discipline, recorded explicitly (`engine-core.md`):** compiled ROM/Rulebook tiers get
+the strict discipline above (capability-mediated only, no direct peer reference) because that tier
+is where it's actually enforceable; script-authored tiers (World Module/GM Overlay/Player, once
+Phase 4 exists) are expected to reference each other directly — "scripts are wild west by design."
+The unified system still tracks/promotes those dependencies for bookkeeping, but doesn't gate the
+coupling underneath. Deliberate, not an oversight — matches the trust gradient `architecture.md`'s
+role table already describes, and the C# tier is where enforcement is actually possible; below
+that, it's best-practice-made-easy, not compiler-enforced.
 
 **Explicitly not this phase** (discussed and set aside during design, not forgotten):
 
 - A Roslyn-based dynamic type resolution / interop compiler — real infrastructure, but solves a
   problem (independently-loaded, dynamically-versioned ROMs) this project doesn't have yet.
+- An NRules-based dependency-validation pass (model `Provides`/`Requires` as facts, let a rule
+  detect mismatches) — fits the project's general instinct to push declarative logic into NRules,
+  but the concrete worry (a client's dependency registering before its provider, or a circular
+  dependency) is more directly and simply handled by the hardcoded two-phase collect-then-validate
+  approach above. Revisit if/when arbitration logic gets real — that's naturally rule-shaped in a
+  way "present or not" isn't.
 - Arbitration between multiple capability providers for the same capability — v1 errors, doesn't
   arbitrate.
 - Any real Phase 4 scripting behavior behind `IScript` — placeholder only, no scripting engine work
   happens in this phase.
-
-## Open design questions
-
-Tracked here so nothing from the design conversation gets lost before implementation starts:
-
-- Where `IRom`/`IInteropRom`/`Capability`/`IScript` physically live — leaning `LunaFlow.Rules`,
-  consistent with `IMechanic`/`IHasLunaFlowReference`/`IRuleBook`, not yet confirmed.
-- Whether `IRuleBook.DependsOnRoms` (already shipped, Phase 2.6/2.7) gets absorbed into this system
-  or stays a separate, complementary mechanism at the Rulebook level.
-- Discovery mechanism for capability providers — explicit hardcoded registration (matching
-  `non-goals.md`'s current stance on ROM loading) vs. reflection-based scanning.
+- Rolling `IRuleBook.DependsOnRoms` into the unified `IHasDependencies` shape — it likely survives
+  as a distinct case (a direct, downward Rulebook→Rom reference doesn't need capability-mediation
+  the way peer-ROM dependencies do), but this is parked, not decided. Pin to revisit once the
+  unified system exists for real, if it turns out to make sense.
 - The exact shape of "promote but don't gate" dependency tracking for script-to-script
-  relationships once Phase 4 exists.
+  relationships — punted along with everything else `IScript`-shaped, until Phase 4 is real.
 
 ## Done when
 
-`IRom`, `IInteropRom`, and `Capability` exist and are load-time validated (a missing required
-capability, or a duplicate provider, both fail fast with a clear error). Tier-ordering violations
-are load-time errors. Grid ROM and D20System (Phase 2.7's split) correlate `PlayerPosition` through
-a capability with zero project reference between them, closing ticket 0023. `IScript` exists as an
-unused, unimplemented placeholder type.
+`IRom`, `IInteropRom`, `Capability`, and `IHasDependencies` exist in their respective projects and
+are load-time validated by the two-phase registry (a missing required capability, or a duplicate
+provider, both fail fast with a clear error; tier-ordering violations are load-time errors too).
+Grid ROM and D20System (Phase 2.7's split) correlate `PlayerPosition` through a capability with zero
+project reference between them — the mechanism the now-administratively-rescinded ticket 0023
+originally asked for. `D20SystemContent.Configure` is removed from the codebase, migrated to the new
+mechanism. `IScript` exists as an unused, unimplemented placeholder type.
 
 ## Related phases
 
-- Previous: [Phase 2.6 — ROM/Rulebook boundary fortification](phase-2-6.md)
-- Next: [Phase 2.7 — Multi-ROM composition](phase-2-7.md), blocked on this phase's mechanism —
-  ticket 0023 gets its real Response once this lands. 2.7's own Done-When bar ("neither ROM
-  references the other's assembly") will need rewording to match the real rule (no mutual/direct
-  reference; one-directional client→`IInteropRom` references are expected and governed) — tracked
-  as follow-up, not resolved in this doc.
+- Previous: [Phase 2.6 — ROM/Rulebook boundary fortification](phase-2-6.md) — administratively
+  closed 2026-07-21; this phase supersedes part of what it shipped (`Configure`).
+- Next: [Phase 2.7 — Multi-ROM composition](phase-2-7.md), blocked on this phase's mechanism. 2.7's
+  own Done-When bar ("neither ROM references the other's assembly") will need rewording to match the
+  real rule (no mutual/direct reference; one-directional client→`IInteropRom` references are
+  expected and governed) — tracked as follow-up, not resolved in this doc.
 
 ## Related documents
 
 - [`design/engine-core.md`](../design/engine-core.md) — the Component model section this phase
-  formalizes and mostly replaces (the `AEngineComponent`/`ARom` sketch)
+  formalizes and mostly replaces (the `AEngineComponent`/`ARom` sketch); also needs the
+  authored-content-vs-infrastructure clarification (Deliverables, `LunaFlow.Rulebook` section above)
+  recorded next to the existing 2.6 Rulebook/Engine rule
+- [`design/architecture.md`](../design/architecture.md) — the target project layout's description of
+  what an external Rulebook consumes is stale once `IRuleBook` lives in `LunaFlow.Rulebook` — it
+  currently only lists `LunaFlow.Rules`/`Engine`/`Rom`; needs `LunaFlow.Rulebook` added
 - [`design/non-goals.md`](../design/non-goals.md) — "Not building the general ROM/Rulebook
   component model yet" and "Not building config-driven ROM/Rulebook packaging yet," both actively
   triggered by this phase, need reconciling once it lands
-- [`phase-2-7.md`](phase-2-7.md) — the Done-When bar this phase's mechanism will require rewording
+- [`phase-2-7.md`](phase-2-7.md) — the Done-When bar this phase's mechanism will require rewording;
+  also carries the now-struck-through `Configure` watch item this phase resolves by deprecation
 - [Handoff ticket 0023](../ClaudeWiki/Processes/Handoffs/0023-cross-rom-fact-mediation.md) — the
-  concrete case that surfaced this gap
+  concrete case that surfaced this gap; administratively rescinded by Kofi rather than closed
+  through the normal Response/Resolution flow, since this phase superseded it
