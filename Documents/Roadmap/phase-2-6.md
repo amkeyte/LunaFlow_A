@@ -105,9 +105,10 @@ rules live in `LunaFlow.Rom` instead.
 ## Related phases
 
 - Previous: [Phase 2.5 — d20 vertical slice & mechanic infrastructure](phase-2-5.md)
-- Next: [Phase 2.7 — Multi-ROM composition](phase-2-7.md) — extends this phase's boundary from one
-  ROM to two; [Phase 4](phase-4.md) follows once 2.7/2.8 land, still separately gated on Phase 2.5's
-  `IMechanic` delivery.
+- Next: [Phase 2.6.5 — ROM identity & cross-ROM interop](phase-2-6-5.md) — the ROM-identity/capability
+  mechanism ticket 0023 surfaced a need for while drafting [Phase 2.7](phase-2-7.md)'s Grid/D20System
+  split; 2.7 itself follows once 2.6.5 lands. [Phase 4](phase-4.md) follows once 2.7/2.8 land, still
+  separately gated on Phase 2.5's `IMechanic` delivery.
 
 ## Related documents
 

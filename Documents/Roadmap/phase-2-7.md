@@ -84,7 +84,11 @@ the split.
 
 ## Related phases
 
-- Previous: [Phase 2.6 — ROM/Rulebook boundary fortification](phase-2-6.md)
+- Previous: [Phase 2.6 — ROM/Rulebook boundary fortification](phase-2-6.md), via
+  [Phase 2.6.5 — ROM identity & cross-ROM interop](phase-2-6-5.md) — this phase's Grid/D20System
+  split is blocked on 2.6.5's `IRom`/`IInteropRom`/`Capability` mechanism landing; the Done-When bar
+  below ("neither ROM references the other's assembly") will need rewording to match that mechanism's
+  real rule once it does (still open, see 2.6.5).
 - Next: [Phase 2.8 — World Module extraction](phase-2-8.md)
 
 ## Related documents
