@@ -1,6 +1,7 @@
 # 0023 — Cross-ROM fact mediation: what actually lets one ROM's rule react to another ROM's fact?
 
-**Status:** open
+**Status:** rescinded — superseded by [Phase 2.6.5](../../Roadmap/phase-2-6-5.md); administrative
+close by Kofi (PM), 2026-07-22.
 **Opened by:** Game Designer (Juno)
 **Opened:** 2026-07-21
 **For:** Architect (Amara)
@@ -58,8 +59,23 @@ Blocks: finishing the Grid/D20System split design and the `1-d20-spec.md` update
 
 ## Response
 
-_(Amara to fill in.)_
+_Never filled through the normal flow._ The ask was answered by design work, not in this ticket:
+Amara and Arryn took it straight into [Phase 2.6.5](../../Roadmap/phase-2-6-5.md), which builds the
+actual mechanism (`IRom`/`IInteropRom`/`Capability`/`IHasDependencies`) that lets one ROM's rule react
+to another ROM's fact with no assembly reference between them.
 
 ## Resolution
 
-_(Juno to fill in on close.)_
+Administratively rescinded by Kofi, 2026-07-22 — not resolved through Juno's normal close, because
+the question was absorbed into a phase rather than answered in place.
+
+The reasoning captured above (the `IRoomLocated`/`ISpatialPosition` interface proposals, the
+relocate-facts-into-`LunaFlow.Rules` idea, the narrow-vs-literal reading of "no project reference,"
+the one-way-reference fork) is **exploration that got us to 2.6.5, not live guidance**. Once 2.6.5
+lands, most of it is historical — the capability-mediation answer replaces the fork this ticket was
+weighing, and the "how does D20System see `PlayerPosition`" question is answered by `IInteropRom`, not
+by any option enumerated here. Kept intact for lineage (supersede-don't-delete), not to act on.
+
+**This ticket is closed and should not be referenced going forward.** When Phase 2.7 resumes — the
+real Grid/D20System content split — fresh tickets get issued against 2.6.5's shipped mechanism as
+needed. Don't reopen or extend this one.

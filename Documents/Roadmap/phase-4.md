@@ -17,6 +17,12 @@ Only worth starting once Phase 2's IR is stable, since this phase's whole point 
   - Script parser as a second `IRuleParser`
   - `RuleRuntimeLoader`/`RuleAdapter` as a runtime `IRuleCompiler` target
 - Resolve the hot-reload question at least at "reload requires a session restart" level, even if a live-reload version comes later
+- Introduce the real scripting-participation type for the [Phase 2.6.5](phase-2-6-5.md) capability
+  system (working name `IScript`, deliberately cut from 2.6.5 as premature — see [ticket
+  0024](../ClaudeWiki/Processes/Handoffs/0024-phase-2-6-5-scope.md)) and use it as a
+  `Capability.ContractType` value. No shape change needed on the capability system itself —
+  `ContractType` has been a bare `Type` since 2.6.5, so this is a new value dropped into an
+  already-open slot, not a migration.
 
 ## Done when
 

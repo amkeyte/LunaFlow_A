@@ -48,8 +48,10 @@ blocked on this phase's mechanism existing. Phase 2.6 itself was administrativel
 
 **In `LunaFlow.Rom`:**
 - **`IRom`** — real type identity for ROMs, replacing the current folder-and-namespace-only
-  convention. Carries publishing metadata (name, version, credits) plus declared
-  `Provides`/`Requires` capability lists (via `IHasDependencies`, below).
+  convention. Carries publishing metadata (name, credits — **not** version; see ticket
+  [0024](../ClaudeWiki/Processes/Handoffs/0024-phase-2-6-5-scope.md), `non-goals.md` already parks
+  ROM versioning and nothing in this phase reads one) plus declared `Provides`/`Requires` capability
+  lists (via `IHasDependencies`, below).
 - **`IInteropRom : IRom`** — explicit marker for a ROM acting as a capability broker: aggregates
   advertised capabilities across loaded ROMs, resolves a peer's `Requires` against them. Kept as
   its own named interface rather than folded into plain `IRom` — any `IRom` could technically play
@@ -80,13 +82,15 @@ not `.Modules` — collides with `EngineTier.WorldModule`, an already-named, unr
 - **`IHasDependencies`** — `{ IReadOnlyList<Capability> Provides { get; } IReadOnlyList<Capability>
   Requires { get; } }`. `IRom` and `IRuleBook` each implement it from their own projects (Rom is
   already Engine-visible; Rulebook's participation is the case the note above covers).
-- **`EngineTier`** and tier-ordering enforcement — dependencies must flow downward (Rom < Rulebook <
-  WorldModule < GmOverlay < Player); a component declaring a dependency on a higher tier is a
-  load-time error, not a warning. Formalizes the rule `engine-core.md`'s `AEngineComponent` sketch
-  already proposed but never enforced. Peers (same tier) may depend on each other, but only through
+- **`EngineTier`** — tags `IRom`/`IRuleBook` with their tier (Rom < Rulebook < WorldModule <
+  GmOverlay < Player) and is real, load-bearing: the validator uses it to decide *how* a declared
+  dependency should resolve — same-tier means capability-mediated (`IInteropRom`), downward means a
+  direct reference is expected. Peers (same tier) may depend on each other, but only through
   `Capability`/`IInteropRom` — never a direct project reference. This is the mechanism that actually
   closes the case ticket 0023 raised: Grid ROM and D20System stay peers, mediated by a capability,
-  zero assembly reference between them.
+  zero assembly reference between them. **Not in this phase** (see below): the explicit
+  upward-dependency-is-an-error enforcement pass — the 2.7 proof never declares an upward
+  dependency, so that check has no failing case to validate against yet.
 - **The registry/validator** — explicit, hardcoded registration only (modules listed in
   `Program.cs`, same as today's `RuleEngineOptions.FromAssembly(...)` calls; no reflection-based
   discovery). Runs **two-phase**: collect every registered module's `Provides`/`Requires` first
@@ -98,11 +102,6 @@ not `.Modules` — collides with `EngineTier.WorldModule`, an already-named, unr
 - **Clash handling** — v1 is a hard load-time error when two ROMs advertise the same capability.
   Arbitration between competing providers is named and explicitly deferred; no design commitment
   made toward it.
-- **`IScript`** — placeholder `Capability.ContractType` value reserved for Phase 4 scripting. Built
-  no further than the marker itself — no behavior, no parallel component-manifest type — so Phase 4
-  has a slot to land in without this system's shape being relitigated or rebuilt around a stub
-  later. Not used anywhere until Phase 4 exists.
-
 **Deprecation:**
 - **`D20SystemContent.Configure(...)`** — the static, mutable ROM content holder from Phase 2.6
   (ticket 0022 close notes), carried into 2.7 as a watch item — is **deprecated outright as of this
@@ -122,6 +121,19 @@ that, it's best-practice-made-easy, not compiler-enforced.
 
 **Explicitly not this phase** (discussed and set aside during design, not forgotten):
 
+- **The upward-dependency-is-an-error enforcement pass** ([ticket 0024](../ClaudeWiki/Processes/Handoffs/0024-phase-2-6-5-scope.md)) —
+  `EngineTier` itself is real and load-bearing (see above), but the explicit check that rejects a
+  component depending on a higher tier has no failing case in 2.7's content to validate against: Grid
+  ROM/D20System are peers, and the one downward edge (Rulebook→Rom) is trivially satisfied. *Revisit
+  once WorldModule (Phase 2.8) is a real tier and something actually declares a dependency across
+  that boundary — not preemptively.*
+- **`IScript`** ([ticket 0024](../ClaudeWiki/Processes/Handoffs/0024-phase-2-6-5-scope.md), confirmed
+  by Arryn) — cut entirely, not even as a placeholder. `Capability.ContractType` is already a bare
+  `Type`; Phase 4 introducing a real scripting type later (expected — "sure to become a new project
+  around phase 4 or so," per Arryn) is a new value in an already-open slot, not a shape migration, so
+  a reserved marker today doesn't actually prevent the "nub to rebuild around" risk it was proposed
+  to guard against. Intent isn't lost, just not built now — see [`phase-4.md`](phase-4.md)'s
+  Deliverables for the forward pointer.
 - A Roslyn-based dynamic type resolution / interop compiler — real infrastructure, but solves a
   problem (independently-loaded, dynamically-versioned ROMs) this project doesn't have yet.
 - An NRules-based dependency-validation pass (model `Provides`/`Requires` as facts, let a rule
@@ -132,14 +144,12 @@ that, it's best-practice-made-easy, not compiler-enforced.
   way "present or not" isn't.
 - Arbitration between multiple capability providers for the same capability — v1 errors, doesn't
   arbitrate.
-- Any real Phase 4 scripting behavior behind `IScript` — placeholder only, no scripting engine work
-  happens in this phase.
 - Rolling `IRuleBook.DependsOnRoms` into the unified `IHasDependencies` shape — it likely survives
   as a distinct case (a direct, downward Rulebook→Rom reference doesn't need capability-mediation
   the way peer-ROM dependencies do), but this is parked, not decided. Pin to revisit once the
   unified system exists for real, if it turns out to make sense.
-- The exact shape of "promote but don't gate" dependency tracking for script-to-script
-  relationships — punted along with everything else `IScript`-shaped, until Phase 4 is real.
+- Script-to-script dependency tracking shape ("promote but don't gate") — moot until Phase 4
+  actually introduces scripting; nothing to design against yet now that `IScript` itself is cut.
 
 ## Done when
 
@@ -149,7 +159,9 @@ provider, both fail fast with a clear error; tier-ordering violations are load-t
 Grid ROM and D20System (Phase 2.7's split) correlate `PlayerPosition` through a capability with zero
 project reference between them — the mechanism the now-administratively-rescinded ticket 0023
 originally asked for. `D20SystemContent.Configure` is removed from the codebase, migrated to the new
-mechanism. `IScript` exists as an unused, unimplemented placeholder type.
+mechanism. Scope trimmed per [ticket 0024](../ClaudeWiki/Processes/Handoffs/0024-phase-2-6-5-scope.md):
+no upward-tier-violation enforcement pass, no `IScript`, no `version` on `IRom` — all three deferred
+or cut because 2.7's proof doesn't exercise them.
 
 ## Related phases
 
@@ -180,3 +192,6 @@ mechanism. `IScript` exists as an unused, unimplemented placeholder type.
 - [Handoff ticket 0023](../ClaudeWiki/Processes/Handoffs/0023-cross-rom-fact-mediation.md) — the
   concrete case that surfaced this gap; administratively rescinded by Kofi rather than closed
   through the normal Response/Resolution flow, since this phase superseded it
+- [Handoff ticket 0024](../ClaudeWiki/Processes/Handoffs/0024-phase-2-6-5-scope.md) — Kofi's scope
+  pass against this doc's Deliverables; trimmed the upward-tier-enforcement pass, `IScript`, and
+  `IRom.version` per the ruling recorded there
