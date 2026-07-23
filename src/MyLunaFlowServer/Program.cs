@@ -1,6 +1,7 @@
 // See https://aka.ms/new-console-template for more information
 using LunaFlow.Engine;
 using LunaFlow.Engine.Commands;
+using LunaFlow.Engine.Components;
 using LunaFlow.Rom.D20System;
 using LunaFlow.Rulebook.OneD20;
 using LunaFlow.Rules.GeneratorServices;
@@ -16,6 +17,30 @@ _ = typeof(NRules.Fluent.Dsl.Rule).Assembly;
 _ = typeof(System.Linq.Expressions.Expression).Assembly;
 _ = typeof(NRules.RuleModel.IContext).Assembly;
 _ = typeof(NRules.ISession).Assembly;
+
+// Phase 2.6.5: Register and validate ROM/Rulebook components.
+// For now, OneD20RuleBook is the only Rulebook and it depends on D20System ROM.
+// This registry validates that all dependencies can be satisfied and tiers are properly ordered.
+var registry = new ComponentRegistry();
+
+// Temporarily create minimal implementations for PoC — these will be proper ROM/Rulebook
+// instances once the model is fully fleshed out (Phase 2.7 and beyond).
+var d20SystemRom = new OneD20RuleBook(); // temporary placeholder for D20System
+var oneD20RuleBook = new OneD20RuleBook();
+
+registry.Register(d20SystemRom, EngineTier.Rom, "D20System");
+registry.Register(oneD20RuleBook, EngineTier.Rulebook, "OneD20");
+
+try
+{
+    registry.Validate();
+    Console.WriteLine("Component registry validated successfully.");
+}
+catch (InvalidOperationException ex)
+{
+    Console.WriteLine($"Component registry validation failed: {ex.Message}");
+    throw;
+}
 
 // Register the current Rulebook's data with the D20System ROM before anything reads it — the
 // declarative rule group's generated code and the command handlers' no-arg constructors both fall

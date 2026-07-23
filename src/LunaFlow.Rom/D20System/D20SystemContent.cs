@@ -72,6 +72,14 @@ namespace LunaFlow.Rom.D20System
         /// Registers the current Rulebook's data. Called once by the composition root
         /// (<c>Program.cs</c>) before <c>RuleExport.Compile</c> and before handlers are registered.
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// <strong>Deprecated as of Phase 2.6.5.</strong> Use <c>IInteropRom</c> capability
+        /// mediation instead — Scenario data reaching ROM content becomes a capability-mediated
+        /// concern rather than a static field the composition root pokes directly.
+        /// </para>
+        /// </remarks>
+        [Obsolete("Use IInteropRom capability mediation instead (Phase 2.6.5+). This method will be removed once Phase 2.7 completes the Grid/D20System split.", error: false)]
         public static void Configure(
             IReadOnlyDictionary<int, Room> rooms,
             IReadOnlyDictionary<string, string> flavorText,

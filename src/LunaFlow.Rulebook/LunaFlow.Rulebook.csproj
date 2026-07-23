@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LunaFlow.Engine\LunaFlow.Engine.csproj" />
     <ProjectReference Include="..\LunaFlow.Rom\LunaFlow.Rom.csproj" />
   </ItemGroup>
 

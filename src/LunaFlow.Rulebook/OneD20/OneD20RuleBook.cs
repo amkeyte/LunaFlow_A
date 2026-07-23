@@ -1,3 +1,4 @@
+using LunaFlow.Engine.Components;
 using LunaFlow.Rules;
 
 namespace LunaFlow.Rulebook.OneD20
@@ -13,7 +14,13 @@ namespace LunaFlow.Rulebook.OneD20
         /// <inheritdoc/>
         public ILunaFlowReference Reference { get; } = new OneD20RulebookReference("OneD20");
 
-        /// <inheritdoc/> edrf
+        /// <inheritdoc/>
         public IReadOnlyList<string> DependsOnRoms { get; } = new[] { "D20System" };
+
+        /// <inheritdoc/>
+        public IReadOnlyList<Capability> Provides { get; } = Array.Empty<Capability>();
+
+        /// <inheritdoc/>
+        public IReadOnlyList<Capability> Requires { get; } = new[] { new Capability("D20System", typeof(object)) };
     }
 }
