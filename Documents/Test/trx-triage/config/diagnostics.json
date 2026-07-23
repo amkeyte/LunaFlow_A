@@ -1,0 +1,78 @@
+{
+  "failure_patterns": [
+    {
+      "id": "timeout",
+      "name": "Deadlock / Timeout",
+      "detection": {
+        "duration_threshold_seconds": 30,
+        "keywords": ["timeout", "deadlock", "wait"]
+      },
+      "probable_cause": "Deadlock in turn gate or wait",
+      "next_step": "Check ManualResetEventSlim usage in test",
+      "severity": "high"
+    },
+    {
+      "id": "flaky_race",
+      "name": "Flaky / Race Condition",
+      "detection": {
+        "keywords": ["flaky", "race", "intermittent", "randomly"]
+      },
+      "probable_cause": "Race condition; test passes/fails randomly",
+      "next_step": "Run test 5-10× in isolation to confirm; then add synchronization",
+      "severity": "high"
+    },
+    {
+      "id": "state_sync",
+      "name": "State Sync Bug",
+      "detection": {
+        "keywords": ["TurnCounter", "State.TurnNumber", "sync", "mismatch"]
+      },
+      "probable_cause": "State synchronization bug between expected and actual",
+      "next_step": "Check AdvanceOneTurnSafe() thread safety and state propagation",
+      "severity": "high"
+    },
+    {
+      "id": "queue_corruption",
+      "name": "Queue / Command Ordering",
+      "detection": {
+        "keywords": ["out of order", "queue", "BlockingCollection", "sequence"]
+      },
+      "probable_cause": "Commands execute out of order; queue corruption",
+      "next_step": "Check BlockingCollection usage and queue semantics",
+      "severity": "high"
+    },
+    {
+      "id": "uncaught_exception",
+      "name": "Uncaught Exception",
+      "detection": {
+        "keywords": ["exception", "throw", "crash", "ExecuteCommandSafe"],
+        "stack_trace_contains": ["Exception", "throw"]
+      },
+      "probable_cause": "Exception in handler not caught or propagated incorrectly",
+      "next_step": "Check ExecuteCommandSafe() wrapper; ensure exceptions are caught",
+      "severity": "high"
+    },
+    {
+      "id": "assertion",
+      "name": "Assertion Failure",
+      "detection": {
+        "keywords": ["Assert", "expected", "actual"]
+      },
+      "probable_cause": "Logic error or assumption violated",
+      "next_step": "Review assertion message and test logic",
+      "severity": "medium"
+    }
+  ],
+  "cascade_rules": [
+    {
+      "broken_tier": 1,
+      "cascade_to": [2, 3, 4],
+      "reason": "Core state machine and thread safety bugs cascade into everything"
+    },
+    {
+      "broken_tier": 2,
+      "cascade_to": [3, 4],
+      "reason": "Lifecycle bugs cascade into integration tests"
+    }
+  ]
+}

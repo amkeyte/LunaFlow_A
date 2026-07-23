@@ -1,0 +1,41 @@
+{
+  "tiers": [
+    {
+      "tier": 1,
+      "name": "Turn loop & concurrency",
+      "risk": "highest",
+      "description": "Core state machine and thread safety; bugs here cascade into everything",
+      "test_classes": [
+        "GameEngineCoreeTurnLoopTests",
+        "GameEngineCoreThreadSafetyTests"
+      ]
+    },
+    {
+      "tier": 2,
+      "name": "Lifecycle & command dispatch",
+      "risk": "medium",
+      "description": "Depends on Tier 1 being solid",
+      "test_classes": [
+        "GameEngineCoreTests",
+        "GameEngineCoreCommandDispatchTests"
+      ]
+    },
+    {
+      "tier": 3,
+      "name": "Content & pipeline fixtures",
+      "risk": "low",
+      "description": "Engine integration via Nine Rooms and rule pipeline",
+      "test_classes": [
+        "NineRoomsEngineFixtureTests",
+        "RulePipelineGeneratorServiceTests"
+      ]
+    },
+    {
+      "tier": 4,
+      "name": "Integration (future)",
+      "risk": "low",
+      "description": "Broader integration classes (session management, parser/dispatcher integration)",
+      "test_classes": []
+    }
+  ]
+}

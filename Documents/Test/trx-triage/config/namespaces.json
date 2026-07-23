@@ -1,0 +1,33 @@
+{
+  "namespaces": [
+    {
+      "tag": "Rules_GeneratorServices",
+      "description": "LunaFlow.Rules.GeneratorServices (parser, generator, compiler, export)",
+      "tier": 3
+    },
+    {
+      "tag": "Engine_Game",
+      "description": "LunaFlow.Engine.Game.GameEngineCore (turn loop, threading, dispatch, lifecycle)",
+      "tier": 1
+    },
+    {
+      "tag": "Engine",
+      "description": "Broad engine integration (e.g. the Nine Rooms fixture)",
+      "tier": 3
+    }
+  ],
+  "phases": [
+    "Phase1",
+    "Phase1.5",
+    "Phase2",
+    "Phase2.5",
+    "Phase2.6",
+    "Phase2.6.5",
+    "Phase2.7",
+    "Phase2.8",
+    "Phase3",
+    "Phase4",
+    "Phase5",
+    "Phase6"
+  ]
+}

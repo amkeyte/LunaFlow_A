@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="00000000-0000-0000-0000-000000000000" name="Sample Test Run" xmlns="http://microsoft.com/schemas/VisualStudio/TestResults/2010">
+  <TestSettings name="Default Test Settings" id="00000000-0000-0000-0000-000000000001" />
+  <Results>
+    <!-- Tier 1: Turn loop timeout (deadlock) -->
+    <TestResult executionId="00000000-0000-0000-0000-000000000002" testId="00000000-0000-0000-0000-000000000003" testName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnCounter_StartsAtZero" computerName="DEVMACHINE" duration="PT35.234S" startTime="2026-07-23T14:00:00" endTime="2026-07-23T14:00:35" testType="Unit" outcome="Failed" testListId="00000000-0000-0000-0000-000000000004">
+      <Output>
+        <Message>Test timed out. Test duration exceeded the configured timeout of 30000 milliseconds. Timeout waiting for ManualResetEventSlim.Set()</Message>
+        <StackTrace>at LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnCounter_StartsAtZero() in GameEngineCoreeTurnLoopTests.cs:line 45</StackTrace>
+      </Output>
+    </TestResult>
+
+    <!-- Tier 1: Race condition (flaky) -->
+    <TestResult executionId="00000000-0000-0000-0000-000000000005" testId="00000000-0000-0000-0000-000000000006" testName="LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.ConcurrentCommands_NoRaceCondition" computerName="DEVMACHINE" duration="PT0.234S" startTime="2026-07-23T14:00:36" endTime="2026-07-23T14:00:36" testType="Unit" outcome="Failed" testListId="00000000-0000-0000-0000-000000000004">
+      <Output>
+        <Message>Assert.AreEqual failed. Expected: 10. Actual: 9. This test is flaky and passes intermittently.</Message>
+        <StackTrace>at LunaFlow.EngineTests.Core.GameEngineCoreThreadSafetyTests.ConcurrentCommands_NoRaceCondition() in GameEngineCoreThreadSafetyTests.cs:line 87</StackTrace>
+      </Output>
+    </TestResult>
+
+    <!-- Tier 1: State sync bug -->
+    <TestResult executionId="00000000-0000-0000-0000-000000000007" testId="00000000-0000-0000-0000-000000000008" testName="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnCounter_MatchesEngineState" computerName="DEVMACHINE" duration="PT0.156S" startTime="2026-07-23T14:00:37" endTime="2026-07-23T14:00:37" testType="Unit" outcome="Failed" testListId="00000000-0000-0000-0000-000000000004">
+      <Output>
+        <Message>Assert.AreEqual failed. Expected &lt;TurnCounter&gt; = 5, but &lt;State.TurnNumber&gt; = 3. State sync bug in AdvanceOneTurnSafe().</Message>
+        <StackTrace>at LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests.TurnCounter_MatchesEngineState() in GameEngineCoreeTurnLoopTests.cs:line 62</StackTrace>
+      </Output>
+    </TestResult>
+
+    <!-- Tier 2: Cascade from Tier 1 -->
+    <TestResult executionId="00000000-0000-0000-0000-000000000009" testId="00000000-0000-0000-0000-000000000010" testName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Start_Stop_Restart" computerName="DEVMACHINE" duration="PT31.012S" startTime="2026-07-23T14:00:38" endTime="2026-07-23T14:01:09" testType="Unit" outcome="Failed" testListId="00000000-0000-0000-0000-000000000004">
+      <Output>
+        <Message>Test timed out. Test duration exceeded the configured timeout of 30000 milliseconds. Deadlock waiting for engine startup.</Message>
+        <StackTrace>at LunaFlow.EngineTests.Core.GameEngineCoreTests.Start_Stop_Restart() in GameEngineCoreTests.cs:line 120</StackTrace>
+      </Output>
+    </TestResult>
+
+    <!-- Tier 2: Exception handling -->
+    <TestResult executionId="00000000-0000-0000-0000-000000000011" testId="00000000-0000-0000-0000-000000000012" testName="LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.Command_Exception_DoesNotStopEngine" computerName="DEVMACHINE" duration="PT0.089S" startTime="2026-07-23T14:01:10" endTime="2026-07-23T14:01:10" testType="Unit" outcome="Failed" testListId="00000000-0000-0000-0000-000000000004">
+      <Output>
+        <Message>Assert.IsTrue failed. Engine should still be running after command exception. Exception was not caught in ExecuteCommandSafe().</Message>
+        <StackTrace>System.InvalidOperationException: Engine stopped unexpectedly
+at LunaFlow.EngineTests.Core.GameEngineCoreCommandDispatchTests.Command_Exception_DoesNotStopEngine() in GameEngineCoreCommandDispatchTests.cs:line 67</StackTrace>
+      </Output>
+    </TestResult>
+
+    <!-- Tier 3: Cascade fixtures -->
+    <TestResult executionId="00000000-0000-0000-0000-000000000013" testId="00000000-0000-0000-0000-000000000014" testName="LunaFlow.EngineTests.Fixtures.NineRoomsEngineFixtureTests.DescribeRoom_AnnounceLocation" computerName="DEVMACHINE" duration="PT35.678S" startTime="2026-07-23T14:01:11" endTime="2026-07-23T14:01:47" testType="Unit" outcome="Failed" testListId="00000000-0000-0000-0000-000000000004">
+      <Output>
+        <Message>Test timed out. Engine loop did not complete in 30 seconds.</Message>
+        <StackTrace>at LunaFlow.EngineTests.Fixtures.NineRoomsEngineFixtureTests.DescribeRoom_AnnounceLocation() in NineRoomsEngineFixtureTests.cs:line 234</StackTrace>
+      </Output>
+    </TestResult>
+
+    <!-- Successful test (for contrast) -->
+    <TestResult executionId="00000000-0000-0000-0000-000000000015" testId="00000000-0000-0000-0000-000000000016" testName="LunaFlow.EngineTests.Core.GameEngineCoreTests.Engine_Initializes" computerName="DEVMACHINE" duration="PT0.045S" startTime="2026-07-23T14:01:48" endTime="2026-07-23T14:01:48" testType="Unit" outcome="Passed" testListId="00000000-0000-0000-0000-000000000004" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TurnCounter_StartsAtZero" storage="lunaflow.enginetests.dll" id="00000000-0000-0000-0000-000000000003">
+      <TestMethod codeBase="LunaFlow.EngineTests.dll" className="LunaFlow.EngineTests.Core.GameEngineCoreeTurnLoopTests" name="TurnCounter_StartsAtZero" />
+    </UnitTest>
+  </TestDefinitions>
+</TestRun>
