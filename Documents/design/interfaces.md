@@ -1,6 +1,6 @@
 # Interfaces
 
-**Status:** concept only, and the least-detailed part of the design — planning never got past naming these projects and their rough purpose. Treat this document as a placeholder to fill in, not a spec to implement against.
+Implementation status: see [`../../Roadmap/roadmap.md`](../../Roadmap/roadmap.md).
 
 ## Shape
 

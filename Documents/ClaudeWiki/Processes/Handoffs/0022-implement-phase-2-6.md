@@ -241,3 +241,9 @@ introduces, so the QA spend is held until the boundary firms. This close rests o
 verification + the green build/regression above, not on a QA verdict. Phase 2.6 is marked
 **implementation-complete, QA-deferred** on the roadmap accordingly — not "done" in the fully-signed
 sense phases 1.5/2/2.5 carry.
+
+**Addendum 2026-07-22:** the deferred verdict was subsequently produced — Lothar **PASS on the
+one-ROM shape** ([`phase-2-6-verdict.md`](../../QA/phase-2-6-verdict.md)), all done-bar criteria
+verified against source. Phase 2.6 is now fully signed and the roadmap reflects it. The *two-ROM /
+cross-ROM* boundary (which this ticket's `Configure` watch item feeds into) remains a separate gate,
+[ticket 0025](0025-rom-rulebook-boundary-qa-gate.md), parked until Phase 2.7 ships.

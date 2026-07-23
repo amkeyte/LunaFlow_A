@@ -36,19 +36,27 @@ whoever raised it — the assignee doesn't get to close their own ticket.
 **Opened:** <date>
 **For:** <role>
 
-## Context
+## Decision
+
+<2–4 sentences: the ask, the ruling (if resolved), and brief why. Agents doing quick-lookups read this and move on. Skip this section on fresh `open` tickets — fill it in when moving to `in-review`.>
+
+## Details
+
+<full narrative: Context, Ask, Response, Resolution. See audit fix 3; "Decision" is for fast triage, "Details" preserves the full story for auditing and reasoning.>
+
+### Context
 
 <what prompted this — link to the doc/code/conversation it came from>
 
-## Ask
+### Ask
 
 <the specific thing the assignee needs to do or answer>
 
-## Response
+### Response
 
 <filled in by the assignee>
 
-## Resolution
+### Resolution
 
 <filled in by the opener when closing — what was confirmed, and how>
 ```

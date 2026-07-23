@@ -11,6 +11,10 @@ it instead.
 - **Do not run state-changing `git`** (commit, add, checkout, etc.) from an agent session — the user
   develops in VS2022 and runs git themselves to avoid file-lock conflicts. Read-only
   `git status`/`diff`/`log` is fine.
+- **Status updates flow through the roadmap only.** Phase status is updated in `Documents/Roadmap/roadmap.md`
+  and the specific phase doc (`phase-X.md`). All other pages — design docs, specs, role pages, process pages —
+  link to the roadmap rather than restating status. This prevents drift and keeps the roadmap as the single
+  source of truth. See `Documents/ClaudeWiki/Processes/wiki-style.md#where-status-lives`.
 
 ## Commands
 
@@ -59,6 +63,7 @@ Don't infer detail from this list — read the owning doc:
 
 ## Where to look
 
+- **`Documents/README-QUICK-START.md`** — agent FAQ, navigation map, and key conventions. **Start here if you're new.**
 - **`Documents/ClaudeWiki/`** — how the team of sessions works: roles (`Roles/`, each with a
   paste-in bootstrap prompt), processes (`Processes/` — handoff tickets, testing), and the ticket
   ledger (`Processes/Handoffs/`). Start at `Documents/ClaudeWiki/index.md`.

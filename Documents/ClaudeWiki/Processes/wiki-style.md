@@ -97,6 +97,61 @@ preserves it.
   every sentence.
 - Keep tables narrow enough to scan; long detail goes in prose beneath.
 
+## Documentation conventions (binding)
+
+These conventions prevent common rot patterns. All violations worth fixing incrementally.
+
+### Convention 1: "Status lives in one place"
+
+- Roadmap is the source of truth. Design docs, tickets, specs refer to it; never restate status inline.
+- Every design doc opens with: `Implementation status: see [Roadmap](../../Roadmap/roadmap.md).`
+- Tickets and specs carry their own status (per [ticket template](#ticket-template) and [spec preamble](../Specs/README.md)).
+- If you catch a status claim in prose ("implemented in Phase 2"), it's rotten — delete it and link to the roadmap instead.
+
+### Convention 2: "Link, don't duplicate"
+
+- One fact has one authoritative owner. Other pages link to it; they don't restate it, because two copies drift.
+- If preamble > 80 words, trim it. Move explanation to main body or linked doc.
+- When templating or scaffolding (e.g., spec preambles), use templates in dedicated files (`Specs/README.md`), not repeated prose.
+
+### Convention 3: "Deprecation implies redirection"
+
+- Any deprecated doc has immediate link to current pattern at the very top.
+- Template: `> **DEPRECATED** (date) — [X] is historical. **Current:** see [Y](link).`
+- Example: [`NineRooms/README-DEPRECATED.md`](NineRooms/README-DEPRECATED.md).
+
+### Convention 4: "Decision-first tickets"
+
+- Every ticket opens with "Decision" section (2–4 sentences): ask, ruling, brief why.
+- Full narrative in "Details" below (preserves audit trail, doesn't block quick-lookups).
+- See [ticket template](#ticket-template) for exact structure.
+
+### Convention 5: "Quick-start for multi-file concerns"
+
+- If a concern splits into 3+ files but agents need the whole picture to start, provide a quick-start.
+- Example: [`testing-quick-start.md`](testing-quick-start.md) ties together `testing.md` + `test-runbook.md` + `test-patterns.md` + `agent-test-workflow.md`.
+
+### Convention 6: "Current pattern marker"
+
+- Mark files representing current, recommended approach at the top.
+- Deprecated/historical content has equally clear marker + redirect.
+- Example: [`1-d20-spec.md`](../Specs/1-d20/1-d20-spec.md) (current) vs. [`NineRooms/README-DEPRECATED.md`](NineRooms/README-DEPRECATED.md) (historical).
+
+### Convention 7: "No orphaned documents"
+
+- Every `.md` file in `Documents/` is linked from an index.
+- Before adding a new doc, check if it fits an existing category.
+- Lint: `grep` for .md files not linked from any index.
+
+### Convention 8: "Maintenance windows"
+
+- PM does 15-minute sync after each phase closes:
+  1. Roadmap status current? (Phase marked done in `roadmap.md` and specific phase doc)
+  2. No stale `Status:` fields in design docs? (Should link to roadmap, not restate)
+  3. Handoff index, QA index align with roadmap phase status? (Link, don't duplicate)
+  4. Deprecation links present on any historical/superseded content?
+- Updates to this checklist land here, not scattered across tickets.
+
 ## Checklist for any wiki edit
 
 1. Right section folder, kebab-case filename, one concern.

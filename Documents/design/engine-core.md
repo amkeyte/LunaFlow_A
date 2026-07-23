@@ -1,6 +1,8 @@
 # Engine Core
 
-**Status:** partially implemented, in a messy in-between state. See [`CLAUDE.md`](../../CLAUDE.md) for the exact current code layout. This document describes the intended shape of the engine host and loop, and calls out where today's code diverges from it.
+Implementation status: see [`../../Roadmap/roadmap.md`](../../Roadmap/roadmap.md).
+
+This document describes the intended shape of the engine host and loop, and calls out where today's code diverges from it. For the exact current code layout, see [`CLAUDE.md`](../../CLAUDE.md).
 
 ## What the engine core owns
 

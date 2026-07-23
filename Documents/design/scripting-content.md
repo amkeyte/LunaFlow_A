@@ -1,6 +1,6 @@
 # World Content & Scripting
 
-**Status:** concept only. Nothing in this document exists in code — no `LunaFlow.Scripting` project, no MoonSharp dependency, no script format. This is the least-developed area of the design and the one with the most open questions.
+Implementation status: see [`../../Roadmap/roadmap.md`](../../Roadmap/roadmap.md).
 
 ## Why content needs its own path
 

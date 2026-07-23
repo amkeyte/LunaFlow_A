@@ -1,15 +1,17 @@
 # Phase 2.6 — ROM/Rulebook boundary fortification
 
-**Status:** done — administrative close (2026-07-21, Arryn's call). Retrofit landed and verified
-against source (ticket [0022](../ClaudeWiki/Processes/Handoffs/0022-implement-phase-2-6.md)); build
-7/7, regression 96/96 unchanged (2026-07-20). The originally-planned Lothar final-verdict, deferred
-to post-2.7 so a two-ROM shape could be evaluated instead of a one-ROM one, is **waived, not
-fulfilled** — recorded here so the gap is honest, not silently dropped. Closing now rather than
-holding the phase open: [Phase 2.6.5](phase-2-6-5.md) sits between this phase and 2.7 and reworks
-part of what 2.6 shipped in its own right (`D20SystemContent.Configure`, the static mutable content
-holder from ticket 0022, is **deprecated as of 2.6.5**, superseded by `IInteropRom`) — evaluating
-2.6 against a two-ROM boundary it no longer fully represents stopped making sense once that was
-true. Unlike phases 1.5/2/2.5, this is not a fully-signed QA close.
+**Status:** done — QA-verified. Retrofit landed and verified against source (ticket
+[0022](../ClaudeWiki/Processes/Handoffs/0022-implement-phase-2-6.md)); build clean, regression 96/96.
+Lothar's final verdict — deferred at the 2026-07-21 administrative close, then produced 2026-07-22 —
+is **PASS on the one-ROM shape 2.6 shipped** ([`phase-2-6-verdict.md`](../QA/phase-2-6-verdict.md)):
+Rulebook source-clean of `LunaFlow.Engine` primitives, `IRuleBook` shape, handler/rule-group
+relocation, and `.sln` wiring all confirmed against source. So 2.6's own shape is now fully signed,
+like phases 1.5/2/2.5. The **two-ROM / cross-ROM** boundary is a separate gate —
+[ticket 0025](../ClaudeWiki/Processes/Handoffs/0025-rom-rulebook-boundary-qa-gate.md), parked until
+Phase 2.7 ships — because [Phase 2.6.5](phase-2-6-5.md) reworks part of what 2.6 shipped
+(`D20SystemContent.Configure`, the static mutable content holder from ticket 0022, is **deprecated as
+of 2.6.5**, superseded by `IInteropRom`). That boundary's final shape gets its verdict at 2.7, not
+here.
 
 ## Overview
 

@@ -1,6 +1,6 @@
 # GM Assistant (AI)
 
-**Status:** concept only, nothing implemented. No `LunaFlow.AI` project, no Ollama integration.
+Implementation status: see [`../../Roadmap/roadmap.md`](../../Roadmap/roadmap.md).
 
 ## Purpose
 

@@ -1,14 +1,12 @@
 # Architecture
 
-**Status:** target design. Very little of this exists in code yet — see [`CLAUDE.md`](../../CLAUDE.md) for what's actually implemented today. This document describes where the project is headed and why it's shaped that way, so that implementation decisions have something to check themselves against.
+LunaFlow's layered, role-based architecture: what can be built, by whom, using what tools. For the rationale behind these choices, see [Design Rationale](#design-rationale) below.
 
-## Vision
+---
 
-LunaFlow is a developer-driven, rulebook-powered tabletop RPG framework. A game system (the rulebook — combat, classes, inventory, etc.) is defined in C# against a shared object model. World content (regions, monsters, encounters) is authored as data and light scripting on top of that rulebook, without touching engine internals. A GM runs sessions against the live engine, optionally assisted by an AI layer that turns natural-language requests into rule-consistent outcomes. The engine itself is a turn-based rule evaluation loop built on NRules.
+## Quick Reference
 
-The framework is meant to support several kinds of contributors at once, each with a different amount of trust and a different authoring surface. That separation of concerns is the main thing this document formalizes.
-
-## Layered architecture
+### Layered architecture
 
 ```
 Core Library              Rule Engine, game loop, fact store, runtime, ROM base, I/O, AI
@@ -24,7 +22,28 @@ World Modules             Regions, monsters, factions, encounters — World-Buil
 Player-Contributed Rules  Cosmetic/sandboxed behavior (pets, gestures, etc.) — Player
 ```
 
-Each layer only depends on the layer(s) below it. World Modules and GM Overlays both sit on top of the Rulebook but are independent of each other — a GM's live rule change shouldn't require a world module to be recompiled, and vice versa. Player-contributed rules are the most constrained layer and never affect anything outside their own sandbox.
+Each layer depends only on the layer(s) below it. World Modules and GM Overlays are independent siblings on top of Rulebook. Player-contributed rules never affect anything outside their own sandbox.
+
+### Roles and access scope
+
+| Role | Responsibility | Access scope | Authoring surface |
+| --- | --- | --- | --- |
+| Developer | Engine core: loop, session management, performance, rule store, validation, debugging | Core Library (engine internals, versioning, system hooks) | C#, diagnostics, unit test scaffolds, serialization handlers |
+| ROM Developer | Reusable domain building blocks and their mechanics — object types plus the logic for using them (a `Dice` object and how to roll it, a Physics ROM's trajectory math). Domain-agnostic; doesn't decide when or why a tool gets used. | Full write access to one or more ROM modules | C#, statically compiled, designed to be reused across many Rulebooks |
+| Rulebook Author | This game's specific rules: classes, spells, combat sequencing, win conditions — decisions about how the available ROM tools get used for this Rulebook | Full write access to Rulebook-level rules; read/consume access to whichever ROM modules the Rulebook depends on | C# + `GeneratorServices` templates and factory APIs, statically compiled for stability |
+| World-Builder | Zones, enemies, dungeons, maps, factions, custom items | Data via JSON/YAML plus partial scripted extensions; cannot change Rulebook- or ROM-level logic | `*.rules.json`, Lua-like scripts, or a DSL-backed module format |
+| Storyteller (GM) | Live world-state edits, narrative exceptions, event triggers | `GMSceneScripts`; full read access to assets plus local override access | Pre-game YAML and live scripting (e.g. Lua or an in-engine editor); AI assistance (see [`ai-gm-assistant.md`](ai-gm-assistant.md)) |
+| Player | Experiencing the game; optional cosmetic self-expression | `PlayerRule`, a sandboxed subset of `BalancedRule` | In-game GUI, constrained scripting (e.g. `"onPet()" => purr"`) |
+
+---
+
+## Design Rationale
+
+### Vision
+
+LunaFlow is a developer-driven, rulebook-powered tabletop RPG framework. A game system (the rulebook — combat, classes, inventory, etc.) is defined in C# against a shared object model. World content (regions, monsters, encounters) is authored as data and light scripting on top of that rulebook, without touching engine internals. A GM runs sessions against the live engine, optionally assisted by an AI layer that turns natural-language requests into rule-consistent outcomes. The engine itself is a turn-based rule evaluation loop built on NRules.
+
+The framework is meant to support several kinds of contributors at once, each with a different amount of trust and a different authoring surface. That separation of concerns is the main thing this section formalizes.
 
 ### System, setting, and session
 
@@ -41,20 +60,9 @@ This is also the cleanest way to keep **ROM** and **Rulebook** from blurring tog
 
 This four-tier split is also why the ROM is meant to be **pluggable rather than a single fixed model** — a ROM Developer's Physics ROM (trajectories, materials, intersection tests) is a self-contained module a Rulebook Author can choose to depend on, the same way `Dice` is: it owns the trajectory math, the flammability lookup, and the intersection test as facts and calculations, while the Rulebook's rules read those ROM facts and decide what happens next (e.g. "flammable + intersects fire → ignites"). A more narrative-focused Rulebook can skip the Physics ROM entirely and use an abstracted damage roll instead, without changing the engine core, the rule pipeline, or any other Rulebook that *does* depend on it — that's the actual payoff of keeping ROM development separate from Rulebook authorship: rule authors choose their simulation fidelity by choosing which ROM modules to build on, not by forking the engine or the ROM itself.
 
-## Roles and access scope
+### Code-level role hierarchy
 
-The layering above maps directly onto who is allowed to author what:
-
-| Role | Responsibility | Access scope | Authoring surface |
-| --- | --- | --- | --- |
-| Developer | Engine core: loop, session management, performance, rule store, validation, debugging | Core Library (engine internals, versioning, system hooks) | C#, diagnostics, unit test scaffolds, serialization handlers |
-| ROM Developer | Reusable domain building blocks and their mechanics — object types plus the logic for using them (a `Dice` object and how to roll it, a Physics ROM's trajectory math). Domain-agnostic; doesn't decide when or why a tool gets used. | Full write access to one or more ROM modules | C#, statically compiled, designed to be reused across many Rulebooks |
-| Rulebook Author | This game's specific rules: classes, spells, combat sequencing, win conditions — decisions about how the available ROM tools get used for this Rulebook | Full write access to Rulebook-level rules; read/consume access to whichever ROM modules the Rulebook depends on | C# + `GeneratorServices` templates and factory APIs, statically compiled for stability |
-| World-Builder | Zones, enemies, dungeons, maps, factions, custom items | Data via JSON/YAML plus partial scripted extensions; cannot change Rulebook- or ROM-level logic | `*.rules.json`, Lua-like scripts, or a DSL-backed module format |
-| Storyteller (GM) | Live world-state edits, narrative exceptions, event triggers | `GMSceneScripts`; full read access to assets plus local override access | Pre-game YAML and live scripting (e.g. Lua or an in-engine editor); AI assistance (see [`ai-gm-assistant.md`](ai-gm-assistant.md)) |
-| Player | Experiencing the game; optional cosmetic self-expression | `PlayerRule`, a sandboxed subset of `BalancedRule` | In-game GUI, constrained scripting (e.g. `"onPet()" => purr"`) |
-
-A rough `BalancedRule` hierarchy expresses this in code terms:
+A rough `BalancedRule` hierarchy expresses the role/access model in code terms:
 
 ```csharp
 public abstract class RuleBase { /* core runtime logic */ }
@@ -77,7 +85,7 @@ public class PlayerRule : BalancedRule
 
 `PlayerRule` can never see combat, world-structure, or balance-relevant facts — the type itself is the sandbox boundary, not a runtime check layered on top.
 
-## Technology choices
+### Technology choices
 
 | Concern | Technology | Why |
 | --- | --- | --- |
@@ -89,7 +97,11 @@ public class PlayerRule : BalancedRule
 
 Rule and mod authorship splits along the same line as the role table: **ROM Developers and Rulebook Authors both use C#** (compiled, statically checked, stable — even though one's building a toolbox and the other's building a specific game with it), **World-Builders use JSON/Lua** (data-driven, hot-reloadable, no compile step).
 
-## Target project layout
+---
+
+## Implementation
+
+### Target project layout
 
 The current solution (`LunaFlow_A.sln`) has `LunaFlow.Engine`, `LunaFlow.Rules`, `MyLunaFlowServer`, and `LunaFlow.EngineTests`, plus an early-stub `LunaFlow.Rom` at `src/LunaFlow.Rom/` and already registered in the `.sln`, which correspond to the bottom of this layout. The target layout adds the pieces needed for scripting, multiple interfaces, and AI:
 
@@ -114,32 +126,16 @@ The current solution (`LunaFlow_A.sln`) has `LunaFlow.Engine`, `LunaFlow.Rules`,
     └── design/                   # This folder — hand-written design docs
 ```
 
-**Corrected 2026-07-20:** the `doc_project/`/DocFX line and the `docs/` path (this folder is actually
-at `Documents/design/`, not `docs/design/`) were stale. Ticket 0012 settled the generated-API-reference
-question differently than this sketch assumed: no `doc_project/`, no DocFX (rejected — "HTML-site-first;
-wrong shape for an LLM consumer") — instead `DefaultDocumentation.Console`, wired as a post-build target
-on each authoring-surface `.csproj`, generating markdown directly into `Documents/ApiReference/`
-(gitignored except a tracked banner `README.md`). See `Documents/ApiReference/README.md` and
-[handoff ticket 0012](../ClaudeWiki/Processes/Handoffs/0012-api-doc-generation.md).
+**Corrected 2026-07-20:** the `doc_project/`/DocFX line and the `docs/` path (this folder is actually at `Documents/design/`, not `docs/design/`) were stale. Ticket 0012 settled the generated-API-reference question differently than this sketch assumed: no `doc_project/`, no DocFX (rejected — "HTML-site-first; wrong shape for an LLM consumer") — instead `DefaultDocumentation.Console`, wired as a post-build target on each authoring-surface `.csproj`, generating markdown directly into `Documents/ApiReference/` (gitignored except a tracked banner `README.md`). See `Documents/ApiReference/README.md` and [handoff ticket 0012](../ClaudeWiki/Processes/Handoffs/0012-api-doc-generation.md).
 
-**Corrected 2026-07-20 (Amara doc pass):** `LunaFlow.Rom` is no longer an empty stub — it holds real,
-checked-in Nine Rooms content (`NineRoomsContent`, `MoveCommandHandler`/`LookCommandHandler`/
-`AnswerCommandHandler`, the challenge/win-line/game-end rule classes, `NineRoomsReference`), and,
-as of the 1.d20 work, is where its d20 System/Scenario content is expected to land too. Don't confuse
-it with `GameState`/`GameWorld`/`Session` in `LunaFlow.Engine.Game`: those are Engine-owned turn/session
-bookkeeping (turn number, connected sessions, per-connection context), not ROM content. Nine Rooms'
-actual game-domain facts — `Room`, `PlayerPosition`, `RoomSolved`, `WinMarker` — live in
-`LunaFlow.Rom.NineRooms` instead, per [`nine-rooms-spec.md`](../NineRooms/nine-rooms-spec.md). Once
-ROM work grows past Nine Rooms, expect `LunaFlow.Rom` to hold multiple independent modules (a Physics
-ROM, a Combat ROM, and so on) that a Rulebook opts into individually — see
-[System, setting, and session](#system-setting-and-session) above — rather than one monolithic model.
-(Nine Rooms itself is a deliberate exception to that: per `nine-rooms.md`, it's disposable test content
-that doesn't get a reusable module boundary.)
+**Corrected 2026-07-20 (Amara doc pass):** `LunaFlow.Rom` is no longer an empty stub — it holds real, checked-in Nine Rooms content (`NineRoomsContent`, `MoveCommandHandler`/`LookCommandHandler`/`AnswerCommandHandler`, the challenge/win-line/game-end rule classes, `NineRoomsReference`), and, as of the 1.d20 work, is where its d20 System/Scenario content is expected to land too. Don't confuse it with `GameState`/`GameWorld`/`Session` in `LunaFlow.Engine.Game`: those are Engine-owned turn/session bookkeeping (turn number, connected sessions, per-connection context), not ROM content. Nine Rooms' actual game-domain facts — `Room`, `PlayerPosition`, `RoomSolved`, `WinMarker` — live in `LunaFlow.Rom.NineRooms` instead, per [`nine-rooms-spec.md`](../NineRooms/nine-rooms-spec.md). Once ROM work grows past Nine Rooms, expect `LunaFlow.Rom` to hold multiple independent modules (a Physics ROM, a Combat ROM, and so on) that a Rulebook opts into individually — see [System, setting, and session](#system-setting-and-session) above — rather than one monolithic model. (Nine Rooms itself is a deliberate exception to that: per `nine-rooms.md`, it's disposable test content that doesn't get a reusable module boundary.)
 
 Rulebooks (concrete games built on top of LunaFlow) are expected to live in their own solutions/`.csproj`s outside this repo, consuming `LunaFlow.Rules`, `LunaFlow.Engine`, `LunaFlow.Rulebook` (for `IRuleBook` and the Rulebook-tier identity/dependency contracts, relocated there in Phase 2.6.5 — see `engine-core.md`), and whichever `LunaFlow.Rom` modules they depend on as libraries. An internal `LunaFlow.Examples` project may be added here for testing and documentation purposes, but it is not a rulebook itself.
 
-**Corrected 2026-07-21 (Phase 2.6.5 design):** this line previously omitted `LunaFlow.Rulebook`
-entirely, back when the project held only example content (`OneD20`) and `IRuleBook` lived in
-`LunaFlow.Rules`. Since `IRuleBook` moved to `LunaFlow.Rulebook` — the project *is* the Rulebook
-tier, not an example holder that happens to also be usable for more — a real external Rulebook
-needs it too.
+**Corrected 2026-07-21 (Phase 2.6.5 design):** this line previously omitted `LunaFlow.Rulebook` entirely, back when the project held only example content (`OneD20`) and `IRuleBook` lived in `LunaFlow.Rules`. Since `IRuleBook` moved to `LunaFlow.Rulebook` — the project *is* the Rulebook tier, not an example holder that happens to also be usable for more — a real external Rulebook needs it too.
+
+---
+
+## Implementation status
+
+See [`../../Roadmap/roadmap.md`](../../Roadmap/roadmap.md) — the roadmap is the authoritative source for what's real vs. planned.

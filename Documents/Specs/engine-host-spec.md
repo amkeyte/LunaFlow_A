@@ -1,10 +1,12 @@
 # Engine Host Interface — Implementation Spec
 
-**Status:** draft, for review. Concrete companion to [`../design/engine-core.md`](../design/engine-core.md), specifically the "ROM as the conduit to NRules" subsection of its Component model section. Triggered by a real, present finding (see [Purpose](#purpose)), not by the general ROM/Rulebook component model — this spec deliberately does **not** build `AEngineComponent`/`EngineTier`/dependency resolution. Those stay exactly as deferred in [`../design/non-goals.md`](../design/non-goals.md) until a second real ROM exists.
+**Status:** draft, for review  
+**Companion design doc:** [`../design/engine-core.md`](../design/engine-core.md) — specifically "ROM as the conduit to NRules."  
+**Related specs:** [`nine-rooms-spec.md`](nine-rooms-spec.md)
 
 ## Purpose
 
-`GameEngineCore` is `internal sealed class` (`src/LunaFlow.Engine/Game/GameEngineCore.cs`). [`nine-rooms-spec.md`](nine-rooms-spec.md)'s "Engine wiring" section (items 1–3) calls for content code in `LunaFlow.Rom` — a separate assembly, no `InternalsVisibleTo` — to reach a `Rules` property, a `Query<T>()` passthrough, and a widened `Post`. It only proposed widening `Post` to `public`. That's insufficient: the class itself is unreachable from outside `LunaFlow.Engine` regardless of individual member accessibility, since C# doesn't let another assembly name an internal type at all — so none of the four wiring items in that section actually work without a separate fix.
+`GameEngineCore` is internal, but `nine-rooms-spec.md` requires ROM-tier code to reach its `Rules`, `Query<T>()`, and messaging surface. This spec defines `IEngineHost` — a minimal, purpose-built public interface — so content code can reach the engine without exposing internal methods like `FinishTurn()` or `Stop()`.
 
 The obvious fix — flip `GameEngineCore` itself to `public` — is worse than the problem it solves. Verified against the actual class today, nearly everything on it is already `public`; only the class declaration is `internal`:
 

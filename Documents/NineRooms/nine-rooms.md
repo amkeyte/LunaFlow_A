@@ -1,4 +1,6 @@
-# Nine Rooms (Test Rulebook)
+# Nine Rooms (Test Rulebook) — **HISTORICAL**
+
+> See [`README-DEPRECATED.md`](README-DEPRECATED.md) for current pattern and status.
 
 **Status:** DEPRECATED as design guidance (2026-07-20) — disposable Phase 1.5 test content, kept
 only for the engine-fixture regression coverage in

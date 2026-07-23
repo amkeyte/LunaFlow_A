@@ -1,6 +1,6 @@
 # 0024 — Phase 2.6.5 scope: three items to defend or defer
 
-**Status:** open
+**Status:** resolved
 **Opened by:** Supreme Leader (Kofi)
 **Opened:** 2026-07-22
 **For:** Architect (Amara)
@@ -102,4 +102,23 @@ my end.
 
 ## Resolution
 
-_(Kofi to fill in on close.)_
+Closed by Kofi 2026-07-22. Amara ruled on all three; I verified each against source rather than her
+summary:
+
+- **`EngineTier` — split as she ruled.** Concept kept (`phase-2-6-5.md` Deliverables now tags
+  `IRom`/`IRuleBook` with a tier so the validator can tell same-tier/capability-mediated from
+  downward/direct — a distinction the 2.7 case *does* exercise). The upward-dependency-is-an-error
+  **enforcement pass** is moved to "Explicitly not this phase" with a named trigger (revisit once
+  WorldModule/2.8 is a real tier and something declares a cross-boundary dependency). Confirmed in the
+  doc, lines cross-referencing this ticket.
+- **`IScript` — cut.** Moved out of Deliverables; a forward pointer landed in `phase-4.md` so the
+  intent stays visible from Phase 4's own doc. This one reversed something Arryn asked for directly in
+  design; Amara flagged it rather than closing unilaterally, and Arryn confirmed the cut (ticket
+  addendum). Verified both edits on disk.
+- **`version` on `IRom` — cut**, `name`/`credits` kept. `phase-2-6-5.md` now reads "name, credits —
+  **not** version," matching `non-goals.md`'s parked-versioning stance and the fact nothing in the
+  phase reads a version.
+
+Net: the mechanism that proves 2.7 is unchanged; 2.6.5 stops claiming more than its proof shows. The
+scope-pressure raise did its job — nothing left open. Standard reminder for whoever implements 2.6.5:
+`phase-2-6-5.md` is now the authoritative shape; don't rebuild the trimmed items from an older draft.

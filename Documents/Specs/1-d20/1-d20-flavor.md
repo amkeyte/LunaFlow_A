@@ -1,6 +1,6 @@
 # 1.d20 — Flavor Text
 
-**Status:** in review, alongside [`1-d20-spec.md`](1-d20-spec.md) (see its status line). Pure prose companion to [`1-d20-spec.md`](1-d20-spec.md) — per
+**Status:** active, alongside [`1-d20-spec.md`](1-d20-spec.md) (see its status line). Pure prose companion to [`1-d20-spec.md`](1-d20-spec.md) — per
 `content-spec-template.md`'s localization-style split, nothing in this file is mechanical (no DCs,
 no fact shapes, no rule logic). Keyed by id; the technical spec references these keys, never the
 literal text. Site: a riverside warehouse Department-7 is quietly searching after a tip — nothing

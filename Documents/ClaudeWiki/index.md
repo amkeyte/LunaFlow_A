@@ -5,6 +5,8 @@ Living knowledge base for the LLM sessions (chats/agents) working on LunaFlow. D
 This wiki is about *how the team of chats works* — roles, process, tools, and anything else
 that helps a session ramp up fast and stay in scope, without belonging in a design doc.
 
+**New here?** Start with [`../README-QUICK-START.md`](../README-QUICK-START.md) — FAQ, navigation, and key conventions.
+
 ## Design principles
 
 - **Small and hyper-topical.** One concern per file. A session should be able to load exactly
@@ -37,6 +39,7 @@ that helps a session ramp up fast and stay in scope, without belonging in a desi
 | [QA / Verification](Roles/qa.md) | Roles |
 | [Handoff Tickets](Processes/handoff-tickets.md) | Processes |
 | [Handoff Ticket Index](Processes/Handoffs/index.md) | Processes |
+| [Testing — quick-start](Processes/testing-quick-start.md) | Processes |
 | [Testing — conventions & workflow](Processes/testing.md) | Processes |
 | [Test Runbook — execution & diagnostics](Processes/test-runbook.md) | Processes |
 | [Test Patterns — concurrency-safe authoring](Processes/test-patterns.md) | Processes |
@@ -44,6 +47,7 @@ that helps a session ramp up fast and stay in scope, without belonging in a desi
 | [Wiki Style — page conventions](Processes/wiki-style.md) | Processes |
 | [Content Spec Template — buildable-spec shape](Processes/content-spec-template.md) | Processes |
 | [API Doc Generation — `DefaultDocumentation` wiring & MAX_PATH](Processes/api-doc-generation.md) | Processes |
+| [Documentation System Audit — deficiencies, fixes, conventions](documentation-audit.md) | System |
 | [Skill — `qa-verify`](Tools/qa-verify-skill.md) | Tools |
 
 ## Migration candidates

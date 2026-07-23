@@ -1,83 +1,23 @@
 # 1.d20 — Implementation Spec
 
-**Status:** in review — revised after a playtest of ticket 0016's build (see revision notes below).
-Recode handed to Baraka via [ticket 0018](../../ClaudeWiki/Processes/Handoffs/0018-recode-1-d20-per-revised-spec.md);
-moves to `active` once implemented and QA-verified against the Acceptance criteria below.
-**Companion to:** [`../../design/1-d20.md`](../../design/1-d20.md) — the concept doc; read that
-first for *why* these calls were made. This doc is about *what to build*.
-**Supersedes:** nothing
-**Flavor companion:** [`1-d20-flavor.md`](1-d20-flavor.md) — every prose field below is a key into
-that file, never literal text here.
-
-**Revised 2026-07-20 (Amara's review):** conflated declarative rules with command handlers —
-`check`/`fight`/`flee` are handler-shaped (branching, multi-fact mutation, early returns), not
-rule-shaped. Fixed: [Mechanics / rules](#mechanics--rules) splits declarative rules from command
-handlers explicitly; the removed `MissionFailedRule` turned out to be redundant once framed
-correctly.
-
-**Revised 2026-07-20 (playtest pass, after ticket 0016's build):** Arryn ran the actual console
-build and surfaced four real content-spec gaps, confirmed against `OneD20RuleGroup`/
-`FightCommandHandler`/`CheckCommandHandler` source, not guessed:
-
-1. **Double-announced room text** — `MoveCommandHandler` and the challenge-prompt rule both
-   announced the same `DescriptionKey`. Nine Rooms never hit this because it has two distinct
-   fields (`Description` always, `ChallengePrompt` only while unsolved); this spec had collapsed
-   them into one. Fixed: `Room` gains a `PromptKey`, separate from `DescriptionKey` — see
-   [Fact / marker vocabulary](#fact--marker-vocabulary).
-2. **Silent `fight` rounds** — only 3 of the (many) possible outcomes ever called `Announce()`;
-   an inconclusive round produced no output at all, reading as broken. Fixed: every roll narrates.
-3. **No HP visibility, anywhere** — neither combatant's HP was ever surfaced. Fixed: combat
-   narration states remaining HP, and `look` reports it while a fight is active.
-4. **Generic `check` messages** — one shared success/failure pair across all 6 different skill
-   checks. Fixed: each room gets its own pair, plus a mechanical roll/DC readout.
-
-One more, found by design review rather than reported directly: **PC HP never recovered between
-fights**, including after a `flee` — meaning a session's difficulty silently ratcheted with no
-way to see it coming, and losing a fight was a full session-ending `PlayerDown` state with no way
-to continue toward a different win line. Redesigned: `CombatRound` now seeds the PC's HP fresh
-(same moment it seeds the monster's), matching `flee`'s existing "fresh fight" language, and
-losing a fight now inserts `RoomFailed` — same as the 3-round timeout — instead of ending the
-whole session. `PlayerDown` is removed. This also resolves an asymmetry that was never a deliberate
-choice: two of combat's three outcomes already only failed the room; the third shouldn't have been
-different by accident.
-
-Ticket 0016's build matched this spec's *previous* revision faithfully — Baraka disclosed the
-double-announce as a cosmetic quirk rather than silently patching around it, which is exactly
-right and is how this got caught. [Ticket 0018](../../ClaudeWiki/Processes/Handoffs/0018-recode-1-d20-per-revised-spec.md)
-asked for a recode against this revision; 0018 is what the two fixes below apply on top of.
-
-**Revised 2026-07-20 (second playtest, after 0018's build):** two more, both confirmed against
-`FightCommandHandler.cs`/`Program.cs` before concluding they were spec bugs, not execution bugs:
-
-1. **A lethal hit narrated its own contradiction** — "he staggers but he's still on his feet" (the
-   `pc-hit` line) immediately followed by "he drops the rapier and doesn't get up"
-   (`monster-defeated`), because this spec's steps 2/3 said "announce the hit, then separately
-   check if it was lethal" — a literal read always announces `pc-hit` before the death check runs.
-   Fixed: lethality is now checked *before* choosing which line to announce, both directions
-   (`pc-hit`/`monster-defeated` and `monster-hit`/`pc-lost`).
-2. **Room 5 never announced its `DescriptionKey` at startup** — a side effect of the previous
-   revision's own fix. The old (buggy) challenge-prompt rule used to announce `DescriptionKey` too,
-   so it accidentally showed at startup via the initial-settle `Fire()`; correctly narrowing that
-   rule to `PromptKey`-only removed the only thing that had been showing it, since
-   `MoveCommandHandler` — the sole remaining `DescriptionKey` announcer — never runs for a seeded
-   starting position. Fixed: startup now explicitly announces it once.
+**Status:** active — implemented & QA-verified ([Phase 2.5](../../QA/phase-2-5-verdict.md) + [Phase 2.6](../../QA/phase-2-6-verdict.md) verdicts)  
+**Companion design doc:** [`../../design/1-d20.md`](../../design/1-d20.md) — read for rationale.  
+**Related specs:** [`1-d20-flavor.md`](1-d20-flavor.md), [`1-d20-revisions.md`](1-d20-revisions.md)
 
 ## Purpose
 
-Turns `1-d20.md`'s concept into something buildable: exact fact shapes, exact rules, exact
-commands. Reuses Nine Rooms' grid/win-line facts and handlers wholesale (see
-[`nine-rooms-facts.md`](../../NineRooms/nine-rooms-facts.md)) and adds the new d20 System/Scenario
-layer on top.
+Turns `1-d20.md`'s concept into buildable form: exact fact shapes, rules, commands. Reuses Nine Rooms' grid/win-line facts and handlers (see [`nine-rooms-facts.md`](../../NineRooms/nine-rooms-facts.md)) and adds d20 System/Scenario layer on top.
 
 **Rule vs. handler, stated up front (per Amara's review — this was ambiguous in an earlier draft):**
 Phase 2.5's load-bearing condition applies to *declarative NRules rules* — the challenge-prompt,
 win-line, and `GameEndRule` family — which must be authored through `GeneratorServices`/
 `RulePrototype`, not hand-written `ARule` classes. It does **not** apply to `check`/`fight`/`flee`.
-Those are `ICommandHandler`s, the same tier as Nine Rooms' checked-in `MoveCommandHandler` — hand-
-written C#, reaching state through `LunaFlowEngine.Host` (and `IMechanic`, once it exists) directly,
-never through the pipeline. Command handlers have always been hand-written; that precedent doesn't
-change here. [Mechanics / rules](#mechanics--rules) below is split into two subsections along
-exactly this line.
+Those are `ICommandHandler`s — ROM-tier, living in `LunaFlow.Rom.D20System` (`Handlers/`) per Phase
+2.6's boundary retrofit, same tier as Nine Rooms' own `MoveCommandHandler` — hand-written C#,
+reaching state through `LunaFlowEngine.Host` (and `IMechanic`, once it exists) directly, never
+through the pipeline. Command handlers have always been hand-written; that precedent doesn't change
+here. [Mechanics / rules](#mechanics--rules) below is split into two subsections along exactly this
+line.
 
 This spec **defines fact shapes and rule behavior**. It does not implement `IMechanic` — that's
 Amara's Phase 2.5 ticket (dice rolling and attack/skill-check resolution need a real Mechanic
@@ -153,8 +93,8 @@ Notes, mirroring `nine-rooms-facts.md`'s own notes where they still apply:
   fight progresses.
 - `RoomSolved` and `RoomFailed` both accumulate and never retract — a room's outcome, once decided,
   is permanent for the session. **No PC-HP-based session-ending state exists anymore** — losing a
-  fight fails that room, same as the timeout; it never ends the session. See the revision note
-  above for why.
+  fight fails that room, same as the timeout; it never ends the session. See
+  [`1-d20-revisions.md`](1-d20-revisions.md) for why.
 - `CombatRound` exists only while a fight is in progress in the PC's current room; retracted on
   win, on loss, on the 3-round timeout, or on `flee`.
 - No `SessionId` — same single-session assumption Nine Rooms makes, same reasoning.
@@ -183,7 +123,7 @@ already relies on, not a new one — announce:
 **`GameEndRule`** (reused): announces `win-announce` plus the win-line's rooms once any `WinMarker`
 exists. Single condition, single action — the shape this rule family is proven at.
 
-### Command handlers (hand-written `ICommandHandler`, same tier as `Move`/`Look` — not subject to the pipeline condition)
+### Command handlers (hand-written `ICommandHandler`s, ROM-tier in `LunaFlow.Rom.D20System` — not subject to the pipeline condition)
 
 **Reused verbatim:** `MoveCommandHandler`'s adjacency rules — identical grid, no changes. It
 additionally updates `PreviousRoomId` (retract old, insert new) on every successful move, which
@@ -243,8 +183,8 @@ built — see [Framework dependencies](#framework-dependencies).
    `1d20 + MonsterTemplate.AttackBonus` vs. `PlayerCharacter.Defense`.
    - **Hit:** reduce `CombatRound.PlayerHp` by `DamageDie + DamageBonus`, same lethality-first
      order as the PC's attack:
-     - If the result is `≤ 0`: insert `RoomFailed(RoomId)` (not a session-ending state — see the
-       revision note and [Fact / marker vocabulary](#fact--marker-vocabulary)), retract
+     - If the result is `≤ 0`: insert `RoomFailed(RoomId)` (not a session-ending state — see
+       [`1-d20-revisions.md`](1-d20-revisions.md) and [Fact / marker vocabulary](#fact--marker-vocabulary)), retract
        `CombatRound`, announce `pc-lost` **only** — no `monster-hit` narration first, same
        contradiction, same fix. Stop.
      - Otherwise: announce `monster-hit` plus the damage taken and the PC's remaining HP. Continue.
@@ -268,8 +208,9 @@ retract `CombatRound` and announce `pc-flee` without moving — stay put, encoun
 
 ## Commands & handlers
 
-All five are hand-written `ICommandHandler`s, same tier as Nine Rooms' checked-in
-`MoveCommandHandler`/`LookCommandHandler` — not pipeline content; see [Purpose](#purpose).
+All five are hand-written `ICommandHandler`s, ROM-tier in `LunaFlow.Rom.D20System` (`Handlers/`) —
+same tier as Nine Rooms' checked-in `MoveCommandHandler`/`LookCommandHandler` in
+`LunaFlow.Rom.NineRooms`, not pipeline content; see [Purpose](#purpose).
 
 | Command | Args | Valid when | Reads | Writes |
 | --- | --- | --- | --- | --- |
@@ -332,11 +273,22 @@ All five are hand-written `ICommandHandler`s, same tier as Nine Rooms' checked-i
   dice/check-resolution members don't go on `IMechanic` itself (that would bake one Mechanic's
   shape into a shared contract); `IMechanic` grows only `IHasLunaFlowReference`, and goes `public`
   — confirmed ROM-tier, same reasoning as ticket 0014's `IEngineHost` ruling. The concrete
-  implementation, `D20ResolutionMechanic` (`src/LunaFlow.Rom/OneD20/`), exists as of
+  implementation, `D20ResolutionMechanic` (`src/LunaFlow.Rom/D20System/`), exists as of
   [ticket 0016](../../ClaudeWiki/Processes/Handoffs/0016-implement-1-d20.md): `Roll(string die)`
   and `ResolveCheck(int modifier, int targetNumber)`. `check`/`fight` call it directly — no
   pipeline involvement for handlers, same as `MoveCommandHandler` calling `LunaFlowEngine.Host`
   directly. This spec now names the concrete type instead of pointing at an open question.
+- **Structural home, as of Phase 2.6 (shipped, QA-passed [phase-2-6-verdict.md](../../QA/phase-2-6-verdict.md)).**
+  All five command handlers and the declarative rule group (`D20SystemRuleGroup`,
+  `[RuleGroup("D20System")]`) live in `LunaFlow.Rom.D20System` (`src/LunaFlow.Rom/D20System/`, split
+  into `Handlers/`/`Rules/`) — ROM-tier, not Scenario-tier; the flat `LunaFlow.Rom.OneD20` namespace
+  this spec originally pointed at is gone. Room/PC/monster/flavor data lives in
+  `LunaFlow.Rulebook.OneD20` (`src/LunaFlow.Rulebook/`) — pure data, zero `LunaFlow.Engine`
+  references. `IRuleBook` (still in `LunaFlow.Rules` today) declares `DependsOnRoms`. **Flagged, not
+  pinned — Phase 2.6.5 moves both, so don't spec against either as durable:** `IRuleBook` relocates
+  to `LunaFlow.Rulebook`, and `D20SystemContent.Configure(...)` (the static content-registration seam
+  ROM code reads today) is deprecated in favor of `IInteropRom`-mediated capability data. See
+  [`phase-2-6-5.md`](../../Roadmap/phase-2-6-5.md).
 - **Rule authoring via `GeneratorServices`** — scoped narrowly to the
   [Declarative rules](#declarative-rules-via-generatorservicesruleprototype--phase-25s-condition-applies)
   subsection only (challenge-prompt, win-line, `GameEndRule`): those need to reach the engine as
@@ -367,6 +319,8 @@ ticket 0016, adopted); fleeing room 5 before any `move` leaves the PC in place (
 
 - [`../../design/1-d20.md`](../../design/1-d20.md) — concept doc this spec builds
 - [`1-d20-flavor.md`](1-d20-flavor.md) — prose companion
+- [`1-d20-revisions.md`](1-d20-revisions.md) — dated revision-history companion (moved out
+  2026-07-22 so this doc reads as current state, not an accumulating changelog)
 - [`../../NineRooms/nine-rooms-facts.md`](../../NineRooms/nine-rooms-facts.md) — reused grid/win-line facts
 - [`../../NineRooms/nine-rooms-gameplay.md`](../../NineRooms/nine-rooms-gameplay.md) — reused handler shapes
 - [`../../Roadmap/phase-2-5.md`](../../Roadmap/phase-2-5.md) — the phase this closes, and the
@@ -380,3 +334,8 @@ ticket 0016, adopted); fleeing room 5 before any `move` leaves the PC in place (
   suite, filed against the same pre-playtest revision — will need to move with this one
 - [Ticket 0018](../../ClaudeWiki/Processes/Handoffs/0018-recode-1-d20-per-revised-spec.md) — recode
   against this revision
+- [Ticket 0022](../../ClaudeWiki/Processes/Handoffs/0022-implement-phase-2-6.md) — Phase 2.6's
+  ROM/Rulebook boundary retrofit; moved the five handlers and the rule group into
+  `LunaFlow.Rom.D20System`, fact shapes unchanged
+- [Ticket 0026](../../ClaudeWiki/Processes/Handoffs/0026-reconcile-1-d20-spec.md) — this reconcile
+  pass, bringing tier/path framing into agreement with the 2.6-as-shipped structure
