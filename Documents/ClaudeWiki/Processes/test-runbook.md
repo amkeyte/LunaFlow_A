@@ -114,4 +114,5 @@ logic error; (4) if it's a consistent failure, trace to the corresponding source
 - [Testing — conventions & where-to-start](testing.md)
 - [Test patterns — authoring concurrency-safe tests](test-patterns.md)
 - [Agent-assisted test workflow (who runs what)](agent-test-workflow.md)
+- [Tool — `.trx` Triage Engine](../Tools/trx-triage-tool.md) — automatic failure classification and prioritization
 - [Wiki style](wiki-style.md)

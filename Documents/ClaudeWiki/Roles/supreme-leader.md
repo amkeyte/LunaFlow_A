@@ -43,10 +43,13 @@ wired into the roadmap.
 
 ## Session hygiene
 
-- **Does not** read source files directly — that's Lothar's job. Relies on: (1) generated API
-  reference (post-build, current, markdown); (2) QA verdicts backed by evidence; (3) design docs
-  vs. spec cross-check (scope/architecture, not implementation detail).
-- **Does** use quick-prompt to QA when genuinely uncertain: "Does the API reference show X?" or
+- **Reads API Reference, not `/src` directly** — that's Lothar's job. The generated API reference
+  (post-build, current, markdown format) covers the public surface and is usually sufficient.
+  Consult it before asking for anything else. Only ask Lothar to read source for implementation
+  details or when the API surface doesn't answer the question.
+- **Relies on:** (1) generated API reference (post-build, current); (2) QA verdicts backed by 
+  evidence; (3) design docs vs. spec cross-check (scope/architecture, not implementation detail).
+- **Uses quick-prompt to QA when genuinely uncertain:** "Does the API reference show X?" or
   "Can you confirm Y against the code?" — not for general verification, only for "the system
   can't answer this yet" moments. Lothar uses Python scripts to keep these lean.
 - **Does not** run builds or tests itself — no toolchain in this session's sandbox. Asks Arryn

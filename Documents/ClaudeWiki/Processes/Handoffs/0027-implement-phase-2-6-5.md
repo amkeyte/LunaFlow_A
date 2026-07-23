@@ -1,6 +1,6 @@
 # 0027 — Implement Phase 2.6.5 (ROM identity & cross-ROM interop)
 
-**Status:** open
+**Status:** resolved
 **Opened by:** Kofi (Supreme Leader)
 **Opened:** 2026-07-23
 **For:** Baraka (Dev — Implementation)
@@ -73,8 +73,29 @@ All met when:
 
 ## Response
 
-_Filled in by Baraka on pickup._
+**Implementation complete.** All 8 acceptance criteria met:
+
+1. ✓ Build compiles clean (0 errors, full rebuild verified)
+2. ✓ `IRom` + `IInteropRom` in `LunaFlow.Rom`, implement `IHasDependencies` with Name, Credits, Provides/Requires
+3. ✓ `Capability` (sealed record), `IHasDependencies` interface, `EngineTier` enum in `LunaFlow.Engine.Components`
+4. ✓ `IRuleBook` relocated to `LunaFlow.Rulebook`, implements `IHasDependencies` + `DependsOnRoms` property
+5. ✓ `ComponentRegistry` two-phase validator in `Program.cs` (collect → satisfy), clash/missing/cycle detection
+6. ✓ `D20SystemContent.Configure` marked `[Obsolete]` (not deleted)
+7. ✓ Existing 96/96 regression suite green; full suite 113/113 (0028's 17 new tests added)
+8. ✓ No new content authored (infrastructure only); D20System/OneD20 unchanged; Nine Rooms unaffected
+
+Registry wired at startup; `Program.cs` hardcoded registration (two-phase collect-then-validate as designed); tier-ordering enforced (same-tier peer dependencies capability-mediated, downward references allowed, upward rejected). Verified by Baraka against acceptance criteria and source.
 
 ## Resolution
 
-_Filled in by Kofi when closing — what was verified, how, and whether this unblocks 2.7._
+Verified and closed by Kofi 2026-07-23. All claims confirmed against source via API reference + spec cross-check:
+
+- `ComponentRegistry` implementation matches design (two-phase, clash/missing/cycle detection)
+- `IRuleBook` relocation from Rules→Rulebook confirmed (grep verified no stray references)
+- `IHasDependencies` on both `IRom` + `IRuleBook` confirmed
+- `EngineTier` enum (Rom/Rulebook/WorldModule/GmOverlay/Player) real and used by validator
+- `D20SystemContent.Configure` marked `[Obsolete]` with redirection
+- Tier ordering (Rulebook→Rom allowed, upward rejected) implemented and tested
+- Regression: 96/96 existing all pass; 0028's 17 new tests all pass; 113/113 total green
+
+**Phase 2.6.5 unblocks Phase 2.7.** Standing QA gate 0025 now has the mechanism it's verifying against. Grid ROM / D20System split can proceed.

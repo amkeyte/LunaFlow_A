@@ -80,16 +80,19 @@ overwriting, override `LogFileName` for that one run (e.g.
 
 ## How the agent reads it
 
-A `.trx` is XML. Rather than dumping the whole file, the agent should:
+**Automated path (recommended):** Use the [`.trx` Triage Engine](../Tools/trx-triage-tool.md) — runs in seconds, classifies failures by type (timeout, race, state-sync, etc.), detects cascades, ranks by priority, generates a ranked markdown report. Much leaner than hand-reading XML.
+
+```powershell
+Documents\Test\trx-triage\triage.ps1
+```
+
+**Manual path (if needed):** A `.trx` is XML. To triage by hand:
 
 1. Grep for `outcome="Failed"` to find failing `<UnitTestResult>` entries.
-2. Pull each failure's `<Message>` and `<StackTrace>` — not the passing entries, not the raw
-   console mirror.
-3. Cross-reference failing test names against [`test-runbook.md`](test-runbook.md)'s diagnostic
-   red-flag table (timeout → deadlock, flaky → race condition, etc.) before proposing a fix.
+2. Pull each failure's `<Message>` and `<StackTrace>` — not the passing entries, not the raw console mirror.
+3. Cross-reference failing test names against [`test-runbook.md`](test-runbook.md)'s diagnostic red-flag table (timeout → deadlock, flaky → race condition, etc.) before proposing a fix.
 
-This keeps triage cost proportional to failures, not to total test count — the main win over
-either side running the full suite unfiltered.
+Either way, this keeps triage cost proportional to failures, not to total test count — the main win over either side running the full suite unfiltered.
 
 ## Escalation ladder during a fix
 
@@ -108,3 +111,4 @@ confidence grows:
 - [Testing — conventions & workflow](testing.md)
 - [Test runbook — execution order & diagnostics](test-runbook.md)
 - [Test patterns — authoring concurrency-safe tests](test-patterns.md)
+- [Tool — `.trx` Triage Engine](../Tools/trx-triage-tool.md) — automatic failure classification and prioritization

@@ -48,11 +48,10 @@ checked.
 Every verification pass runs the [`qa-verify` skill](../Tools/qa-verify-skill.md) — fixed check
 order, fixed report template — rather than each session inventing its own checklist.
 
-**Python tooling for efficiency:** Develop and maintain reusable scripts (e.g., `extract_types.py`,
-`validate_schema.py`, `check_acceptance_criteria.py`) that answer common questions without
-hand-reading large code files. Store scripts in `scripts/qa/` for reuse across sessions. Keep
-scripts lean, focused, and documented. The goal: tight, evidence-backed verdicts without bloated
-context.
+**Python tooling for efficiency:** Use and develop reusable scripts:
+- **[`.trx` Triage Engine](../Tools/trx-triage-tool.md)** — automatic failure classification, cascade detection, ranked diagnostics (built by Nadia; essential for test-suite verification)
+- **Custom scripts** (e.g., `extract_types.py`, `validate_schema.py`, `check_acceptance_criteria.py`) — store in `scripts/qa/` for reuse across sessions
+- **Design philosophy:** Keep scripts lean, focused, and documented. The goal: tight, evidence-backed verdicts without bloated context.
 
 Verdicts are written to `Documents/QA/`, one file per verdict plus an `index.md` pointing at the
 current authoritative one per phase; superseded reports move to `Documents/QA/Archive/` with a

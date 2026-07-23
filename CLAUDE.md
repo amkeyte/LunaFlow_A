@@ -11,6 +11,8 @@ it instead.
 - **Do not run state-changing `git`** (commit, add, checkout, etc.) from an agent session — the user
   develops in VS2022 and runs git themselves to avoid file-lock conflicts. Read-only
   `git status`/`diff`/`log` is fine.
+- **API Reference before `/src`:** Consult `Documents/ApiReference/` (generated post-build, kept current by Baraka) 
+  before reading source files directly. The public surface is usually what you need; read code only for implementation details.
 - **Status updates flow through the roadmap only.** Phase status is updated in `Documents/Roadmap/roadmap.md`
   and the specific phase doc (`phase-X.md`). All other pages — design docs, specs, role pages, process pages —
   link to the roadmap rather than restating status. This prevents drift and keeps the roadmap as the single
@@ -64,6 +66,7 @@ Don't infer detail from this list — read the owning doc:
 ## Where to look
 
 - **`Documents/README-QUICK-START.md`** — agent FAQ, navigation map, and key conventions. **Start here if you're new.**
+- **`Documents/ApiReference/`** — **read this first for code understanding.** Generated post-build, kept current, covers the public surface you usually need. Open after `dotnet build`. Only read `/src` if you need implementation details.
 - **`Documents/ClaudeWiki/`** — how the team of sessions works: roles (`Roles/`, each with a
   paste-in bootstrap prompt), processes (`Processes/` — handoff tickets, testing), and the ticket
   ledger (`Processes/Handoffs/`). Start at `Documents/ClaudeWiki/index.md`.
@@ -71,7 +74,5 @@ Don't infer detail from this list — read the owning doc:
   next."
 - **`Documents/design/`** — technical design docs (intended shape).
 - **`Documents/Specs/`** — buildable specs the devs implement against.
-- **`Documents/ApiReference/`** — generated API docs (type shapes/signatures) for the
-  authoring-surface projects.
 - **`planning/`** — raw, aspirational design transcripts. Useful for *why* something is shaped as it
   is; not a spec for what exists, and not current. Don't build against it.

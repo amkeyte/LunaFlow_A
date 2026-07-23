@@ -6,6 +6,9 @@ Fast answers to common agent questions. For deep dives, follow the links.
 
 ## FAQ
 
+**Q: I need to understand what's in the codebase. Where do I start?**
+A: **Always read the API Reference first** — it's generated from source after every build, so it's current and accurate. See [`ApiReference/`](ApiReference/) (open after `dotnet build`). The public surface is usually what you need. Only read `/src` directly if you need implementation details or the API Reference doesn't answer your question.
+
 **Q: What's the active roadmap phase?**
 A: See [`Roadmap/roadmap.md`](Roadmap/roadmap.md) — Phase 2.6 is done. Phase 2.6.5 (ROM identity & interop) is **designing**; Phase 2.7 (multi-ROM composition) is **pending**.
 
@@ -39,6 +42,7 @@ A: [`design/non-goals.md`](design/non-goals.md) — deliberately deferred items 
 
 | Need | Go to |
 | --- | --- |
+| **Understand the code surface** | **[`ApiReference/`](ApiReference/)** — generated, current, accurate (open after `dotnet build`). Read this first, not `/src`. |
 | **Roadmap, phases, status** | [`Roadmap/roadmap.md`](Roadmap/roadmap.md) → phase doc → linked spec/design |
 | **Architecture, design decisions** | [`design/`](design/) — architecture.md, engine-core.md, rule-pipeline.md, etc. |
 | **Buildable specs** | [`Specs/`](Specs/) — concrete fact shapes, rules, acceptance criteria |
@@ -46,7 +50,6 @@ A: [`design/non-goals.md`](design/non-goals.md) — deliberately deferred items 
 | **QA verdicts** | [`QA/`](QA/) — phase verdicts, test results, defect reports |
 | **Handoff tickets** | [`ClaudeWiki/Processes/Handoffs/`](ClaudeWiki/Processes/Handoffs/) |
 | **Role definitions** | [`ClaudeWiki/Roles/`](ClaudeWiki/Roles/) — one per role, authority & communication |
-| **API reference** | [`ApiReference/`](ApiReference/) — generated from source (open after `dotnet build`) |
 | **Deprecated content** | Marked with "DEPRECATED" banner + link to current pattern. Start with the link. |
 
 ---

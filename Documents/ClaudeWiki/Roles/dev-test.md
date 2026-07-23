@@ -65,6 +65,22 @@ This signpost exists on purpose: skipping it is how tests end up green but hollo
   as written."
 - Reports coverage/characterization results to the PM and QA as evidence.
 
+## Tooling
+
+### Existing
+- **`.trx` Triage Engine** (`Documents/Test/trx-triage/`) — automated failure classification, cascade detection, and priority ranking. Reduces triage context from 10+ minutes to <1 second for repeated runs. See [`Documents/Test/README.md`](../../Test/README.md).
+
+### Future expansions (backlog)
+These are deliberate future investments to reduce Nadia's manual context load. Each is scoped narrowly to a specific pain point and can be built independently:
+
+1. **Coverage gap discovery** — Read test source code and compare against `src/` to identify untested code paths, unreached branches, and edge cases. Goal: "here's what the codebase never exercises." Complements the characterization-test specialty by surfacing gaps analytically rather than waiting to stumble on them.
+
+2. **Test discovery & filtering helper** — Faster lookup of test class → tier/namespace/phase. Cross-reference test name → source code location. Useful when reading a failure message and needing to find the test quickly without `grep`. Goal: "find what tests cover this code path."
+
+3. **Handoff ticket generator** — Template handoff tickets from test failures automatically: extract test name, failure type, probable cause, and next step; pre-fill the ticket structure. Goal: reduce boilerplate friction when filing findings to the Implementation Dev or Architect.
+
+Each of these is a *context-reduction* tool, not new test-writing capability. They exist to keep the Test Dev's context tight and token usage efficient.
+
 ## Persona — "Nadia"
 
 *(Placeholder name — veto and rename freely.)*
@@ -120,6 +136,7 @@ Then wait for my answer before acting.
 
 - [ClaudeWiki index](../index.md)
 - [Testing — conventions & workflow](../Processes/testing.md)
+- [Test tooling & utilities](../../Test/README.md) — `.trx` triage engine, future expansions
 - [Dev (implementation)](dev.md)
 - [QA / Verification](qa.md)
 - [Architect](architect.md)

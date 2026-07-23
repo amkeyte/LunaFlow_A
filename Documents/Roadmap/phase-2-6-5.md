@@ -1,7 +1,6 @@
 # Phase 2.6.5 — ROM identity & cross-ROM interop
 
-**Status:** design complete (2026-07-21, Arryn + Amara). Mechanism, placement, and naming all
-decided — see Deliverables below. No code written yet.
+**Status:** done (2026-07-23). Design complete (2026-07-21, Arryn + Amara); implementation complete (Baraka, ticket 0027); test suite green (Nadia, ticket 0028). Build 0 errors, 113/113 tests green, zero regressions. Ready for Phase 2.7.
 
 ## Overview
 
