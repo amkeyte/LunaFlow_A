@@ -1,9 +1,11 @@
+using LunaFlow.Engine.Components;
+
 namespace LunaFlow.Rom
 {
     /// <summary>
-    /// Marker interface tagging a ROM as the intended capability broker for peer-ROM interoperability.
-    /// The broker's concrete surface (methods to aggregate and resolve capabilities) is specified in Phase 2.7,
-    /// once the consuming ROM's actual needs are known.
+    /// Capability broker for peer-ROM interoperability. Resolves declared capabilities
+    /// to the instances providing them, enabling cross-ROM composition with zero assembly
+    /// reference between peer ROMs.
     /// </summary>
     /// <remarks>
     /// Kept as a distinct, named interface rather than folded into plain <c>IRom</c> for the same
@@ -13,5 +15,11 @@ namespace LunaFlow.Rom
     /// </remarks>
     public interface IInteropRom : IRom
     {
+        /// <summary>Resolves a declared capability to the instance providing it.</summary>
+        /// <exception cref="InvalidOperationException">No registered provider for that capability.</exception>
+        object Resolve(Capability capability);
+
+        /// <summary>Typed convenience over <see cref="Resolve"/>.</summary>
+        T Resolve<T>(string capabilityName) where T : class;
     }
 }

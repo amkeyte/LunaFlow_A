@@ -4,10 +4,14 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="LunaFlow.Rom\GridMap\" />
+    <ProjectReference Include="..\..\src\LunaFlow.Rom\LunaFlow.Rom.csproj" />
+    <ProjectReference Include="..\..\src\LunaFlow.Rules\LunaFlow.Rules.csproj" />
+    <ProjectReference Include="..\..\src\LunaFlow.Engine\LunaFlow.Engine.csproj" />
+    <ProjectReference Include="..\D20SystemExampleC\D20SystemExampleC.csproj" />
   </ItemGroup>
 
 </Project>

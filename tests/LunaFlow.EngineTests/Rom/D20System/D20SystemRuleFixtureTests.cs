@@ -19,7 +19,7 @@ namespace LunaFlow.EngineTests.Rom.D20System
     /// </summary>
     [TestClass]
     [TestCategory("Rom_OneD20")]
-    [TestCategory("Phase2.5")]
+    [TestCategory("Phase2.7")]
     public class D20SystemRuleFixtureTests
     {
         private static System.Reflection.Assembly _compiledRules = null!;

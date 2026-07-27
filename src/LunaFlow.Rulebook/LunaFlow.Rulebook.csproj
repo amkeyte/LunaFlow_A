@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LunaFlow.Engine\LunaFlow.Engine.csproj" />
     <ProjectReference Include="..\LunaFlow.Rom\LunaFlow.Rom.csproj" />
+    <ProjectReference Include="..\..\example\D20SystemExampleA\D20SystemExampleA.csproj" />
   </ItemGroup>
 
   <Target Name="GenerateApiReference" AfterTargets="Build">

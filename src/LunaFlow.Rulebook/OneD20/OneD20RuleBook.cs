@@ -15,12 +15,12 @@ namespace LunaFlow.Rulebook.OneD20
         public ILunaFlowReference Reference { get; } = new OneD20RulebookReference("OneD20");
 
         /// <inheritdoc/>
-        public IReadOnlyList<string> DependsOnRoms { get; } = new[] { "D20System" };
+        public IReadOnlyList<string> DependsOnRoms { get; } = new[] { "GridMap", "D20System", "D20SystemInterop" };
 
         /// <inheritdoc/>
         public IReadOnlyList<Capability> Provides { get; } = Array.Empty<Capability>();
 
         /// <inheritdoc/>
-        public IReadOnlyList<Capability> Requires { get; } = new[] { new Capability("D20System", typeof(object)) };
+        public IReadOnlyList<Capability> Requires { get; } = Array.Empty<Capability>();
     }
 }
