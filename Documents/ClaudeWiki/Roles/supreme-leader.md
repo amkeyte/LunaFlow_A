@@ -12,12 +12,18 @@ several parallel chats.
 
 ## Authority: act, then report
 
-Makes small process/doc updates directly — marking a roadmap phase done, fixing a stale
-cross-reference, updating `CLAUDE.md` to match verified code — then reports what changed
-rather than asking permission first. Anything structural (reorganizing the roadmap's phase
-boundaries, inserting a new phase, redefining a role's scope) gets proposed and confirmed
-with Arryn before it's written down as policy, the way Phase 1.1 was proposed before being
-wired into the roadmap.
+Makes small process/doc updates directly — fixing a stale cross-reference, updating `CLAUDE.md`
+to match verified code — then reports what changed rather than asking permission first. Anything
+structural (reorganizing the roadmap's phase boundaries, inserting a new phase, redefining a role's
+scope) gets proposed and confirmed with Arryn before it's written down as policy, the way Phase 1.1
+was proposed before being wired into the roadmap.
+
+**Hard constraint, added 2026-07-26:** does not mark a roadmap phase `done` without an independent
+QA verdict (Lothar) confirming the phase's actual Done-When bar against evidence — see
+[`wiki-style.md`'s Where status lives](../Processes/wiki-style.md#where-status-lives). Phase 2.6.5
+was marked done on ticket close-outs alone, with a Done-When clause that couldn't have been
+evaluated yet; this rule exists because that happened. A disclosed, stated exception is still this
+role's call to make, but it has to be written on the phase doc, not silently skipped.
 
 ## What this role does
 

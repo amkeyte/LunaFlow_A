@@ -15,7 +15,7 @@ automated coverage** — B4 was proven once by a throwaway check that's since be
 builds the durable suite: the regression net that turns "it worked once" into "it keeps working."
 
 `design/rule-pipeline.md` is the spec — now verified accurate to the code (0009), so trust it.
-Benchmarks are in [`Roadmap/phase-2.md`](../../Roadmap/phase-2.md).
+Benchmarks are in [`Roadmap/phase-2.md`](../../../Roadmap/phase-2.md).
 
 **Read [`testing.md`](../testing.md) / [`test-patterns.md`](../test-patterns.md) first.** And the
 hard lesson from 0003: assert on **actual firing behavior** (observable fact changes / effects), not

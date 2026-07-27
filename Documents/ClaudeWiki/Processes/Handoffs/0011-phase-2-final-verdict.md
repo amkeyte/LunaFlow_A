@@ -9,7 +9,7 @@
 
 ## Context
 
-The Phase 2 rule pipeline (Rule pipeline MVP — [`Roadmap/phase-2.md`](../../Roadmap/phase-2.md)) is
+The Phase 2 rule pipeline (Rule pipeline MVP — [`Roadmap/phase-2.md`](../../../Roadmap/phase-2.md)) is
 implemented ([0008](0008-rule-pipeline-implementation.md)), the design doc reconciled to code
 ([0009](0009-rule-pipeline-doc-reconcile.md)), and the durable B1–B5 suite landed after one bounce
 ([0010](0010-rule-pipeline-b1-b5-suite.md)). This is the independent sign-off that decides whether

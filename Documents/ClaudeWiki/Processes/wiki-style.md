@@ -65,7 +65,15 @@ Progress and state are tracked in exactly three places, and nowhere else:
 - **Ticket status** — **open → in-review → resolved**, in [`Handoffs/`](Handoffs/) (per
   [`handoff-tickets.md`](handoff-tickets.md)).
 - **Phase status** — **pending → done** (and **superseded**), in the roadmap
-  (`Documents/Roadmap/`).
+  (`Documents/Roadmap/`). **A phase does not move to `done` without an independent QA verdict**
+  (Lothar) confirming the phase's actual Done-When bar against evidence — not the PM's own read of
+  ticket close-outs, however carefully checked. Added 2026-07-26 after Phase 2.6.5 was marked done on
+  two implementation/test tickets alone, with a Done-When clause that couldn't have been evaluated
+  yet (see ticket [0029](Handoffs/0029-phase-2-6-5-status-and-qa-gap.md)) — the exact rubber-stamping
+  failure this rule exists to prevent, caught after the fact rather than before. An exception (skip
+  the verdict for a specific phase) is the PM's call, but it must be **stated and disclosed on the
+  phase doc itself**, not silently skipped — see `phase-2-6-5.md`'s Status line for the pattern this
+  rule was written to require going forward.
 - **Content-spec status** — **draft → in review → active**, on the spec itself (per
   [`content-spec-template.md`](content-spec-template.md); `active` means Baraka has implemented
   against it and QA has verified the acceptance criteria, not just that the Game Designer is done).
@@ -142,6 +150,22 @@ These conventions prevent common rot patterns. All violations worth fixing incre
 - Every `.md` file in `Documents/` is linked from an index.
 - Before adding a new doc, check if it fits an existing category.
 - Lint: `grep` for .md files not linked from any index.
+
+### Convention 9: "No vestigial concepts"
+
+- Public API surface must match current design intent. A type or member that's placeholder-marked
+  ("future work," "not currently in use"), has zero consumers, or contradicts a current design doc
+  or `glossary.md` entry doesn't get left indefinitely — it gets ruled on (keep, relocate, retype,
+  delete) and the ruling gets executed, not just recorded as a flag that nobody follows up on.
+- This applies broadly, not just during QA passes — any session reading `Documents/ApiReference/`
+  or source for a design/scoping task should flag a vestigial-looking type when it's noticed, the
+  same way `IGameSystem` was caught mid-scope rather than through any systematic check (ruled in
+  [ticket 0030](Handoffs/0030-doc-reconcile-post-2-6-5.md) item 12, actioned in
+  [ticket 0031](Handoffs/0031-code-currency-vs-2-6-5-design.md) item 4). QA's `qa-verify` routine
+  also scans for this explicitly now (Step 6, red flags) so it's not purely accidental going forward.
+- A flagged concept is a ticket, not a comment left in place. Route to the PM if it's a scope/
+  process question, to the Architect if it's a design-authority ruling (does this belong, and
+  where), to the Dev once the ruling lands (the actual removal/relocation).
 
 ### Convention 8: "Maintenance windows"
 

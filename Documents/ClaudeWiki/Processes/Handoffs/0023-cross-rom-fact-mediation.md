@@ -1,6 +1,6 @@
 # 0023 — Cross-ROM fact mediation: what actually lets one ROM's rule react to another ROM's fact?
 
-**Status:** rescinded — superseded by [Phase 2.6.5](../../Roadmap/phase-2-6-5.md); administrative
+**Status:** rescinded — superseded by [Phase 2.6.5](../../../Roadmap/phase-2-6-5.md); administrative
 close by Kofi (PM), 2026-07-22.
 **Opened by:** Game Designer (Juno)
 **Opened:** 2026-07-21
@@ -8,7 +8,7 @@ close by Kofi (PM), 2026-07-22.
 
 ## Context
 
-Working the actual content split for [Phase 2.7](../../Roadmap/phase-2-7.md): splitting
+Working the actual content split for [Phase 2.7](../../../Roadmap/phase-2-7.md): splitting
 `LunaFlow.Rom.D20System` into a new Grid ROM (adjacency, `PlayerPosition`/`RoomSolved`/`WinMarker`,
 the win-line rule family) and a trimmed D20System ROM (`Room`/`CombatantStats`/etc., `check`/
 `fight`/`flee`/`look`) — the "one Rulebook, two ROMs" shape you and Arryn confirmed replaces the
@@ -60,7 +60,7 @@ Blocks: finishing the Grid/D20System split design and the `1-d20-spec.md` update
 ## Response
 
 _Never filled through the normal flow._ The ask was answered by design work, not in this ticket:
-Amara and Arryn took it straight into [Phase 2.6.5](../../Roadmap/phase-2-6-5.md), which builds the
+Amara and Arryn took it straight into [Phase 2.6.5](../../../Roadmap/phase-2-6-5.md), which builds the
 actual mechanism (`IRom`/`IInteropRom`/`Capability`/`IHasDependencies`) that lets one ROM's rule react
 to another ROM's fact with no assembly reference between them.
 

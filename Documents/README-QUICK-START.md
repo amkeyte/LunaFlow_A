@@ -10,7 +10,7 @@ Fast answers to common agent questions. For deep dives, follow the links.
 A: **Always read the API Reference first** — it's generated from source after every build, so it's current and accurate. See [`ApiReference/`](ApiReference/) (open after `dotnet build`). The public surface is usually what you need. Only read `/src` directly if you need implementation details or the API Reference doesn't answer your question.
 
 **Q: What's the active roadmap phase?**
-A: See [`Roadmap/roadmap.md`](Roadmap/roadmap.md) — Phase 2.6 is done. Phase 2.6.5 (ROM identity & interop) is **designing**; Phase 2.7 (multi-ROM composition) is **pending**.
+A: See [`Roadmap/roadmap.md`](Roadmap/roadmap.md) for current status — this page doesn't restate it (phase status changes; restating it here just gives it a second place to go stale).
 
 **Q: Is feature X done?**
 A: Roadmap is the source of truth. No status in design docs, role pages, or prose — only in `Roadmap/roadmap.md`. See [ClaudeWiki — where status lives](ClaudeWiki/Processes/wiki-style.md#where-status-lives).

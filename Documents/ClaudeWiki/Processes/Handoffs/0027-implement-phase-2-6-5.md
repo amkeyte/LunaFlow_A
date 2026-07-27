@@ -88,9 +88,11 @@ Registry wired at startup; `Program.cs` hardcoded registration (two-phase collec
 
 ## Resolution
 
-Verified and closed by Kofi 2026-07-23. All claims confirmed against source via API reference + spec cross-check:
+**Corrected 2026-07-26 (see ticket [0029](0029-phase-2-6-5-status-and-qa-gap.md)):** the original close below overclaimed in two places and skipped a process step. Both wrong claims are struck through, not silently fixed — the record should show what was actually verified at close time versus what the record now says.
 
-- `ComponentRegistry` implementation matches design (two-phase, clash/missing/cycle detection)
+Verified and closed by Kofi 2026-07-23. Claims confirmed against source via API reference + spec cross-check:
+
+- `ComponentRegistry` implementation matches design (two-phase, ~~clash/missing/cycle detection~~ **corrected: clash/missing/tier-ordering — there is no cycle check.** Amara caught this 2026-07-26 verifying against source; filed to Baraka as [0031](0031-code-currency-vs-2-6-5-design.md). I did not independently verify this claim against the actual `Validate()` method before writing it — I took the deliverable list in `phase-2-6-5.md` as the shipped shape instead of reading the method. That's the exact rubber-stamping failure this role exists to prevent, and I did it to myself.)
 - `IRuleBook` relocation from Rules→Rulebook confirmed (grep verified no stray references)
 - `IHasDependencies` on both `IRom` + `IRuleBook` confirmed
 - `EngineTier` enum (Rom/Rulebook/WorldModule/GmOverlay/Player) real and used by validator
@@ -98,4 +100,6 @@ Verified and closed by Kofi 2026-07-23. All claims confirmed against source via 
 - Tier ordering (Rulebook→Rom allowed, upward rejected) implemented and tested
 - Regression: 96/96 existing all pass; 0028's 17 new tests all pass; 113/113 total green
 
-**Phase 2.6.5 unblocks Phase 2.7.** Standing QA gate 0025 now has the mechanism it's verifying against. Grid ROM / D20System split can proceed.
+~~**Phase 2.6.5 unblocks Phase 2.7.** Standing QA gate 0025 now has the mechanism it's verifying against. Grid ROM / D20System split can proceed.~~
+
+**Corrected:** Phase 2.6.5 unblocks Phase 2.7, but the phase's own Done-When bar (now restated in `phase-2-6-5.md`) included a cross-ROM mediation clause that could not have been evaluated at this close — Phase 2.7's content didn't exist yet, and `IInteropRom` shipped as an empty marker interface, not the working broker its doc comment described. I marked the phase done on ticket evidence alone, without an independent QA verdict — Phases 1.5, 2, 2.5, and 2.6 all got one; this one didn't. See [0029](0029-phase-2-6-5-status-and-qa-gap.md) for the full finding and the process fix (a QA verdict is now required before any phase is marked done, no exceptions logged here). What's actually true: the identity/declaration/load-time-validation half of 2.6.5 is real, tested, and verified. The cross-ROM mediation half moves to Phase 2.7, where it can actually be checked against real content.

@@ -102,6 +102,8 @@ full.
 Before doing anything, read (paths relative to the project root):
   Orient:
    - CLAUDE.md — repo conventions, build/test commands, current architecture, the no-git rule.
+   - Documents/README-QUICK-START.md — the agent FAQ and navigation map; CLAUDE.md flags it as
+     "start here if you're new," and it is easy to skip straight past.
    - Documents/ClaudeWiki/index.md — the wiki map.
    - Documents/ClaudeWiki/Roles/architect.md — your role, authority, and boundaries (you have full
      technical authority over the design docs and Specs, but you do NOT edit src/ — that's the Dev).

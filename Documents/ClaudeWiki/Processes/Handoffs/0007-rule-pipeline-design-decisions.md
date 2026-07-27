@@ -8,8 +8,8 @@
 
 ## Context
 
-Phase 2 (Rule pipeline MVP — [`Roadmap/phase-2.md`](../../Roadmap/phase-2.md),
-[`design/rule-pipeline.md`](../../design/rule-pipeline.md)) fills in the three empty
+Phase 2 (Rule pipeline MVP — [`Roadmap/phase-2.md`](../../../Roadmap/phase-2.md),
+[`design/rule-pipeline.md`](../../../design/rule-pipeline.md)) fills in the three empty
 `GeneratorServices` interface bodies (`IRuleParser`, `IRuleIRGenerator`, `IRuleCompiler`) and
 `RuleExport`. Verified current state: `RulePipeline`, `RuleParseContext.FromAssembly`, and all DTOs
 (`RuleIR`, `RuleIRGroup`, `RuleCodeUnit`, `RuleCodeClass`, `RulePrototype`) already exist; only the
@@ -64,7 +64,7 @@ pass, `RuleTester`). Compile-time C# path only.
 ## Response
 
 All four ruled. Full reasoning lives in `design/rule-pipeline.md`'s new
-["Design decisions (Phase 2 pre-implementation)"](../../design/rule-pipeline.md#design-decisions-phase-2-pre-implementation)
+["Design decisions (Phase 2 pre-implementation)"](../../../design/rule-pipeline.md#design-decisions-phase-2-pre-implementation)
 section; summary here:
 
 - **D1:** `RuleIR` grows `RequiredUsings` (`List<string>`) and `PreambleCode` (`string`), closing

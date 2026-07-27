@@ -1,5 +1,9 @@
 # doc-scaffold: Generate Handoff Tickets & Specs
 
+**Built and verified 2026-07-26.** `doc-scaffold.py` is real, tested against a throwaway ticket and
+spec generation (structure confirmed matching the real templates, duplicate-ID and missing-design-doc
+validation both confirmed working), then cleaned up. Commands below are live.
+
 **Purpose:** Scaffold new handoff tickets and specs with correct structure, preambles, and conventions.
 
 **Use when:** Creating a new handoff ticket or buildable spec. Saves time, ensures structure consistency.
@@ -10,28 +14,26 @@
 
 ### Generate a new handoff ticket:
 
-```
-$ dotnet tool restore  # if needed
-$ pwsh ./doc-scaffold.ps1 -Type ticket -Id 0025 -Title "My ticket title"
+```bash
+python3 Documents/ClaudeWiki/Tools/doc-scaffold.py ticket --id 0033 --title "My ticket title"
 ```
 
-Creates `Documents/ClaudeWiki/Processes/Handoffs/0025-my-ticket-title.md` with:
+Creates `Documents/ClaudeWiki/Processes/Handoffs/0033-my-ticket-title.md` with:
 - Status field (defaulting to "open")
-- Decision section header (ready to fill in)
-- Context, Verification, Follow-up sections
-- Proper heading hierarchy and conventions
+- `## Decision` section header (ready to fill in — Convention 4)
+- `## Details` wrapper with `### Context` / `### Ask` / `### Response` / `### Resolution`
+- Proper heading hierarchy per `handoff-tickets.md`'s real template
 
 ### Generate a new spec:
 
-```
-$ pwsh ./doc-scaffold.ps1 -Type spec -Name engine-host -DesignDoc "engine-core.md"
+```bash
+python3 Documents/ClaudeWiki/Tools/doc-scaffold.py spec --name engine-host --design-doc engine-core.md
 ```
 
 Creates `Documents/Specs/engine-host-spec.md` with:
-- One-liner preamble linking to design doc
-- Purpose, Shape, AcceptanceCriteria, OpenQuestions sections
-- Reference to `Specs/README.md` for pattern guidance
-- Proper heading hierarchy
+- One-liner preamble linking to the design doc, per `Specs/README.md`'s template
+- `## Purpose` / `## Scope` sections
+- Reference to `Specs/README.md` for the full pattern
 
 ---
 
@@ -43,78 +45,99 @@ Creates `Documents/Specs/engine-host-spec.md` with:
 # [ID] — [Title]
 
 **Status:** open
+**Opened by:** [OpenedBy or "TBD"]
+**Opened:** [today's date]
+**For:** [For or "TBD"]
 
 ## Decision
-[2–4 sentences: what was asked, what was ruled, brief why, any immediate follow-up.]
 
-## Context
+[2–4 sentences: what was asked, what was ruled, brief why. Fill in once there's a ruling — leave as
+a placeholder note on a fresh `open` ticket.]
+
+## Details
+
+### Context
+
 [Background, alternatives considered, rationale.]
 
-## Verification
-[How it was/will be verified; what you checked.]
+### Ask
 
-## Follow-up
-[Related tickets, next steps, or "none".]
+[The specific thing the assignee needs to do or answer.]
+
+### Response
+
+[Filled in by the assignee.]
+
+### Resolution
+
+[Filled in by the opener when closing.]
 ```
 
 **Notes:**
-- ID is auto-formatted to 4 digits (0025, not 25).
-- Filename is auto-slugified from title.
-- Status defaults to "open" (editor changes to "resolved" when done).
+- ID is auto-formatted to 4 digits (`0033`, not `33`); script checks `Handoffs/index.md` and the
+  folder itself for the next free number and warns on collision.
+- Filename is auto-slugified from title (lowercase, spaces → hyphens, punctuation stripped).
+- Status defaults to `open`.
+- **Does not** auto-add a row to `Handoffs/index.md` — that's a deliberate manual step (the index
+  row is a summary written after the ticket has real content, not generated from a title alone).
 
 ### Spec Template
 
 ```markdown
-# [SpecName] Specification
+# [SpecName] — Implementation Spec
 
-**Concrete companion to [`../design/[DesignDoc]`](../design/[DesignDoc]).**
-See [Specs README](README.md) for the design-to-spec pattern.
+**Status:** draft
+**Companion design doc:** [`../design/[DesignDoc]`](../design/[DesignDoc]) — read for rationale.
 
 ## Purpose
-[What this spec covers; why it exists as separate from the design doc.]
 
-## Shape
-[The structural design: tiers, components, interfaces, data shapes.]
+[What this spec turns into buildable form. One paragraph, link don't restate.]
 
-## Acceptance Criteria
-[Buildable, verifiable done-bar. Numbered list or table.]
+## Scope
 
-## Open Questions
-[Undecided items; prerequisites; known gaps.]
+[In / Out, or brief bullets of what's covered.]
 ```
 
 **Notes:**
-- Preamble is exactly one line linking to design doc.
-- No restating of design-doc content; focus on buildable specifics.
-- Ends with a "Related" footer linking back to design doc and any related specs.
+- Preamble matches [`Specs/README.md`](../../Specs/README.md)'s template exactly — one-liner +
+  links, no restated design-doc content.
+- Status defaults to `draft` per the spec lifecycle (`draft` → `in review` → `active`).
+- Ends with a `## Related pages` footer linking back to the design doc.
 
 ---
 
 ## Implementation
 
-The script (`doc-scaffold.ps1`) does:
+The script (`doc-scaffold.py`) does:
 
-1. **Validate inputs** — Check that ticket ID is unique, spec name doesn't already exist.
+1. **Validate inputs** — ticket ID not already in use (checked against the `Handoffs/` folder
+   listing, not just `index.md`, since the two can drift); spec name doesn't collide with an
+   existing file in `Specs/`.
 2. **Create file with correct path** — `Handoffs/NNNN-slug.md` or `Specs/spec-name-spec.md`.
-3. **Populate template** — Insert provided metadata (title, design-doc link, etc.).
-4. **Preserve conventions** — Correct heading levels, preamble format, section order per `wiki-style.md`.
-5. **Report success** — Print the file path and a note: "Edit and fill in [sections]."
+3. **Populate template** — insert provided metadata (title, design-doc link, dates).
+4. **Preserve conventions** — correct heading levels, preamble format, section order per
+   `wiki-style.md` and `handoff-tickets.md`.
+5. **Report success** — print the file path and a reminder of what's still manual (index row for
+   tickets, filling in Purpose/Scope for specs).
+
+No external dependencies beyond the Python 3 standard library.
 
 ---
 
 ## Parameters
 
 ### For tickets:
-- `-Type ticket` — Create a handoff ticket.
-- `-Id NNNN` — Ticket ID (e.g., 0025). Required.
-- `-Title "Text"` — Human-readable title. Required.
-- Optional: `-OpenedBy "Name"`, `-For "Name"` (metadata; defaults to "TBD").
+- `ticket` — subcommand.
+- `--id NNNN` — Ticket ID (e.g., `0033`). Required.
+- `--title "Text"` — Human-readable title. Required.
+- Optional: `--opened-by "Name"`, `--for "Name"` (defaults to `TBD`).
 
 ### For specs:
-- `-Type spec` — Create a spec.
-- `-Name "name"` — Spec name (e.g., "engine-host"). Required.
-- `-DesignDoc "filename"` — Design doc it's paired with (e.g., "engine-core.md"). Required.
-- Optional: `-Purpose "Brief text"` (fills in first line of Purpose section; user expands).
+- `spec` — subcommand.
+- `--name "name"` — Spec name (e.g., `engine-host`). Required.
+- `--design-doc "filename"` — Design doc it's paired with (e.g., `engine-core.md`). Required —
+  script checks the file exists in `Documents/design/` and errors if not (a spec with no real
+  design-doc companion is exactly the drift this tool exists to prevent).
 
 ---
 
@@ -122,26 +145,29 @@ The script (`doc-scaffold.ps1`) does:
 
 **Creating a new ticket:**
 
-```powershell
-pwsh ./doc-scaffold.ps1 -Type ticket -Id 0025 -Title "ROM identity & cross-ROM interop" -OpenedBy "Kofi" -For "Amara"
-# → Documents/ClaudeWiki/Processes/Handoffs/0025-rom-identity-cross-rom-interop.md
-# Ready to edit: fill in Decision (2–4 sentences), Context, Verification, Follow-up
+```bash
+python3 Documents/ClaudeWiki/Tools/doc-scaffold.py ticket --id 0033 \
+  --title "ROM identity & cross-ROM interop" --opened-by Kofi --for Amara
+# → Documents/ClaudeWiki/Processes/Handoffs/0033-rom-identity-cross-rom-interop.md
+# Ready to edit: fill in Decision (2–4 sentences), Context, Ask
+# Reminder: add a row to Handoffs/index.md once there's real content
 ```
 
 **Creating a new spec:**
 
-```powershell
-pwsh ./doc-scaffold.ps1 -Type spec -Name "world-module" -DesignDoc "scripting-content.md" `
-  -Purpose "Content authored in JSON/Lua without a C# compile step"
+```bash
+python3 Documents/ClaudeWiki/Tools/doc-scaffold.py spec --name world-module \
+  --design-doc scripting-content.md
 # → Documents/Specs/world-module-spec.md
-# Ready to edit: expand Purpose, add Shape, AcceptanceCriteria, OpenQuestions
+# Ready to edit: expand Purpose, add Scope
 ```
 
 ---
 
 ## Related
 
-- [Handoff Ticket Process](../Processes/handoff-tickets.md)
+- [doc-tooling-setup.md](doc-tooling-setup.md) — why these tools exist, maintenance model
+- [Handoff Ticket Process](../Processes/handoff-tickets.md) — the real template this generates
 - [Wiki Style Guidelines](../Processes/wiki-style.md) — conventions this enforces
 - [Documentation System Audit](../documentation-audit.md) — why these templates exist
-- [doc-lint](doc-lint-SKILL.md) — companion: validates generated docs
+- [doc-lint](doc-lint-SKILL.md) — companion: validates generated (and hand-written) docs

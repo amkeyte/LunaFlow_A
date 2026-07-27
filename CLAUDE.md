@@ -13,6 +13,21 @@ it instead.
   `git status`/`diff`/`log` is fine.
 - **API Reference before `/src`:** Consult `Documents/ApiReference/` (generated post-build, kept current by Baraka) 
   before reading source files directly. The public surface is usually what you need; read code only for implementation details.
+  **Scope of what it proves:** API Reference confirms *shape* — a method exists, its signature, its doc comment.
+  It does not confirm *behavior* — whether the method actually does what the shape or a design doc claims (e.g.
+  "the validator runs a cycle check"). Behavioral/acceptance-criteria claims are QA's (Lothar's) job, verified
+  against source or a passing test — not read off the API Reference and not inferred from a design doc's
+  deliverable list. See [0029](ClaudeWiki/Processes/Handoffs/0029-phase-2-6-5-status-and-qa-gap.md) for the
+  case that made this distinction necessary to write down.
+- **Upstream source before inference.** When a third-party dependency's behaviour is load-bearing for
+  a design or implementation decision, read that dependency's **source at the version pinned in the
+  `.csproj`** — before inferring from its prose docs, and before commissioning a spike to find out
+  experimentally. Most of what we depend on is MIT and public; NRules' API docs link every member
+  straight to GitHub. Two corollaries, both learned the hard way in
+  [0033](Documents/ClaudeWiki/Processes/Handoffs/0033-spike-does-nrules-match-facts-through-interfaces.md):
+  docs describe *intent* while source is *what shipped*, and a spike answers "did my test pass,"
+  which is a different question from "how does this work" — a **failing** test proves only that the
+  test failed, so a negative result needs a positive control before it's treated as a finding.
 - **Status updates flow through the roadmap only.** Phase status is updated in `Documents/Roadmap/roadmap.md`
   and the specific phase doc (`phase-X.md`). All other pages — design docs, specs, role pages, process pages —
   link to the roadmap rather than restating status. This prevents drift and keeps the roadmap as the single

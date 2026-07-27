@@ -5,7 +5,7 @@
 **Opened:** 2026-07-22
 **For:** Game Designer (Juno)
 **Origin:** [0021](0021-phase-2-6-spec-alignment.md) item 2, parked until the retrofit landed — it has
-(impl [0022](0022-implement-phase-2-6.md), QA PASS [`phase-2-6-verdict.md`](../../QA/phase-2-6-verdict.md),
+(impl [0022](0022-implement-phase-2-6.md), QA PASS [`phase-2-6-verdict.md`](../../../QA/phase-2-6-verdict.md),
 2026-07-22). This is the ticket 0021 promised.
 
 ## Context

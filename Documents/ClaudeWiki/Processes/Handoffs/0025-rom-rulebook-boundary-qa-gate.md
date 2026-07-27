@@ -5,20 +5,20 @@
 **Opened:** 2026-07-22
 **For:** QA (Lothar)
 **Depends on:** Phase 2.6.5 and Phase 2.7 implementation landing. Both are design-stage / blocked as
-of filing — see [`phase-2-6-5.md`](../../Roadmap/phase-2-6-5.md), [`phase-2-7.md`](../../Roadmap/phase-2-7.md).
+of filing — see [`phase-2-6-5.md`](../../../Roadmap/phase-2-6-5.md), [`phase-2-7.md`](../../../Roadmap/phase-2-7.md).
 
 ## Context
 
 Phase 2.6 was closed administratively (2026-07-21) with the Lothar final-verdict **waived, not
-fulfilled** — recorded honestly in [`phase-2-6.md`](../../Roadmap/phase-2-6.md) and ticket
+fulfilled** — recorded honestly in [`phase-2-6.md`](../../../Roadmap/phase-2-6.md) and ticket
 [0022](0022-implement-phase-2-6.md)'s close. The reasoning was sound: verifying the ROM/Rulebook
 boundary against 2.6's *one-ROM* shape proves less than verifying the two-ROM shape that follows, and
-[Phase 2.6.5](../../Roadmap/phase-2-6-5.md) (ROM identity + capability mediation) and
-[Phase 2.7](../../Roadmap/phase-2-7.md) (the Grid/D20System split) both **rework that boundary** —
+[Phase 2.6.5](../../../Roadmap/phase-2-6-5.md) (ROM identity + capability mediation) and
+[Phase 2.7](../../../Roadmap/phase-2-7.md) (the Grid/D20System split) both **rework that boundary** —
 2.6.5 even deprecates `D20SystemContent.Configure`, part of what 2.6 shipped.
 
 That gap is now **half-closed:** Lothar produced a PASS on 2.6's *one-ROM* shape (2026-07-22,
-[`phase-2-6-verdict.md`](../../QA/phase-2-6-verdict.md)) — the boundary as it shipped has been checked
+[`phase-2-6-verdict.md`](../../../QA/phase-2-6-verdict.md)) — the boundary as it shipped has been checked
 against source. This ticket is the **remaining half**: the *two-ROM / cross-ROM* boundary that 2.6.5
 (capability mediation via `IInteropRom`) and 2.7 (the Grid/D20System split) actually ship — a shape
 that doesn't exist in code yet. It gets one verdict on its final form, so the cross-ROM boundary is

@@ -1,0 +1,19 @@
+{
+  "latest.trx": {
+    "hash": "4ec5f17d4ec0298f173970c924e3c192eebeb07d3dfec37294532c4188028e70",
+    "triaged_at": "2026-07-26T21:05:55.014350",
+    "format": "markdown",
+    "report_lines": [
+      "# Test Triage Report",
+      "Generated: 2026-07-26 21:05:55",
+      "",
+      "## Summary by Tier",
+      "",
+      "## Failures (ranked by priority)",
+      "",
+      "| Priority | Test | Type | Tier | Probable Cause | Next Step | Cascade? |",
+      "|----------|------|------|------|----------------|-----------|----------|",
+      ""
+    ]
+  }
+}

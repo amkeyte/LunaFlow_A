@@ -38,7 +38,7 @@ Build a durable test suite for the component system, covering:
 
 All tests should use `TestCategory` tags consistent with the existing scheme (Engine/Components for this namespace, Phase2.6.5 for the phase).
 
-**Note:** The registry and validator are currently KISS (hardcoded registration in Program.cs, no reflection or config). Treat that as settled, not a placeholder — see [`phase-2-6-5.md`](../../Roadmap/phase-2-6-5.md#explicitly-not-this-phase) for why.
+**Note:** The registry and validator are currently KISS (hardcoded registration in Program.cs, no reflection or config). Treat that as settled, not a placeholder — see [`phase-2-6-5.md`](../../../Roadmap/phase-2-6-5.md#explicitly-not-this-phase) for why.
 
 ### Response
 
@@ -85,5 +85,7 @@ All acceptance criteria met: 17/17 tests pass, full suite 113/113 (96 existing +
 - Error cases (duplicate provider, missing requirement, upward dependency): all three scenarios covered with clear message verification
 - Concrete case: OneD20RuleBook (Rulebook) + D20System (Rom) validates successfully
 - TestCategory tags correct: `Engine_Components`/`Phase2.6.5`
+
+**Follow-up:** Cycle detection was added to `Validate()` in ticket 0031 (fourth pass, DFS-based). Nadia will need to add a test case for circular dependencies (e.g., Rom A requires B's capability, B requires A's capability) to complete the error-case coverage — flagged in 0031's response.
 
 Verified by Baraka against ticket ask and source. Closed.

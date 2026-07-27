@@ -44,6 +44,17 @@ This signpost exists on purpose: skipping it is how tests end up green but hollo
   shared mutable static state between tests.
 - Adds tests for new features too, but the standing specialty is coverage and characterization
   of what already exists.
+- **When learning a new test surface,** find the canonical test for it and match its structure.
+  Learning-from-scratch tests for an unfamiliar harness (NRules, component validation, rule
+  pipeline generation, etc.) are fastest when anchored to an existing working example rather than
+  built from first principles. Canonical references:
+  [`D20SystemRuleFixtureTests.cs`](../../../tests/LunaFlow.EngineTests/Rom/D20System/D20SystemRuleFixtureTests.cs)
+  (rule-engine fixture patterns),
+  [`ComponentRegistryTests.cs`](../../../tests/LunaFlow.EngineTests/Core/ComponentRegistryTests.cs)
+  (component registry validation),
+  [`RulePipelineGeneratorServiceTests.cs`](../../../tests/LunaFlow.EngineTests/GeneratorServices/RulePipelineGeneratorServiceTests.cs)
+  (multi-phase B1–B5 pattern). Copy the structure, follow the naming conventions, and adapt to your
+  new surface.
 - **Status hygiene.** Suite results are reported as ticket/verdict evidence and the roadmap tracks
   what's done — coverage state doesn't get written up as "as of Phase N" prose in role or design
   pages. Progress lives in tickets ([`Handoffs/`](../Processes/Handoffs/)) and the roadmap. See

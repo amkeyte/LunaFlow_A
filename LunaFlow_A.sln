@@ -24,6 +24,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.Rom", "src\LunaFlo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.Rulebook", "src\LunaFlow.Rulebook\LunaFlow.Rulebook.csproj", "{58029AD9-D2EA-4B0C-A709-A6B34962C9AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D20SystemExampleA", "example\D20SystemExampleA\D20SystemExampleA.csproj", "{31C88D31-5652-4E64-9E32-4E55F7E25E56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D20SystemExampleB", "example\D20SystemExampleB\D20SystemExampleB.csproj", "{FDD70032-5B8E-43F1-81EA-D99DCDB87A24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D20SystemExampleC", "example\D20SystemExampleC\D20SystemExampleC.csproj", "{A4CF248C-FCA9-4733-B93C-C584AC3E9134}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +64,18 @@ Global
 		{58029AD9-D2EA-4B0C-A709-A6B34962C9AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58029AD9-D2EA-4B0C-A709-A6B34962C9AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58029AD9-D2EA-4B0C-A709-A6B34962C9AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31C88D31-5652-4E64-9E32-4E55F7E25E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31C88D31-5652-4E64-9E32-4E55F7E25E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31C88D31-5652-4E64-9E32-4E55F7E25E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31C88D31-5652-4E64-9E32-4E55F7E25E56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDD70032-5B8E-43F1-81EA-D99DCDB87A24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDD70032-5B8E-43F1-81EA-D99DCDB87A24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDD70032-5B8E-43F1-81EA-D99DCDB87A24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDD70032-5B8E-43F1-81EA-D99DCDB87A24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4CF248C-FCA9-4733-B93C-C584AC3E9134}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4CF248C-FCA9-4733-B93C-C584AC3E9134}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4CF248C-FCA9-4733-B93C-C584AC3E9134}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4CF248C-FCA9-4733-B93C-C584AC3E9134}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

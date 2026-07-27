@@ -10,23 +10,29 @@ namespace LunaFlow.Engine.Components
 
         /// <summary>
         /// Registers a component (ROM or Rulebook) with its tier and an identifying name.
+        /// A component's registered name is its identity within this registry and must be unique.
         /// </summary>
+        /// <exception cref="ArgumentNullException">If component is null.</exception>
+        /// <exception cref="ArgumentException">If name is null/empty/whitespace, or if a component with this name is already registered.</exception>
         public void Register(IHasDependencies component, EngineTier tier, string name)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Component name cannot be null or empty.", nameof(name));
+            if (_registrations.Any(r => r.Item3 == name))
+                throw new ArgumentException(
+                    $"A component named '{name}' is already registered in this registry.", nameof(name));
 
             _registrations.Add((component, tier, name));
         }
 
         /// <summary>
         /// Validates the complete component graph: no duplicate capability providers,
-        /// all requirements satisfied, tier-ordering constraints met.
+        /// all requirements satisfied, tier-ordering constraints met, and no circular dependencies.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        /// If validation fails (duplicate provider, missing requirement, or tier violation).
+        /// If validation fails (duplicate provider, missing requirement, tier violation, or cycle).
         /// </exception>
         public void Validate()
         {
@@ -83,6 +89,57 @@ namespace LunaFlow.Engine.Components
                     }
                 }
             }
+
+            // Phase 4: Detect cycles in the capability dependency graph
+            DetectCycles(providedByName);
+        }
+
+        private void DetectCycles(Dictionary<string, (IHasDependencies Component, string ComponentName)> providedByName)
+        {
+            var visited = new HashSet<string>();
+            var stack = new HashSet<string>();
+
+            foreach (var (component, tier, name) in _registrations)
+            {
+                if (!visited.Contains(name))
+                {
+                    DetectCyclesDfs(name, visited, stack, providedByName);
+                }
+            }
+        }
+
+        private void DetectCyclesDfs(
+            string componentName,
+            HashSet<string> visited,
+            HashSet<string> stack,
+            Dictionary<string, (IHasDependencies Component, string ComponentName)> providedByName)
+        {
+            visited.Add(componentName);
+            stack.Add(componentName);
+
+            var componentReg = _registrations.First(r => r.Item3 == componentName);
+            var component = componentReg.Component;
+
+            foreach (var req in component.Requires)
+            {
+                if (providedByName.TryGetValue(req.Name, out var provider))
+                {
+                    var providerName = provider.ComponentName;
+
+                    if (!visited.Contains(providerName))
+                    {
+                        DetectCyclesDfs(providerName, visited, stack, providedByName);
+                    }
+                    else if (stack.Contains(providerName))
+                    {
+                        throw new InvalidOperationException(
+                            $"Circular dependency detected: '{componentName}' depends on capability '{req.Name}' " +
+                            $"provided by '{providerName}', which (transitively) depends on capabilities provided by '{componentName}'.");
+                    }
+                }
+            }
+
+            stack.Remove(componentName);
         }
     }
 }

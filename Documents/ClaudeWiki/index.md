@@ -50,6 +50,9 @@ that helps a session ramp up fast and stay in scope, without belonging in a desi
 | [Documentation System Audit — deficiencies, fixes, conventions](documentation-audit.md) | System |
 | [Skill — `qa-verify`](Tools/qa-verify-skill.md) | Tools |
 | [Tool — `.trx` Triage Engine](Tools/trx-triage-tool.md) | Tools |
+| [Doc Tooling — setup & implementation notes](Tools/doc-tooling-setup.md) | Tools |
+| [Skill — `doc-scaffold`](Tools/doc-scaffold-SKILL.md) | Tools |
+| [Skill — `doc-lint`](Tools/doc-lint-SKILL.md) | Tools |
 
 ## Migration candidates
 

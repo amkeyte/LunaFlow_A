@@ -1,6 +1,15 @@
 # Phase 2.6.5 — ROM identity & cross-ROM interop
 
-**Status:** done (2026-07-23). Design complete (2026-07-21, Arryn + Amara); implementation complete (Baraka, ticket 0027); test suite green (Nadia, ticket 0028). Build 0 errors, 113/113 tests green, zero regressions. Ready for Phase 2.7.
+**Status:** done (2026-07-23) on the shipped identity/declaration/validation surface — see restated
+Done-When below. Design complete (2026-07-21, Arryn + Amara); implementation complete (Baraka,
+ticket 0027); test suite green (Nadia, ticket 0028). Build 0 errors, 113/113 tests green, zero
+regressions. **No independent QA verdict was produced for this phase** (Phases 1.5, 2, 2.5, and 2.6
+all got one); disclosed and ruled on 2026-07-26 as a one-time exception rather than run retroactively
+— the shipped surface is small and infrastructure-only, and [ticket
+0025](../ClaudeWiki/Processes/Handoffs/0025-rom-rulebook-boundary-qa-gate.md) will verify the
+cross-ROM mediation half for real once Phase 2.7 ships actual content to check it against. Going
+forward, no phase is marked done without a QA verdict or a disclosed exception exactly like this one
+— see [`wiki-style.md`'s Where status lives](../ClaudeWiki/Processes/wiki-style.md#where-status-lives).
 
 ## Overview
 
@@ -120,12 +129,24 @@ that, it's best-practice-made-easy, not compiler-enforced.
 
 **Explicitly not this phase** (discussed and set aside during design, not forgotten):
 
-- **The upward-dependency-is-an-error enforcement pass** ([ticket 0024](../ClaudeWiki/Processes/Handoffs/0024-phase-2-6-5-scope.md)) —
+- ~~**The upward-dependency-is-an-error enforcement pass** ([ticket 0024](../ClaudeWiki/Processes/Handoffs/0024-phase-2-6-5-scope.md)) —
   `EngineTier` itself is real and load-bearing (see above), but the explicit check that rejects a
   component depending on a higher tier has no failing case in 2.7's content to validate against: Grid
   ROM/D20System are peers, and the one downward edge (Rulebook→Rom) is trivially satisfied. *Revisit
   once WorldModule (Phase 2.8) is a real tier and something actually declares a dependency across
-  that boundary — not preemptively.*
+  that boundary — not preemptively.*~~ **Ratified as shipped-early, 2026-07-26** (Amara, ticket
+  [0030](../ClaudeWiki/Processes/Handoffs/0030-doc-reconcile-post-2-6-5.md)): this deferral did not
+  hold — `ComponentRegistry.Validate()`'s third pass rejects a component whose required capability is
+  provided by a higher tier, with a named-components error message, and
+  [0028](../ClaudeWiki/Processes/Handoffs/0028-phase-2-6-5-test-suite.md) covers it. **The code is
+  ratified, not tolerated:** the check is cheap, correct, and matches what `engine-core.md` has
+  claimed since before any of it was real, so removing it to match a deferral would be worse than
+  the drift. Recorded here rather than silently corrected because doc and code disagreed in *two*
+  directions at once — this pass shipped though deferred, while the specified cycle check did not
+  ship at all (fixed since, ticket
+  [0031](../ClaudeWiki/Processes/Handoffs/0031-code-currency-vs-2-6-5-design.md)). The original
+  reasoning stays struck-through rather than deleted so the judgement that proved wrong is still
+  legible.
 - **`IScript`** ([ticket 0024](../ClaudeWiki/Processes/Handoffs/0024-phase-2-6-5-scope.md), confirmed
   by Arryn) — cut entirely, not even as a placeholder. `Capability.ContractType` is already a bare
   `Type`; Phase 4 introducing a real scripting type later (expected — "sure to become a new project
@@ -152,15 +173,19 @@ that, it's best-practice-made-easy, not compiler-enforced.
 
 ## Done when
 
+**Restated 2026-07-26** (see ticket [0029](../ClaudeWiki/Processes/Handoffs/0029-phase-2-6-5-status-and-qa-gap.md)): the original bar below included a cross-ROM mediation clause that could not be evaluated at close — Phase 2.7's content didn't exist yet, and `IInteropRom` shipped as an empty marker interface, not a working broker. That clause is struck through and moves to [`phase-2-7.md`](phase-2-7.md), where it belongs and can actually be verified against real content.
+
 `IRom`, `IInteropRom`, `Capability`, and `IHasDependencies` exist in their respective projects and
 are load-time validated by the two-phase registry (a missing required capability, or a duplicate
 provider, both fail fast with a clear error; tier-ordering violations are load-time errors too).
-Grid ROM and D20System (Phase 2.7's split) correlate `PlayerPosition` through a capability with zero
+~~Grid ROM and D20System (Phase 2.7's split) correlate `PlayerPosition` through a capability with zero
 project reference between them — the mechanism the now-administratively-rescinded ticket 0023
-originally asked for. `D20SystemContent.Configure` is removed from the codebase, migrated to the new
+originally asked for.~~ `D20SystemContent.Configure` is removed from the codebase, migrated to the new
 mechanism. Scope trimmed per [ticket 0024](../ClaudeWiki/Processes/Handoffs/0024-phase-2-6-5-scope.md):
 no upward-tier-violation enforcement pass, no `IScript`, no `version` on `IRom` — all three deferred
 or cut because 2.7's proof doesn't exercise them.
+
+**What actually shipped and is verified:** ROM/Rulebook identity (`IRom`, `IInteropRom` as marker), capability declaration (`Capability`/`IHasDependencies`/`EngineTier`), and load-time validation (`ComponentRegistry`'s two-phase collect-then-validate — clash detection, missing-requirement detection, tier-ordering; **no cycle check yet**, tracked as a defect against Phase 2.7's peer-ROM shape in [ticket 0031](../ClaudeWiki/Processes/Handoffs/0031-code-currency-vs-2-6-5-design.md)). **What did not ship:** the capability broker itself — `IInteropRom`'s aggregate/resolve behavior. That work moves to Phase 2.7, sized against Juno's real Grid ROM/D20System split rather than designed on zero examples.
 
 ## Related phases
 

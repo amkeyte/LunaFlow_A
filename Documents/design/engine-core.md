@@ -1,6 +1,6 @@
 # Engine Core
 
-Implementation status: see [`../../Roadmap/roadmap.md`](../../Roadmap/roadmap.md).
+Implementation status: see [`../Roadmap/roadmap.md`](../Roadmap/roadmap.md).
 
 This document describes the intended shape of the engine host and loop, and calls out where today's code diverges from it. For the exact current code layout, see [`CLAUDE.md`](../../CLAUDE.md).
 
@@ -47,7 +47,7 @@ Once rule evaluation is wired into the turn advance, the engine is expected to p
 
 - **Settling markers** — once a marker fact like an end-of-game condition is present, further rule evaluation for that session stops. Rule authors shouldn't have to add `.Not<ExitGameMarker>()` to every rule by hand. **Implemented** (corrected 2026-07-20): `[StandingRule(typeof(T))]` on a `RuleTemplate` does exactly this — `RuleCodeGenerator` emits `.Not<T>()` into the generated rule's `When()` automatically, verified in `RuleCodeGenerator.cs` and covered by Nadia's B1–B5 suite (property-level pickup, union across guards, dedup on the same type).
 - **One-time constraints** — a rule that should fire at most once per fact lifetime. Still open; no evidence either way found in a spot check, unlike the other three bullets here.
-- **Initial settle** — `GameEngineCore.Start()` seeds initial facts before any command is ever dispatched (per [`../Specs/nine-rooms-spec.md`](../Specs/nine-rooms-spec.md)'s `RuleEngineOptions.Seed`). If a rule's condition is already satisfied by those seed facts — Nine Rooms' start-room challenge is the concrete case — it needs a chance to fire before turn one, not just on the first command. **Implemented** (corrected 2026-07-20): `GameEngineCore.Start()` calls `Rules.Fire()` once, unconditionally, right after `Options.Rules.ApplyTo(Rules)` — the source comment on that line literally reads `"initial settle": rules already satisfied by seeded facts get a chance to fire before turn one`, word-for-word this guarantee.
+- **Initial settle** — `GameEngineCore.Start()` seeds initial facts before any command is ever dispatched (per [`../NineRooms/nine-rooms-spec.md`](../NineRooms/nine-rooms-spec.md)'s `RuleEngineOptions.Seed`). If a rule's condition is already satisfied by those seed facts — Nine Rooms' start-room challenge is the concrete case — it needs a chance to fire before turn one, not just on the first command. **Implemented** (corrected 2026-07-20): `GameEngineCore.Start()` calls `Rules.Fire()` once, unconditionally, right after `Options.Rules.ApplyTo(Rules)` — the source comment on that line literally reads `"initial settle": rules already satisfied by seeded facts get a chance to fire before turn one`, word-for-word this guarantee.
 - **Evaluation phasing** — grouping rules into phases (e.g. via NRules agenda groups) so that, for example, all "reaction" rules resolve before the next command is accepted. Still open; no evidence found of agenda-group usage in a spot check.
 
 **Corrected 2026-07-20:** this paragraph used to claim none of the above was implemented and that
@@ -62,7 +62,7 @@ evaluation phasing remain genuinely open — no source evidence either way, not 
 
 ## Component model: ROM, Rulebook, and the event bus
 
-**Status: general/future design, not what Nine Rooms uses.** [`nine-rooms-spec.md`](../Specs/nine-rooms-spec.md) deliberately loads its one rule assembly through `RuleEngineOptions.FromAssembly(...)` called directly in `Program.cs` — hardcoded, no registry, no abstraction — and [`nine-rooms.md`](nine-rooms.md) explicitly declines to extract a shared ROM contract on the strength of a single example. Everything below is where the ROM/Rulebook story grows *to*, once there's a second real ROM and dependency/ordering concerns between components stop being hypothetical. Building it now, against zero real consumers, would repeat the mistake already flagged in [`rule-pipeline.md`](rule-pipeline.md) about `GeneratorServices`.
+**Status: general/future design, not what Nine Rooms uses.** [`nine-rooms-spec.md`](../NineRooms/nine-rooms-spec.md) deliberately loads its one rule assembly through `RuleEngineOptions.FromAssembly(...)` called directly in `Program.cs` — hardcoded, no registry, no abstraction — and [`nine-rooms.md`](../NineRooms/nine-rooms.md) explicitly declines to extract a shared ROM contract on the strength of a single example. Everything below is where the ROM/Rulebook story grows *to*, once there's a second real ROM and dependency/ordering concerns between components stop being hypothetical. Building it now, against zero real consumers, would repeat the mistake already flagged in [`rule-pipeline.md`](rule-pipeline.md) about `GeneratorServices`.
 
 ### Two interfaces, not one
 
@@ -139,6 +139,46 @@ No quorum or "report in when you're done" protocol is needed for this, and it's 
 
 - **`FinishTurn()` doesn't queue, by design.** It's a level-triggered gate — a `bool` plus a `ManualResetEventSlim` — not a counter. N rapid calls collapse to however many turns the background loop actually catches between them, not N; a batch of test failures initially read this as a bug (`FinishTurn_MultipleTimes_QueuesCorrectly` and four others expected N calls to produce N turns). It isn't one: "N calls, N turns" isn't a meaningful request without real state change between calls, the doc comment on `TurnFinished` already says "advance *exactly one* turn," and the only real consumer (Nine Rooms) doesn't use `FinishTurn`/`TurnTick` at all. The five tests were fixed to wait for each turn to actually fire before calling `FinishTurn()` again, matching this semantics, rather than the engine being changed to add queueing. If a genuine need for queued turns shows up later — distinct from this, and narrower: not losing a signal that arrives *during* processing — that's a separate, smaller feature to design against a real requirement, not a reason to add general queueing now.
 - **A synchronous `FinishTurn()` call from inside its own `TurnTick` handler is ignored, not chained.** `AdvanceOneTurnSafe()` resets the gate *after* the handler runs (in a `finally`, so a throwing handler doesn't leave the gate wedged) rather than before, so a handler calling `FinishTurn()` on itself doesn't re-arm a fresh signal and trigger another turn on the next loop pass. (The reset-before-invoke ordering this replaced was a day-one authoring slip, not a later regression — confirmed via `git log -p`, introduced together with a comment stating the *opposite* intent in the same commit that first wrote `GameEngineCore.cs`, most likely a direct translation of the `planning/chats/*.txt` brainstorming into code without checking the two agreed.) This matches why `FinishTurn()` exists in the first place: it represents a deliberate external decision — the command/Rulebook layer saying a turn is over — not something the engine's own turn-advance notification should be able to trigger on itself. A handler needing cascading effects should rely on NRules' fact-settling (`Insert` a fact, `Fire()`, let the rule network cascade to a fixed point), not recursive turn-advancement at the loop level — letting `TurnTick` handlers re-enter `FinishTurn()` would open a second, uncontrolled cascade mechanism alongside the one NRules already handles cleanly.
+
+### Authored content vs. infrastructure — what the Rulebook/Engine rule actually bans
+
+**Added 2026-07-26** (owed since Phase 2.6.5's design and not delivered until now — ticket
+[0030](../ClaudeWiki/Processes/Handoffs/0030-doc-reconcile-post-2-6-5.md)). Phase 2.6 established
+the load-bearing invariant that **a Rulebook-tier content module never touches a `LunaFlow.Engine`
+primitive directly** — ROM is the conduit. Phase 2.6.5 then had `IRuleBook` implement
+`IHasDependencies`, which *is* a `LunaFlow.Engine.Components` type. That looks like a violation and
+isn't, and the distinction needs to be written where a future session will hit it rather than left
+in a phase doc.
+
+The rule governs **authored content** — what a Rulebook Author writes into a content class like
+`OneD20RuleBookContent`: no `ICommandHandler` implementations, no `LunaFlowEngine.Host`, no
+`RuleEngine` calls, no NRules facts touched directly. It does **not** govern the tier's own
+**infrastructure type** participating in the engine's module system. `IRuleBook` declaring
+`Provides`/`Requires` is the Rulebook tier *registering itself* with the component registry — that's
+how a tier joins the system at all, not content reaching around its conduit.
+
+Two related non-violations, recorded at the same time so the rule isn't over-read as a blanket ban:
+
+- **A transitive `Engine.dll` reference through ROM is expected and correct.** `LunaFlow.Rulebook`
+  references `LunaFlow.Engine` and `LunaFlow.Rom`; what matters is that Rulebook *source* is clean of
+  Engine primitives, not that the assembly graph has no edge. This was settled during 2.6's
+  implementation — ticket [0022](../ClaudeWiki/Processes/Handoffs/0022-implement-phase-2-6.md) had to
+  correct its own Ask, which wrongly said "directly or transitively."
+- **Composition-root code is exempt outright.** `Program.cs` wires every tier together by
+  construction; that's its job.
+
+The test to apply, when it's unclear which side of the line something falls on: *is this the content
+an author writes, or the plumbing that lets the tier exist?* Plumbing is exempt. Content is not.
+
+### Cross-ROM correlation — see the spec
+
+How a ROM's rule correlates against a fact a *peer* ROM owns, without either referencing the other,
+is specified in [`../Specs/cross-rom-capability-spec.md`](../Specs/cross-rom-capability-spec.md).
+The short version, because it constrains everything below: the matched type is a **contract type in a
+shared interop assembly**, not the owner's concrete fact class — and because both peers then share
+that type, ordinary NRules matching does the work with **no runtime broker call**. That property is
+deliberate. Generated rule code has no constructor or DI seam, so any design that needs rule code to
+*call* a broker reintroduces the static global `D20SystemContent.Configure` was.
 
 ### ROM as the conduit to NRules
 

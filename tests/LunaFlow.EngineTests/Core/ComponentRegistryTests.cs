@@ -300,6 +300,152 @@ namespace LunaFlow.EngineTests.Core
 
         #endregion
 
+        #region Cycle detection (Phase 4 of validation)
+
+        [TestMethod]
+        [TestCategory("Engine_Components")]
+        [TestCategory("Phase2.6.5")]
+        public void ComponentRegistry_TwoPeerMutualCycle_ThrowsWithClearMessage()
+        {
+            var registry = new ComponentRegistry();
+            var romA = new ComponentWithCapabilities(
+                provides: new[] { new Capability("ServiceA", typeof(object)) },
+                requires: new[] { new Capability("ServiceB", typeof(object)) }
+            );
+            var romB = new ComponentWithCapabilities(
+                provides: new[] { new Capability("ServiceB", typeof(object)) },
+                requires: new[] { new Capability("ServiceA", typeof(object)) }
+            );
+
+            registry.Register(romA, EngineTier.Rom, "RomA");
+            registry.Register(romB, EngineTier.Rom, "RomB");
+
+            var ex = Assert.ThrowsException<InvalidOperationException>(
+                () => registry.Validate()
+            );
+            Assert.IsTrue(ex.Message.Contains("Circular dependency"));
+            Assert.IsTrue(ex.Message.Contains("RomA") || ex.Message.Contains("RomB"));
+        }
+
+        [TestMethod]
+        [TestCategory("Engine_Components")]
+        [TestCategory("Phase2.6.5")]
+        public void ComponentRegistry_SelfCycle_ThrowsWithClearMessage()
+        {
+            var registry = new ComponentRegistry();
+            var romSelfDep = new ComponentWithCapabilities(
+                provides: new[] { new Capability("MySelfService", typeof(object)) },
+                requires: new[] { new Capability("MySelfService", typeof(object)) }
+            );
+
+            registry.Register(romSelfDep, EngineTier.Rom, "SelfDepRom");
+
+            var ex = Assert.ThrowsException<InvalidOperationException>(
+                () => registry.Validate()
+            );
+            Assert.IsTrue(ex.Message.Contains("Circular dependency"));
+            Assert.IsTrue(ex.Message.Contains("SelfDepRom"));
+        }
+
+        [TestMethod]
+        [TestCategory("Engine_Components")]
+        [TestCategory("Phase2.6.5")]
+        public void ComponentRegistry_ThreePeerCycle_ThrowsWithClearMessage()
+        {
+            var registry = new ComponentRegistry();
+            var romA = new ComponentWithCapabilities(
+                provides: new[] { new Capability("ServiceA", typeof(object)) },
+                requires: new[] { new Capability("ServiceC", typeof(object)) }
+            );
+            var romB = new ComponentWithCapabilities(
+                provides: new[] { new Capability("ServiceB", typeof(object)) },
+                requires: new[] { new Capability("ServiceA", typeof(object)) }
+            );
+            var romC = new ComponentWithCapabilities(
+                provides: new[] { new Capability("ServiceC", typeof(object)) },
+                requires: new[] { new Capability("ServiceB", typeof(object)) }
+            );
+
+            registry.Register(romA, EngineTier.Rom, "RomA");
+            registry.Register(romB, EngineTier.Rom, "RomB");
+            registry.Register(romC, EngineTier.Rom, "RomC");
+
+            var ex = Assert.ThrowsException<InvalidOperationException>(
+                () => registry.Validate()
+            );
+            Assert.IsTrue(ex.Message.Contains("Circular dependency"));
+        }
+
+        [TestMethod]
+        [TestCategory("Engine_Components")]
+        [TestCategory("Phase2.6.5")]
+        public void ComponentRegistry_DiamondNoDependencyCycle_Succeeds()
+        {
+            // Diamond shape: C1 and C2 both require the same capability from C3.
+            // This is NOT a cycle — it's a valid multi-consumer pattern.
+            // The DFS should visit C3, return from C3, then visit C2, and not false-positive on C3 being already-visited.
+            var registry = new ComponentRegistry();
+            var provider = new ComponentWithCapabilities(
+                provides: new[] { new Capability("CommonService", typeof(object)) },
+                requires: Array.Empty<Capability>()
+            );
+            var consumer1 = new ComponentWithCapabilities(
+                provides: new[] { new Capability("C1Service", typeof(object)) },
+                requires: new[] { new Capability("CommonService", typeof(object)) }
+            );
+            var consumer2 = new ComponentWithCapabilities(
+                provides: new[] { new Capability("C2Service", typeof(object)) },
+                requires: new[] { new Capability("CommonService", typeof(object)) }
+            );
+
+            registry.Register(provider, EngineTier.Rom, "Provider");
+            registry.Register(consumer1, EngineTier.Rom, "Consumer1");
+            registry.Register(consumer2, EngineTier.Rom, "Consumer2");
+            registry.Validate();
+            // If we reach here, the diamond was handled correctly (no false positive)
+        }
+
+        #endregion
+
+        #region Duplicate component name guard (A1)
+
+        [TestMethod]
+        [TestCategory("Engine_Components")]
+        [TestCategory("Phase2.6.5")]
+        public void ComponentRegistry_RegisterDuplicateComponentName_ThrowsWithClearMessage()
+        {
+            var registry = new ComponentRegistry();
+            var component1 = new TestComponent();
+            var component2 = new TestComponent();
+
+            registry.Register(component1, EngineTier.Rom, "DuplicateName");
+
+            var ex = Assert.ThrowsException<ArgumentException>(
+                () => registry.Register(component2, EngineTier.Rom, "DuplicateName")
+            );
+            Assert.IsTrue(ex.Message.Contains("already registered"));
+            Assert.IsTrue(ex.Message.Contains("DuplicateName"));
+        }
+
+        [TestMethod]
+        [TestCategory("Engine_Components")]
+        [TestCategory("Phase2.6.5")]
+        public void ComponentRegistry_MultipleRegistrations_AllowsDifferentNames()
+        {
+            var registry = new ComponentRegistry();
+            var component1 = new TestComponent();
+            var component2 = new TestComponent();
+            var component3 = new TestComponent();
+
+            registry.Register(component1, EngineTier.Rom, "Rom1");
+            registry.Register(component2, EngineTier.Rom, "Rom2");
+            registry.Register(component3, EngineTier.Rulebook, "Rulebook1");
+            registry.Validate();
+            // If no exception, all three registered successfully with different names
+        }
+
+        #endregion
+
         #region Test helpers
 
         /// <summary>

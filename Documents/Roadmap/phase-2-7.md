@@ -2,6 +2,8 @@
 
 **Status:** pending
 
+**Scope grew 2026-07-26** (see ticket [0029](../ClaudeWiki/Processes/Handoffs/0029-phase-2-6-5-status-and-qa-gap.md)): this phase was originally scoped as *composing against* an existing cross-ROM mediation mechanism from Phase 2.6.5. That mechanism doesn't exist yet — 2.6.5 shipped `IInteropRom` as an empty marker interface, not a working capability broker. Amara (Architect) ruled against carving out a separate phase for the broker: its surface is dictated by what a consuming ROM's rule actually needs, so it has to be designed against Juno's real Grid ROM/D20System split, not in the abstract. **The broker's design and implementation are now part of this phase's scope**, not a prerequisite delivered by 2.6.5. This makes 2.7 materially bigger than originally written; absorbed as a schedule consequence, not re-litigated as a phase-boundary question — see `roadmap.md`'s framing ("dependency order, not a calendar").
+
 ## Overview
 
 Phase 2.6 fortifies the ROM/Rulebook boundary with exactly one ROM. `architecture.md` has claimed
@@ -31,19 +33,49 @@ general answer for cross-ROM coordination.
 
 ## Deliverables
 
-- **A shared, ROM-agnostic marker vocabulary in `LunaFlow.Rules`** (alongside `IHasLunaFlowReference`,
+- ~~**A shared, ROM-agnostic marker vocabulary in `LunaFlow.Rules`** (alongside `IHasLunaFlowReference`,
   `IMechanic`) that any ROM can produce (insert a fact) or consume (guard against it in a rule or
   handler) without referencing the other ROM's assembly. Start narrow — a small, concrete family of
   markers proven against real cross-ROM cases as they appear, not a fully general "any fact can
-  suppress any action" system on the first pass.
+  suppress any action" system on the first pass.~~ **Struck 2026-07-26 — superseded by Phase 2.6.5**
+  (Arryn's ruling: where the two conflict, 2.6.5 is the authority; ticket
+  [0030](../ClaudeWiki/Processes/Handoffs/0030-doc-reconcile-post-2-6-5.md)). This bullet predates
+  2.6.5, which considered and **rejected** exactly this placement: content facts, and even abstracted
+  domain-flavoured interfaces (`IRoomLocated`, `ISpatialPosition` were both proposed), do not belong
+  in `LunaFlow.Rules` — "that project is NRules infrastructure, not a content home, however abstract
+  the content gets."
+
+  **The pattern survives; the location doesn't.** Cross-ROM coordination through facts and
+  declarative guards — one ROM inserts, another guards via `.Not<T>`, neither knowing the other
+  exists — is still the intended interaction model, and it's the generalization of the existing
+  Marker/`[StandingRule]` pattern this phase's Overview describes. What 2.6.5 changed is the answer
+  to *where the shared type lives*: it comes through the capability mechanism, not through a shared
+  vocabulary project. That makes it part of the broker deliverable below, not a separate one.
 - **`IRuleBook` grows a declared list of which ROM(s) it depends on** (extends 2.6's minimal shape).
   Loading validates every declared ROM is actually present and errors out clearly on a mismatch —
-  fail fast, not silent degradation.
+  fail fast, not silent degradation. **Half-shipped as of 2.6.5, verified 2026-07-26:** the
+  *declaration* exists (`IRuleBook.DependsOnRoms`, `IReadOnlyList<string>`, in `LunaFlow.Rulebook`).
+  The *validation* does not — `ComponentRegistry.Validate()` checks capability `Provides`/`Requires`
+  and tier ordering, and never reads `DependsOnRoms`. A Rulebook naming a ROM that isn't registered
+  currently fails silently, which is the exact "silent degradation" this bullet rules out. Still
+  live work for this phase.
 - **Two real, independently-loadable ROMs**, proven by one Rulebook depending on and coordinating
   both, with their only interaction being fact/marker-mediated (no project reference between them).
-- **Retrofit Nine Rooms onto whichever navigation-shaped ROM this phase produces**, so the split has
+- **The capability broker itself** — `IInteropRom`'s aggregate/resolve behavior, which Phase 2.6.5
+  shipped as an empty marker interface only (see [`phase-2-6-5.md`](phase-2-6-5.md)'s restated
+  Done-When). Sized against this phase's real Grid ROM/D20System split, not designed ahead of a
+  consumer. Architect's (Amara's) call, per [ticket 0029](../ClaudeWiki/Processes/Handoffs/0029-phase-2-6-5-status-and-qa-gap.md) — no separate 2.6.6 phase for it.
+  **Specced 2026-07-26:** [`../Specs/cross-rom-capability-spec.md`](../Specs/cross-rom-capability-spec.md).
+  Draft, and gated on one verification spike (does NRules match polymorphically through *interfaces*,
+  not just base classes) that has to be run before anything is built on it. The authoring contract is
+  stable enough for content design to proceed against in the meantime.
+- ~~**Retrofit Nine Rooms onto whichever navigation-shaped ROM this phase produces**, so the split has
   two real consumers proving it, not one content module divided on spec. (Without this, the split is
-  tidiness, not fortification — same reasoning 2.6 applied to itself.)
+  tidiness, not fortification — same reasoning 2.6 applied to itself.)~~ **Removed 2026-07-26, on
+  Arryn's direct instruction** (ticket [0029](../ClaudeWiki/Processes/Handoffs/0029-phase-2-6-5-status-and-qa-gap.md)):
+  Nine Rooms is deprecated and retained for regression-test purposes only; retrofitting it onto the
+  new ROM is out of scope. The split's two real consumers are D20System and whatever content Juno
+  designs against the Grid ROM directly.
 - **Keep each ROM's actually-consumed public surface small and deliberate** — same instinct as
   `IEngineHost`/`IMechanic` staying thin. A narrow surface breaks less often, independent of whatever
   versioning eventually sits on top of it.
@@ -76,11 +108,29 @@ general answer for cross-ROM coordination.
 
 ## Done when
 
-One Rulebook genuinely depends on and coordinates two independently-loadable ROMs. Neither ROM
-references the other's assembly; their interaction is entirely fact/marker-mediated; removing either
-ROM from the load list produces a clear, immediate error rather than a silent failure or a partial
-game. Nine Rooms runs against the shared navigation-shaped ROM alongside whatever new content proves
-the split.
+**Updated 2026-07-26** (tickets [0029](../ClaudeWiki/Processes/Handoffs/0029-phase-2-6-5-status-and-qa-gap.md), [0030](../ClaudeWiki/Processes/Handoffs/0030-doc-reconcile-post-2-6-5.md)): Nine Rooms clause struck per Arryn's direct instruction (Kofi); reference rule stated precisely and the marker-vocabulary residue removed (Amara). One clause below still can't be written until the broker's shape lands — flagged inline rather than left vague.
+
+One Rulebook genuinely depends on and coordinates two independently-loadable ROMs.
+
+**The reference rule, stated precisely** (the 2.6.5 follow-up this doc previously owed): neither ROM
+references the other's assembly — no mutual reference, no direct peer reference in either direction.
+A **one-directional reference from a ROM to the broker** (`IInteropRom`) is expected and governed,
+not a violation; that's the whole mechanism. The bar is the peer-to-peer edge, not every edge.
+
+Their interaction is capability-mediated through the broker this phase builds. (The "and/or
+fact/marker-mediated" alternative that stood here is gone with the marker-vocabulary deliverable
+above — facts are still how ROMs coordinate at runtime, but the shared type reaches them through the
+capability mechanism, so it isn't a second, parallel route.)
+
+Removing either ROM from the load list produces a clear, immediate error rather than a silent failure
+or a partial game — which requires `DependsOnRoms` to actually be validated, not merely declared (see
+Deliverables). ~~Nine Rooms runs against the shared navigation-shaped ROM alongside whatever new
+content proves the split.~~
+
+**Still to be written here:** the acceptance clause for the broker itself — what "the broker works"
+means in verifiable terms. Deliberately left open until its surface is specced against real content
+rather than guessed at now; that spec is the next Architect deliverable, and this clause lands with
+it.
 
 ## Related phases
 

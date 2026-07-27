@@ -17,7 +17,7 @@ in question here** — they're exactly what "D20System requires positioning, Gri
 zero assembly reference" exercises. Keep them.
 
 This ticket is the other half of that same call: *don't over-specify.* Three items in
-[`phase-2-6-5.md`](../../Roadmap/phase-2-6-5.md)'s Deliverables look like they specify past what the
+[`phase-2-6-5.md`](../../../Roadmap/phase-2-6-5.md)'s Deliverables look like they specify past what the
 phase actually proves. The test I'm applying to each:
 
 > **Does 2.7's Grid/D20System proof actually exercise it? If the demo never touches it, it ships

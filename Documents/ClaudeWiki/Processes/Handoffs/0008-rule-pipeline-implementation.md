@@ -8,9 +8,9 @@
 
 ## Context
 
-Phase 2 (Rule pipeline MVP — [`Roadmap/phase-2.md`](../../Roadmap/phase-2.md)). The design is
+Phase 2 (Rule pipeline MVP — [`Roadmap/phase-2.md`](../../../Roadmap/phase-2.md)). The design is
 settled and the DTOs/interfaces are shaped per [0007](0007-rule-pipeline-design-decisions.md);
-[`design/rule-pipeline.md`](../../design/rule-pipeline.md) is the authoritative spec, including its
+[`design/rule-pipeline.md`](../../../design/rule-pipeline.md) is the authoritative spec, including its
 "Design decisions (Phase 2 pre-implementation)" section (D1–D4). Your job is to fill in the three
 empty interface bodies + `RuleExport` so an author-written `[RuleGroup]` class becomes a loadable,
 firing NRules rule.

@@ -1,8 +1,9 @@
 namespace LunaFlow.Rom
 {
     /// <summary>
-    /// Marker interface for a ROM acting as a capability broker. An <c>IInteropRom</c> aggregates
-    /// capabilities advertised by loaded ROMs and resolves a peer's <c>Requires</c> against them.
+    /// Marker interface tagging a ROM as the intended capability broker for peer-ROM interoperability.
+    /// The broker's concrete surface (methods to aggregate and resolve capabilities) is specified in Phase 2.7,
+    /// once the consuming ROM's actual needs are known.
     /// </summary>
     /// <remarks>
     /// Kept as a distinct, named interface rather than folded into plain <c>IRom</c> for the same
