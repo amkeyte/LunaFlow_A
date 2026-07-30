@@ -30,6 +30,7 @@ have to rediscover them.
 | Phase 2.6 | done (QA PASS) | [ROM/Rulebook boundary fortification](phase-2-6.md) |
 | Phase 2.6.5 | done | [ROM identity & cross-ROM interop](phase-2-6-5.md) |
 | Phase 2.7 | done (QA PASS) | [Multi-ROM composition](phase-2-7.md) |
+| Phase 2.7.1 | pending | [Content expansion: Loot ROM, monster roster, room randomization](phase-2-7-1.md) |
 | Phase 2.8 | pending | [World Module extraction](phase-2-8.md) |
 | Phase 3 | superseded (confirmed) | [Vertical slice](phase-3.md) — superseded by Phase 2.5; the load-bearing condition held, verified by QA |
 | Phase 4 | pending | [World content & scripting](phase-4.md) |

@@ -10,6 +10,10 @@
     /// resolution, or a future Physics ROM's trajectory math) belong on the concrete class
     /// implementing this interface, not here. Public so a concrete Mechanic living in
     /// <c>LunaFlow.Rom</c> (a different assembly) can implement it.
+    /// 
+    /// need to think on this comment description more. I'm not sure this captures my
+    /// initial concept.
+    /// 
     /// </remarks>
     public interface IMechanic : IHasLunaFlowReference
     {

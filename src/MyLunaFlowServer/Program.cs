@@ -11,6 +11,17 @@ using LunaFlow.Rules.GeneratorServices;
 Console.WriteLine("Welcome to MyLunaFlowServer, powered by LunaFlow_A");
 Console.WriteLine("Starting server");
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Arryn's BIG  note:
+// under no circumstances should the current existence of content code living here
+// be construed as future-proof. Content code should not bleed into other infrastructure
+// classes. Content code should also not become overly dependent on the shape of this Program.cs
+// file, as it WILL change.
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 // Bootstrap contract probe (cross-rom-capability-spec.md §5). Top-level statements compile into
 // ONE method, and the CLR resolves every type referenced anywhere in a method before executing any
 // of it — so a naive try/catch inline in this file would not actually catch a missing/incompatible
@@ -20,6 +31,7 @@ Console.WriteLine("Starting server");
 // names one directly (object only) — confirmed by fault injection (deleting the Cartridge assembly
 // and re-running produced an unhandled crash until this was restructured this way). Using
 // directives are compile-time only and don't force runtime type loading, so they stay here safely.
+
 object gridMapObj;
 object d20SystemObj;
 
