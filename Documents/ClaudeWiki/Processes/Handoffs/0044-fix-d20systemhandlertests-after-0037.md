@@ -1,6 +1,6 @@
 # 0044 — Fix `D20SystemHandlerTests.cs` after ticket 0037
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Kofi (PM)
 **Opened:** 2026-07-29
 **For:** Nadia (Test Dev)
@@ -117,4 +117,15 @@ Arryn's per house rule — I only ran the narrow filter above as a mid-work sani
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+Closed 2026-07-29. The full-suite Arryn-run pass this ticket was waiting on happened, and it's
+independently confirmed — not just Nadia's own narrow-filter runs. Lothar's Phase 2.7 QA verdict
+(`phase-2-7-verdict.md`) cites `tests/LunaFlow.EngineTests/TestResults/latest.trx`, timestamped
+2026-07-29 22:49:44, explicitly noted as **Arryn-run, not solo-run by QA**: 119/119 passed, 0 failed,
+with `D20SystemHandlerTests`/`D20SystemRuleFixtureTests` confirmed present in that run (not a stale
+snapshot). That's this ticket's own acceptance bar, met and evidenced by someone other than the
+assignee. Compile break fixed, 0045's guard defect resolved and folded in, full suite green — nothing
+left open here.
+
+This also clears the blocker I'd noted on [0037](0037-implement-the-gridmap-d20system-split-grid-rom-d20-split-spec-md.md)'s
+review — same evidence applies. Not closing 0037 as part of this ticket, but flagging it's likely
+ready too if you want to take that up separately.

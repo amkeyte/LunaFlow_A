@@ -1,6 +1,6 @@
 # 0037 — Implement the GridMap/D20System split (grid-rom-d20-split-spec.md)
 
-**Status:** in-review
+**Status:** resolved
 
 **⚠️ If you have any in-progress work building `IInteropRom.Resolve`: stop now, don't finish it.**
 It's cut — see item 2 below.
@@ -11,7 +11,12 @@ It's cut — see item 2 below.
 
 ## Decision
 
-<Open — no ruling yet. Fill in on close per `handoff-tickets.md`'s convention.>
+Done. All four asked items independently confirmed by Lothar's Phase 2.7 QA verdict, not just
+Baraka's or Kofi's own read: two ROMs, `LunaFlow.Cartridge` namespace with zero project reference,
+`FleeCommandHandler` on plain constructor injection, `LunaFlow.Rulebook` naming no ROM assembly.
+Legitimate mechanics expansion beyond the four items also confirmed. The verdict's two FAILs
+(`DependsOnRoms` validation, flavor text) were never part of this ticket's ask — both explicitly
+out of scope here, tracked on 0047 and 0043 respectively.
 
 ## Details
 
@@ -153,4 +158,22 @@ Response. Recommend a QA pass once 0044 lands a compiling, green suite.
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+Closed 2026-07-29, on the strength of Lothar's Phase 2.7 QA verdict (`phase-2-7-verdict.md`) —
+independent verification, not just this ticket's own Response. Criteria mapping directly to this
+ticket's four-item ask, all **PASS**:
+
+- Two `IRom`s only (GridMap/D20System), `DependsOnRoms` names both — PASS.
+- Neither ROM references the other's assembly; contract surface implements no `IRom`, not
+  registered — PASS (the one caveat, an orphan `src/LunaFlow.Cartridge` project, was a leftover
+  artifact unrelated to this ticket's actual work — cleared via [0049](0049-delete-orphan-src-lunaflow-cartridge-project.md)).
+- No lookup API anywhere in the shipped surface; consuming ROM gets `IPlayerMovement` only as a
+  `Program.cs` constructor argument — PASS.
+- `LunaFlow.Rulebook` references no ROM implementation assembly — PASS.
+- `D20SystemContent.Configure` gone from both content ROMs — PASS.
+- Full suite green from an Arryn-run `latest.trx` (119/119, confirmed via [0044](0044-fix-d20systemhandlertests-after-0037.md)) — PASS.
+
+The verdict's two FAILs — `DependsOnRoms` *validation* enforcement and the flavor-text seam — were
+both explicitly out of this ticket's scope from the start (see Ask), not defects in what was
+actually asked for here. They're tracked on their own tickets ([0047](0047-dependsonroms-validation-not-enforced.md),
+[0043](0043-generated-rules-have-no-seam-for-rulebook-flavor-text.md)) and don't block this one's
+close. Nothing left open against this ticket's own ask.

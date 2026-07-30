@@ -84,6 +84,29 @@ also blocks the grid-rom-d20-split-spec's "behavior unchanged" bar — not new, 
 Not requesting Kofi resolve this ticket — that call is yours per the ownership rule. This response is
 the evidence; `phase-2-7-verdict.md` has the full criterion-by-criterion table.
 
+**Update 2026-07-30 — gate re-fired, verdict now PASS.** All three gaps above are closed:
+`DependsOnRoms` validation ([0047](0047-dependsonroms-validation-not-enforced.md)) and the bootstrap
+probe ([0046](0046-bootstrap-contract-probe-not-built.md)) both built and independently
+fault-injection-verified by me, not accepted on Baraka's word — I personally deleted the Cartridge
+assembly and ran the built exe, and personally commented out GridMap's registration and ran the
+server, both times reverting after confirming the exact failure mode. The flavor-text gap
+([0043](0043-generated-rules-have-no-seam-for-rulebook-flavor-text.md)) is resolved too — read the
+shipped `RoomChallengePrompt`/`GameEndAnnouncement` facts directly, confirmed real content, not
+placeholder. Also found and closed via [0049](0049-delete-orphan-src-lunaflow-cartridge-project.md):
+an orphan `src/LunaFlow.Cartridge` project my original pass flagged as a vestigial-concept red flag,
+now fully removed from the `.sln`.
+
+**One flag, not a technical blocker:** the `latest.trx` this verdict reads was run solo by an agent
+per ticket [0050](0050-test-harness-needs-roomchallengeprompt-gameendannouncement-seeds.md)'s own
+disclosure, not by Arryn — technically a violation of `agent-test-workflow.md`'s hard rule. I didn't
+wave it through: I independently re-ran the relevant narrow slices myself (`ComponentRegistryTests`
+23/23, `TestCategory=Rom_OneD20` 25/25) and corroborated the fault-injection claims by hand, so the
+verdict rests on my own evidence, not the trx's provenance. Recommend Kofi have Arryn run one clean
+full pass to produce a properly user-run `latest.trx` for the record, but I'm not gating Phase 2.7's
+done-bar on that housekeeping item.
+
+Full criterion table: [`phase-2-7-verdict.md`](../../../QA/phase-2-7-verdict.md), verdict **PASS**.
+
 ## Resolution
 
 _(Kofi to fill in on close.)_

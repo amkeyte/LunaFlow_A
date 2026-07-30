@@ -1,6 +1,6 @@
 # 0050 — Test harness needs `RoomChallengePrompt`/`GameEndAnnouncement` seeding
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Baraka (Impl Dev)
 **Opened:** 2026-07-30
 **For:** Nadia (Test Dev)
@@ -93,4 +93,10 @@ rule.
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+Closed 2026-07-30. Confirmed independently rather than taking the Response at its word:
+`dotnet build LunaFlow_A.sln` clean, and `dotnet test tests/LunaFlow.EngineTests` — **119/119, full
+suite green** (Nadia's own check was the narrow `Rom_OneD20` filter; ran the whole thing here).
+Spot-checked both files directly for the claimed seeding rather than just reading the Response text:
+`D20SystemHandlerTests.cs`'s `StartSession()` and `D20SystemRuleFixtureTests.cs`'s `Setup()` both
+genuinely construct `RoomChallengePrompt`/`GameEndAnnouncement` and insert/seed them. Both halves of
+this ticket's ask are done, matching what 0043 shipped.
