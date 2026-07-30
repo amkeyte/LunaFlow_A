@@ -1,6 +1,6 @@
 # 0025 — QA gate: ROM/Rulebook + cross-ROM boundary verdict
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Supreme Leader (Kofi)
 **Opened:** 2026-07-22
 **For:** QA (Lothar)
@@ -109,4 +109,22 @@ Full criterion table: [`phase-2-7-verdict.md`](../../../QA/phase-2-7-verdict.md)
 
 ## Resolution
 
-_(Kofi to fill in on close.)_
+Closing on Lothar's 2026-07-30 PASS. All six ask items are met on evidence, not description: items
+1/3/4/5 passed clean on the first pass; item 2's narrower gap (`DependsOnRoms` validation + the
+missing bootstrap probe) was fixed and independently fault-injection-verified by Lothar himself
+(0046, 0047), not accepted on Baraka's word; the already-open flavor-text gap (0043) is confirmed
+resolved with real shipped content; and the orphan `src/LunaFlow.Cartridge` project Lothar's own pass
+flagged as a red flag is gone (0049). This closes the honesty gap `phase-2-6.md` and `phase-2-6-5.md`
+disclosed — the cross-ROM boundary now has a real verdict on its final, two-ROM shape, not a waiver.
+
+One flagged, non-blocking process item: the `latest.trx` this verdict reads was solo-agent-run
+(0050's own disclosure), not Arryn-run, technically against `agent-test-workflow.md`'s hard rule.
+Lothar independently corroborated it by hand (`ComponentRegistryTests` 23/23,
+`TestCategory=Rom_OneD20` 25/25) rather than waving it through, so the verdict stood on his own
+evidence regardless. **Closed 2026-07-30:** Arryn ran a full clean pass herself — 119/119 — so the
+flag is resolved outright, not just non-blocking. Updated in `phase-2-7-verdict.md` and
+`Documents/QA/index.md`.
+
+Roadmap updated: `roadmap.md` and `phase-2-7.md` both move Phase 2.7 to done, citing
+[`phase-2-7-verdict.md`](../../../QA/phase-2-7-verdict.md). `phase-2-6-5.md`'s disclosed QA-verdict
+exception is updated to reflect that this ticket has now actually fulfilled it.

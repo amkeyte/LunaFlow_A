@@ -3,13 +3,15 @@
 **Status:** done (2026-07-23) on the shipped identity/declaration/validation surface — see restated
 Done-When below. Design complete (2026-07-21, Arryn + Amara); implementation complete (Baraka,
 ticket 0027); test suite green (Nadia, ticket 0028). Build 0 errors, 113/113 tests green, zero
-regressions. **No independent QA verdict was produced for this phase** (Phases 1.5, 2, 2.5, and 2.6
-all got one); disclosed and ruled on 2026-07-26 as a one-time exception rather than run retroactively
-— the shipped surface is small and infrastructure-only, and [ticket
-0025](../ClaudeWiki/Processes/Handoffs/0025-rom-rulebook-boundary-qa-gate.md) will verify the
-cross-ROM mediation half for real once Phase 2.7 ships actual content to check it against. Going
-forward, no phase is marked done without a QA verdict or a disclosed exception exactly like this one
-— see [`wiki-style.md`'s Where status lives](../ClaudeWiki/Processes/wiki-style.md#where-status-lives).
+regressions. **No independent QA verdict was produced for this phase at close** (Phases 1.5, 2, 2.5,
+and 2.6 all got one); disclosed and ruled on 2026-07-26 as a one-time exception rather than run
+retroactively — the shipped surface was small and infrastructure-only, and [ticket
+0025](../ClaudeWiki/Processes/Handoffs/0025-rom-rulebook-boundary-qa-gate.md) would verify the
+cross-ROM mediation half for real once Phase 2.7 shipped actual content to check it against.
+**That verification landed 2026-07-30: 0025 fired PASS** ([`phase-2-7-verdict.md`](../QA/phase-2-7-verdict.md)) —
+the disclosed exception is closed out, not still outstanding. Going forward, no phase is marked done
+without a QA verdict or a disclosed exception exactly like this one — see
+[`wiki-style.md`'s Where status lives](../ClaudeWiki/Processes/wiki-style.md#where-status-lives).
 
 ## Overview
 

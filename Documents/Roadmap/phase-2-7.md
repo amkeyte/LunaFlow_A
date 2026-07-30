@@ -1,6 +1,10 @@
 # Phase 2.7 — Multi-ROM composition
 
-**Status:** pending
+**Status:** done — QA-verified 2026-07-30 (ticket
+[0025](../ClaudeWiki/Processes/Handoffs/0025-rom-rulebook-boundary-qa-gate.md), verdict
+[`phase-2-7-verdict.md`](../QA/phase-2-7-verdict.md), **PASS**). All Done-When criteria below
+confirmed against source/fault-injection, not ticket prose; one flagged non-blocking process item
+(solo-run `latest.trx`, see 0025's Resolution).
 
 **Scope grew 2026-07-26** (see ticket [0029](../ClaudeWiki/Processes/Handoffs/0029-phase-2-6-5-status-and-qa-gap.md)): this phase was originally scoped as *composing against* an existing cross-ROM mediation mechanism from Phase 2.6.5. That mechanism doesn't exist yet — 2.6.5 shipped `IInteropRom` as an empty marker interface, not a working capability broker. Amara (Architect) ruled against carving out a separate phase for the broker: its surface is dictated by what a consuming ROM's rule actually needs, so it has to be designed against Juno's real Grid ROM/D20System split, not in the abstract. **The broker's design and implementation are now part of this phase's scope**, not a prerequisite delivered by 2.6.5. This makes 2.7 materially bigger than originally written; absorbed as a schedule consequence, not re-litigated as a phase-boundary question — see `roadmap.md`'s framing ("dependency order, not a calendar").
 
@@ -68,10 +72,10 @@ general answer for cross-ROM coordination.
   Loading validates every declared ROM is actually present and errors out clearly on a mismatch —
   fail fast, not silent degradation. **Half-shipped as of 2.6.5, verified 2026-07-26:** the
   *declaration* exists (`IRuleBook.DependsOnRoms`, `IReadOnlyList<string>`, in `LunaFlow.Rulebook`).
-  The *validation* does not — `ComponentRegistry.Validate()` checks capability `Provides`/`Requires`
-  and tier ordering, and never reads `DependsOnRoms`. A Rulebook naming a ROM that isn't registered
-  currently fails silently, which is the exact "silent degradation" this bullet rules out. Still
-  live work for this phase.
+  The *validation* was missing as of Lothar's first 2.7 QA pass (ticket
+  [0025](../ClaudeWiki/Processes/Handoffs/0025-rom-rulebook-boundary-qa-gate.md)) — filed as
+  [0047](../ClaudeWiki/Processes/Handoffs/0047-dependsonroms-validation-not-enforced.md) — and is now
+  built (`ComponentRegistry.ValidateDependsOn`) and independently fault-injection-verified by Lothar.
 - **Two real, independently-loadable ROMs**, proven by one Rulebook depending on and coordinating
   both, with their only interaction being fact/marker-mediated (no project reference between them).
 - **The capability broker itself** — `IInteropRom`'s aggregate/resolve behavior, which Phase 2.6.5
@@ -151,9 +155,9 @@ above — facts are still how ROMs coordinate at runtime, but the shared type re
 capability mechanism, so it isn't a second, parallel route.)
 
 Removing either ROM from the load list produces a clear, immediate error rather than a silent failure
-or a partial game — which requires `DependsOnRoms` to actually be validated, not merely declared (see
-Deliverables). ~~Nine Rooms runs against the shared navigation-shaped ROM alongside whatever new
-content proves the split.~~
+or a partial game — confirmed by Lothar's independent fault injection (0047): commenting out a ROM's
+registration produces the expected validation error, not a silent partial game. ~~Nine Rooms runs
+against the shared navigation-shaped ROM alongside whatever new content proves the split.~~
 
 `LunaFlow.Rulebook` names no ROM assembly — `LunaFlow.Rom`/`example/D20SystemExampleA` project
 references and `using LunaFlow.Rom.D20System;` are gone, replaced by Rulebook-owned types translated
@@ -171,10 +175,10 @@ satisfied by `Program.cs` injecting the concrete implementation directly, which 
 ## Related phases
 
 - Previous: [Phase 2.6 — ROM/Rulebook boundary fortification](phase-2-6.md), via
-  [Phase 2.6.5 — ROM identity & cross-ROM interop](phase-2-6-5.md) — this phase's Grid/D20System
-  split is blocked on 2.6.5's `IRom`/`IInteropRom`/`Capability` mechanism landing; the Done-When bar
-  below ("neither ROM references the other's assembly") will need rewording to match that mechanism's
-  real rule once it does (still open, see 2.6.5).
+  [Phase 2.6.5 — ROM identity & cross-ROM interop](phase-2-6-5.md) — the Grid/D20System split landed
+  against 2.6.5's `Capability`/`IRom` mechanism (the `IInteropRom.Resolve` broker was cut in the
+  Cartridge pivot, above); the Done-When bar's reference rule is worded to match the shipped
+  mechanism and QA-verified against it (ticket 0025).
 - Next: [Phase 2.8 — World Module extraction](phase-2-8.md)
 
 ## Related documents

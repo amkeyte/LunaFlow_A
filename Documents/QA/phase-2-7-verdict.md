@@ -1,12 +1,17 @@
 # Phase 2.7 (Multi-ROM composition) — QA Verdict
 
-**Verdict:** PASS (one process flag, not a technical blocker — see below)
-**Date:** 2026-07-29 (original pass, FAIL); updated 2026-07-29 (2 of 4 blockers cleared, still FAIL); **final update 2026-07-30 (PASS)**
+**Verdict:** PASS — process flag below is now closed, not just non-blocking.
+**Date:** 2026-07-29 (original pass, FAIL); updated 2026-07-29 (2 of 4 blockers cleared, still FAIL); **final update 2026-07-30 (PASS)**; **process flag closed 2026-07-30 (Arryn-run full pass, 119/119)**
 **Ticket:** Answers the standing gate [0025](../ClaudeWiki/Processes/Handoffs/0025-rom-rulebook-boundary-qa-gate.md).
 **Build:** `dotnet build LunaFlow_A.sln` — clean, 0 errors (re-run this session).
 **Suite:** Read from `tests/LunaFlow.EngineTests/TestResults/latest.trx`, timestamped 2026-07-30 00:58:22. **119/119 passed, 0 failed.**
 
-## Process flag, not a verdict blocker
+## Process flag — closed 2026-07-30
+
+Arryn ran a full clean pass herself: **119/119 passed.** That's the genuinely user-run `latest.trx`
+the note below was asking for — the flag is closed, not merely non-blocking. Left the original note
+below intact rather than deleted, per the supersede-don't-delete convention, since it explains why
+the flag existed in the first place.
 
 Per ticket [0050](../ClaudeWiki/Processes/Handoffs/0050-test-harness-needs-roomchallengeprompt-gameendannouncement-seeds.md)'s
 own Resolution text, the full-suite run that produced this `latest.trx` was run solo by the closing
@@ -46,7 +51,7 @@ done-bar on it, since I've substantively verified the content it claims through 
 | `D20SystemContent.Configure` gone from both content ROMs | Grepped `example/` — zero hits; class retained, obsolete, in `src/LunaFlow.Rom` for NineRooms regression only (ticketed exception) | PASS |
 | Bootstrap probe (§5) runs and fails loudly against a deliberately broken build | `Program.cs`'s `Bootstrap()`/`RunGame()` split (ticket 0046, against 0048's `Capability.Provided<,>`/`ForceMemberResolution()` ruling). Independently reproduced last pass: deleted the built Cartridge assembly, ran the exe directly — binding failure named module + exception, real exit code 1, confirmed unmasked | PASS |
 | Probe forces member resolution via `GetInterfaceMap`+`PrepareMethod` | `Capability.ForceMemberResolution()`, called per `Provides` entry inside `Bootstrap()`'s try block | PASS |
-| Full suite green from an Arryn-run `latest.trx` | 119/119, fresh — **but see Process flag above: provenance is agent-run, not Arryn-run, per ticket 0050's own disclosure** | PASS on content; **flagged on provenance** |
+| Full suite green from an Arryn-run `latest.trx` | 119/119, fresh — Arryn ran a clean full pass herself 2026-07-30, closing the provenance flag raised over ticket 0050's agent-run trx | PASS |
 | `IRom` instances exist for GridMap/D20System only; Cartridge implements no `IRom`, not registered | Confirmed via `GridMapRom : IRom`, `D20SystemRom : IRom`, 3 total registrations | PASS |
 | Every behavior in `1-d20-spec.md`'s acceptance criteria holds unchanged | **RESOLVED via ticket [0043](../ClaudeWiki/Processes/Handoffs/0043-generated-rules-have-no-seam-for-rulebook-flavor-text.md).** Challenge-prompt rules and `GameEndRule` now match `RoomChallengePrompt`/`GameEndAnnouncement` facts carrying real, already-resolved flavor text (`Facts.cs`, `D20SystemRuleGroup.cs`, `GridMapRuleGroup.cs` all read directly, confirmed). `Program.cs` seeds them from `flavorText["monster-desc"]`/`flavorText[r.PromptKey!]`/`flavorText["win-announce"]` — all three keys confirmed present in `1-d20-flavor.md` | PASS |
 | Challenge-prompt/win-line rules fire off contract types, zero-reference | Unchanged from prior pass, re-confirmed | PASS |

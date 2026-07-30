@@ -12,9 +12,10 @@ have to rediscover them.
   recompiling what sits above it.** Adopted 2026-07-27 per [`design/cartridge.md`](../design/cartridge.md)
   and ticket [0039](../ClaudeWiki/Processes/Handoffs/0039-cartridge-the-published-unit-and-no-upward-lookup-apis.md) —
   a Rulebook binds to a Cartridge's contract surface, never to a ROM's implementation assembly.
-  Currently violated (`LunaFlow.Rulebook.csproj` references `LunaFlow.Rom` and
-  `example/D20SystemExampleA`; `OneD20RulebookContent.cs` opens with `using LunaFlow.Rom.D20System;`)
-  — fixing this is part of [Phase 2.7](phase-2-7.md)'s scope, not deferred past it.
+  Fixed as of [Phase 2.7](phase-2-7.md) (QA-verified 2026-07-30, ticket
+  [0025](../ClaudeWiki/Processes/Handoffs/0025-rom-rulebook-boundary-qa-gate.md)):
+  `LunaFlow.Rulebook.csproj` no longer references `LunaFlow.Rom`/`example/D20SystemExampleA`, and
+  Rulebook content is translated against the Cartridge contract surface in `Program.cs`.
 
 ## Phase sequence
 
@@ -28,7 +29,7 @@ have to rediscover them.
 | Phase 2.5 | done | [d20 vertical slice & mechanic infrastructure](phase-2-5.md) |
 | Phase 2.6 | done (QA PASS) | [ROM/Rulebook boundary fortification](phase-2-6.md) |
 | Phase 2.6.5 | done | [ROM identity & cross-ROM interop](phase-2-6-5.md) |
-| Phase 2.7 | pending | [Multi-ROM composition](phase-2-7.md) |
+| Phase 2.7 | done (QA PASS) | [Multi-ROM composition](phase-2-7.md) |
 | Phase 2.8 | pending | [World Module extraction](phase-2-8.md) |
 | Phase 3 | superseded (confirmed) | [Vertical slice](phase-3.md) — superseded by Phase 2.5; the load-bearing condition held, verified by QA |
 | Phase 4 | pending | [World content & scripting](phase-4.md) |

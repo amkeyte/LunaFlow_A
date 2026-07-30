@@ -18,7 +18,7 @@ one-liner instruction wasn't specific enough to hold.)
 | [0022](0022-implement-phase-2-6.md) | resolved | Kofi (PM) | Baraka (Impl Dev) | Phase 2.6 ROM/Rulebook retrofit — one-ROM shape PASS. |
 | [0023](0023-cross-rom-fact-mediation.md) | rescinded | Juno (Game Designer) | Amara (Architect) | Cross-ROM fact mediation — superseded by 2.6.5's real mechanism. |
 | [0024](0024-phase-2-6-5-scope.md) | resolved | Kofi (PM) | Amara (Architect) | Phase 2.6.5 scope ruling — `EngineTier` kept, `IScript`/`IRom.version` cut. |
-| [0025](0025-rom-rulebook-boundary-qa-gate.md) | in-review | Kofi (PM) | Lothar (QA) | Standing QA gate re-fired 2026-07-30 — verdict now PASS, see [phase-2-7-verdict.md](../../../QA/phase-2-7-verdict.md); Kofi to close. |
+| [0025](0025-rom-rulebook-boundary-qa-gate.md) | resolved | Kofi (PM) | Lothar (QA) | Standing QA gate — cross-ROM boundary verdict **PASS**, see [phase-2-7-verdict.md](../../../QA/phase-2-7-verdict.md). |
 | [0026](0026-reconcile-1-d20-spec.md) | resolved | Kofi (PM) | Juno (Game Designer) | `1-d20-spec.md` reconciled to the shipped Phase 2.6 split. |
 | [0027](0027-implement-phase-2-6-5.md) | resolved | Kofi (PM) | Baraka (Impl Dev) | Phase 2.6.5 infrastructure — identity/declaration/validation shipped. |
 | [0028](0028-phase-2-6-5-test-suite.md) | resolved | Baraka (Impl Dev) | Nadia (Test Dev) | Phase 2.6.5 test suite — 17 tests, 113/113 full suite. |
