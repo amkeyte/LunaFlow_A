@@ -65,4 +65,13 @@ namespace LunaFlow.Rom.D20System
     /// or the PC's HP reaching 0 during that fight. Permanent; no PC-HP-based session-ending state.
     /// </summary>
     public sealed record RoomFailed(int RoomId);
+
+    /// <summary>
+    /// The challenge-prompt rule's seam into Rulebook flavor text (ticket 0043, Amara's ruling):
+    /// already-resolved text, not a key — generated <c>RulePrototype</c> code has no constructor/DI
+    /// seam, so <c>Program.cs</c> resolves the flavor key once at seed time and hands the rule only
+    /// the finished string, same pattern <c>NineRooms/ChallengeRules.cs</c>'s pre-split
+    /// <c>Room.ChallengePrompt</c> already used. One per room, seeded at session start.
+    /// </summary>
+    public sealed record RoomChallengePrompt(int RoomId, string Text);
 }

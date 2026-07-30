@@ -66,7 +66,10 @@ namespace LunaFlow.Rom.GridMap
         [RuleTemplate] public static RulePrototype WinLineDiagonalUp => WinLineRule("WinLineDiagonalUp", new[] { 3, 5, 7 });
 
         /// <summary>
-        /// GameEndRule: announces victory once any WinMarker exists.
+        /// GameEndRule: announces victory once any WinMarker exists. The announcement text comes
+        /// from a matched <see cref="GameEndAnnouncement"/> fact — already-resolved Rulebook flavor
+        /// text, seeded once by <c>Program.cs</c>, never a key looked up inside generated code
+        /// (ticket 0043, Amara's ruling).
         /// </summary>
         [RuleTemplate]
         public static RulePrototype GameEndRule => new()
@@ -74,10 +77,11 @@ namespace LunaFlow.Rom.GridMap
             Name = "GameEnd",
             Description = "Announces victory when any win line is complete.",
             RequiredUsings = new() { "LunaFlow.Engine", "LunaFlow.Rom.GridMap" },
-            WhenStatements = new() { "Match<WinMarker>()" },
+            PreambleStatements = new() { "GameEndAnnouncement end = null!;" },
+            WhenStatements = new() { "Match<WinMarker>()", "Match<GameEndAnnouncement>(() => end)" },
             ThenStatements = new()
             {
-                "Do(ctx => LunaFlowEngine.Host.Announce(\"You win!\\n\"))",
+                "Do(ctx => LunaFlowEngine.Host.Announce(end.Text))",
             },
         };
     }

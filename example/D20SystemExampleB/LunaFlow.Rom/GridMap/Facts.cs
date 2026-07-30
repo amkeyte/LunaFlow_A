@@ -13,4 +13,11 @@ namespace LunaFlow.Rom.GridMap
 
     /// <summary>Fact marking that a win line (a row, column, or diagonal of solved rooms) is complete.</summary>
     public sealed record WinMarker(IReadOnlyList<int> Line) : IGameWon;
+
+    /// <summary>
+    /// <c>GameEndRule</c>'s seam into Rulebook flavor text (ticket 0043, Amara's ruling) — the
+    /// already-resolved <c>win-announce</c> string, seeded once at session start, same reasoning as
+    /// D20System's <c>RoomChallengePrompt</c> (a different project — GridMap never references it).
+    /// </summary>
+    public sealed record GameEndAnnouncement(string Text);
 }

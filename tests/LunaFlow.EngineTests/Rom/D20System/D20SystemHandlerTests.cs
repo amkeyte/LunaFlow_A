@@ -126,6 +126,20 @@ namespace LunaFlow.EngineTests.Rom.D20System
                     foreach (var room in OneD20RulebookContent.Rooms.Values)
                         facts.Add(room);
                     return facts.ToArray();
+                })
+                .Seed(() =>
+                {
+                    // Ticket 0043/0050 (Amara's ruling): generated RulePrototype rules have no
+                    // constructor/DI seam, so they can't resolve a flavor key themselves. Resolve
+                    // each key once, here — mirrors Program.cs's own seed block exactly — and hand
+                    // the rule only the finished string via RoomChallengePrompt/GameEndAnnouncement.
+                    var prompts = OneD20RulebookContent.Rooms.Values
+                        .Select(r => (object)new RoomChallengePrompt(
+                            r.Id,
+                            r.ChallengeType == OneD20ChallengeType.Fight
+                                ? flavorText["monster-desc"]
+                                : flavorText[r.PromptKey!]));
+                    return prompts.Append(new GameEndAnnouncement(flavorText["win-announce"]));
                 });
             _engine.SetOptions(options);
             _engine.Start();
@@ -191,29 +205,25 @@ namespace LunaFlow.EngineTests.Rom.D20System
             var entered = MessagesSince(baseline);
             Assert.AreEqual(1, entered.Count(m => m == OneD20FlavorText.Text["room-2-desc"]),
                 "DescriptionKey should announce exactly once, from the handler");
-            // ChallengePromptRoom2 (a generated rule) has no flavor-text seam yet — it announces a
-            // generic placeholder, not room-2-prompt. Disclosed, accepted gap; see ticket 0043.
-            Assert.AreEqual(1, entered.Count(m => m == "[Room 2] Challenge prompt."),
-                "The rule's challenge-prompt placeholder should announce exactly once");
-            Assert.AreNotEqual(OneD20FlavorText.Text["room-2-desc"], "[Room 2] Challenge prompt.",
+            Assert.AreEqual(1, entered.Count(m => m == OneD20FlavorText.Text["room-2-prompt"]),
+                "PromptKey should announce exactly once, from the rule (ticket 0050's RoomChallengePrompt seed)");
+            Assert.AreNotEqual(OneD20FlavorText.Text["room-2-desc"], OneD20FlavorText.Text["room-2-prompt"],
                 "Description and prompt must never be identical text");
         }
 
         // ---- room-5 startup announcement (criterion 3) ----
 
         [TestMethod]
-        public void SessionStart_AnnouncesRoom5Description_BeforeChallengePrompt()
+        public void SessionStart_AnnouncesRoom5Description_BeforeMonsterDesc()
         {
             StartSession();
 
-            // ChallengePromptRoom5 has no flavor-text seam yet — it announces a generic placeholder,
-            // not monster-desc. Disclosed, accepted gap; see ticket 0043.
             var descIndex = _messages.IndexOf(OneD20FlavorText.Text["room-5-desc"]);
-            var promptIndex = _messages.IndexOf("[Room 5] Challenge prompt.");
+            var monsterIndex = _messages.IndexOf(OneD20FlavorText.Text["monster-desc"]);
 
             Assert.AreNotEqual(-1, descIndex, "Room 5's description should be announced at startup");
-            Assert.AreNotEqual(-1, promptIndex, "Room 5 is a Fight room; its challenge-prompt rule should announce at startup too");
-            Assert.IsTrue(descIndex < promptIndex, "Description must print before the challenge prompt, not just be present");
+            Assert.AreNotEqual(-1, monsterIndex, "Room 5 is a Fight room; monster-desc should be announced at startup too");
+            Assert.IsTrue(descIndex < monsterIndex, "Description must print before monster-desc, not just be present");
         }
 
         // ---- fight: lethal PC hit (criteria 4, 10) ----
@@ -382,8 +392,7 @@ namespace LunaFlow.EngineTests.Rom.D20System
             Submit("check"); // already solved: no-op
 
             Assert.AreEqual(0, MessagesSince(baseline).Count, "A solved room's check must be rejected");
-            // Placeholder text per ticket 0043 (no flavor-text seam on generated rules yet).
-            Assert.AreEqual(1, _messages.Count(m => m == "[Room 2] Challenge prompt."),
+            Assert.AreEqual(1, _messages.Count(m => m == OneD20FlavorText.Text["room-2-prompt"]),
                 "Solving must not re-trigger the challenge-prompt announcement");
         }
 
@@ -470,9 +479,7 @@ namespace LunaFlow.EngineTests.Rom.D20System
 
             var markers = _engine.Rules.Query<WinMarker>().ToList();
             Assert.IsTrue(markers.Any(m => m.Line.SequenceEqual(new[] { 3, 6, 9 })));
-            // GameEndRule has no flavor-text seam yet — placeholder text, not a per-line
-            // announcement. Disclosed, accepted gap; see ticket 0043.
-            Assert.IsTrue(_messages.Contains("You win!\n"));
+            Assert.IsTrue(_messages.Contains(OneD20FlavorText.Text["win-announce"]));
         }
 
         // ---- win: combat-inclusive line (criterion 15, second half) ----
@@ -497,8 +504,7 @@ namespace LunaFlow.EngineTests.Rom.D20System
             var markers = _engine.Rules.Query<WinMarker>().ToList();
             Assert.IsTrue(markers.Any(m => m.Line.SequenceEqual(new[] { 1, 2, 3 })),
                 "Top-row line, which required room 1 solved via fight, should fire");
-            // GameEndRule has no flavor-text seam yet — placeholder text. See ticket 0043.
-            Assert.IsTrue(_messages.Contains("You win!\n"));
+            Assert.IsTrue(_messages.Contains(OneD20FlavorText.Text["win-announce"]));
         }
     }
 }

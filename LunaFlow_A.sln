@@ -30,8 +30,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D20SystemExampleB", "exampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D20SystemExampleC", "example\D20SystemExampleC\D20SystemExampleC.csproj", "{A4CF248C-FCA9-4733-B93C-C584AC3E9134}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.Cartridge", "src\LunaFlow.Cartridge\LunaFlow.Cartridge.csproj", "{6E6EEC6A-42F2-493D-964A-EB288B0256C4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,10 +76,6 @@ Global
 		{A4CF248C-FCA9-4733-B93C-C584AC3E9134}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4CF248C-FCA9-4733-B93C-C584AC3E9134}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4CF248C-FCA9-4733-B93C-C584AC3E9134}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6E6EEC6A-42F2-493D-964A-EB288B0256C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6E6EEC6A-42F2-493D-964A-EB288B0256C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6E6EEC6A-42F2-493D-964A-EB288B0256C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6E6EEC6A-42F2-493D-964A-EB288B0256C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

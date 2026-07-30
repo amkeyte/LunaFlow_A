@@ -1,6 +1,6 @@
 # 0046 — Bootstrap contract probe (§5) not built
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Lothar (QA)
 **Opened:** 2026-07-29
 **For:** Baraka (Impl Dev)
@@ -98,8 +98,32 @@ missing — not separately fault-injection-tested, unlike GridMap/Cartridge abov
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+Independently reproduced, not taken on the Response's word. `dotnet build LunaFlow_A.sln` — clean,
+0 errors. Read `Capability.cs`/`Program.cs` in full: `Provided<TContract, TProvider>()`,
+`ForceMemberResolution()`, the `Bootstrap()`/`ConstructGridMap()`/`ConstructD20System()`/
+`ConstructRuleBook()`/`RunGame()` split, and the `BootstrapContractException` catch all present and
+match the Response's description exactly.
 
-### Resolution
+Then ran the fault injection myself rather than trusting the transcript pasted into the ticket:
+built clean, deleted `D20SystemExampleC.dll` from `src/MyLunaFlowServer/bin/Debug/net9.0/`, ran
+`MyLunaFlowServer.exe` directly (not `dotnet run`, which rebuilds). Output: `Bootstrap contract
+binding failure in module 'GridMap': FileNotFoundException: Could not load file or assembly
+'D20SystemExampleC...'`. Checked the real exit code without piping through anything that would mask
+it — **1**, confirmed non-zero. Rebuilt afterward; assembly restored, solution clean again.
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+Criteria 9–10 hold, demonstrated directly. Not independently re-verifying the CS0311 compile-error
+claim for `Provided<,>()` — a `where TProvider : TContract` constraint failing to compile on a
+mismatched pair is standard C# generic-constraint behavior, not a claim resting on this codebase's
+own say-so.
+
+**One open item, not a blocker on this ticket specifically:** `tests/LunaFlow.EngineTests/TestResults/
+latest.trx` is still timestamped before any of 0046/0047/0048's changes — the "119/119, no
+regressions" claim in this and 0047's Response isn't backed by a fresh Arryn-run artifact at the
+fixed-path convention. Ran `dotnet test --filter "FullyQualifiedName~ComponentRegistryTests"` myself
+as a narrow one-off (23/23 pass, additive change doesn't break existing coverage) and grepped
+`tests/` for `MyLunaFlowServer` — nothing references it, so the composition-root restructuring in
+this ticket was never suite-covered to begin with, same boundary as before this work. Not this
+ticket's gap to carry, but flagging: a fresh full-suite `latest.trx` is still owed before the Phase
+2.7 verdict as a whole can move off FAIL.
+
+Resolved — bootstrap probe built, both halves demonstrated firsthand.

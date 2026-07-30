@@ -50,8 +50,22 @@ namespace LunaFlow.EngineTests.Rom.D20System
             _engine = new RuleEngine();
             _engine.LoadRulesFromAssembly(_compiledD20SystemRules);
             _engine.LoadRulesFromAssembly(_compiledGridMapRules);
+
+            // Ticket 0043/0050 (Amara's ruling): the challenge-prompt/GameEnd rules have no
+            // constructor/DI seam, so they match already-resolved flavor text via
+            // RoomChallengePrompt/GameEndAnnouncement facts instead of a placeholder. Seed them here
+            // exactly as Program.cs does, so this fixture exercises the real content.
+            var flavorText = OneD20FlavorText.Text;
             foreach (var room in OneD20RulebookContent.Rooms.Values)
+            {
                 _engine.Insert(room);
+                _engine.Insert(new RoomChallengePrompt(
+                    room.Id,
+                    room.ChallengeType == OneD20ChallengeType.Fight
+                        ? flavorText["monster-desc"]
+                        : flavorText[room.PromptKey!]));
+            }
+            _engine.Insert(new GameEndAnnouncement(flavorText["win-announce"]));
 
             _messages.Clear();
             SubscribeToMessages();
@@ -81,30 +95,26 @@ namespace LunaFlow.EngineTests.Rom.D20System
             _messageHandler = null;
         }
 
-        // ChallengePromptRule has no flavor-text seam yet (ticket 0043, disclosed/accepted gap) — it
-        // announces a generic "[Room N] Challenge prompt." placeholder for every room, SkillCheck or
-        // Fight alike, not the Rulebook's room-N-prompt/monster-desc keys.
-
         [TestMethod]
-        public void ChallengePrompt_SkillCheckRoom_AnnouncesGenericPlaceholder_WhileUnsolvedAndUnfailed()
+        public void ChallengePrompt_SkillCheckRoom_AnnouncesPromptKey_WhileUnsolvedAndUnfailed()
         {
             _engine.Insert(new PlayerPosition(2));
 
             _engine.Fire();
 
             Assert.AreEqual(1, _messages.Count, "Only room 2's challenge-prompt rule should fire");
-            Assert.AreEqual("[Room 2] Challenge prompt.", _messages[0]);
+            Assert.AreEqual(OneD20FlavorText.Text["room-2-prompt"], _messages[0]);
         }
 
         [TestMethod]
-        public void ChallengePrompt_FightRoom_AnnouncesGenericPlaceholder_SameShapeAsSkillCheckRoom()
+        public void ChallengePrompt_FightRoom_AnnouncesMonsterDesc()
         {
             _engine.Insert(new PlayerPosition(1));
 
             _engine.Fire();
 
             Assert.AreEqual(1, _messages.Count, "Only room 1's challenge-prompt rule should fire");
-            Assert.AreEqual("[Room 1] Challenge prompt.", _messages[0]);
+            Assert.AreEqual(OneD20FlavorText.Text["monster-desc"], _messages[0]);
         }
 
         [TestMethod]
@@ -138,8 +148,8 @@ namespace LunaFlow.EngineTests.Rom.D20System
             _engine.Fire();
 
             // GameEndRule itself fires (Not<WinMarker>() isn't on it) — confirm room 4's own
-            // challenge-prompt placeholder specifically never shows up alongside it.
-            Assert.IsFalse(_messages.Contains("[Room 4] Challenge prompt."),
+            // prompt text specifically never shows up alongside it.
+            Assert.IsFalse(_messages.Contains(OneD20FlavorText.Text["room-4-prompt"]),
                 "Not<WinMarker>() should block every remaining challenge-prompt rule once any line is won");
         }
 
@@ -203,10 +213,8 @@ namespace LunaFlow.EngineTests.Rom.D20System
 
             _engine.Fire();
 
-            // GameEndRule has no flavor-text seam yet (ticket 0043) — a fixed placeholder, not a
-            // per-line announcement naming the winning rooms.
-            Assert.IsTrue(_messages.Contains("You win!\n"),
-                "GameEndRule should announce its placeholder win text on any WinMarker");
+            Assert.IsTrue(_messages.Contains(OneD20FlavorText.Text["win-announce"]),
+                "GameEndRule should announce the real win text on any WinMarker");
         }
     }
 }

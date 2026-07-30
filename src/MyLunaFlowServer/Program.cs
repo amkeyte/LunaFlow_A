@@ -207,6 +207,20 @@ static void RunGame(object gridMapObj, object d20SystemObj)
                         d20System.PlayerCharacter,
                         d20System.Monster,
                     };
+                })
+                .Seed(() =>
+                {
+                    // Ticket 0043 (Amara's ruling): generated RulePrototype rules have no
+                    // constructor/DI seam, so they can't resolve a flavor key themselves. Resolve
+                    // each key once, here — the one place the Rulebook's flavor map and the ROM's
+                    // room data already meet — and hand the rule only the finished string.
+                    var prompts = OneD20RulebookContent.Rooms.Values
+                        .Select(r => (object)new RoomChallengePrompt(
+                            r.Id,
+                            r.ChallengeType == OneD20ChallengeType.Fight
+                                ? flavorText["monster-desc"]
+                                : flavorText[r.PromptKey!]));
+                    return prompts.Append(new GameEndAnnouncement(flavorText["win-announce"]));
                 });
         })
         .ConfigureCommand(opts =>

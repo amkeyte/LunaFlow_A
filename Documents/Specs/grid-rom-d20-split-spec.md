@@ -5,7 +5,11 @@
 **Amended 2026-07-29** to add the fifth Cartridge contract, `IGameWon`, per
 [ticket 0045](../ClaudeWiki/Processes/Handoffs/0045-challenge-prompt-rule-missing-solved-failed-winmarker-guards.md)'s
 Architect ruling — this doc previously undercounted the contract surface at four; five is what
-shipped and is verified.
+shipped and is verified. **Amended 2026-07-30** to resolve this doc's own open question on how
+generated declarative rules reach Rulebook-supplied flavor text, per
+[ticket 0043](../ClaudeWiki/Processes/Handoffs/0043-generated-rules-have-no-seam-for-rulebook-flavor-text.md)'s
+Architect ruling — not yet built as of this amendment; describes the decided shape, not shipped
+status (see the roadmap/QA verdict for that).
 **Companion design doc:** [`../design/engine-core.md`](../design/engine-core.md) — "Component
 model: ROM, Rulebook, and the event bus."
 **Supersedes:** nothing. Trims and relocates [`1-d20/1-d20-spec.md`](1-d20/1-d20-spec.md)'s existing,
@@ -240,7 +244,13 @@ the concrete fact. **No `RoomFailed` involvement needed here, same as today:** a
 line through it without an extra guard — `D20SystemRuleGroup.WinLineRule`'s existing doc comment
 already states this reasoning; it carries over unchanged.
 
-**`GameEndRule`** (relocated): unchanged — matches GridMap's own `WinMarker`, no cross-ROM read.
+**`GameEndRule`** (relocated): matches GridMap's own `WinMarker`, no cross-ROM read — unchanged on
+that count. **One addition, per ticket 0043:** the rule also matches a seeded, one-instance
+`GameEndAnnouncement(string Text)` fact (`Match<GameEndAnnouncement>(() => end)`) and announces
+`end.Text` instead of the hardcoded placeholder `"You win!\n"` this spec's own build originally
+shipped with. `Program.cs` seeds the single instance once, resolved from `1-d20-flavor.md`'s
+`win-announce` key, via the same `.Seed(...)` call that already seeds `GridRoomData`/`PlayerPosition`/
+`PlayerCharacter`/`Monster`. No static holder; the rule never performs a dictionary lookup.
 
 ### D20System
 
@@ -255,6 +265,16 @@ in translation** (ticket 0045): the pre-split rule this family descends from car
 "the same guard Nine Rooms already relies on." `WinMarker` is GridMap's and crosses no boundary by
 name, so the guard is written against the fifth Cartridge contract instead — the one cross-ROM read
 this rule family needs, same contract-typed pattern as `Match<IPlayerLocation>`.
+
+**A second addition, per ticket 0043:** the rule also matches a seeded `RoomChallengePrompt(int
+RoomId, string Text)` fact (`Match<RoomChallengePrompt>(() => prompt, p => p.RoomId == roomId)`) and
+announces `prompt.Text`, replacing the hardcoded placeholder `"[Room {roomId}] Challenge prompt."`
+this spec's own build originally shipped with. `Program.cs` seeds one instance per room, resolving
+`flavorText[room.PromptKey]` for skill-check rooms and `flavorText["monster-desc"]` for fight rooms
+— the same branching `1-d20-spec.md` already specifies — via the same `.Seed(...)` call, same
+reasoning as `GameEndAnnouncement` above. `RoomChallenge`'s own `PromptKey`/`SuccessKey`/`FailureKey`
+fields are untouched; the hand-written `check`/`fight` handlers keep resolving those themselves via
+their own constructor-injected `flavorText`, unaffected by this addition.
 
 **`check`** (`CheckCommandHandler`, relocated): unchanged mechanics (`D20ResolutionMechanic.ResolveCheck`,
 success/failure narration). The current-room lookup changes from `rules.Query<PlayerPosition>().First()`
@@ -314,6 +334,11 @@ behavior — same outcome, now reached through the capability instead of a direc
       room) by constructor argument.
 - [ ] Removing either ROM from the registration list produces a clear load-time error (from the
       framework's registry validation, not this spec's content) rather than a silent failure.
+- [ ] The 9 challenge-prompt rules and `GameEndRule` announce `1-d20-flavor.md`'s real content
+      (room-specific prompt text, `monster-desc`, `win-announce`) via the seeded
+      `RoomChallengePrompt`/`GameEndAnnouncement` facts — not the generic placeholder text this
+      spec's own build originally shipped with. Added by ticket 0043; closes the one gap
+      `grid-rom-d20-split-spec.md`'s "unchanged behavior" bar didn't hold at first build.
 - [ ] Full suite green, read from an Arryn-run `latest.trx`.
 
 ## Framework dependencies
@@ -340,11 +365,18 @@ behavior — same outcome, now reached through the capability instead of a direc
   §4.1 cuts it outright, on trust-boundary grounds independent of this spec. Fact-shaped contracts
   are queried/matched directly through the shared NRules session; `IPlayerMovement` is supplied by
   constructor injection from `Program.cs`. No divergence to catch.
-- **Whether `RoomChallenge`/`GridRoomData` need to be seeded as NRules facts** (today's `Room` is —
-  see `D20SystemRuleGroup.ChallengeRule`'s `Match<Room>`) or can stay plain dictionary lookups in
-  generated `Then()` code. Not decided here; RulePrototype generation shape is Baraka's translation
-  of this spec's stated behavior, per `content-spec-template.md`'s "state player-facing behavior,
-  not NRules mechanics" instruction.
+- **Whether generated rules need a seam to Rulebook-supplied flavor text — settled, not open**
+  (this bullet originally read "not decided here," and the spec's first build shipped generic
+  placeholder text rather than deciding it inline — see
+  [ticket 0043](../ClaudeWiki/Processes/Handoffs/0043-generated-rules-have-no-seam-for-rulebook-flavor-text.md)).
+  **Ruled:** not `RoomChallenge`/`GridRoomData` themselves — two small, purpose-built facts,
+  `RoomChallengePrompt`/`GameEndAnnouncement`, carrying already-*resolved* text (never a key),
+  seeded once by `Program.cs` alongside the content facts that already are seeded today
+  (`GridRoomData`, per `D20SystemRuleGroup.ChallengeRule`'s pre-split `Match<Room>` precedent).
+  Restores the pre-split `NineRooms.Room.ChallengePrompt` pattern rather than inventing one — see
+  [Mechanics / rules](#mechanics--rules) above for the concrete shapes. General answer for any
+  future case: the fact a generated rule matches always carries resolved text, never a key: the
+  flavor dictionary itself never needs a seam into generated code.
 - **NineRooms** — confirmed untouched by this spec; it keeps its own `PlayerPosition`/`RoomSolved`/
   `WinMarker` facts, duplicated rather than shared, exactly as it does today against D20System.
 
@@ -375,4 +407,7 @@ behavior — same outcome, now reached through the capability instead of a direc
 - [Ticket 0045](../ClaudeWiki/Processes/Handoffs/0045-challenge-prompt-rule-missing-solved-failed-winmarker-guards.md) —
   the missing-guard defect that surfaced `IGameWon`, the fifth Cartridge contract; this doc's
   2026-07-29 amendment brings it into agreement with what shipped
+- [Ticket 0043](../ClaudeWiki/Processes/Handoffs/0043-generated-rules-have-no-seam-for-rulebook-flavor-text.md) —
+  the flavor-text-seam ruling this doc's 2026-07-30 amendment describes; not yet built as of that
+  amendment
 - [Specs README](README.md)

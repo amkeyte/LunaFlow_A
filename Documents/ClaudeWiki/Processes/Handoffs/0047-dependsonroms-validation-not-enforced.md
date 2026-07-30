@@ -1,6 +1,6 @@
 # 0047 — `DependsOnRoms` declared but never validated
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Lothar (QA)
 **Opened:** 2026-07-29
 **For:** Baraka (Impl Dev)
@@ -80,4 +80,28 @@ happens to fire for unrelated reasons).
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+Independently reproduced. Read `ComponentRegistry.cs` in full: `ValidateDependsOn(string
+dependentName, IReadOnlyList<string> dependsOnRoms)` exists, iterates `dependsOnRoms`, throws
+`InvalidOperationException` naming both the dependent and the missing ROM if any name has no matching
+registration. Read `Program.cs`'s `Bootstrap()`: called as `registry.ValidateDependsOn("OneD20",
+dependsOnRoms)`, immediately after all three components register and explicitly **before**
+`registry.Validate()` — so its message wins over the incidental capability-mismatch one, exactly as
+the Response describes.
+
+Then reproduced the fault myself rather than trusting the pasted transcript: commented out
+`registry.Register(gridMap, EngineTier.Rom, "GridMap");` in `Program.cs`, ran `dotnet run --project
+src/MyLunaFlowServer`. Output: `Component registry validation failed: 'OneD20' declares DependsOnRoms
+naming 'GridMap', but no component named 'GridMap' is registered.` — an unhandled
+`InvalidOperationException` with that exact message, not a silent failure or a partial game. Reverted
+the edit immediately, rebuilt clean (0 errors) to confirm no leftover state.
+
+Also ran `dotnet test --filter "FullyQualifiedName~ComponentRegistryTests"` myself as a narrow
+one-off: 23/23 pass — the new method is additive and doesn't disturb existing coverage. No automated
+test exists yet for `ValidateDependsOn` itself (grepped `tests/` — no hits); not blocking this ticket,
+since the acceptance criterion asked for a demonstrated, attributable load-time error and got exactly
+that, but worth a follow-up test so this doesn't silently regress later.
+
+**Same open item as 0046:** `latest.trx` predates this change; a fresh Arryn-run full-suite pass is
+still owed before the Phase 2.7 verdict overall can move off FAIL.
+
+Resolved — DependsOnRoms enforcement built and demonstrated firsthand, both ROMs.
