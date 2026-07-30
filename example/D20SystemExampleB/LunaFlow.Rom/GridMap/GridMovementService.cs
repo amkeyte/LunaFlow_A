@@ -1,5 +1,5 @@
 using LunaFlow.Engine;
-using LunaFlow.Rom.D20SystemInterop;
+using LunaFlow.Cartridge;
 
 namespace LunaFlow.Rom.GridMap
 {

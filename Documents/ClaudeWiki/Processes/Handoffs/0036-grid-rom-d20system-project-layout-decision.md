@@ -7,7 +7,28 @@
 
 ## Decision
 
-**Ruled directly by Arryn, not routed through Amara's review** — disclosed as a direct exception to
+**Superseded 2026-07-27 (Arryn, confirmed explicitly), per [0039](0039-cartridge-the-published-unit-and-no-upward-lookup-apis.md)/[0040](0040-pivot-to-2-6-5-and-re-sequence-phase-2-7.md):** the Cartridge
+design reverses the load-bearing claim below. `D20SystemInterop` is **not** a ROM — it implements no
+`IRom`/`IInteropRom`, is not registered with `ComponentRegistry`, and holds no `Resolve` behavior
+(cut entirely, on trust-boundary grounds: a runtime pull API is undeclared-by-construction and
+`ComponentRegistry.Validate()` can't see it). It is a **Cartridge contract surface** — its own
+assembly, referenced downward by both peers, naming no implementation type. This was Arryn's own
+ruling below and its reversal needed his explicit word rather than Amara's or Kofi's inference; that
+word is now on record. See `design/cartridge.md` for the full reasoning. The ruling as originally
+written is preserved struck through beneath for the audit trail.
+
+**Naming, settled same day via ticket [0042](0042-correct-cartridge-project-location-in-spec.md):**
+the name `D20SystemInterop` itself goes away — but only as the **C# namespace**, not the physical
+project. `LunaFlow.Cartridge` is the namespace going forward for the four interfaces; the physical
+project scaffolded below as `D20SystemExampleC` keeps its own identity untouched — still an example
+project, no rename, no move — per [0037](0037-implement-the-gridmap-d20system-split-grid-rom-d20-split-spec-md.md).
+Same physical-project-vs-namespace distinction this ticket already drew for `GridMap`/`D20System`,
+just applied to the third project too. Also settled the same day: this project stays physically in
+`example/`, not `src/` — a location correction to 0039/0040's operational follow-through, recorded on
+those tickets directly. No `src/LunaFlow.Cartridge` project exists; that name would only apply to a
+genuinely engine-agnostic Cartridge-runtime type, which isn't being built (`non-goals.md`).
+
+~~**Ruled directly by Arryn, not routed through Amara's review** — disclosed as a direct exception to
 the normal assignee-responds flow, same spirit as the project's other disclosed-exception calls
 (e.g. phase-2-6-5's QA-verdict exception). **Three real projects, not two.** `GridMap` and
 `D20System` (the corrected name — "GridRom" was my placeholder) are separate assemblies with zero
@@ -17,7 +38,7 @@ actual negotiation between the two peers, rather than being a passive, logic-fre
 Both peers reference it downward (governed, per phase-2-7.md); it references neither peer, since
 `IInteropRom.Resolve` deals in `Capability`/`object`, never a peer's concrete type. General
 principle stated alongside the ruling: don't ceremonially argue over which ROM plays which role —
-`IRom` identity/registration is a given per module, not a per-split design question.
+`IRom` identity/registration is a given per module, not a per-split design question.~~
 
 ## Details
 

@@ -1,5 +1,5 @@
 using LunaFlow.Engine;
-using LunaFlow.Rom.D20SystemInterop;
+using LunaFlow.Cartridge;
 
 namespace LunaFlow.Rom.D20System
 {
@@ -7,12 +7,20 @@ namespace LunaFlow.Rom.D20System
     public sealed class FleeCommandHandler : ICommandHandler
     {
         private readonly IPlayerMovement _movement;
+        private readonly IReadOnlyDictionary<string, string> _flavorText;
 
-        public FleeCommandHandler(IPlayerMovement movement)
+        /// <summary>Constructs the handler with the movement capability and the Rulebook's flavor text.</summary>
+        public FleeCommandHandler(IPlayerMovement movement, IReadOnlyDictionary<string, string> flavorText)
         {
             _movement = movement;
+            _flavorText = flavorText;
         }
 
+        /// <summary>
+        /// Retracts the active CombatRound (reversible — no RoomSolved/RoomFailed) and moves the PC
+        /// to PreviousRoomId. If none exists yet (room 5's fight, before any move), stays put —
+        /// encounter abandoned, same "pc-flee" announcement either way.
+        /// </summary>
         public void Handle(ICommand command)
         {
             var rules = LunaFlowEngine.Host.Rules;
@@ -23,15 +31,9 @@ namespace LunaFlow.Rom.D20System
                 return;
             }
 
-            if (_movement.ReturnToPreviousRoom())
-            {
-                rules.Retract(combat);
-                LunaFlowEngine.Host.Announce("Fled to previous room.");
-            }
-            else
-            {
-                LunaFlowEngine.Host.Announce("Can't flee (no previous room).");
-            }
+            rules.Retract(combat);
+            _movement.ReturnToPreviousRoom();
+            LunaFlowEngine.Host.Announce(_flavorText["pc-flee"]);
         }
     }
 }

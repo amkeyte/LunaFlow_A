@@ -170,6 +170,32 @@ Two related non-violations, recorded at the same time so the rule isn't over-rea
 The test to apply, when it's unclear which side of the line something falls on: *is this the content
 an author writes, or the plumbing that lets the tier exist?* Plumbing is exempt. Content is not.
 
+### Push down, never pull up — the trust rule behind tier ordering
+
+**Added 2026-07-27** alongside [`cartridge.md`](cartridge.md), which carries the full rationale.
+`EngineTier` and `ComponentRegistry`'s tier check are usually described as layering hygiene. They
+are not — they are a **trust boundary**, and the distinction changes what's permitted.
+
+[`architecture.md`](architecture.md)'s role table is a trust gradient: each tier above the engine
+core is authored by a less-trusted contributor, ending in World Modules, GM Overlays and Player
+rules, which are unreviewed script. So the direction a dependency runs decides who is exposed to
+whom. **Pushing data down is safe** — a lower layer is handed something and validates it at its own
+boundary, so control stays with the layer that has the most to lose. **Pulling up is not** — a deep
+layer that reaches into shallower territory consumes whatever comes back and inherits its trust
+level, at the depth where a failure or exploit has the widest blast radius.
+
+**The part that matters for this document:** `ComponentRegistry.Validate()` cannot enforce this. It
+checks *declared* dependencies — `Requires` against `Provides`, plus the tier comparison. A runtime
+lookup API (`Resolve(name)`, a service locator, any registry a component can query) is **undeclared
+by construction**, never appears in the graph the validator inspects, and so is structurally
+invisible to it. One such API reopens the boundary that every declaration-time check exists to hold.
+
+Enforcement is therefore **by construction**: no upward lookup mechanism is provided at all. This is
+why `IInteropRom.Resolve` was cut during Phase 2.7 design rather than constrained — a composition
+root injecting the same object explicitly achieves an identical result with no pull surface. Static
+content reaching a ROM by constructor injection from `Program.cs` (see "Three kinds of state" below,
+category 2) is the sanctioned pattern precisely because it is a push.
+
 ### Cross-ROM correlation — see the spec
 
 How a ROM's rule correlates against a fact a *peer* ROM owns, without either referencing the other,

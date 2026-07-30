@@ -168,44 +168,52 @@ Rule code observes peer facts. It does not call peer behaviour. If a consuming R
 something a peer owns — a calculation, a service, a movement operation — that happens in a **command
 handler**, which has constructor injection. Not in a rule. See §4.
 
-## 4. The broker, and the `Configure` replacement
+## 4. Behaviour across the boundary, and the `Configure` replacement
 
-### 4.1 `IInteropRom` gains resolution
+### 4.1 There is no broker — `Resolve` is cut
 
-```csharp
-public interface IInteropRom : IRom
-{
-    /// <summary>Resolves a declared capability to the instance providing it.</summary>
-    /// <exception cref="InvalidOperationException">No registered provider for that capability.</exception>
-    object Resolve(Capability capability);
+**Revised 2026-07-27.** An earlier draft of this spec gave `IInteropRom` a resolution surface —
+`Resolve(Capability)` and `Resolve<T>(string)` — so a consuming ROM could obtain a peer's service
+implementation at runtime. **That is cut, on two independent grounds**, and
+[`../design/cartridge.md`](../design/cartridge.md) carries the full reasoning:
 
-    /// <summary>Typed convenience over <see cref="Resolve"/>.</summary>
-    T Resolve<T>(string capabilityName) where T : class;
-}
-```
+1. **It is a pull API across a trust boundary.** The tier stack is a trust gradient ending in
+   unreviewed script; a deep layer that reaches upward to obtain something inherits the trust level
+   of wherever it reached. And `ComponentRegistry.Validate()` **cannot** catch it — the validator
+   inspects *declared* dependencies, while a runtime lookup is undeclared by construction and never
+   appears in that graph. Enforcement has to be by construction: don't provide the mechanism.
+2. **It is redundant.** A single composition root already knows every ROM and every implementation.
+   It can hand the implementation over directly, which is explicit where `Resolve` is implicit — and
+   consistent with decisions already on record: Phase 2.6.5 chose hardcoded registration over
+   discovery, and [ticket 0019](../ClaudeWiki/Processes/Handoffs/0019-d20-rng-test-seam.md) chose
+   constructor injection specifically to avoid a global mutable holder.
 
-Resolution is **load-time-validated, runtime-cheap**: `ComponentRegistry.Validate()` has already
-proven every `Requires` has exactly one provider before any `Resolve` call happens, so a throw from
-`Resolve` means a registration bug, not a runtime condition to handle. It is not a general service
-locator and must not grow into one — it resolves *declared* capabilities only.
+`IInteropRom` therefore gains nothing, and the assembly it named is **not a ROM at all** — it's the
+Cartridge's contract surface. See §4.4.
 
-### 4.2 Reaching it — handlers only, by constructor injection
+### 4.2 Behaviour crosses by constructor injection, from the composition root
 
-The composition root resolves capabilities and constructs handlers with what they need. This is the
-existing pattern rather than a new mechanism — the same shape as
-[ticket 0019](../ClaudeWiki/Processes/Handoffs/0019-d20-rng-test-seam.md)'s `Random` seam.
+A consuming ROM names only the contract interface; the composition root supplies the implementation.
 
 ```csharp
 // Program.cs
 var registry = new ComponentRegistry();
-registry.Register(gridRom,  EngineTier.Rom,      "GridRom");
+registry.Register(gridRom,  EngineTier.Rom,      "GridMap");
 registry.Register(d20Rom,   EngineTier.Rom,      "D20System");
 registry.Register(ruleBook, EngineTier.Rulebook, "OneD20");
 registry.Validate();                       // fail fast, before anything is constructed
 
-var locations = interop.Resolve<ILocationQuery>("LocationQuery");
-dispatcher.Register(new FightCommandHandler(mechanic, locations, ...));
+// GridMap implements IPlayerMovement; D20System's handler names only the interface.
+dispatcher.Register(new FleeCommandHandler(mechanic, gridMovementService));
 ```
+
+`FleeCommandHandler`'s parameter is typed `IPlayerMovement` — declared in the contract surface, which
+D20System already references. It never names `GridMap`, and it never asks anyone for anything.
+
+**`Capability` remains meaningful and is not cut**: `Provides`/`Requires` plus
+`ComponentRegistry.Validate()` still fail the load fast when a required contract has no provider, a
+duplicate provider exists, or a dependency runs the wrong way. What changed is that a capability is
+a **declaration validated at load time**, not a handle resolved at runtime.
 
 ### 4.3 `D20SystemContent.Configure` is removed
 
@@ -217,13 +225,135 @@ through **§3's shared contract**. Neither path needs a static mutable holder.
 the Scenario data; the handlers did. Delete `Configure` and its backing static state, and migrate its
 call sites in `Program.cs` to constructor arguments.
 
-## 5. Deliberately excluded
+### 4.4 Where the contract surface lives — it is not a ROM
+
+The assembly holding the contract types is the **Cartridge's contract surface**
+([`../design/cartridge.md`](../design/cartridge.md)), not a third peer ROM. It does not implement
+`IRom`, has no identity metadata, declares no capabilities, and is never registered with
+`ComponentRegistry` — it contains interfaces and nothing else.
+
+Modelling it as a ROM breaks the replaceability requirement outright: contracts living inside a ROM
+means updating that ROM rebuilds the contracts, which forces a recompile of every consumer above —
+exactly the coupling the structure exists to prevent.
+
+**Consumers reference the contract surface only.** That includes the Rulebook: a Rulebook may not
+reference a ROM implementation assembly, and must express its own content in Rulebook-owned types
+that the composition root translates at construction.
+
+## 5. Bootstrap contract probe — making "hard fail at bootstrap" true
+
+The component model claims a mismatch is a hard failure at bootstrap. **Today that claim is false.**
+Compile-time type checking proves a module was once consistent with *some* build of a contract
+surface; nothing forces the runtime to check the installed one until it happens to need it — and the
+CLR resolves lazily, so `TypeLoadException` or `MissingMethodException` can surface at first use,
+potentially inside a rule firing several turns into a session, pointing at NRules rather than at the
+module that is wrong.
+
+The fix is not to check compatibility ourselves. It's to **force the runtime to perform the check it
+was always going to perform, at a moment we control.** No recorded state, nothing to keep in sync,
+and the CLR's binding rules are the oracle. See
+[`../design/cartridge.md`](../design/cartridge.md#compile-time-consistency-is-not-deployment-compatibility).
+
+This is also where `Capability.ContractType` finally earns its slot — it has been required at
+construction and read by nothing since Phase 2.6.5.
+
+### 5.1 Bootstrap failure barrier
+
+`Program.cs` wraps **module construction, registration, validation, and probing** in a single handler.
+Construction must be inside it: a module's `Provides`/`Requires` are built with `typeof(IContract)`
+expressions, so type resolution happens *there*, before the registry ever sees it.
+
+Catch the binding family — `TypeLoadException`, `MissingMethodException`, `MissingFieldException`,
+`FileLoadException`, `FileNotFoundException`, `BadImageFormatException` — report which module and
+which contract was being processed, and **exit non-zero**.
+
+**It must not degrade.** Catching, logging and continuing is worse than no probe at all: it converts
+a loud failure into a quiet one, which is the exact outcome this exists to prevent.
+
+### 5.2 Assignability — proven at compile time, not probed at bootstrap
+
+**Revised 2026-07-29, [ticket 0048](../ClaudeWiki/Processes/Handoffs/0048-capability-provider-model-vs-bootstrap-probe-spec.md).**
+The original draft of this section probed assignability at bootstrap, against "the registered
+provider" — which assumed the object registered with `ComponentRegistry` (the ROM itself) is what
+implements a `Provides` entry's contract. It never is: a fact-shaped capability is implemented by a
+fact *type* (`PlayerPosition : IPlayerLocation`) that's never registered, and no single instance of
+it need exist at bootstrap. A literal reading of the original probe would fail every real capability
+in a correctly-working ROM pair, not just a broken one.
+
+**The fix: make the pairing a compile-time fact instead of a runtime lookup.** `Capability` gains a
+generic factory used on the `Provides` side only:
+
+```csharp
+public static Capability Provided<TContract, TProvider>(string name) where TProvider : TContract
+    => new Capability(name, typeof(TContract)) { ProviderType = typeof(TProvider) };
+```
+
+A ROM declares `Capability.Provided<IPlayerLocation, PlayerPosition>("PlayerLocation")`; if
+`PlayerPosition` doesn't implement `IPlayerLocation`, the generic constraint fails to compile. This
+is strictly stronger than a bootstrap probe — it can't ship a mismatched pairing at all, in a
+deliberately-broken build or otherwise — so there is no runtime assignability check left to run.
+`Requires`-side capabilities keep the plain two-argument constructor unchanged; a requirement doesn't
+own an implementation, so there's nothing to pair.
+
+### 5.3 Member-resolution probe
+
+Type loading does **not** resolve members, and §5.2's compile-time constraint only proves this ROM's
+*own build* was consistent with *some* version of the contract — exactly the gap
+[`cartridge.md`](../design/cartridge.md#compile-time-consistency-is-not-deployment-compatibility)
+names: the installed contract assembly may have been rebuilt with a changed member signature since.
+A contract type that still exists but whose members changed signature raises `MissingMethodException`
+when a *call site* is JIT-compiled, so an edited interface is a likelier real-world event than a
+deleted one. This is still real runtime work; §5.2's fix doesn't remove it.
+
+Force it, without invoking anything — now a method on `Capability` itself, since it already holds
+both types:
+
+```csharp
+public void ForceMemberResolution()
+{
+    if (ProviderType is null) return;   // Requires-side capability; nothing to force.
+    var map = ProviderType.GetInterfaceMap(ContractType);
+    foreach (var target in map.TargetMethods)
+        RuntimeHelpers.PrepareMethod(target.MethodHandle);
+}
+```
+
+Called once per `Provides` entry on every registered component, from inside §5.1's barrier.
+`GetInterfaceMap` yields exactly the concrete methods implementing that contract — a bounded set, no
+guessing — and `PrepareMethod` JIT-compiles each without calling it.
+
+**Known limit, stated so nobody over-trusts this.** This covers **provider-side** skew. A *consumer*
+whose compiled call sites reference a member the installed contract no longer has is still only
+caught when that call site is JIT'd. Bounding the consumer-side set requires machine-enumerable
+dependencies — the typed-slot direction in `cartridge.md` — and is not attempted here.
+
+**Disclosed gap in the enforcement, not closed here:** nothing stops a future `Provides` entry from
+using the plain two-argument constructor instead of `Provided<,>()`, silently skipping both the
+compile-time constraint and `ForceMemberResolution()`. Accepted for now, same category as
+`DependsOnRoms` being declared-but-unvalidated until this phase — convention-enforced, not
+type-enforced. A `RequiredCapability`/`ProvidedCapability` type split would close it structurally;
+not built on one observed near-miss. Revisit if a bypass actually ships.
+
+### 5.4 What this is and isn't
+
+A **binding smoke test**, not a compatibility proof. It cannot catch a semantic change: identical
+signatures with different meaning (`RoomId` silently becoming 1-based) pass, and would also pass a
+fingerprint check, so this is no worse than the deferred alternative. It covers what it forces and
+nothing more.
+
+Scope discipline: declared contract types only, one pass, at one point. Not a general health-check
+framework.
+
+## 6. Deliberately excluded
 
 - **Cross-ROM fact mutation.** A consumer observes peer facts; it does not insert, update, or retract
   them. Permitting mutation makes every ROM's invariants everyone else's problem, and nothing in
   0023's case needs it. *Revisit only against a concrete case that cannot be expressed as the owner
   reacting to a fact of its own.*
-- **Broker access from rule code.** §1's whole point; reintroducing it reintroduces a static global.
+- **Any upward lookup API — permanently, not pending.** No `Resolve`, no service locator, no registry
+  a component can query. This is a security boundary, not a sequencing decision: see §4.1 and
+  [`../design/non-goals.md`](../design/non-goals.md). A concrete need for one is evidence of a
+  modelling error, not of a missing feature.
 - **Capability arbitration.** v1 hard-errors on two providers (2.6.5).
 - **Turn-ordered event dispatch** (`IEngineEventSubscriber`, `OnTurnAdvance` ordering). Still
   deferred; nothing here needs it.
@@ -232,30 +362,53 @@ call sites in `Program.cs` to constructor arguments.
   [`../Roadmap/phase-2-7.md`](../Roadmap/phase-2-7.md)'s Deliverables; adjacent to this spec, not part
   of it.
 
-## 6. Acceptance criteria
+## 7. Acceptance criteria
 
 1. Two peer ROMs correlate a fact through a contract type with **zero project reference between them**
    — verified against the assembly graph, not merely by a passing test.
-3. The consuming ROM's rule fires on a fact inserted by the owning ROM, matched via the contract type
+2. The consuming ROM's rule fires on a fact inserted by the owning ROM, matched via the contract type
    — and a consuming **handler** reaches the same fact via `Query<TContract>()`. Both paths, not one;
    they share no code (§2).
-4. `IInteropRom.Resolve` returns the registered provider; resolving an undeclared capability throws.
-5. **No rule code calls the broker**, verified by inspection of the generated sources.
-6. `D20SystemContent.Configure` and its backing static state are gone; `Program.cs` passes the same
+3. **No lookup API exists anywhere in the shipped surface** — no `Resolve`, no service locator, no
+   queryable registry. Verified by inspecting the contract surface and `IInteropRom`, not by testing
+   that nobody calls one. Absence is the criterion.
+4. A consuming ROM obtains a peer's service implementation **only** as a constructor argument typed
+   to a contract interface, supplied by `Program.cs`.
+5. **The contract surface assembly implements no `IRom`** and is not registered with
+   `ComponentRegistry`. It contains interfaces and nothing else.
+6. **The Rulebook references no ROM implementation assembly** — assembly-graph check, same as (1).
+   `LunaFlow.Rulebook` must not reference `LunaFlow.Rom` or any ROM project, and no Rulebook source
+   file may `using` a ROM implementation namespace.
+7. `D20SystemContent.Configure` and its backing static state are gone; `Program.cs` passes the same
    data by constructor argument.
-7. Removing either ROM from the registration list produces a clear load-time error, not a partial
+8. Removing either ROM from the registration list produces a clear load-time error, not a partial
    game.
-8. Full suite green, read from an Arryn-run `latest.trx`.
+9. **A provider/contract mismatch fails at compile time, not bootstrap.** Demonstrated by attempting
+   to declare a `Provides` entry pairing a concrete type with a contract it doesn't implement (e.g.
+   `Capability.Provided<IChallengeSolved, PlayerPosition>(...)`) and observing a build error, not a
+   runtime exception. Revised 2026-07-29 per
+   [ticket 0048](../ClaudeWiki/Processes/Handoffs/0048-capability-provider-model-vs-bootstrap-probe-spec.md) —
+   §5.2 moved this check to compile time; the bootstrap probe no longer performs it.
+10. **The probe forces member resolution, not merely type load** — verified by `GetInterfaceMap` +
+    `PrepareMethod` being present over each declared `Provides` entry's `ProviderType`
+    (`Capability.ForceMemberResolution()`), since a cast alone cannot catch signature skew (§5.3).
+11. **The §5.1 barrier still fails loudly and non-zero** on a genuine binding-exception-family error
+    (a stale build, a contract assembly rebuilt with a breaking change) — a caught exception that logs
+    and continues fails this criterion, same bar the original criterion 9 held for the probe as a
+    whole.
+11. Full suite green, read from an Arryn-run `latest.trx`.
 
-## 7. Open
+## 8. Open
 
-- **Where the interop assembly lives** — a third ROM-tier project, or an existing ROM designated as
-  broker. Deliberately unresolved: it depends on whether the split produces a natural broker or needs
-  a neutral one, which is content-shaped and not yet known. Does not block §3's authoring contract,
-  which is identical either way.
+- **Which Cartridge the Phase 2.7 split produces, and what its contract surface project is called.**
+  Content-shaped, and not blocking: §3's authoring contract and §4's injection pattern are identical
+  regardless. What *is* settled is that the surface is not a ROM (§4.4).
 
 ## Related pages
 
+- [`../design/cartridge.md`](../design/cartridge.md) — the published unit this spec's contracts form
+  the surface of, and the trust rationale behind §4.1
 - [`../design/engine-core.md`](../design/engine-core.md)
+- [`../design/non-goals.md`](../design/non-goals.md)
 - [`../Roadmap/phase-2-7.md`](../Roadmap/phase-2-7.md)
 - [Specs README](README.md)

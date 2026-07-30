@@ -44,7 +44,7 @@ Every page has, in order:
 Adding a page is not done until it's linked from somewhere discoverable:
 
 - Add a row to the [index](../index.md) Pages table.
-- If the page belongs to a set with its own index (e.g. `Handoffs/index.md`), add it there too.
+- If the page belongs to a set with its own index (e.g. `Handoffs/_index.md`), add it there too.
 - Cross-link from related pages' "Related pages" footers.
 
 An unlinked page is invisible — the exact failure that made `testing.md` necessary.

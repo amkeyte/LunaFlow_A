@@ -49,7 +49,7 @@ write-protected from an agent session; Arryn needs to apply these two additions 
 
 `Documents/QA/` holds the verdict artifacts this skill produces — `index.md` lists the current
 authoritative verdict per phase, one file per verdict, same shape as
-[`Handoffs/`](../Processes/Handoffs/index.md).
+[`Handoffs/`](../Processes/Handoffs/_index.md).
 
 ## Related pages
 

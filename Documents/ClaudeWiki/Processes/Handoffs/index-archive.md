@@ -1,7 +1,7 @@
 # Handoff Ticket Index — Archive (0001–0020)
 
-Split from [`index.md`](index.md) 2026-07-26 once the live table grew unwieldy. Covers Phases 1.5,
-2, and 2.5 — all closed. See [`index.md`](index.md) for the current/active window and for the
+Split from [`_index.md`](_index.md) 2026-07-26 once the live table grew unwieldy. Covers Phases 1.5,
+2, and 2.5 — all closed. See [`_index.md`](_index.md) for the current/active window and for the
 process this index supports.
 
 Ticket files themselves haven't moved — still in this same `Handoffs/` folder. Only the index rows
@@ -33,5 +33,5 @@ Decision/Details.
 
 ## Related
 
-- [Handoff Ticket Index — current window](index.md)
+- [Handoff Ticket Index — current window](_index.md)
 - [Handoff ticket process](../handoff-tickets.md)

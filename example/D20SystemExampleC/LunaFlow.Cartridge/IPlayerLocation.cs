@@ -1,4 +1,4 @@
-namespace LunaFlow.Rom.D20SystemInterop
+namespace LunaFlow.Cartridge
 {
     /// <summary>Contract interface for cross-ROM fact: the player's current location.</summary>
     public interface IPlayerLocation

@@ -28,6 +28,31 @@ namespace LunaFlow.Engine.Components
         }
 
         /// <summary>
+        /// Confirms every name in <paramref name="dependsOnRoms"/> matches a component already
+        /// registered in this registry — the enforcement <c>IRuleBook.DependsOnRoms</c> has been
+        /// missing since it was declared (ticket 0047). Kept separate from <see cref="Validate"/>
+        /// rather than folded into it: <see cref="IHasDependencies"/> stays ROM-agnostic
+        /// (Provides/Requires only), so the registry has no structural way to know which of its
+        /// registered components carry a named-dependency list like a Rulebook's — the caller
+        /// (the composition root, which can see both tiers) supplies it explicitly instead.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// If <paramref name="dependsOnRoms"/> names a component that isn't registered.
+        /// </exception>
+        public void ValidateDependsOn(string dependentName, IReadOnlyList<string> dependsOnRoms)
+        {
+            foreach (var romName in dependsOnRoms)
+            {
+                if (!_registrations.Any(r => r.Name == romName))
+                {
+                    throw new InvalidOperationException(
+                        $"'{dependentName}' declares DependsOnRoms naming '{romName}', but no component " +
+                        $"named '{romName}' is registered.");
+                }
+            }
+        }
+
+        /// <summary>
         /// Validates the complete component graph: no duplicate capability providers,
         /// all requirements satisfied, tier-ordering constraints met, and no circular dependencies.
         /// </summary>

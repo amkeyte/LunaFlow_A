@@ -1,7 +1,11 @@
 # GridMap / D20System Split — Implementation Spec
 
-**Status:** in review — framework layout question (ticket 0036) resolved; ready for Baraka once
-picked up.
+**Status:** in review — Cartridge-pivot correction (ticket 0041) applied; built per ticket
+[0037](../ClaudeWiki/Processes/Handoffs/0037-implement-the-gridmap-d20system-split-grid-rom-d20-split-spec-md.md).
+**Amended 2026-07-29** to add the fifth Cartridge contract, `IGameWon`, per
+[ticket 0045](../ClaudeWiki/Processes/Handoffs/0045-challenge-prompt-rule-missing-solved-failed-winmarker-guards.md)'s
+Architect ruling — this doc previously undercounted the contract surface at four; five is what
+shipped and is verified.
 **Companion design doc:** [`../design/engine-core.md`](../design/engine-core.md) — "Component
 model: ROM, Rulebook, and the event bus."
 **Supersedes:** nothing. Trims and relocates [`1-d20/1-d20-spec.md`](1-d20/1-d20-spec.md)'s existing,
@@ -18,32 +22,39 @@ contract, per [ticket 0034](../ClaudeWiki/Processes/Handoffs/0034-handoff-juno-b
 
 1.d20 today is one ROM module (`LunaFlow.Rom.D20System`) that conflates two concerns: *where the
 player is and how the grid connects* (spatial) and *what a room's obstacle is and how it resolves*
-(challenge/combat). This spec splits those into two peer content ROMs — **GridMap** (spatial:
-position, movement, win-line topology) and a **trimmed D20System** (challenge resolution: skill
-checks, combat) — plus a third, real ROM that is the interop broker itself
-(**D20SystemInterop**, `IInteropRom`), per [ticket 0036](../ClaudeWiki/Processes/Handoffs/0036-grid-rom-d20system-project-layout-decision.md)'s
-resolved ruling. Zero project reference exists between the two content peers; their only
-interaction is mediated through the broker. This spec also retires
-`D20SystemContent.Configure`'s static holder in favor of constructor injection, per §4.3.
+(challenge/combat). This spec splits those into two peer ROMs — **GridMap** (spatial: position,
+movement, win-line topology) and a **trimmed D20System** (challenge resolution: skill checks,
+combat) — both living inside one **Cartridge** (`design/cartridge.md`), the published unit that
+pairs a contract surface with the implementation behind it. The contract surface (project
+`LunaFlow.Cartridge`) holds the five shared interfaces (four at this spec's original writing, plus
+`IGameWon` added post-build — see [The Cartridge contract
+surface](#the-cartridge-contract-surface-lunaflowcartridge)); it is not a ROM, is not registered,
+and brokers nothing — GridMap and D20System are peers correlating through it directly, per
+[ticket 0041](../ClaudeWiki/Processes/Handoffs/0041-correct-grid-rom-d20-split-spec-for-cartridge-pivot.md)'s
+correction of this spec's original (superseded) framing. Zero project reference exists between the
+two peers; both reference the contract surface downward, and it references neither of them. This
+spec also retires `D20SystemContent.Configure`'s static holder in favor of constructor injection,
+per §4.3.
 
-**This spec does not implement:** `D20SystemInterop`'s generic aggregate/resolve internals — the
-broker's own C# (framework work; this spec names the capabilities it must carry, not its code).
+**This spec does not implement:** anything in `LunaFlow.Cartridge` beyond the five interfaces
+themselves — there is no broker class, no `Resolve`, nothing to size or build there. The
+composition root (`Program.cs`) is what wires implementations to consumers, plain constructor
+injection.
 
 ## Scope
 
 **In:**
 - Splitting 1.d20's current fact vocabulary and command handlers between GridMap and a trimmed
   D20System.
-- The capability contracts each ROM provides/requires, carried by the third ROM
-  (`D20SystemInterop`), and which existing rule/handler behavior crosses the boundary through them.
+- The capability contracts each ROM provides/requires, carried by the Cartridge's contract-surface
+  project (`LunaFlow.Cartridge`), and which existing rule/handler behavior crosses the boundary
+  through them.
 - Retiring `D20SystemContent.Configure` — Scenario data (rooms, flavor text, PC/monster stats,
-  ability scores, start room) reaches both content ROMs' handlers by constructor injection instead
+  ability scores, start room) reaches both ROMs' handlers by constructor injection instead
   of a static holder, per §4.3.
-- `OneD20RuleBook.DependsOnRoms` naming all three ROMs.
+- `OneD20RuleBook.DependsOnRoms` naming both ROMs.
 
 **Out:**
-- `D20SystemInterop`'s own aggregate/resolve C# — framework work, phase-2-7.md's Architect-owned
-  deliverable, now sized against this spec's real capability list.
 - `DependsOnRoms` *validation* enforcement (`ComponentRegistry` reading it) — already tracked as
   live framework work in phase-2-7.md's Deliverables, not a new ask from this spec.
 - NineRooms — untouched, stays deprecated/regression-only, per phase-2-7.md's struck retrofit
@@ -54,11 +65,11 @@ broker's own C# (framework work; this spec names the capabilities it must carry,
 
 ## Fact / marker vocabulary
 
-Three real ROMs, three groups: GridMap's own facts/content, D20System's trimmed facts/content, and
-D20SystemInterop's shared contracts. Everything not listed as changed keeps its exact shape from
+Three groups: GridMap's own facts/content, D20System's trimmed facts/content, and the Cartridge
+contract surface's shared interfaces. Everything not listed as changed keeps its exact shape from
 [`1-d20-spec.md`](1-d20/1-d20-spec.md).
 
-### GridMap (`LunaFlow.Rom.GridMap`, own project — confirmed per ticket 0036's example scaffold)
+### GridMap (`LunaFlow.Rom.GridMap`, own project in `example/` — location confirmed per ticket 0036's example scaffold and ticket 0038, unaffected by the Cartridge pivot)
 
 Static content (constructor-injected; replaces the room-position slice of `D20SystemContent`):
 
@@ -76,19 +87,24 @@ Facts (NRules; unchanged shape from today's `D20System.Facts.cs`, GridMap-owned)
 ```csharp
 public sealed record PlayerPosition(int RoomId) : IPlayerLocation;
 public sealed record PreviousRoomId(int RoomId);
-public sealed record WinMarker(IReadOnlyList<int> Line);
+public sealed record WinMarker(IReadOnlyList<int> Line) : IGameWon;
 ```
 
-`PlayerPosition` implements `IPlayerLocation` directly — see [Interop
-contracts](#interop-contracts-lunaflowromd20systeminterop-own-project-a-real-rom-not-a-passive-library).
-`PreviousRoomId` and `WinMarker` cross no boundary and stay plain GridMap facts.
+`PlayerPosition` implements `IPlayerLocation` directly — see [The Cartridge contract
+surface](#the-cartridge-contract-surface-lunaflowcartridge). `PreviousRoomId` crosses no boundary
+and stays a plain GridMap fact. **`WinMarker` was originally written the same way** ("crosses no
+boundary, stays plain"), which this spec's own acceptance criteria and NineRooms' inherited
+`Not<WinMarker>()` guard contradicted once built — see [ticket
+0045](../ClaudeWiki/Processes/Handoffs/0045-challenge-prompt-rule-missing-solved-failed-winmarker-guards.md).
+`WinMarker` now implements `IGameWon`, the fifth contract, same pattern as `PlayerPosition`. Its own
+`Line` field does not cross; only the marker's existence does.
 
 Also in this project: `GridMovementService : IPlayerMovement` — a small adapter, not a fact, that
 performs the actual `Retract`/`Insert` on `PlayerPosition`/`PreviousRoomId`. It references
-`D20SystemInterop` only for the interface it implements; nothing else needs to reference
+`LunaFlow.Cartridge` only for the interface it implements; nothing else needs to reference
 `D20System`. See [Capability declarations](#capability-declarations).
 
-### D20System (trimmed; `LunaFlow.Rom.D20System`, own project, unchanged namespace)
+### D20System (trimmed; `LunaFlow.Rom.D20System`, own project in `example/`, unchanged namespace)
 
 Static content (constructor-injected; replaces the rest of `D20SystemContent`):
 
@@ -117,22 +133,40 @@ rules](#mechanics--rules) for why win-line logic needs nothing from it directly.
 no adapter classes of its own — every capability D20System provides is fact-shaped, observed
 directly, never invoked as an action.
 
-### D20SystemInterop (`LunaFlow.Rom.D20SystemInterop`, own project — a real `IRom`/`IInteropRom`, not a passive library)
+### The Cartridge contract surface (`LunaFlow.Cartridge`)
 
-Per ticket 0036's ruling: this is a genuine third ROM performing the negotiation between the other
-two, not merely a shared assembly of interface definitions. It holds:
+**Corrected 2026-07-27, [ticket 0041](../ClaudeWiki/Processes/Handoffs/0041-correct-grid-rom-d20-split-spec-for-cartridge-pivot.md),
+location fixed same-day by [ticket 0042](../ClaudeWiki/Processes/Handoffs/0042-correct-cartridge-project-location-in-spec.md):**
+this spec originally modeled this as a third ROM (`D20SystemInterop`, implementing `IInteropRom`),
+per [ticket 0036](../ClaudeWiki/Processes/Handoffs/0036-grid-rom-d20system-project-layout-decision.md)'s
+then-ruling. That's superseded — [`design/cartridge.md`](../design/cartridge.md) names this exactly
+the passive contract surface the original framing said it wasn't: content, not framework, so it
+**stays in `example/D20SystemExampleC`** (already its own project — that alone satisfies
+`cartridge.md`'s "own assembly, never inside a ROM" invariant; `src/` is reserved for the genuinely
+engine-agnostic tiers, same reasoning ticket 0038 already applied to keep GridMap/D20System out of
+`src/`), retyped from the original `D20SystemInteropRom : IInteropRom` to bare interfaces, holding
+the five shared interfaces (`IGameWon` added post-build, ticket 0045) and performing no negotiation
+of its own. GridMap and D20System are
+peers declaring `Provides`/`Requires` directly against each other; `ComponentRegistry` validates the
+pair with no third component mediating. It holds:
 
 ```csharp
-// Fact-shaped contracts — matched in rules (Match<T>) or queried in handlers (rules.Query<T>()),
-// no broker call at runtime, per cross-rom-capability-spec.md §1: the shared NRules session does
-// the work once both peers reference this project for the interface.
+// Fact-shaped contracts — matched in rules (Match<T>) or queried in handlers (rules.Query<T>()).
+// Ordinary NRules polymorphic matching does the work once both peers reference this project for
+// the interface — no runtime call into this project at all, per cross-rom-capability-spec.md §1.
 public interface IPlayerLocation { int RoomId { get; } }
 public interface IChallengeSolved { int RoomId { get; } }
 public interface ICombatStatus { int RoomId { get; } int MonsterHp { get; } int PlayerHp { get; } }
 
-// Service-shaped contract — resolved once via D20SystemInterop's own Resolve<T> at
-// composition-root time, invoked from a handler's constructor-injected instance. Never touched
-// from rule code (§4.3).
+// Marker contract, no members. Added post-build (ticket 0045), not at this spec's original
+// writing. D20System's challenge-prompt rules need to stop firing once the game is won, but
+// WinMarker is GridMap's and Not<T>() never reads a property — so the contract carries nothing,
+// not even WinMarker's own Line. Guarded with Not<IGameWon>(), never Not<WinMarker>() by name.
+public interface IGameWon { }
+
+// Service-shaped contract — GridMap implements it; Program.cs constructs GridMap's implementation
+// and passes it directly to FleeCommandHandler's constructor as this interface. No resolve call
+// anywhere; never touched from rule code (§4.3).
 public interface IPlayerMovement
 {
     /// <summary>Moves the player back to <c>PreviousRoomId</c>. Returns false (no-op) if none
@@ -141,38 +175,43 @@ public interface IPlayerMovement
 }
 ```
 
-Plus the concrete `IInteropRom` implementation (name TBD, e.g. `D20SystemInteropRom`) — the
-`Resolve`/`Resolve<T>` machinery per §4.1, populated by the composition root at registration time.
-**This project references neither GridMap nor D20System.** `Resolve` deals only in `Capability`/
-`object`; it never needs either peer's concrete fact types, because the composition root — not the
-broker — is what constructs `GridMovementService` and wires the fact-implementing records. Both
-content ROMs reference `D20SystemInterop` downward for the interfaces; that's the one-directional,
-governed edge phase-2-7.md's Done-When describes, not a peer-to-peer one.
+**This project holds interfaces only — no broker class, no `Resolve`, no registration.** It
+implements no `IRom`, declares no capabilities, and is never registered with `ComponentRegistry`.
+**It references neither GridMap nor D20System**, and — unlike the superseded framing — nothing in
+it needs to, because there is no negotiation logic here to construct anything from either peer's
+concrete types. Both ROMs reference this project downward for the interfaces; that's the
+one-directional, governed edge cross-rom-capability-spec.md §4.4 describes, not a peer-to-peer one.
 
-**Why three contracts are fact-shaped and one is service-shaped:** `IPlayerLocation`,
-`IChallengeSolved`, and `ICombatStatus` are all *observations* of a peer's own state — exactly
-§3's worked example, applied three times. `IPlayerMovement` is the one case that's genuinely an
+**Why three contracts are fact-shaped, one is a bare marker, and one is service-shaped:**
+`IPlayerLocation`, `IChallengeSolved`, and `ICombatStatus` are all *observations* of a peer's own
+state — exactly §3's worked example, applied three times. `IGameWon` is the same kind of
+observation stripped to existence only — the one guard that needs it (`Not<IGameWon>()`) never
+reads a member, so nothing crosses but the type. `IPlayerMovement` is the one case that's genuinely an
 *action* a consumer needs a peer to perform on its own facts (`flee` moving the PC) — mutation
-stays with the owner (§3.2 rule 2, §5), so the consumer invokes a capability the owner implements,
-never mutates the fact itself. This is §4.2's handler-injection pattern, generalized from a query
-(`ILocationQuery` in the spec's own example) to an action.
+stays with the owner (§3.2 rule 2, §6), so the consumer is handed a capability the owner
+implements, never mutates the fact itself. This is §4.2's constructor-injection pattern, generalized
+from a query (`ILocationQuery` in the spec's own example) to an action — supplied directly by
+`Program.cs`, not resolved from anywhere.
 
 ### Capability declarations
 
 ```csharp
 // GridMap
 Provides: [ new("PlayerLocation", typeof(IPlayerLocation)),
-            new("PlayerMovement", typeof(IPlayerMovement)) ]
+            new("PlayerMovement", typeof(IPlayerMovement)),
+            new("GameWon", typeof(IGameWon)) ]          // added post-build, ticket 0045
 Requires: [ new("ChallengeSolved", typeof(IChallengeSolved)) ]
 
 // D20System
 Provides: [ new("ChallengeSolved", typeof(IChallengeSolved)),
             new("CombatStatus", typeof(ICombatStatus)) ]
 Requires: [ new("PlayerLocation", typeof(IPlayerLocation)),
-            new("PlayerMovement", typeof(IPlayerMovement)) ]
+            new("PlayerMovement", typeof(IPlayerMovement)),
+            new("GameWon", typeof(IGameWon)) ]          // added post-build, ticket 0045
 
-// D20SystemInterop — provides no game-facing capability of its own; it's the broker the two
-// content ROMs' Provides/Requires resolve through, registered as its own IRom for identity.
+// LunaFlow.Cartridge isn't registered at all — not an IRom, provides/requires nothing itself.
+// GridMap and D20System declare Provides/Requires directly against each other; ComponentRegistry
+// validates the pair with no third component in the loop.
 ```
 
 ## Mechanics / rules
@@ -191,7 +230,7 @@ unconditionally, same as today. The combat-status line ("You're at 8/11 HP. He's
 now a cross-ROM read: `rules.Query<ICombatStatus>().FirstOrDefault(s => s.RoomId == current.RoomId)`
 against the shared session — the contract type, never `CombatRound` by name. No behavior change
 visible to the player; the query source changes from `LunaFlow.Rom.D20System.CombatRound` to the
-`D20SystemInterop`-defined contract.
+`LunaFlow.Cartridge`-defined contract.
 
 **Win-line rules** (8 total, relocated to a `GridMapRuleGroup`): unchanged shape and unchanged
 room-id groupings. The one change: each `Match<RoomSolved>(...)` becomes
@@ -210,7 +249,12 @@ becomes `Match<RoomChallenge>(...)` (D20System's own trimmed fact, no cross-ROM 
 `Match<PlayerPosition>(p => p.RoomId == roomId)` becomes `Match<IPlayerLocation>(loc => loc.RoomId
 == roomId)` — the rule correlates against GridMap's provided contract, never `PlayerPosition` by
 name. `Not<RoomSolved>`/`Not<RoomFailed>` stay concrete — D20System owns both, no cross-ROM read
-needed for its own facts.
+needed for its own facts. **A third guard, `Not<IGameWon>()`, is required and was originally missed
+in translation** (ticket 0045): the pre-split rule this family descends from carries a bare
+`Not<WinMarker>()` (see NineRooms' `ChallengeRules.cs`), and `1-d20-spec.md` inherits it silently as
+"the same guard Nine Rooms already relies on." `WinMarker` is GridMap's and crosses no boundary by
+name, so the guard is written against the fifth Cartridge contract instead — the one cross-ROM read
+this rule family needs, same contract-typed pattern as `Match<IPlayerLocation>`.
 
 **`check`** (`CheckCommandHandler`, relocated): unchanged mechanics (`D20ResolutionMechanic.ResolveCheck`,
 success/failure narration). The current-room lookup changes from `rules.Query<PlayerPosition>().First()`
@@ -225,8 +269,8 @@ for validity-checking the current room.
 no active `CombatRound`; stays put if fled before any `move`). The one change is structural: instead
 of directly retracting/inserting `PlayerPosition`/`PreviousRoomId` (facts it no longer owns),
 `FleeCommandHandler` calls its constructor-injected `IPlayerMovement.ReturnToPreviousRoom()` —
-resolved from `D20SystemInterop` at composition-root time, implemented by GridMap's
-`GridMovementService`. A `false` return (no `PreviousRoomId` yet) maps to the existing "stay put"
+`Program.cs` constructs GridMap's `GridMovementService` directly and passes it in; no resolve call,
+no broker, plain DI. A `false` return (no `PreviousRoomId` yet) maps to the existing "stay put"
 behavior — same outcome, now reached through the capability instead of a direct fact mutation.
 
 ## Commands & handlers
@@ -237,14 +281,15 @@ behavior — same outcome, now reached through the capability instead of a direc
 | `look` | GridMap | `PlayerPosition`, `GridRoomData`, `ICombatStatus` | — | `ICombatStatus` (query) |
 | `check` | D20System | `IPlayerLocation`, `RoomChallenge`, ability scores | `RoomSolved` | `IPlayerLocation` (query) |
 | `fight` | D20System | `IPlayerLocation`, `PlayerCharacter`, `MonsterTemplate`, `CombatRound`, `RoomChallenge` | `CombatRound`, `RoomSolved`, `RoomFailed` | `IPlayerLocation` (query) |
-| `flee` | D20System | `CombatRound` | `CombatRound` | `IPlayerMovement` (resolve + invoke, via `D20SystemInterop`) |
+| `flee` | D20System | `CombatRound` | `CombatRound` | `IPlayerMovement` (constructor-injected by `Program.cs`, no resolve) |
 
 ## Acceptance criteria
 
-- [ ] `IRom` instances exist for GridMap, D20System, and `D20SystemInterop` (the latter also
-      implementing `IInteropRom`); `ComponentRegistry.Validate()` passes with all three registered.
-- [ ] `OneD20RuleBook.DependsOnRoms` names all three: `"GridMap"`, `"D20System"`,
-      `"D20SystemInterop"`.
+- [ ] `IRom` instances exist for GridMap and D20System only; `ComponentRegistry.Validate()` passes
+      with both registered. `LunaFlow.Cartridge` implements no `IRom` and is not registered.
+- [ ] `OneD20RuleBook.DependsOnRoms` names both: `"GridMap"`, `"D20System"` — confirmed by Juno per
+      ticket 0041 (there's nothing for a third entry to validate against once the contract surface
+      isn't an `IRom`).
 - [ ] Every behavior in `1-d20-spec.md`'s existing acceptance criteria still holds unchanged,
       verified against the split structure — this spec introduces no new player-facing behavior,
       only relocates the fact/handler ownership behind it.
@@ -253,48 +298,53 @@ behavior — same outcome, now reached through the capability instead of a direc
       graph, not just a passing test, per `cross-rom-capability-spec.md`'s own acceptance criterion 1).
 - [ ] Win-line rules fire correctly off `IChallengeSolved`, matched from a `RoomSolved` fact
       D20System inserts — same zero-reference bar, opposite direction.
+- [ ] Once any `WinMarker` exists, every challenge-prompt rule stops announcing — for the room it
+      just won *and* for every other unsolved room — verified via `Not<IGameWon>()`, matched from a
+      `WinMarker` fact GridMap inserts, with zero project reference from D20System to GridMap (same
+      assembly-graph bar as the two criteria above). Added by ticket 0045; the fifth Cartridge
+      contract.
 - [ ] `look`'s combat-status line reports correctly via `ICombatStatus`, sourced from D20System's
       `CombatRound` with no reference from GridMap to D20System.
 - [ ] `flee` returns the PC to `PreviousRoomId` via `IPlayerMovement.ReturnToPreviousRoom()`, and the
       no-`PreviousRoomId`-yet case returns `false` without throwing and without moving the PC.
-- [ ] `D20SystemInterop` has zero project reference to either GridMap or D20System — verified
-      against the assembly graph, confirming the broker resolves by `Capability`/`object` alone.
+- [ ] `LunaFlow.Cartridge` has zero project reference to either GridMap or D20System — verified
+      against the assembly graph. It contains interfaces only; there is nothing else to reference.
 - [ ] `D20SystemContent.Configure` and its backing static state are gone from both content ROMs;
       `Program.cs` passes Scenario data (rooms, flavor text, PC/monster stats, ability scores, start
       room) by constructor argument.
-- [ ] Removing any of the three ROMs from the registration list produces a clear load-time error
-      (from the framework's registry validation, not this spec's content) rather than a silent
-      failure.
+- [ ] Removing either ROM from the registration list produces a clear load-time error (from the
+      framework's registry validation, not this spec's content) rather than a silent failure.
 - [ ] Full suite green, read from an Arryn-run `latest.trx`.
 
 ## Framework dependencies
 
-- **`D20SystemInterop`'s aggregate/resolve implementation** — phase-2-7.md's Architect-owned
-  deliverable, now sized against this spec's real capability list (three fact-shaped, one
-  service-shaped) instead of a guessed example. Not a new ask; named here so the sizing has a real
-  target.
 - **`DependsOnRoms` validation enforcement** — already tracked as live framework work in
   phase-2-7.md's Deliverables (`ComponentRegistry.Validate()` doesn't read it yet). Not a new ask.
-- Project layout itself is resolved — [ticket 0036](../ClaudeWiki/Processes/Handoffs/0036-grid-rom-d20system-project-layout-decision.md)
-  closed against the example scaffold in `example/D20SystemExampleA`/`B`/`C`. No longer an open
-  framework dependency.
+- **The bootstrap contract probe** (`cross-rom-capability-spec.md` §5) — a Phase 2.7 framework
+  deliverable, not this spec's to build, but this spec's five contracts are exactly what it exercises
+  at bootstrap. Named here so the connection is visible, not as a new ask.
+- Project layout: `GridMap`, `D20System`, and `LunaFlow.Cartridge` (the contract surface, retyped
+  from `D20SystemInteropRom : IInteropRom` to bare interfaces) all stay in `example/` — content, not
+  framework, so `src/` doesn't apply to any of the three; the Cartridge's "own assembly" invariant is
+  satisfied by `example/D20SystemExampleC` already being its own project. Confirmed by Arryn (tickets
+  0038, 0040). No longer an open framework dependency — superseded framing struck via
+  [ticket 0036](../ClaudeWiki/Processes/Handoffs/0036-grid-rom-d20system-project-layout-decision.md),
+  corrected via [ticket 0041](../ClaudeWiki/Processes/Handoffs/0041-correct-grid-rom-d20-split-spec-for-cartridge-pivot.md),
+  location fixed via [ticket 0042](../ClaudeWiki/Processes/Handoffs/0042-correct-cartridge-project-location-in-spec.md).
 
 ## Open questions / edge cases
 
-- **`ICombatStatus`/`IPlayerLocation` as handler-side `Query<T>` vs. broker `Resolve`:** this spec
-  treats fact-shaped contracts as directly queryable through the shared NRules session (no broker
-  call, per §1's polymorphic-matching finding extending to `Query<T>` the same way it does to
-  `Match<T>`) and reserves `D20SystemInterop`'s `Resolve` for the one service-shaped case
-  (`IPlayerMovement`). If the broker's implementation disagrees with this reading of §1, that's a
-  real design divergence to catch before Baraka builds against this spec, not after.
+- **`ICombatStatus`/`IPlayerLocation` as handler-side `Query<T>` — settled, not open** (was flagged
+  as an open risk in this spec's original draft; resolved by the Cartridge pivot rather than by
+  Baraka's build). There is no broker `Resolve` under any reading now — `cross-rom-capability-spec.md`
+  §4.1 cuts it outright, on trust-boundary grounds independent of this spec. Fact-shaped contracts
+  are queried/matched directly through the shared NRules session; `IPlayerMovement` is supplied by
+  constructor injection from `Program.cs`. No divergence to catch.
 - **Whether `RoomChallenge`/`GridRoomData` need to be seeded as NRules facts** (today's `Room` is —
   see `D20SystemRuleGroup.ChallengeRule`'s `Match<Room>`) or can stay plain dictionary lookups in
   generated `Then()` code. Not decided here; RulePrototype generation shape is Baraka's translation
   of this spec's stated behavior, per `content-spec-template.md`'s "state player-facing behavior,
   not NRules mechanics" instruction.
-- **`D20SystemInteropRom`'s exact class name** — placeholder, Baraka's call; the project/namespace
-  name (`D20SystemInterop`) is fixed by ticket 0036's example scaffold, the class name inside it
-  isn't.
 - **NineRooms** — confirmed untouched by this spec; it keeps its own `PlayerPosition`/`RoomSolved`/
   `WinMarker` facts, duplicated rather than shared, exactly as it does today against D20System.
 
@@ -305,7 +355,10 @@ behavior — same outcome, now reached through the capability instead of a direc
 - [`1-d20/1-d20-flavor.md`](1-d20/1-d20-flavor.md) — flavor keys, unchanged, now split in ownership
   between `GridRoomData.DescriptionKey` and `RoomChallenge`'s prompt/success/failure keys
 - [`cross-rom-capability-spec.md`](cross-rom-capability-spec.md) — the authoring contract (§3) this
-  spec builds against, and the broker surface (§4) it names capabilities for
+  spec builds against, and §4 (behaviour across the boundary — no broker, constructor injection
+  only) that this spec's `IPlayerMovement` wiring follows
+- [`../design/cartridge.md`](../design/cartridge.md) — the published-unit design this spec's
+  contract-surface framing follows; its own worked example is this exact split
 - [`../Roadmap/phase-2-7.md`](../Roadmap/phase-2-7.md) — the phase this spec's content belongs to
 - [`../Roadmap/phase-2-6-5.md`](../Roadmap/phase-2-6-5.md) — `IRom`/`IInteropRom`/`Capability`/
   `IHasDependencies`, shipped and load-bearing for this spec
@@ -315,5 +368,11 @@ behavior — same outcome, now reached through the capability instead of a direc
 - [Ticket 0034](../ClaudeWiki/Processes/Handoffs/0034-handoff-juno-builds-against-cross-rom-capability-spec-md.md) —
   the handoff this spec answers
 - [Ticket 0036](../ClaudeWiki/Processes/Handoffs/0036-grid-rom-d20system-project-layout-decision.md) —
-  resolved; the three-project layout this spec builds against
+  superseded in part (the `D20SystemInterop`-as-ROM framing); its project-location ruling for
+  GridMap/D20System in `example/` stands
+- [Ticket 0041](../ClaudeWiki/Processes/Handoffs/0041-correct-grid-rom-d20-split-spec-for-cartridge-pivot.md) —
+  the correction this revision applies
+- [Ticket 0045](../ClaudeWiki/Processes/Handoffs/0045-challenge-prompt-rule-missing-solved-failed-winmarker-guards.md) —
+  the missing-guard defect that surfaced `IGameWon`, the fifth Cartridge contract; this doc's
+  2026-07-29 amendment brings it into agreement with what shipped
 - [Specs README](README.md)

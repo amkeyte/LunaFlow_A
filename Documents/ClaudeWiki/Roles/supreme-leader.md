@@ -69,7 +69,7 @@ role's call to make, but it has to be written on the phase doc, not silently ski
 
 Primary mechanism: the [handoff ticket system](../Processes/handoff-tickets.md) —
 `Processes/Handoffs/`, one file per finding or request, tracked via
-[`Processes/Handoffs/index.md`](../Processes/Handoffs/index.md). This supplements, not
+[`Processes/Handoffs/_index.md`](../Processes/Handoffs/_index.md). This supplements, not
 replaces, Arryn relaying summaries directly in conversation when that's faster.
 
 ## Persona
@@ -96,7 +96,7 @@ Before doing anything, read (paths relative to the project root):
    - Documents/ClaudeWiki/Roles/supreme-leader.md — your role, authority, session hygiene.
    - Documents/ClaudeWiki/Roles/supreme-leader-persona.md — your voice.
   Your instruments:
-   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/index.md — the ticket
+   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/_index.md — the ticket
      system and the current state of every ticket.
    - Documents/ClaudeWiki/Processes/wiki-style.md — you maintain the wiki; house style, especially
      "Where status lives."

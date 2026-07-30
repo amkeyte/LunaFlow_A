@@ -369,27 +369,34 @@ namespace LunaFlow.EngineTests.Core
             // Each thread waits for its turn to complete before the next thread submits
             var submitLock = new object();
             var threads = new List<Thread>();
+            var waitResults = new ConcurrentBag<bool>();
 
             for (int i = 0; i < 5; i++)
             {
-                var turnIndex = i + 1; // Turn 1, 2, 3, 4, 5
                 var thread = new Thread(() =>
                 {
                     var turnFired = new ManualResetEventSlim(false);
 
-                    EventHandler waitForTurn = (s, e) =>
-                    {
-                        if (_engine.TurnCounter == turnIndex)
-                            turnFired.Set();
-                    };
+                    // Gate on "the next tick to fire," not a precomputed turn number: Thread.Start()
+                    // gives no ordering guarantee, so a thread's lock-acquisition order (and thus
+                    // which TurnCounter value its FinishTurn() call actually produces) need not match
+                    // its creation order. Checking TurnCounter against a fixed expected index made
+                    // this gate spuriously never match, silently exhausting the full timeout and
+                    // releasing the lock regardless — the exact gap that let two FinishTurn() calls
+                    // overlap and coalesce into one advance (TurnFinished is a bool, not a counter).
+                    // Since this thread is the sole submitLock holder and the only one that just
+                    // called FinishTurn(), the very next tick is unambiguously its own.
+                    EventHandler waitForTurn = (s, e) => turnFired.Set();
 
                     lock (submitLock)
                     {
                         SubscribeToTurnTick(waitForTurn);
                         _engine.FinishTurn();
 
-                        // Wait for this specific turn to fire before releasing lock so next thread can submit
-                        turnFired.Wait(TimeSpan.FromSeconds(2));
+                        // Wait for this specific turn to fire before releasing lock so next thread can submit.
+                        // Assert must not run on this background thread (an AssertFailedException here
+                        // wouldn't fail the test cleanly) — record the result and assert after Join().
+                        waitResults.Add(turnFired.Wait(TimeSpan.FromSeconds(2)));
 
                         _engine.TurnTick -= waitForTurn;
                         _turnTickSubscribers.Remove(waitForTurn);
@@ -406,6 +413,7 @@ namespace LunaFlow.EngineTests.Core
                 thread.Join();
 
             // Assert - verify all turns fired in order
+            Assert.AreEqual(5, waitResults.Count(r => r), "Every thread's own FinishTurn() should have fired its turn within the timeout");
             Assert.AreEqual(5, turnNumbers.Count, "All 5 turns should have fired");
             var ordered = turnNumbers.OrderBy(x => x).ToList();
             for (int i = 0; i < 5; i++)

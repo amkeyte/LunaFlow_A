@@ -1,4 +1,4 @@
-namespace LunaFlow.Rom.D20SystemInterop
+namespace LunaFlow.Cartridge
 {
     /// <summary>Contract interface for cross-ROM service: player movement actions.</summary>
     public interface IPlayerMovement

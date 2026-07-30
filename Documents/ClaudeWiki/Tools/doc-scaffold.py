@@ -28,7 +28,7 @@ def slugify(title: str) -> str:
 def existing_ticket_ids(handoffs_dir: Path) -> set[str]:
     ids = set()
     for f in handoffs_dir.glob("*.md"):
-        if f.name == "index.md":
+        if f.name in ("_index.md", "index-archive.md"):
             continue
         m = re.match(r"^(\d{4})-", f.name)
         if m:
@@ -99,7 +99,7 @@ def cmd_ticket(args: argparse.Namespace) -> int:
     existing = existing_ticket_ids(handoffs_dir)
     if ticket_id in existing:
         print(f"ERROR: Ticket ID {ticket_id} already in use in {handoffs_dir}.", file=sys.stderr)
-        print("Pick the next free number (check Handoffs/index.md too — the folder and the index can drift).", file=sys.stderr)
+        print("Pick the next free number (check Handoffs/_index.md too — the folder and the index can drift).", file=sys.stderr)
         return 1
 
     slug = slugify(args.title)
@@ -118,7 +118,7 @@ def cmd_ticket(args: argparse.Namespace) -> int:
     print(f"Created: {out_path.relative_to(root)}")
     print("Next steps:")
     print("  1. Fill in ## Details (Context, Ask).")
-    print("  2. Add a row to Handoffs/index.md once there's real content (not auto-generated).")
+    print("  2. Add a row to Handoffs/_index.md once there's real content (not auto-generated).")
     print("  3. Leave ## Decision as-is until there's a ruling to summarize.")
     return 0
 

@@ -6,13 +6,13 @@ chat can act on a specific ask without ingesting another chat's full context.
 ## Location
 
 Each ticket is its own file in [`Handoffs/`](Handoffs/) — one concern per ticket, matching the
-wiki-wide rule that pages stay hyper-topical. [`Handoffs/index.md`](Handoffs/index.md) lists
+wiki-wide rule that pages stay hyper-topical. [`Handoffs/_index.md`](Handoffs/_index.md) lists
 every ticket with its status, so a chat can scan the index instead of the folder.
 
 ## Naming
 
 `NNNN-short-slug.md` — sequential across the whole system (not per-role), zero-padded to 4
-digits. Next number is whatever follows the highest one already in `Handoffs/index.md`.
+digits. Next number is whatever follows the highest one already in `Handoffs/_index.md`.
 
 ## Lifecycle
 
@@ -64,5 +64,5 @@ whoever raised it — the assignee doesn't get to close their own ticket.
 ## Adding a ticket
 
 1. Create `Handoffs/NNNN-short-slug.md` from the template above.
-2. Add a row to `Handoffs/index.md`.
+2. Add a row to `Handoffs/_index.md`.
 3. Keep it scoped to one ask — if it grows a second concern, split it into another ticket.

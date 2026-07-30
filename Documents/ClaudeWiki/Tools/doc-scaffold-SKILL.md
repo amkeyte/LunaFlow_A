@@ -74,11 +74,11 @@ a placeholder note on a fresh `open` ticket.]
 ```
 
 **Notes:**
-- ID is auto-formatted to 4 digits (`0033`, not `33`); script checks `Handoffs/index.md` and the
+- ID is auto-formatted to 4 digits (`0033`, not `33`); script checks `Handoffs/_index.md` and the
   folder itself for the next free number and warns on collision.
 - Filename is auto-slugified from title (lowercase, spaces → hyphens, punctuation stripped).
 - Status defaults to `open`.
-- **Does not** auto-add a row to `Handoffs/index.md` — that's a deliberate manual step (the index
+- **Does not** auto-add a row to `Handoffs/_index.md` — that's a deliberate manual step (the index
   row is a summary written after the ticket has real content, not generated from a title alone).
 
 ### Spec Template
@@ -111,7 +111,7 @@ a placeholder note on a fresh `open` ticket.]
 The script (`doc-scaffold.py`) does:
 
 1. **Validate inputs** — ticket ID not already in use (checked against the `Handoffs/` folder
-   listing, not just `index.md`, since the two can drift); spec name doesn't collide with an
+   listing, not just `_index.md`, since the two can drift); spec name doesn't collide with an
    existing file in `Specs/`.
 2. **Create file with correct path** — `Handoffs/NNNN-slug.md` or `Specs/spec-name-spec.md`.
 3. **Populate template** — insert provided metadata (title, design-doc link, dates).
@@ -150,7 +150,7 @@ python3 Documents/ClaudeWiki/Tools/doc-scaffold.py ticket --id 0033 \
   --title "ROM identity & cross-ROM interop" --opened-by Kofi --for Amara
 # → Documents/ClaudeWiki/Processes/Handoffs/0033-rom-identity-cross-rom-interop.md
 # Ready to edit: fill in Decision (2–4 sentences), Context, Ask
-# Reminder: add a row to Handoffs/index.md once there's real content
+# Reminder: add a row to Handoffs/_index.md once there's real content
 ```
 
 **Creating a new spec:**

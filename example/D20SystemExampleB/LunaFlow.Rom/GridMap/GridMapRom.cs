@@ -7,7 +7,7 @@ namespace LunaFlow.Rom.GridMap
     /// <summary>
     /// The GridMap ROM: handles spatial concerns for the 1.d20 grid.
     /// Owns facts: PlayerPosition, PreviousRoomId, WinMarker.
-    /// Provides: PlayerLocation, PlayerMovement capabilities.
+    /// Provides: PlayerLocation, PlayerMovement, GameWon capabilities.
     /// Requires: ChallengeSolved capability (from D20System).
     /// </summary>
     public sealed class GridMapRom : IRom
@@ -28,11 +28,14 @@ namespace LunaFlow.Rom.GridMap
         /// <summary>Credits for the GridMap ROM.</summary>
         public string Credits => "Spatial navigation and win-condition logic";
 
-        /// <summary>Capabilities this ROM provides: PlayerLocation and PlayerMovement.</summary>
+        /// <summary>Capabilities this ROM provides: PlayerLocation, PlayerMovement, and GameWon.
+        /// Each pairs its contract with the concrete type that implements it — a mismatched pairing
+        /// is a compile error, per ticket 0048.</summary>
         public IReadOnlyList<Capability> Provides => new[]
         {
-            new Capability("PlayerLocation", typeof(LunaFlow.Rom.D20SystemInterop.IPlayerLocation)),
-            new Capability("PlayerMovement", typeof(LunaFlow.Rom.D20SystemInterop.IPlayerMovement)),
+            Capability.Provided<LunaFlow.Cartridge.IPlayerLocation, PlayerPosition>("PlayerLocation"),
+            Capability.Provided<LunaFlow.Cartridge.IPlayerMovement, GridMovementService>("PlayerMovement"),
+            Capability.Provided<LunaFlow.Cartridge.IGameWon, WinMarker>("GameWon"),
         };
 
         /// <summary>Capabilities this ROM requires: none. Win-line rules match IChallengeSolved facts through NRules, not capability mediation.</summary>

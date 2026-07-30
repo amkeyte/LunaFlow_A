@@ -1,5 +1,5 @@
 using LunaFlow.Engine;
-using LunaFlow.Rom.D20SystemInterop;
+using LunaFlow.Cartridge;
 
 namespace LunaFlow.Rom.D20System
 {
@@ -8,15 +8,17 @@ namespace LunaFlow.Rom.D20System
     {
         private readonly D20SystemRom _d20System;
         private readonly D20ResolutionMechanic _mechanic;
+        private readonly IReadOnlyDictionary<string, string> _flavorText;
 
-        /// <summary>Constructs the handler with the D20System ROM and resolution mechanic.</summary>
-        public CheckCommandHandler(D20SystemRom d20System, D20ResolutionMechanic? mechanic = null)
+        /// <summary>Constructs the handler with the D20System ROM, resolution mechanic, and the Rulebook's flavor text.</summary>
+        public CheckCommandHandler(D20SystemRom d20System, IReadOnlyDictionary<string, string> flavorText, D20ResolutionMechanic? mechanic = null)
         {
             _d20System = d20System;
+            _flavorText = flavorText;
             _mechanic = mechanic ?? d20System.Mechanic;
         }
 
-        /// <summary>Resolves a skill check for the current room.</summary>
+        /// <summary>Resolves a skill check for the current room. Silent no-op if already solved.</summary>
         public void Handle(ICommand command)
         {
             var rules = LunaFlowEngine.Host.Rules;
@@ -26,18 +28,24 @@ namespace LunaFlow.Rom.D20System
             var challenge = _d20System.Challenges.Values.FirstOrDefault(c => c.Id == location.RoomId);
             if (challenge?.SkillAbility is null) return;
 
+            if (rules.Query<RoomSolved>().Any(rs => rs.RoomId == location.RoomId))
+                return;
+
             var abilityScore = _d20System.PlayerAbilityScores[challenge.SkillAbility];
             var modifier = D20SystemRom.AbilityModifier(abilityScore);
             var result = _mechanic.ResolveCheck(modifier, challenge.DC ?? 10);
+            var readout = $"{challenge.Skill}: rolled {result.Total} vs. DC {result.TargetNumber}.";
 
             if (result.Success)
             {
                 rules.Insert(new RoomSolved(location.RoomId));
-                LunaFlowEngine.Host.Announce("Check succeeded!");
+                LunaFlowEngine.Host.Announce(_flavorText[challenge.SuccessKey!]);
+                LunaFlowEngine.Host.Announce(readout);
             }
             else
             {
-                LunaFlowEngine.Host.Announce("Check failed.");
+                LunaFlowEngine.Host.Announce(_flavorText[challenge.FailureKey!]);
+                LunaFlowEngine.Host.Announce(readout);
             }
         }
     }

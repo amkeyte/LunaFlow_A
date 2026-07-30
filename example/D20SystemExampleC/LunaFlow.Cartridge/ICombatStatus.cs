@@ -1,4 +1,4 @@
-namespace LunaFlow.Rom.D20SystemInterop
+namespace LunaFlow.Cartridge
 {
     /// <summary>Contract interface for cross-ROM fact: the status of an active fight.</summary>
     public interface ICombatStatus

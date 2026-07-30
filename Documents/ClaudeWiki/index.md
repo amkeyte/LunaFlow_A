@@ -38,7 +38,7 @@ that helps a session ramp up fast and stay in scope, without belonging in a desi
 | [Dev — Test Suite](Roles/dev-test.md) | Roles |
 | [QA / Verification](Roles/qa.md) | Roles |
 | [Handoff Tickets](Processes/handoff-tickets.md) | Processes |
-| [Handoff Ticket Index](Processes/Handoffs/index.md) | Processes |
+| [Handoff Ticket Index](Processes/Handoffs/_index.md) | Processes |
 | [Testing — quick-start](Processes/testing-quick-start.md) | Processes |
 | [Testing — conventions & workflow](Processes/testing.md) | Processes |
 | [Test Runbook — execution & diagnostics](Processes/test-runbook.md) | Processes |

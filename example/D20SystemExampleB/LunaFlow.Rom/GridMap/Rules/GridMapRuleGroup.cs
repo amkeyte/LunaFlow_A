@@ -1,4 +1,4 @@
-using LunaFlow.Rom.D20SystemInterop;
+using LunaFlow.Cartridge;
 using LunaFlow.Rules.GeneratorServices;
 
 namespace LunaFlow.Rom.GridMap
@@ -33,7 +33,7 @@ namespace LunaFlow.Rom.GridMap
         {
             Name = name,
             Description = $"Inserts a WinMarker once rooms {string.Join(", ", line)} are all solved.",
-            RequiredUsings = new() { "LunaFlow.Rom.GridMap", "LunaFlow.Rom.D20SystemInterop" },
+            RequiredUsings = new() { "LunaFlow.Rom.GridMap", "LunaFlow.Cartridge" },
             WhenStatements = line
                 .Select(id => $"Match<IChallengeSolved>(cs => cs.RoomId == {id})")
                 .Append("Not<WinMarker>()")

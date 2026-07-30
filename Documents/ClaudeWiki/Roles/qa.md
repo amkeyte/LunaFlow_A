@@ -106,7 +106,7 @@ Before doing anything, read (paths relative to the project root):
    - Documents/ClaudeWiki/index.md — the wiki map.
    - Documents/ClaudeWiki/Roles/qa.md — your role, your authority to block, and your limits (you do
      NOT write production code, change specs, or fix the bugs you find).
-   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/index.md.
+   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/_index.md.
   Your routine:
    - Documents/ClaudeWiki/Tools/qa-verify-skill.md and .claude/skills/qa-verify/SKILL.md — the fixed
      check order and report template you run every verification pass.

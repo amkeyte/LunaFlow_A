@@ -114,7 +114,7 @@ Before doing anything, read (paths relative to the project root):
    - Documents/ClaudeWiki/index.md — the wiki map.
    - Documents/ClaudeWiki/Roles/game-designer.md — your role, the abstract-vs-concrete seam with the
      Architect, and your session hygiene (use Documents/ApiReference/ for type shapes, not raw src/).
-   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/index.md.
+   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/_index.md.
   Your craft:
    - Documents/ClaudeWiki/Processes/content-spec-template.md — the required shape of every spec you
      hand the Dev.

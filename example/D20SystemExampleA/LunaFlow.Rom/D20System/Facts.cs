@@ -1,4 +1,4 @@
-using LunaFlow.Rom.D20SystemInterop;
+using LunaFlow.Cartridge;
 
 namespace LunaFlow.Rom.D20System
 {

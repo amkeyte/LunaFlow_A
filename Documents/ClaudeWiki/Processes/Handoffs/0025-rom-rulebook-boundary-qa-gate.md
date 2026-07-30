@@ -1,6 +1,6 @@
 # 0025 — QA gate: ROM/Rulebook + cross-ROM boundary verdict
 
-**Status:** open (parked — not actionable until Phase 2.7 is implementation-complete)
+**Status:** in-review
 **Opened by:** Supreme Leader (Kofi)
 **Opened:** 2026-07-22
 **For:** QA (Lothar)
@@ -58,7 +58,31 @@ fully-signed across 2.6/2.6.5/2.7 — closing the honesty gap `phase-2-6.md` cur
 
 ## Response
 
-_(Lothar to fill in when the gate fires.)_
+Gate fired 2026-07-29. Full verdict: [`phase-2-7-verdict.md`](../../../QA/phase-2-7-verdict.md) — **FAIL**.
+
+Items 1, 3, 4, 5 of the ask **PASS**: no `LunaFlow.Rulebook` source touches `ICommandHandler`/
+`LunaFlowEngine.Host`/`RuleEngine`; `GridMapRom`/`D20SystemRom` correlate `PlayerPosition` (and three
+other facts) through `Capability`-declared contract types with zero project reference between the
+two ROM projects (checked the `.csproj` files directly, not just that it runs); `ComponentRegistry
+.Validate()`'s duplicate-provider/missing-requirement/tier/cycle checks are all present and covered
+by `ComponentRegistryTests` in the 119/119 suite; `D20SystemContent.Configure` is gone from both
+content ROMs (retained, obsolete, for NineRooms regression only — a ticketed exception, not drift).
+
+Item 2 **fails on a narrower point than the ask anticipated**: cross-ROM correlation itself is
+correctly zero-reference, but the *load-time fail-fast on removing a ROM* half of item 2/the phase's
+own Done-When rests on `DependsOnRoms` being validated — and it isn't. `ComponentRegistry.Validate()`
+never reads it; nothing in `Program.cs` does either. Phase-2-7.md's own text already flagged this as
+live work in progress; this pass confirms it's still unbuilt. Compounding that, the bootstrap contract
+probe (§5 of `cross-rom-capability-spec.md`, an explicitly named 2.7 deliverable) doesn't exist at all
+— no assignability probe, no member-resolution probe, no binding-exception barrier anywhere in the
+codebase. Both filed as new defect tickets to Baraka: [0046](0046-bootstrap-contract-probe-not-built.md),
+[0047](0047-dependsonroms-validation-not-enforced.md).
+
+A third, already-open gap (ticket [0043](0043-generated-rules-have-no-seam-for-rulebook-flavor-text.md))
+also blocks the grid-rom-d20-split-spec's "behavior unchanged" bar — not new, just confirmed still live.
+
+Not requesting Kofi resolve this ticket — that call is yours per the ownership rule. This response is
+the evidence; `phase-2-7-verdict.md` has the full criterion-by-criterion table.
 
 ## Resolution
 

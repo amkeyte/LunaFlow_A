@@ -1,4 +1,4 @@
-namespace LunaFlow.Rom.D20SystemInterop
+namespace LunaFlow.Cartridge
 {
     /// <summary>Contract interface for cross-ROM fact: a room's challenge has been resolved successfully.</summary>
     public interface IChallengeSolved

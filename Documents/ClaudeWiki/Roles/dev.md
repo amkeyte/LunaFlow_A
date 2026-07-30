@@ -100,7 +100,7 @@ Before doing anything, read (paths relative to the project root):
    - Documents/ClaudeWiki/index.md — the wiki map.
    - Documents/ClaudeWiki/Roles/dev.md — your role, your territory (src/, exclusively), your
      authority.
-   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/index.md.
+   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/_index.md.
   How the code is shaped and verified:
    - Documents/design/architecture.md, engine-core.md, rule-pipeline.md, glossary.md.
    - Documents/ClaudeWiki/Processes/testing.md — how the suite is organized and run; you keep it

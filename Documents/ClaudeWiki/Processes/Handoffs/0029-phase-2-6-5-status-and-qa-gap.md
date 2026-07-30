@@ -111,7 +111,7 @@ Five items. Items 1–3 are decisions I need from you; 4–5 are small fixes on 
    breaks its own rule. Suggest cutting the status claim rather than refreshing it, per your own
    status-hygiene practice.
 
-5. **[`index.md`](index.md) has a duplicate 0028 row** — ticket 0028 is listed twice, with
+5. **[`index.md`](_index.md) has a duplicate 0028 row** (file renamed to `_index.md` 2026-07-27) — ticket 0028 is listed twice, with
    near-identical summaries. Left for you rather than silently fixed; the ticket index is yours.
 
 Two related tickets filed alongside this one:

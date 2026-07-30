@@ -8,7 +8,7 @@ namespace LunaFlow.Rom.D20System
     /// The trimmed D20System ROM: handles challenge/combat concerns for the 1.d20 grid.
     /// Owns facts: RoomChallenge, CombatRound, RoomFailed.
     /// Provides: ChallengeSolved, CombatStatus capabilities.
-    /// Requires: PlayerLocation, PlayerMovement capabilities (from GridMap).
+    /// Requires: PlayerLocation, PlayerMovement, GameWon capabilities (from GridMap).
     /// </summary>
     public sealed class D20SystemRom : IRom
     {
@@ -39,18 +39,21 @@ namespace LunaFlow.Rom.D20System
         /// <summary>Credits for the D20System ROM.</summary>
         public string Credits => "D20 challenge resolution and combat mechanics";
 
-        /// <summary>Capabilities this ROM provides: ChallengeSolved and CombatStatus.</summary>
+        /// <summary>Capabilities this ROM provides: ChallengeSolved and CombatStatus.
+        /// Each pairs its contract with the concrete type that implements it — a mismatched pairing
+        /// is a compile error, per ticket 0048.</summary>
         public IReadOnlyList<Capability> Provides => new[]
         {
-            new Capability("ChallengeSolved", typeof(LunaFlow.Rom.D20SystemInterop.IChallengeSolved)),
-            new Capability("CombatStatus", typeof(LunaFlow.Rom.D20SystemInterop.ICombatStatus)),
+            Capability.Provided<LunaFlow.Cartridge.IChallengeSolved, RoomSolved>("ChallengeSolved"),
+            Capability.Provided<LunaFlow.Cartridge.ICombatStatus, CombatRound>("CombatStatus"),
         };
 
-        /// <summary>Capabilities this ROM requires: PlayerLocation and PlayerMovement (from GridMap).</summary>
+        /// <summary>Capabilities this ROM requires: PlayerLocation, PlayerMovement, and GameWon (from GridMap).</summary>
         public IReadOnlyList<Capability> Requires => new[]
         {
-            new Capability("PlayerLocation", typeof(LunaFlow.Rom.D20SystemInterop.IPlayerLocation)),
-            new Capability("PlayerMovement", typeof(LunaFlow.Rom.D20SystemInterop.IPlayerMovement)),
+            new Capability("PlayerLocation", typeof(LunaFlow.Cartridge.IPlayerLocation)),
+            new Capability("PlayerMovement", typeof(LunaFlow.Cartridge.IPlayerMovement)),
+            new Capability("GameWon", typeof(LunaFlow.Cartridge.IGameWon)),
         };
 
         /// <summary>The ROM's LunaFlow reference.</summary>

@@ -1,11 +1,7 @@
-using LunaFlow.Engine.Components;
-
 namespace LunaFlow.Rom
 {
     /// <summary>
-    /// Capability broker for peer-ROM interoperability. Resolves declared capabilities
-    /// to the instances providing them, enabling cross-ROM composition with zero assembly
-    /// reference between peer ROMs.
+    /// Marker interface for a ROM acting as capability broker.
     /// </summary>
     /// <remarks>
     /// Kept as a distinct, named interface rather than folded into plain <c>IRom</c> for the same
@@ -13,13 +9,14 @@ namespace LunaFlow.Rom
     /// any <c>IRom</c> could technically play this role, but a named interface is a discoverability
     /// win for content authors.
     /// </remarks>
+    /// <remarks>
+    /// <c>Resolve</c>/<c>Resolve&lt;T&gt;</c> were cut in the Cartridge pivot (ticket 0039): a
+    /// runtime pull API across a trust boundary is undeclared-by-construction and
+    /// <c>ComponentRegistry.Validate()</c> can't see it. Service-shaped cross-ROM dependencies are
+    /// satisfied by plain constructor injection from the composition root instead. This interface
+    /// is an empty marker again, as originally shipped in Phase 2.6.5.
+    /// </remarks>
     public interface IInteropRom : IRom
     {
-        /// <summary>Resolves a declared capability to the instance providing it.</summary>
-        /// <exception cref="InvalidOperationException">No registered provider for that capability.</exception>
-        object Resolve(Capability capability);
-
-        /// <summary>Typed convenience over <see cref="Resolve"/>.</summary>
-        T Resolve<T>(string capabilityName) where T : class;
     }
 }

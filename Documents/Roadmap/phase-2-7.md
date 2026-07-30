@@ -4,6 +4,19 @@
 
 **Scope grew 2026-07-26** (see ticket [0029](../ClaudeWiki/Processes/Handoffs/0029-phase-2-6-5-status-and-qa-gap.md)): this phase was originally scoped as *composing against* an existing cross-ROM mediation mechanism from Phase 2.6.5. That mechanism doesn't exist yet — 2.6.5 shipped `IInteropRom` as an empty marker interface, not a working capability broker. Amara (Architect) ruled against carving out a separate phase for the broker: its surface is dictated by what a consuming ROM's rule actually needs, so it has to be designed against Juno's real Grid ROM/D20System split, not in the abstract. **The broker's design and implementation are now part of this phase's scope**, not a prerequisite delivered by 2.6.5. This makes 2.7 materially bigger than originally written; absorbed as a schedule consequence, not re-litigated as a phase-boundary question — see `roadmap.md`'s framing ("dependency order, not a calendar").
 
+**Scope re-adjusted 2026-07-27 (Cartridge pivot, tickets [0039](../ClaudeWiki/Processes/Handoffs/0039-cartridge-the-published-unit-and-no-upward-lookup-apis.md)/[0040](../ClaudeWiki/Processes/Handoffs/0040-pivot-to-2-6-5-and-re-sequence-phase-2-7.md)) — ruled by Kofi (PM), no re-sequencing.**
+`IInteropRom.Resolve`/`Resolve<T>` is cut entirely — the broker-behavior build the previous paragraph
+added back to this phase's scope is now gone, replaced by plain constructor injection in `Program.cs`
+(`FleeCommandHandler` takes `IPlayerMovement` directly). That's real scope coming *out*. Against it:
+retyping `example/D20SystemExampleC`'s interop project down to bare contract interfaces (not a new
+`src/` project — briefly proposed, corrected same day: the interfaces are content, same rule that
+already keeps `GridMap`/`D20System` in `example/`), and the previously-unscoped Rulebook-decoupling
+work (`LunaFlow.Rulebook` losing its ROM project references — see `roadmap.md`'s standing
+constraint). Net effect reads as a wash, if anything smaller than first estimated — same reasoning
+applies: **absorbed within this phase, not split into a 2.7.5.** Baraka's ticket
+([0037](../ClaudeWiki/Processes/Handoffs/0037-implement-the-gridmap-d20system-split-grid-rom-d20-split-spec-md.md))
+is amended in place to redirect the in-flight work, not reopened as a new phase.
+
 ## Overview
 
 Phase 2.6 fortifies the ROM/Rulebook boundary with exactly one ROM. `architecture.md` has claimed
@@ -76,9 +89,24 @@ general answer for cross-ROM coordination.
   Nine Rooms is deprecated and retained for regression-test purposes only; retrofitting it onto the
   new ROM is out of scope. The split's two real consumers are D20System and whatever content Juno
   designs against the Grid ROM directly.
+- **A bootstrap contract probe** ([`../Specs/cross-rom-capability-spec.md`](../Specs/cross-rom-capability-spec.md) §5).
+  The component model claims a mismatch is a hard failure at bootstrap; that is currently **not true**
+  — the CLR resolves types lazily, so a binding failure surfaces at first use, possibly inside a rule
+  firing mid-session. The probe exercises each declared contract at startup so the runtime's own
+  failure happens at a controlled point, is reported against the offending module, and exits non-zero.
+  Cheap, and valuable today: a stale build artefact or a partially rebuilt solution produces exactly
+  this failure. Added 2026-07-27 with [`../design/cartridge.md`](../design/cartridge.md).
 - **Keep each ROM's actually-consumed public surface small and deliberate** — same instinct as
   `IEngineHost`/`IMechanic` staying thin. A narrow surface breaks less often, independent of whatever
   versioning eventually sits on top of it.
+- **A Rulebook must not depend on a specific ROM assembly** (standing constraint, see `roadmap.md`) —
+  `LunaFlow.Rulebook`'s two ROM project references (`LunaFlow.Rom`, `example/D20SystemExampleA`) and
+  `using LunaFlow.Rom.D20System;` in `OneD20RulebookContent.cs` come out; Rulebook content is
+  expressed in Rulebook-owned types that `Program.cs` translates against the Cartridge contract
+  surface (`example/D20SystemExampleC`'s interfaces — content, so it stays in `example/`, not a
+  `src/` project). Added 2026-07-27 with the Cartridge design ([`design/cartridge.md`](../design/cartridge.md),
+  ticket [0039](../ClaudeWiki/Processes/Handoffs/0039-cartridge-the-published-unit-and-no-upward-lookup-apis.md)) —
+  real, previously-unscoped work, not a rewording.
 
 **Explicitly deferred, with a named trigger condition:**
 
@@ -127,10 +155,18 @@ or a partial game — which requires `DependsOnRoms` to actually be validated, n
 Deliverables). ~~Nine Rooms runs against the shared navigation-shaped ROM alongside whatever new
 content proves the split.~~
 
-**Still to be written here:** the acceptance clause for the broker itself — what "the broker works"
+`LunaFlow.Rulebook` names no ROM assembly — `LunaFlow.Rom`/`example/D20SystemExampleA` project
+references and `using LunaFlow.Rom.D20System;` are gone, replaced by Rulebook-owned types translated
+against the Cartridge contract surface (`example/D20SystemExampleC`) in `Program.cs`. Added
+2026-07-27 as part of the standing constraint in `roadmap.md`.
+
+~~**Still to be written here:** the acceptance clause for the broker itself — what "the broker works"
 means in verifiable terms. Deliberately left open until its surface is specced against real content
 rather than guessed at now; that spec is the next Architect deliverable, and this clause lands with
-it.
+it.~~ **Moot as of 2026-07-27** (Cartridge pivot, above) — there is no broker to write an acceptance
+clause for. `IInteropRom.Resolve` is cut; the one service-shaped dependency (`IPlayerMovement`) is
+satisfied by `Program.cs` injecting the concrete implementation directly, which the existing
+"neither ROM references the other's assembly" and bootstrap-probe clauses already cover.
 
 ## Related phases
 

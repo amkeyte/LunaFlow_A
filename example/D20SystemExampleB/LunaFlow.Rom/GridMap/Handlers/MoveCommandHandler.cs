@@ -9,11 +9,13 @@ namespace LunaFlow.Rom.GridMap
     public sealed class MoveCommandHandler : ICommandHandler
     {
         private readonly GridMapRom _gridMap;
+        private readonly IReadOnlyDictionary<string, string> _flavorText;
 
-        /// <summary>Constructs the handler with the GridMap ROM for room data access.</summary>
-        public MoveCommandHandler(GridMapRom gridMap)
+        /// <summary>Constructs the handler with the GridMap ROM for room data access and the Rulebook's flavor text.</summary>
+        public MoveCommandHandler(GridMapRom gridMap, IReadOnlyDictionary<string, string> flavorText)
         {
             _gridMap = gridMap;
+            _flavorText = flavorText;
         }
 
         /// <summary>Moves the player per <paramref name="command"/>'s direction argument, or announces the move is invalid.</summary>
@@ -40,7 +42,7 @@ namespace LunaFlow.Rom.GridMap
             var room = _gridMap.RoomData.FirstOrDefault(r => r.Id == toId);
             if (room is not null)
             {
-                LunaFlowEngine.Host.Announce("TODO: flavor text lookup");
+                LunaFlowEngine.Host.Announce(_flavorText[room.DescriptionKey]);
             }
         }
 

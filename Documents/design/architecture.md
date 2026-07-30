@@ -24,6 +24,8 @@ Player-Contributed Rules  Cosmetic/sandboxed behavior (pets, gestures, etc.) —
 
 Each layer depends only on the layer(s) below it. World Modules and GM Overlays are independent siblings on top of Rulebook. Player-contributed rules never affect anything outside their own sandbox.
 
+**This stack is a trust boundary, not just a layering scheme** — each tier upward is authored by a less-trusted contributor with a broader authoring surface, ending in unreviewed script. Data is therefore **pushed down and vetted by the receiver, never pulled up**; a deep layer that reaches into shallower territory inherits its trust level. The unit that makes this enforceable — a published **Cartridge**, being a contract surface plus the implementation behind it — is defined in [`cartridge.md`](cartridge.md), which also covers why the rule can't be delegated to load-time validation. Read it before designing anything that crosses a tier.
+
 ### Roles and access scope
 
 | Role | Responsibility | Access scope | Authoring surface |

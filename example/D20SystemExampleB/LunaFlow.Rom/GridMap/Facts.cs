@@ -1,4 +1,4 @@
-using LunaFlow.Rom.D20SystemInterop;
+using LunaFlow.Cartridge;
 
 namespace LunaFlow.Rom.GridMap
 {
@@ -12,5 +12,5 @@ namespace LunaFlow.Rom.GridMap
     public sealed record PreviousRoomId(int RoomId);
 
     /// <summary>Fact marking that a win line (a row, column, or diagonal of solved rooms) is complete.</summary>
-    public sealed record WinMarker(IReadOnlyList<int> Line);
+    public sealed record WinMarker(IReadOnlyList<int> Line) : IGameWon;
 }

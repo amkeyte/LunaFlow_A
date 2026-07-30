@@ -2,6 +2,20 @@
 
 This orders the design docs into a build sequence. It's **dependency order, not a calendar** — there are no dates because this is a solo/small-team project and dates would just go stale. Each phase names a rough "done" bar so it's obvious when to move to the next one.
 
+## Standing constraints
+
+Requirements that hold across every phase from the point they're adopted, not scoped to one phase's
+Done-When bar. Recorded here (not just in the phase that triggered them) so a later phase doesn't
+have to rediscover them.
+
+- **A Rulebook must not depend on a specific ROM assembly; a ROM must be replaceable without
+  recompiling what sits above it.** Adopted 2026-07-27 per [`design/cartridge.md`](../design/cartridge.md)
+  and ticket [0039](../ClaudeWiki/Processes/Handoffs/0039-cartridge-the-published-unit-and-no-upward-lookup-apis.md) —
+  a Rulebook binds to a Cartridge's contract surface, never to a ROM's implementation assembly.
+  Currently violated (`LunaFlow.Rulebook.csproj` references `LunaFlow.Rom` and
+  `example/D20SystemExampleA`; `OneD20RulebookContent.cs` opens with `using LunaFlow.Rom.D20System;`)
+  — fixing this is part of [Phase 2.7](phase-2-7.md)'s scope, not deferred past it.
+
 ## Phase sequence
 
 | Phase | Status | Link |

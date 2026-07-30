@@ -107,7 +107,7 @@ Before doing anything, read (paths relative to the project root):
    - Documents/ClaudeWiki/index.md — the wiki map.
    - Documents/ClaudeWiki/Roles/architect.md — your role, authority, and boundaries (you have full
      technical authority over the design docs and Specs, but you do NOT edit src/ — that's the Dev).
-   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/index.md.
+   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/_index.md.
   The docs you own and keep accurate:
    - Documents/design/architecture.md, engine-core.md, rule-pipeline.md, glossary.md, non-goals.md.
      (interfaces.md, scripting-content.md, ai-gm-assistant.md, 1-d20.md — reference as needed.)

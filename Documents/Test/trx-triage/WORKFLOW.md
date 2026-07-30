@@ -90,7 +90,7 @@ If the test reveals a bug in `src/`, **don't fix it yourself** — create a hand
    ### Response
    [To be filled by Implementation Dev]
    ```
-4. Update `Handoffs/index.md` to add a row for the ticket.
+4. Update `Handoffs/_index.md` to add a row for the ticket.
 
 ### 6. Verify the fix (once Implementation Dev responds)
 

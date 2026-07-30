@@ -7,10 +7,4 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\LunaFlow.Rom\LunaFlow.Rom.csproj" />
-    <ProjectReference Include="..\..\src\LunaFlow.Rules\LunaFlow.Rules.csproj" />
-    <ProjectReference Include="..\..\src\LunaFlow.Engine\LunaFlow.Engine.csproj" />
-  </ItemGroup>
-
 </Project>

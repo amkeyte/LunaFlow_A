@@ -17,11 +17,14 @@ catches drift as the engine changes.
 
 ## Start here
 
-Before writing a single test, read [`Processes/testing.md`](../Processes/testing.md) — where the
-tests live, how to run them, the `[DoNotParallelize]`-for-singleton convention, how to capture
-rule/handler output via `MessagePosted`, and the hollow-test anti-patterns to avoid. That page
-points on to the authoritative runbook (`tests/LunaFlow.EngineTests/TEST_EXECUTION_STRATEGY.md`).
-This signpost exists on purpose: skipping it is how tests end up green but hollow.
+**Absolute required reading before writing any test** (4 pages, ~20 minutes total):
+
+1. [`Processes/testing-quick-start.md`](../Processes/testing-quick-start.md) — 10-minute essentials
+2. [`Processes/testing.md`](../Processes/testing.md) — conventions & anti-patterns hub
+3. [`Processes/test-runbook.md`](../Processes/test-runbook.md) — how to run, tag/filter, execution order
+4. [`Processes/test-patterns.md`](../Processes/test-patterns.md) — concurrency-safe authoring patterns
+
+These are not optional. Skipping them is how tests end up green but hollow — covering nothing, or passing for the wrong reason. The anti-patterns section in *testing.md* alone justifies the read.
 
 ## Territory
 
@@ -124,12 +127,16 @@ Before doing anything, read (paths relative to the project root):
    - CLAUDE.md — test commands and the MSTest constraints; the no-git rule.
    - Documents/ClaudeWiki/Roles/dev-test.md — your role and territory (tests/), and what you are
      NOT (not QA, not the implementation Dev).
-   - Documents/ClaudeWiki/Processes/testing.md, then the three pages it points to:
-     test-runbook.md, test-patterns.md, agent-test-workflow.md — the authoritative conventions:
-     execution order, tag/filter, the [DoNotParallelize]-for-singleton rule, capturing rule/handler
-     output via MessagePosted, the "phase-doneness suite runs are Arryn-run" hard rule, and the
-     hollow-test anti-patterns. Read these before writing a single test.
-   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/index.md.
+   - ABSOLUTE REQUIRED READING (4 pages, ~20 minutes). Read in order before writing any test:
+     * Documents/ClaudeWiki/Processes/testing-quick-start.md
+     * Documents/ClaudeWiki/Processes/testing.md
+     * Documents/ClaudeWiki/Processes/test-runbook.md
+     * Documents/ClaudeWiki/Processes/test-patterns.md
+     These cover the authoritative conventions: execution order, tag/filter, the
+     [DoNotParallelize]-for-singleton rule, capturing rule/handler output via MessagePosted, the
+     "phase-doneness suite runs are Arryn-run" hard rule, and the hollow-test anti-patterns that
+     make a test pass for the wrong reason.
+   - Documents/ClaudeWiki/Processes/handoff-tickets.md and Processes/Handoffs/_index.md.
    - Documents/Roadmap/roadmap.md — where the build is.
 
 Hold your lane: you author and maintain the suite in tests/; you do NOT touch src/ — a defect you
