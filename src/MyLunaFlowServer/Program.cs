@@ -5,6 +5,7 @@ using LunaFlow.Engine.Components;
 using LunaFlow.Rom.D20System;
 using LunaFlow.Rom.GridMap;
 using LunaFlow.Rom.GridMap.Handlers;
+using LunaFlow.Rom.Loot;
 using LunaFlow.Rulebook.OneD20;
 using LunaFlow.Rules.GeneratorServices;
 
@@ -34,10 +35,12 @@ Console.WriteLine("Starting server");
 
 object gridMapObj;
 object d20SystemObj;
+object lootObj;
+OneD20SessionAssignment assignment;
 
 try
 {
-    (gridMapObj, d20SystemObj) = Bootstrap();
+    (gridMapObj, d20SystemObj, lootObj, assignment) = Bootstrap();
 }
 catch (BootstrapContractException ex)
 {
@@ -53,7 +56,7 @@ catch (InvalidOperationException ex)
     throw;
 }
 
-RunGame(gridMapObj, d20SystemObj);
+RunGame(gridMapObj, d20SystemObj, lootObj, assignment);
 Console.WriteLine("Server stopped.");
 
 // Constructs and registers both ROMs plus the Rulebook, validates the registry, and forces member
@@ -62,13 +65,18 @@ Console.WriteLine("Server stopped.");
 // method's own JIT can never fail on a binding fault either; the actual risky construction is one
 // level further down, in ConstructGridMap()/ConstructD20System(), whose call sites are where a
 // fault surfaces — attributable to whichever module was current when it did.
-static (object GridMap, object D20System) Bootstrap()
+static (object GridMap, object D20System, object Loot, OneD20SessionAssignment Assignment) Bootstrap()
 {
     string? currentModule = null;
     Type? currentContract = null;
 
     try
     {
+        // Plain Rulebook-tier data, no ROM/Cartridge type reference — safe to construct before the
+        // isolated Construct*() call sites below without affecting this method's JIT-failure
+        // isolation (that isolation is specifically about ROM/Cartridge assembly binding).
+        var assignment = new OneD20SessionAssembler().Assemble();
+
         var registry = new ComponentRegistry();
 
         currentModule = "GridMap";
@@ -76,8 +84,12 @@ static (object GridMap, object D20System) Bootstrap()
         registry.Register(gridMap, EngineTier.Rom, "GridMap");
 
         currentModule = "D20System";
-        var d20System = ConstructD20System();
+        var d20System = ConstructD20System(assignment);
         registry.Register(d20System, EngineTier.Rom, "D20System");
+
+        currentModule = "Loot";
+        var loot = ConstructLoot();
+        registry.Register(loot, EngineTier.Rom, "Loot");
 
         currentModule = "OneD20";
         var (ruleBook, dependsOnRoms) = ConstructRuleBook();
@@ -97,9 +109,10 @@ static (object GridMap, object D20System) Bootstrap()
         // §5.3 member-resolution probe: force JIT of every Provides entry's contract implementation,
         // without invoking anything. Catches a member-signature change in the installed contract
         // assembly that §5.2's compile-time constraint (checked only against this ROM's own build)
-        // can't see.
+        // can't see. Loot's Provides is empty (first pure-sink ROM shape) — the loop iterates zero
+        // capabilities for it, no special-casing needed.
         foreach (var (component, name) in new (IHasDependencies Component, string Name)[]
-            { (gridMap, "GridMap"), (d20System, "D20System") })
+            { (gridMap, "GridMap"), (d20System, "D20System"), (loot, "Loot") })
         {
             currentModule = name;
             foreach (var capability in component.Provides)
@@ -109,7 +122,7 @@ static (object GridMap, object D20System) Bootstrap()
             }
         }
 
-        return (gridMap, d20System);
+        return (gridMap, d20System, loot, assignment);
     }
     catch (Exception ex) when (ex is TypeLoadException or MissingMethodException or MissingFieldException
         or FileLoadException or FileNotFoundException or BadImageFormatException)
@@ -138,22 +151,45 @@ static IHasDependencies ConstructGridMap()
     return rom;
 }
 
-/// <summary>Same isolation reasoning as <see cref="ConstructGridMap"/>, for D20System.</summary>
-static IHasDependencies ConstructD20System()
+/// <summary>Same isolation reasoning as <see cref="ConstructGridMap"/>, for D20System. Builds each
+/// room's RoomChallenge from this session's assignment: the assigned pool challenge for
+/// skill-check rooms, or the assigned MonsterId for fight rooms.</summary>
+static IHasDependencies ConstructD20System(OneD20SessionAssignment assignment)
 {
     var challenges = OneD20RulebookContent.Rooms.Values
-        .Select(r => new RoomChallenge(
-            r.Id,
-            r.ChallengeType == OneD20ChallengeType.Fight ? RoomChallengeType.Fight : RoomChallengeType.SkillCheck,
-            r.Skill, r.SkillAbility, r.DC, r.SuccessKey, r.FailureKey, r.PromptKey))
+        .Select(r => r.ChallengeType == OneD20ChallengeType.Fight
+            ? new RoomChallenge(r.Id, RoomChallengeType.Fight, null, null, null, null, null, null,
+                MonsterId: assignment.MonsterIdByRoom[r.Id])
+            : ToRoomChallenge(r.Id, OneD20RulebookContent.Challenges[assignment.ChallengeKeyByRoom[r.Id]]))
         .ToDictionary(c => c.Id);
     var playerStats = OneD20RulebookContent.PlayerCharacter;
-    var monsterStats = OneD20RulebookContent.Monster;
+    var monsters = OneD20RulebookContent.Monsters.Values
+        .Select(m => new MonsterTemplate(m.Id, m.Name, m.DescriptionKey,
+            new CombatantStats(m.Stats.Defense, m.Stats.AttackBonus, m.Stats.DamageDie, m.Stats.DamageBonus, m.Stats.MaxHp)))
+        .ToDictionary(m => m.Id);
     var rom = new D20SystemRom(
         new PlayerCharacter(new CombatantStats(playerStats.Defense, playerStats.AttackBonus, playerStats.DamageDie, playerStats.DamageBonus, playerStats.MaxHp)),
-        new MonsterTemplate(new CombatantStats(monsterStats.Defense, monsterStats.AttackBonus, monsterStats.DamageDie, monsterStats.DamageBonus, monsterStats.MaxHp)),
+        monsters,
         challenges,
         OneD20RulebookContent.PlayerAbilityScores);
+    _ = rom.Provides;
+    _ = rom.Requires;
+    return rom;
+}
+
+/// <summary>Translates one Rulebook-owned pool challenge into D20System's RoomChallenge, assigned to
+/// <paramref name="roomId"/> this session.</summary>
+static RoomChallenge ToRoomChallenge(int roomId, OneD20ChallengeTemplate challenge) =>
+    new(roomId, RoomChallengeType.SkillCheck, challenge.Skill, challenge.SkillAbility, challenge.DC,
+        challenge.SuccessKey, challenge.FailureKey, challenge.PromptKey, MonsterId: null);
+
+/// <summary>Same isolation reasoning as <see cref="ConstructGridMap"/>, for Loot. The full 5-entry
+/// loot table is always constructed — session assignment only decides which 3 monsters (and thus
+/// which 3 items) are actually in play this session.</summary>
+static IHasDependencies ConstructLoot()
+{
+    var lootTable = new MonsterLootTable(OneD20RulebookContent.ItemIdByMonsterId);
+    var rom = new LootRom(lootTable);
     _ = rom.Provides;
     _ = rom.Requires;
     return rom;
@@ -175,7 +211,7 @@ static (IHasDependencies Component, IReadOnlyList<string> DependsOnRoms) Constru
 // — which means these same GridMap/D20System types were just proven loadable — so casting back to
 // the concrete types here introduces no new binding risk; this is legitimately outside §5's scope
 // (construction/registration/validation/probing), not a gap in it.
-static void RunGame(object gridMapObj, object d20SystemObj)
+static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, OneD20SessionAssignment assignment)
 {
     // RoslynRuleCompiler only sees already-loaded, file-backed assemblies (see its own doc comment)
     // — since 1.d20 has no hand-written ARule anywhere in this process to pull these in as a side
@@ -188,10 +224,16 @@ static void RunGame(object gridMapObj, object d20SystemObj)
 
     var gridMap = (GridMapRom)gridMapObj;
     var d20System = (D20SystemRom)d20SystemObj;
+    _ = (LootRom)lootObj; // Loot's static content (the loot table) is used only by Bootstrap()/ConstructLoot(); nothing here reads it back.
 
     var gridMapRoomData = gridMap.RoomData;
     var playerStats = OneD20RulebookContent.PlayerCharacter;
-    var monsterStats = OneD20RulebookContent.Monster;
+
+    // Which monster's stat block applies to a given fight room this session — GridMap's LookCommandHandler
+    // needs this to report combat status without ever referencing D20System's Monsters dictionary.
+    var monsterMaxHpByRoom = assignment.MonsterIdByRoom.ToDictionary(
+        kv => kv.Key,
+        kv => OneD20RulebookContent.Monsters[kv.Value].Stats.MaxHp);
 
     // No broker: GridMap's movement service is constructed directly and handed to whoever needs it.
     var movement = new GridMovementService();
@@ -205,6 +247,7 @@ static void RunGame(object gridMapObj, object d20SystemObj)
             opts.Rules
                 .FromAssembly(RuleExport.Compile(typeof(GridMapRuleGroup)))
                 .FromAssembly(RuleExport.Compile(typeof(D20SystemRuleGroup)))
+                .FromAssembly(RuleExport.Compile(typeof(LootRuleGroup)))
                 .Seed(() => gridMapRoomData)
                 .Seed(() =>
                 {
@@ -217,22 +260,34 @@ static void RunGame(object gridMapObj, object d20SystemObj)
                     {
                         new PlayerPosition(OneD20RulebookContent.StartRoomId),
                         d20System.PlayerCharacter,
-                        d20System.Monster,
                     };
                 })
                 .Seed(() =>
                 {
-                    // Ticket 0043 (Amara's ruling): generated RulePrototype rules have no
-                    // constructor/DI seam, so they can't resolve a flavor key themselves. Resolve
-                    // each key once, here — the one place the Rulebook's flavor map and the ROM's
-                    // room data already meet — and hand the rule only the finished string.
+                    // Ticket 0043 (Amara's ruling), applied per-session: generated RulePrototype rules
+                    // have no constructor/DI seam, so they can't resolve a flavor key (or a monster
+                    // assignment) themselves. Resolve each room's prompt text once, here — the one
+                    // place the Rulebook's flavor map, the session's assignment, and the room data
+                    // already meet — and hand the rule only the finished string.
                     var prompts = OneD20RulebookContent.Rooms.Values
                         .Select(r => (object)new RoomChallengePrompt(
                             r.Id,
                             r.ChallengeType == OneD20ChallengeType.Fight
-                                ? flavorText["monster-desc"]
-                                : flavorText[r.PromptKey!]));
+                                ? flavorText[OneD20RulebookContent.Monsters[assignment.MonsterIdByRoom[r.Id]].DescriptionKey]
+                                : flavorText[OneD20RulebookContent.Challenges[assignment.ChallengeKeyByRoom[r.Id]].PromptKey]));
                     return prompts.Append(new GameEndAnnouncement(flavorText["win-announce"]));
+                })
+                .Seed(() =>
+                {
+                    // LootAssignment: one per fight room, derived from this session's monster
+                    // assignment. LootPickupText: same seeded-fact pattern as RoomChallengePrompt
+                    // above, one per item in the full 5-item table (harmless for items not in play
+                    // this session — the award rule only fires with a matching LootAssignment).
+                    var assignments = assignment.ItemIdByRoom
+                        .Select(kv => (object)new LootAssignment(kv.Key, kv.Value));
+                    var pickupTexts = OneD20RulebookContent.ItemIdByMonsterId.Values
+                        .Select(itemId => (object)new LootPickupText(itemId, flavorText[$"item-{itemId}-pickup"]));
+                    return assignments.Concat(pickupTexts);
                 });
         })
         .ConfigureCommand(opts =>
@@ -243,10 +298,12 @@ static void RunGame(object gridMapObj, object d20SystemObj)
             opts.CommandDispatcher.RegisterHandler("echo", new EchoCommandHandler(), "Print back the given arguments.");
             opts.CommandDispatcher.RegisterHandler("help", new HelpCommandHandler(opts.CommandDispatcher), "List available commands.");
             opts.CommandDispatcher.RegisterHandler("move", new MoveCommandHandler(gridMap, flavorText), "Move: move north/south/east/west.");
-            opts.CommandDispatcher.RegisterHandler("look", new LookCommandHandler(gridMap, flavorText, playerStats.MaxHp, monsterStats.MaxHp), "Redisplay the current room's description.");
+            opts.CommandDispatcher.RegisterHandler("look", new LookCommandHandler(gridMap, flavorText, playerStats.MaxHp, monsterMaxHpByRoom), "Redisplay the current room's description.");
             opts.CommandDispatcher.RegisterHandler("check", new CheckCommandHandler(d20System, flavorText, mechanic), "Attempt the current room's skill check.");
             opts.CommandDispatcher.RegisterHandler("fight", new FightCommandHandler(d20System, flavorText, mechanic), "Attack the monster in the current room.");
             opts.CommandDispatcher.RegisterHandler("flee", new FleeCommandHandler(movement, flavorText), "Retreat from the current fight.");
+            opts.CommandDispatcher.RegisterHandler("inventory", new InventoryCommandHandler(flavorText), "List your collected items.");
+            opts.CommandDispatcher.RegisterHandler("inv", new InventoryCommandHandler(flavorText), "List your collected items.");
         });
 
     engine.Run();

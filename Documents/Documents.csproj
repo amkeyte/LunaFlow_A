@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="html\" />
-    <Folder Include="Roadmap\CodePlans\" />
     <Folder Include="Test\" />
     <Folder Include="QA\" />
   </ItemGroup>

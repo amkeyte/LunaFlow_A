@@ -26,7 +26,9 @@ namespace LunaFlow.Rom.D20System
         string? FailureKey,
         string? PromptKey);
 
-    /// <summary>A room's challenge data (without spatial information, which GridMap owns).</summary>
+    /// <summary>A room's challenge data (without spatial information, which GridMap owns).
+    /// <c>MonsterId</c> is set for Fight rooms only (resolves into <see cref="MonsterTemplate"/> via
+    /// the session's monster roster); null for SkillCheck rooms.</summary>
     public sealed record RoomChallenge(
         int Id,
         RoomChallengeType ChallengeType,
@@ -35,7 +37,8 @@ namespace LunaFlow.Rom.D20System
         int? DC,
         string? SuccessKey,
         string? FailureKey,
-        string? PromptKey);
+        string? PromptKey,
+        string? MonsterId);
 
     /// <summary>A combatant's fixed, pre-baked stat block used by attack/damage resolution.</summary>
     public sealed record CombatantStats(
@@ -48,8 +51,9 @@ namespace LunaFlow.Rom.D20System
     /// <summary>The pregenerated Strong-hero PC. Singleton, seeded once at session start.</summary>
     public sealed record PlayerCharacter(CombatantStats Stats);
 
-    /// <summary>The single monster template shared by all three combat rooms. Singleton.</summary>
-    public sealed record MonsterTemplate(CombatantStats Stats);
+    /// <summary>One entry in the monster roster — a keyed, identified template (five entries this
+    /// session's content ships), replacing the pre-roster implicit singleton.</summary>
+    public sealed record MonsterTemplate(string Id, string Name, string DescriptionKey, CombatantStats Stats);
 
     /// <summary>Fact marking that a room's challenge has been resolved successfully.</summary>
     public sealed record RoomSolved(int RoomId) : IChallengeSolved;

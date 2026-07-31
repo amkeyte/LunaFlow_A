@@ -9,19 +9,21 @@ namespace LunaFlow.Rom.GridMap.Handlers
         private readonly GridMapRom _gridMap;
         private readonly IReadOnlyDictionary<string, string> _flavorText;
         private readonly int _playerMaxHp;
-        private readonly int _monsterMaxHp;
+        private readonly IReadOnlyDictionary<int, int> _monsterMaxHpByRoom;
 
         /// <summary>
         /// Constructs the handler with the GridMap ROM (room data), the Rulebook's flavor text, and
         /// the combatants' max HP — static Scenario data, constructor-injected rather than read from
-        /// D20System's concrete types, which GridMap must never reference.
+        /// D20System's concrete types, which GridMap must never reference. Monster max HP is a
+        /// per-room lookup, not a scalar, since which monster's stat block applies to a given fight
+        /// room now varies per session (the roster is randomized).
         /// </summary>
-        public LookCommandHandler(GridMapRom gridMap, IReadOnlyDictionary<string, string> flavorText, int playerMaxHp, int monsterMaxHp)
+        public LookCommandHandler(GridMapRom gridMap, IReadOnlyDictionary<string, string> flavorText, int playerMaxHp, IReadOnlyDictionary<int, int> monsterMaxHpByRoom)
         {
             _gridMap = gridMap;
             _flavorText = flavorText;
             _playerMaxHp = playerMaxHp;
-            _monsterMaxHp = monsterMaxHp;
+            _monsterMaxHpByRoom = monsterMaxHpByRoom;
         }
 
         /// <summary>Redisplay the current room's description and combat status if active.</summary>
@@ -44,10 +46,10 @@ namespace LunaFlow.Rom.GridMap.Handlers
             var combatStatus = rules.Query<ICombatStatus>()
                 .FirstOrDefault(c => c.RoomId == current.RoomId);
 
-            if (combatStatus is not null)
+            if (combatStatus is not null && _monsterMaxHpByRoom.TryGetValue(current.RoomId, out var monsterMaxHp))
             {
                 LunaFlowEngine.Host.Announce(
-                    $"You're at {combatStatus.PlayerHp}/{_playerMaxHp} HP. He's at {combatStatus.MonsterHp}/{_monsterMaxHp} HP.");
+                    $"You're at {combatStatus.PlayerHp}/{_playerMaxHp} HP. He's at {combatStatus.MonsterHp}/{monsterMaxHp} HP.");
             }
         }
     }

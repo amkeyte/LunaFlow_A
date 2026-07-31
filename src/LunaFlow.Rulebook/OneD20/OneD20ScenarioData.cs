@@ -11,17 +11,35 @@ namespace LunaFlow.Rulebook.OneD20
     }
 
     /// <summary>
-    /// Rulebook-owned data for one room: spatial and challenge fields together, translated by
-    /// <c>Program.cs</c> into GridMap's <c>GridRoomData</c> and D20System's <c>RoomChallenge</c> —
-    /// this Rulebook never references either ROM's types directly.
+    /// Rulebook-owned data for one room's fixed grid position and which slot-kind it is — the
+    /// topology (position, fight-vs-skill-check) never varies session to session. The specific
+    /// challenge/monster filling the slot is session-assigned data instead (see
+    /// <c>OneD20SessionAssembler</c>), no longer carried on this record.
     /// </summary>
     public sealed record OneD20RoomData(
         int Id, int Row, int Col,
         OneD20ChallengeType ChallengeType,
-        string? Skill, string? SkillAbility, int? DC,
-        string DescriptionKey, string? SuccessKey, string? FailureKey, string? PromptKey);
+        string DescriptionKey);
+
+    /// <summary>
+    /// Rulebook-owned data for one pool skill-check challenge (9 total this session's content
+    /// ships) — assignable to any of the grid's fixed skill-check positions. Keyed by
+    /// <see cref="Key"/> (e.g. <c>"search"</c>), which doubles as the flavor-text key prefix
+    /// (<c>{key}-prompt</c>/<c>{key}-success</c>/<c>{key}-failure</c>).
+    /// </summary>
+    public sealed record OneD20ChallengeTemplate(
+        string Key, string Skill, string SkillAbility, int DC,
+        string SuccessKey, string FailureKey, string PromptKey);
 
     /// <summary>Rulebook-owned mirror of D20System's <c>CombatantStats</c> — no ROM reference.</summary>
     public sealed record OneD20CombatantStats(
         int Defense, int AttackBonus, string DamageDie, int DamageBonus, int MaxHp);
+
+    /// <summary>
+    /// Rulebook-owned data for one roster monster (5 total this session's content ships) —
+    /// assignable to any of the grid's fixed fight positions. Keyed by <see cref="Id"/>, which also
+    /// keys the monster→item loot table.
+    /// </summary>
+    public sealed record OneD20MonsterTemplate(
+        string Id, string Name, string DescriptionKey, OneD20CombatantStats Stats);
 }

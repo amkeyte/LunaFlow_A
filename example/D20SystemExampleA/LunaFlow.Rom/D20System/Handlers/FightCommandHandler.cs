@@ -28,6 +28,10 @@ namespace LunaFlow.Rom.D20System
             if (rules.Query<RoomSolved>().Any(rs => rs.RoomId == location.RoomId)) return;
             if (rules.Query<RoomFailed>().Any(rf => rf.RoomId == location.RoomId)) return;
 
+            var challenge = _d20System.Challenges.Values.FirstOrDefault(c => c.Id == location.RoomId);
+            if (challenge?.MonsterId is null) return;
+            var monsterTemplate = _d20System.Monsters[challenge.MonsterId];
+
             // Read the active round's HP into plain locals and retract the fact once up front —
             // exactly one CombatRound/terminal fact gets inserted at the end of this method,
             // never a partially-updated intermediate instance (replace-not-update, same as
@@ -36,7 +40,7 @@ namespace LunaFlow.Rom.D20System
             int monsterHp, playerHp, roundsElapsed;
             if (combat is null)
             {
-                monsterHp = _d20System.Monster.Stats.MaxHp;
+                monsterHp = monsterTemplate.Stats.MaxHp;
                 playerHp = _d20System.PlayerCharacter.Stats.MaxHp;
                 roundsElapsed = 0;
             }
@@ -49,7 +53,7 @@ namespace LunaFlow.Rom.D20System
             }
 
             var pc = _d20System.PlayerCharacter.Stats;
-            var monster = _d20System.Monster.Stats;
+            var monster = monsterTemplate.Stats;
 
             // PC's attack.
             var pcRoll = _mechanic.Roll("1d20");

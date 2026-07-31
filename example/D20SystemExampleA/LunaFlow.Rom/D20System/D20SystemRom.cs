@@ -13,7 +13,7 @@ namespace LunaFlow.Rom.D20System
     public sealed class D20SystemRom : IRom
     {
         private readonly PlayerCharacter _playerCharacter;
-        private readonly MonsterTemplate _monster;
+        private readonly IReadOnlyDictionary<string, MonsterTemplate> _monsters;
         private readonly IReadOnlyDictionary<int, RoomChallenge> _challenges;
         private readonly IReadOnlyDictionary<string, int> _playerAbilityScores;
         private readonly D20ResolutionMechanic _mechanic;
@@ -21,13 +21,13 @@ namespace LunaFlow.Rom.D20System
         /// <summary>Constructs the D20System ROM with challenge and combat data.</summary>
         public D20SystemRom(
             PlayerCharacter playerCharacter,
-            MonsterTemplate monster,
+            IReadOnlyDictionary<string, MonsterTemplate> monsters,
             IReadOnlyDictionary<int, RoomChallenge> challenges,
             IReadOnlyDictionary<string, int> playerAbilityScores,
             D20ResolutionMechanic? mechanic = null)
         {
             _playerCharacter = playerCharacter;
-            _monster = monster;
+            _monsters = monsters;
             _challenges = challenges;
             _playerAbilityScores = playerAbilityScores;
             _mechanic = mechanic ?? new D20ResolutionMechanic();
@@ -62,8 +62,8 @@ namespace LunaFlow.Rom.D20System
         /// <summary>Provides access to player character stats.</summary>
         public PlayerCharacter PlayerCharacter => _playerCharacter;
 
-        /// <summary>Provides access to monster template stats.</summary>
-        public MonsterTemplate Monster => _monster;
+        /// <summary>Provides access to the monster roster, keyed by <see cref="MonsterTemplate.Id"/>.</summary>
+        public IReadOnlyDictionary<string, MonsterTemplate> Monsters => _monsters;
 
         /// <summary>Provides access to room challenges by ID.</summary>
         public IReadOnlyDictionary<int, RoomChallenge> Challenges => _challenges;
