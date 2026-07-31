@@ -28,6 +28,23 @@ namespace LunaFlow.EngineTests.Rom.D20System
         private RuleEngine _engine = null!;
         private readonly List<string> _messages = new();
 
+        // Fixed test session assignment — see D20SystemHandlerTests's own copy of this comment for
+        // why room 5/1's monster and room 2/3/6/9's challenges are chosen to match legacy values.
+        private static readonly IReadOnlyDictionary<int, string> TestChallengeAssignment = new Dictionary<int, string>
+        {
+            [2] = "search", [3] = "climb", [4] = "listen", [6] = "swim", [7] = "disabledevice", [9] = "jump",
+        };
+        private static readonly IReadOnlyDictionary<int, string> TestMonsterAssignment = new Dictionary<int, string>
+        {
+            [1] = "duelist", [5] = "duelist", [8] = "duelist",
+        };
+
+        private static string ChallengePromptFor(int roomId) =>
+            OneD20FlavorText.Text[OneD20RulebookContent.Challenges[TestChallengeAssignment[roomId]].PromptKey];
+
+        private static string MonsterDescFor(int roomId) =>
+            OneD20FlavorText.Text[OneD20RulebookContent.Monsters[TestMonsterAssignment[roomId]].DescriptionKey];
+
         [ClassInitialize]
         public static void ClassSetup(TestContext context)
         {
@@ -62,8 +79,8 @@ namespace LunaFlow.EngineTests.Rom.D20System
                 _engine.Insert(new RoomChallengePrompt(
                     room.Id,
                     room.ChallengeType == OneD20ChallengeType.Fight
-                        ? flavorText["monster-desc"]
-                        : flavorText[room.PromptKey!]));
+                        ? MonsterDescFor(room.Id)
+                        : ChallengePromptFor(room.Id)));
             }
             _engine.Insert(new GameEndAnnouncement(flavorText["win-announce"]));
 
@@ -103,7 +120,7 @@ namespace LunaFlow.EngineTests.Rom.D20System
             _engine.Fire();
 
             Assert.AreEqual(1, _messages.Count, "Only room 2's challenge-prompt rule should fire");
-            Assert.AreEqual(OneD20FlavorText.Text["room-2-prompt"], _messages[0]);
+            Assert.AreEqual(ChallengePromptFor(2), _messages[0]);
         }
 
         [TestMethod]
@@ -114,7 +131,7 @@ namespace LunaFlow.EngineTests.Rom.D20System
             _engine.Fire();
 
             Assert.AreEqual(1, _messages.Count, "Only room 1's challenge-prompt rule should fire");
-            Assert.AreEqual(OneD20FlavorText.Text["monster-desc"], _messages[0]);
+            Assert.AreEqual(MonsterDescFor(1), _messages[0]);
         }
 
         [TestMethod]
@@ -149,7 +166,7 @@ namespace LunaFlow.EngineTests.Rom.D20System
 
             // GameEndRule itself fires (Not<WinMarker>() isn't on it) — confirm room 4's own
             // prompt text specifically never shows up alongside it.
-            Assert.IsFalse(_messages.Contains(OneD20FlavorText.Text["room-4-prompt"]),
+            Assert.IsFalse(_messages.Contains(ChallengePromptFor(4)),
                 "Not<WinMarker>() should block every remaining challenge-prompt rule once any line is won");
         }
 

@@ -19,6 +19,7 @@
     <ProjectReference Include="..\..\example\D20SystemExampleA\D20SystemExampleA.csproj" />
     <ProjectReference Include="..\..\example\D20SystemExampleB\D20SystemExampleB.csproj" />
     <ProjectReference Include="..\..\example\D20SystemExampleC\D20SystemExampleC.csproj" />
+    <ProjectReference Include="..\..\example\D20SystemExampleD\D20SystemExampleD.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,71 @@
+using LunaFlow.Cartridge;
+using LunaFlow.Rom.Loot;
+
+namespace LunaFlow.EngineTests.Rom.Loot
+{
+    /// <summary>
+    /// <see cref="LootRom"/>'s own shape: the first pure-sink ROM (empty <c>Provides</c>), its one
+    /// <c>Requires</c> entry, and the assembly-boundary guarantee (no reference to GridMap's or
+    /// D20System's assembly — only the Cartridge contract surface) that ticket 0052's Done-When
+    /// calls for.
+    /// </summary>
+    [TestClass]
+    [TestCategory("Rom_OneD20")]
+    [TestCategory("Phase2.7.1")]
+    public class LootRomTests
+    {
+        private static LootRom NewLootRom() =>
+            new(new MonsterLootTable(new Dictionary<string, string>
+            {
+                ["duelist"] = "rapier",
+                ["brawler"] = "knuckles",
+            }));
+
+        [TestMethod]
+        public void Provides_IsEmpty_FirstPureSinkRomShape()
+        {
+            Assert.AreEqual(0, NewLootRom().Provides.Count);
+        }
+
+        [TestMethod]
+        public void Requires_NamesChallengeSolved_PairedWithIChallengeSolvedContract()
+        {
+            var requires = NewLootRom().Requires;
+            Assert.AreEqual(1, requires.Count);
+            Assert.AreEqual("ChallengeSolved", requires[0].Name);
+            Assert.AreEqual(typeof(IChallengeSolved), requires[0].ContractType);
+        }
+
+        [TestMethod]
+        public void LootTable_ReturnsTheConstructedTable()
+        {
+            var table = new MonsterLootTable(new Dictionary<string, string> { ["duelist"] = "rapier" });
+            var rom = new LootRom(table);
+            Assert.AreSame(table, rom.LootTable);
+        }
+
+        [TestMethod]
+        public void Name_IsLoot()
+        {
+            Assert.AreEqual("Loot", NewLootRom().Name);
+        }
+
+        [TestMethod]
+        public void Assembly_ReferencesNeitherGridMapNorD20SystemAssembly()
+        {
+            // Loot's own .csproj references only D20SystemExampleC (the Cartridge contract surface)
+            // plus Rom/Rules/Engine — never D20SystemExampleA (D20System) or D20SystemExampleB
+            // (GridMap) directly. Asserted against the built assembly, not just the .csproj, so a
+            // future accidental reference addition fails this test even if nobody re-reads the
+            // project file.
+            var referenced = typeof(LootRom).Assembly.GetReferencedAssemblies()
+                .Select(a => a.Name)
+                .ToList();
+
+            Assert.IsFalse(referenced.Contains("D20SystemExampleA"),
+                "Loot must never reference D20System's assembly directly");
+            Assert.IsFalse(referenced.Contains("D20SystemExampleB"),
+                "Loot must never reference GridMap's assembly directly");
+        }
+    }
+}

@@ -34,6 +34,34 @@ namespace LunaFlow.EngineTests.Rom.D20System
         private GridMapRom _gridMap = null!;
         private D20SystemRom _d20System = null!;
 
+        // Fixed test session assignment (Phase 2.7.1 replaced the old room-fixed challenge/monster
+        // shape with session-randomized pool assignment via OneD20SessionAssembler). This class
+        // pins one specific, known assignment rather than exercising the assembler's randomness —
+        // chosen so every seeded-Random fight/check math already pinned below keeps working
+        // unchanged: room 5's assigned monster ("duelist": Defense 13, AttackBonus 3, DamageDie
+        // 1d6+1, MaxHp 8) is exactly the old fixed singleton Monster's stats, and rooms 2/3/6/9's
+        // assigned challenges (search/climb/swim/jump) are exactly the old fixed per-room
+        // Skill/SkillAbility/DC values. OneD20SessionAssembler's own randomization is covered
+        // separately (ticket 0054's new-coverage list), not by this fixture.
+        private static readonly IReadOnlyDictionary<int, string> TestChallengeAssignment = new Dictionary<int, string>
+        {
+            [2] = "search", [3] = "climb", [4] = "listen", [6] = "swim", [7] = "disabledevice", [9] = "jump",
+        };
+        private static readonly IReadOnlyDictionary<int, string> TestMonsterAssignment = new Dictionary<int, string>
+        {
+            [1] = "duelist", [5] = "duelist", [8] = "duelist",
+        };
+
+        private static string ChallengePromptFor(int roomId) =>
+            OneD20FlavorText.Text[OneD20RulebookContent.Challenges[TestChallengeAssignment[roomId]].PromptKey];
+
+        private static string MonsterDescFor(int roomId) =>
+            OneD20FlavorText.Text[OneD20RulebookContent.Monsters[TestMonsterAssignment[roomId]].DescriptionKey];
+
+        private static RoomChallenge ToRoomChallenge(int roomId, OneD20ChallengeTemplate challenge) =>
+            new(roomId, RoomChallengeType.SkillCheck, challenge.Skill, challenge.SkillAbility, challenge.DC,
+                challenge.SuccessKey, challenge.FailureKey, challenge.PromptKey, MonsterId: null);
+
         [ClassInitialize]
         public static void ClassSetup(TestContext context)
         {
@@ -79,26 +107,31 @@ namespace LunaFlow.EngineTests.Rom.D20System
             _gridMap = new GridMapRom(gridMapData, OneD20RulebookContent.StartRoomId);
 
             var d20Challenges = OneD20RulebookContent.Rooms.Values
-                .Select(r => new RoomChallenge(
-                    r.Id,
-                    r.ChallengeType == OneD20ChallengeType.Fight ? RoomChallengeType.Fight : RoomChallengeType.SkillCheck,
-                    r.Skill, r.SkillAbility, r.DC, r.SuccessKey, r.FailureKey, r.PromptKey))
+                .Select(r => r.ChallengeType == OneD20ChallengeType.Fight
+                    ? new RoomChallenge(r.Id, RoomChallengeType.Fight, null, null, null, null, null, null,
+                        MonsterId: TestMonsterAssignment[r.Id])
+                    : ToRoomChallenge(r.Id, OneD20RulebookContent.Challenges[TestChallengeAssignment[r.Id]]))
                 .ToDictionary(c => c.Id);
             var playerStats = OneD20RulebookContent.PlayerCharacter;
-            var monsterStats = OneD20RulebookContent.Monster;
+            var monsters = OneD20RulebookContent.Monsters.Values
+                .Select(m => new MonsterTemplate(m.Id, m.Name, m.DescriptionKey,
+                    new CombatantStats(m.Stats.Defense, m.Stats.AttackBonus, m.Stats.DamageDie, m.Stats.DamageBonus, m.Stats.MaxHp)))
+                .ToDictionary(m => m.Id);
             _d20System = new D20SystemRom(
                 new PlayerCharacter(new CombatantStats(playerStats.Defense, playerStats.AttackBonus, playerStats.DamageDie, playerStats.DamageBonus, playerStats.MaxHp)),
-                new MonsterTemplate(new CombatantStats(monsterStats.Defense, monsterStats.AttackBonus, monsterStats.DamageDie, monsterStats.DamageBonus, monsterStats.MaxHp)),
+                monsters,
                 d20Challenges,
                 OneD20RulebookContent.PlayerAbilityScores,
                 fightMechanic ?? new D20ResolutionMechanic());
 
             var movement = new GridMovementService();
             var flavorText = OneD20FlavorText.Text;
+            var monsterMaxHpByRoom = TestMonsterAssignment.ToDictionary(
+                kv => kv.Key, kv => OneD20RulebookContent.Monsters[kv.Value].Stats.MaxHp);
 
             // Register handlers with injected dependencies (direct DI, no interop broker)
             _dispatcher.RegisterHandler("move", new MoveCommandHandler(_gridMap, flavorText));
-            _dispatcher.RegisterHandler("look", new LookCommandHandler(_gridMap, flavorText, playerStats.MaxHp, monsterStats.MaxHp));
+            _dispatcher.RegisterHandler("look", new LookCommandHandler(_gridMap, flavorText, playerStats.MaxHp, monsterMaxHpByRoom));
             _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, flavorText, checkMechanic));
             _dispatcher.RegisterHandler("fight", new FightCommandHandler(_d20System, flavorText, fightMechanic));
             _dispatcher.RegisterHandler("flee", new FleeCommandHandler(movement, flavorText));
@@ -120,7 +153,6 @@ namespace LunaFlow.EngineTests.Rom.D20System
                     {
                         new PlayerPosition(OneD20RulebookContent.StartRoomId),
                         OneD20RulebookContent.PlayerCharacter,
-                        OneD20RulebookContent.Monster,
                     };
                     // Insert all rooms so challenge-prompt rules can fire correctly
                     foreach (var room in OneD20RulebookContent.Rooms.Values)
@@ -137,8 +169,8 @@ namespace LunaFlow.EngineTests.Rom.D20System
                         .Select(r => (object)new RoomChallengePrompt(
                             r.Id,
                             r.ChallengeType == OneD20ChallengeType.Fight
-                                ? flavorText["monster-desc"]
-                                : flavorText[r.PromptKey!]));
+                                ? MonsterDescFor(r.Id)
+                                : ChallengePromptFor(r.Id)));
                     return prompts.Append(new GameEndAnnouncement(flavorText["win-announce"]));
                 });
             _engine.SetOptions(options);
@@ -205,9 +237,9 @@ namespace LunaFlow.EngineTests.Rom.D20System
             var entered = MessagesSince(baseline);
             Assert.AreEqual(1, entered.Count(m => m == OneD20FlavorText.Text["room-2-desc"]),
                 "DescriptionKey should announce exactly once, from the handler");
-            Assert.AreEqual(1, entered.Count(m => m == OneD20FlavorText.Text["room-2-prompt"]),
+            Assert.AreEqual(1, entered.Count(m => m == ChallengePromptFor(2)),
                 "PromptKey should announce exactly once, from the rule (ticket 0050's RoomChallengePrompt seed)");
-            Assert.AreNotEqual(OneD20FlavorText.Text["room-2-desc"], OneD20FlavorText.Text["room-2-prompt"],
+            Assert.AreNotEqual(OneD20FlavorText.Text["room-2-desc"], ChallengePromptFor(2),
                 "Description and prompt must never be identical text");
         }
 
@@ -219,7 +251,7 @@ namespace LunaFlow.EngineTests.Rom.D20System
             StartSession();
 
             var descIndex = _messages.IndexOf(OneD20FlavorText.Text["room-5-desc"]);
-            var monsterIndex = _messages.IndexOf(OneD20FlavorText.Text["monster-desc"]);
+            var monsterIndex = _messages.IndexOf(MonsterDescFor(5));
 
             Assert.AreNotEqual(-1, descIndex, "Room 5's description should be announced at startup");
             Assert.AreNotEqual(-1, monsterIndex, "Room 5 is a Fight room; monster-desc should be announced at startup too");
@@ -392,7 +424,7 @@ namespace LunaFlow.EngineTests.Rom.D20System
             Submit("check"); // already solved: no-op
 
             Assert.AreEqual(0, MessagesSince(baseline).Count, "A solved room's check must be rejected");
-            Assert.AreEqual(1, _messages.Count(m => m == OneD20FlavorText.Text["room-2-prompt"]),
+            Assert.AreEqual(1, _messages.Count(m => m == ChallengePromptFor(2)),
                 "Solving must not re-trigger the challenge-prompt announcement");
         }
 
