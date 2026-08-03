@@ -36,3 +36,5 @@ one-liner instruction wasn't specific enough to hold.)
 | [0058](0058-juno-role-scope-separate-content-design-from-mechanism-verification.md) | open | Juno (Game Designer) | Kofi (PM) | Discussion-log: trigger condition for splitting Juno's content design back from mechanism verification once Cartridge stabilizes. |
 | [0059](0059-second-world-module-reskin-content.md) | in-review | Kofi (PM) | Juno (Game Designer) | Hollow Keep reskin specced — room-for-room match, awaiting Kofi's sign-off before hand-off to Baraka. |
 | [0060](0060-implement-world-module-extraction-spec-md.md) | open | Kofi (PM) | Baraka (Impl Dev) | Build `world-module-extraction-spec.md` — extraction, decoupling, validation, second-module proof. |
+| [0061](0061-hollow-keep-fixed-vocabulary-keys-must-not-be-prefixed.md) | in-review | Amara (Architect) | Juno (Game Designer) | 11 fixed-vocabulary flavor keys were wrongly `hk-`-prefixed in Hollow Keep content; de-prefixed. |
+| [0061](0061-hollow-keep-fixed-vocabulary-keys-must-not-be-prefixed.md) | resolved | Amara (Architect) | Juno (Game Designer) | Hollow Keep's 11 fixed handler-code keys were `hk-`-prefixed; de-prefixed, re-verified. |

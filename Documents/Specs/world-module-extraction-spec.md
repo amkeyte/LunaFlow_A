@@ -101,6 +101,19 @@ Rulebook-tier). Checks, all fail-fast with a message naming what's wrong:
   announcement mid-session.
 - `PlayerAbilityScores` names all six abilities `OneD20ResolutionMechanic`/`fight`/`check` read
   (`Str`/`Dex`/`Con`/`Int`/`Wis`/`Cha`).
+- `FlavorText` contains, verbatim and unprefixed, the **fixed vocabulary** every command handler
+  reads by literal string rather than through a template's `*Key` field: `pc-hit`, `pc-miss`,
+  `monster-hit`, `monster-miss`, `monster-defeated`, `monster-fled`, `pc-flee`, `pc-lost`,
+  `win-announce`, `inventory-empty`, `inventory-header`. **Added 2026-08-03 (Amara, doc pass):**
+  this was missing from the original Mechanics list — every other `FlavorText` key is data-driven
+  (a template's field names the key, so a World Module may rename it freely), but these eleven are
+  hardcoded literal lookups inside `FightCommandHandler`/`FleeCommandHandler`/
+  `InventoryCommandHandler`/`Program.cs` — shared handler code no World Module swap changes. A
+  module that renames or omits one of these (e.g. namespacing it under a theme prefix, the way a
+  room or monster key correctly can be) passes every other check and then throws
+  `KeyNotFoundException` at first use — mid-session, not at load, which is exactly the failure mode
+  this validation pass exists to rule out. Found auditing Hollow Keep's flavor content against this
+  spec; see ticket 0061.
 
 A World Module failing any check is a load-time error, same "hard fail at bootstrap, never a
 degradation during play" property the Cartridge probe (`cross-rom-capability-spec.md` §5) upholds
@@ -141,6 +154,10 @@ logic.
       `Challenges` pool of 5, a flavor key gone) with a clear, load-time, non-zero-exit error naming
       what's wrong — demonstrated, not asserted, same bar `cross-rom-capability-spec.md`'s probe
       criteria hold.
+- [ ] The validation pass rejects a module missing any of the eleven fixed-vocabulary `FlavorText`
+      keys (Mechanics section, above) — this is a load-time check, not something discovered by
+      running a full session, since a session run might not exercise every one of the eleven in a
+      single pass (e.g. never triggering `pc-lost` or `monster-fled`).
 - [ ] **A second, independently-authored `IOneD20WorldModule` implementation runs a full session
       correctly** — move/look/check/fight/flee/inventory all work, win-line topology unaffected,
       loot awards correctly — **with zero changes to `LunaFlow.Rulebook`'s structural code, GridMap,

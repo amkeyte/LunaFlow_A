@@ -1,19 +1,23 @@
 namespace LunaFlow.Rulebook.OneD20
 {
     /// <summary>
-    /// The 1.d20 Department-7 mission's Scenario data: the 9 rooms' fixed grid positions, the pool
-    /// of 9 skill-check challenges and roster of 5 monsters session content draws from, the
-    /// monster→item loot table, the pregenerated PC's sheet, and ability scores — Rulebook-owned
-    /// data types only, never a ROM type. Which specific challenge/monster fills a given room is
-    /// session-assigned by <see cref="OneD20SessionAssembler"/>, not fixed here. Translated into
-    /// GridMap's/D20System's/Loot's own fact shapes by <c>Program.cs</c> (the composition root,
-    /// exempt from the Rulebook/ROM boundary). Pure data; no logic, no fact-store access.
+    /// The 1.d20 Department-7 mission's shipped content, reimplemented against
+    /// <see cref="IOneD20WorldModule"/> instead of as static fields — the 9 rooms' fixed grid
+    /// positions, the pool of 9 skill-check challenges and roster of 5 monsters session content draws
+    /// from, the monster→item loot table, the pregenerated PC's sheet, and ability scores. A
+    /// relocation of <c>OneD20RulebookContent</c>'s values, not a rewrite. Which specific
+    /// challenge/monster fills a given room is session-assigned by <see cref="OneD20SessionAssembler"/>,
+    /// not fixed here. Translated into GridMap's/D20System's/Loot's own fact shapes by
+    /// <c>Program.cs</c> (the composition root, exempt from the Rulebook/ROM boundary). Pure data; no
+    /// logic, no fact-store access. Flavor text lives in the <c>FlavorText</c> partial
+    /// (<c>DefaultOneD20WorldModule.FlavorText.cs</c>), mirroring today's
+    /// <c>OneD20RulebookContent</c>/<c>OneD20FlavorText</c> file split.
     /// </summary>
-    public static class OneD20RulebookContent
+    public sealed partial class DefaultOneD20WorldModule : IOneD20WorldModule
     {
         /// <summary>The nine rooms' fixed grid position and slot-kind, keyed by <see cref="OneD20RoomData.Id"/>.
         /// Rooms 1, 5, 8 are Fight; the rest are SkillCheck — this topology never varies per session.</summary>
-        public static readonly IReadOnlyDictionary<int, OneD20RoomData> Rooms = new Dictionary<int, OneD20RoomData>
+        public IReadOnlyDictionary<int, OneD20RoomData> Rooms { get; } = new Dictionary<int, OneD20RoomData>
         {
             [1] = new OneD20RoomData(1, 0, 0, OneD20ChallengeType.Fight, "room-1-desc"),
             [2] = new OneD20RoomData(2, 0, 1, OneD20ChallengeType.SkillCheck, "room-2-desc"),
@@ -27,13 +31,13 @@ namespace LunaFlow.Rulebook.OneD20
         };
 
         /// <summary>The room a new player starts in (the center of the grid — also a Fight room).</summary>
-        public const int StartRoomId = 5;
+        public int StartRoomId { get; } = 5;
 
         /// <summary>
         /// The pool of 9 skill-check challenges, keyed by <see cref="OneD20ChallengeTemplate.Key"/>.
         /// Session-assembly assigns 6 of these to the grid's 6 fixed skill-check positions.
         /// </summary>
-        public static readonly IReadOnlyDictionary<string, OneD20ChallengeTemplate> Challenges =
+        public IReadOnlyDictionary<string, OneD20ChallengeTemplate> Challenges { get; } =
             new Dictionary<string, OneD20ChallengeTemplate>
             {
                 ["search"] = new("search", "Search", "Int", 10, "search-success", "search-failure", "search-prompt"),
@@ -53,7 +57,7 @@ namespace LunaFlow.Rulebook.OneD20
         /// loot-rom-content-expansion-spec.md's roster table, all checked against the PC (attack +4,
         /// Defense 11) to land in a plausible-either-way band.
         /// </summary>
-        public static readonly IReadOnlyDictionary<string, OneD20MonsterTemplate> Monsters =
+        public IReadOnlyDictionary<string, OneD20MonsterTemplate> Monsters { get; } =
             new Dictionary<string, OneD20MonsterTemplate>
             {
                 ["duelist"] = new("duelist", "The Duelist", "monster-duelist-desc",
@@ -73,7 +77,7 @@ namespace LunaFlow.Rulebook.OneD20
         /// same item, per loot-rom-content-expansion-spec.md. Translated into Loot's
         /// <c>MonsterLootTable</c> by <c>Program.cs</c>.
         /// </summary>
-        public static readonly IReadOnlyDictionary<string, string> ItemIdByMonsterId = new Dictionary<string, string>
+        public IReadOnlyDictionary<string, string> ItemIdByMonsterId { get; } = new Dictionary<string, string>
         {
             ["duelist"] = "rapier",
             ["brawler"] = "knuckles",
@@ -83,11 +87,11 @@ namespace LunaFlow.Rulebook.OneD20
         };
 
         /// <summary>The pregenerated level-1 Strong-hero PC's stats.</summary>
-        public static readonly OneD20CombatantStats PlayerCharacter =
+        public OneD20CombatantStats PlayerCharacter { get; } =
             new(Defense: 11, AttackBonus: 4, DamageDie: "1d8", DamageBonus: 3, MaxHp: 11);
 
         /// <summary>The PC's six ability scores, per the Strong-hero sheet.</summary>
-        public static readonly IReadOnlyDictionary<string, int> PlayerAbilityScores = new Dictionary<string, int>
+        public IReadOnlyDictionary<string, int> PlayerAbilityScores { get; } = new Dictionary<string, int>
         {
             ["Str"] = 16,
             ["Dex"] = 10,

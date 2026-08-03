@@ -70,17 +70,23 @@ Deliberately generic — no weapon named that doesn't belong to every monster in
 "overly generic" instinct `loot-rom-content-expansion-flavor.md` applied to its own combat lines.
 `pc-hit`/`pc-miss` reference the PC's own sword, which doesn't vary with the monster faced.
 
+**Unprefixed by design** — these eleven keys (this table's nine plus the two inventory keys below) are
+hardcoded literal-string lookups inside the shared ROM-tier handler code every `IOneD20WorldModule`
+runs against unchanged (`FightCommandHandler`/`FleeCommandHandler`/`InventoryCommandHandler`); they
+must appear in `FlavorText` verbatim, not under this module's `hk-` prefix. See ticket
+[0061](../../ClaudeWiki/Processes/Handoffs/0061-hollow-keep-fixed-vocabulary-keys-must-not-be-prefixed.md).
+
 | Key | Use | Text |
 | --- | --- | --- |
-| `hk-monster-defeated` | Monster HP reaches 0 | He goes down and doesn't get up. |
-| `hk-monster-fled` | 3-round clock expires | He breaks away and vanishes into the ruin before you can stop him — no catching him now. |
-| `hk-pc-hit` | PC's attack connects, monster still standing | Your sword connects — he staggers but he's still on his feet. |
-| `hk-pc-miss` | PC's attack misses | You swing and miss. |
-| `hk-monster-hit` | Monster's counterattack connects | He gets a hit in — that's going to leave a mark. |
-| `hk-monster-miss` | Monster's counterattack misses | He comes at you and you dodge clear. |
-| `hk-pc-flee` | Player uses `flee` | You break off and put a wall between you and him. He doesn't follow. |
-| `hk-pc-lost` | PC's HP reaches 0 during `fight` | He gets the better of you this time — you're forced back, bruised. No going through him, not today. |
-| `hk-win-announce` | Any win line completes | Three for three — that's enough to call it. Whatever's been living in Hollow Keep, it isn't anymore. |
+| `monster-defeated` | Monster HP reaches 0 | He goes down and doesn't get up. |
+| `monster-fled` | 3-round clock expires | He breaks away and vanishes into the ruin before you can stop him — no catching him now. |
+| `pc-hit` | PC's attack connects, monster still standing | Your sword connects — he staggers but he's still on his feet. |
+| `pc-miss` | PC's attack misses | You swing and miss. |
+| `monster-hit` | Monster's counterattack connects | He gets a hit in — that's going to leave a mark. |
+| `monster-miss` | Monster's counterattack misses | He comes at you and you dodge clear. |
+| `pc-flee` | Player uses `flee` | You break off and put a wall between you and him. He doesn't follow. |
+| `pc-lost` | PC's HP reaches 0 during `fight` | He gets the better of you this time — you're forced back, bruised. No going through him, not today. |
+| `win-announce` | Any win line completes | Three for three — that's enough to call it. Whatever's been living in Hollow Keep, it isn't anymore. |
 
 ## Loot — item names and pickup text
 
@@ -94,10 +100,13 @@ Deliberately generic — no weapon named that doesn't belong to every monster in
 
 ## Inventory command text
 
+**Also unprefixed by design** — see the note above the combat narration table; `InventoryCommandHandler`
+looks these up as fixed literals too.
+
 | Key | Use | Text |
 | --- | --- | --- |
-| `hk-inventory-empty` | No items collected yet | You're not carrying anything yet. |
-| `hk-inventory-header` | At least one item collected | You're carrying: *(followed by each held item's Name, one per line)* |
+| `inventory-empty` | No items collected yet | You're not carrying anything yet. |
+| `inventory-header` | At least one item collected | You're carrying: *(followed by each held item's Name, one per line)* |
 
 ## Related documents
 

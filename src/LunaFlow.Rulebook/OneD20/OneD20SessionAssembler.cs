@@ -21,30 +21,32 @@ namespace LunaFlow.Rulebook.OneD20
     /// </summary>
     public sealed class OneD20SessionAssembler
     {
+        private readonly IOneD20WorldModule _worldModule;
         private readonly Random _random;
 
-        /// <summary>Constructs the assembler with an injectable RNG — defaults to a real
-        /// <see cref="Random"/>, swappable for a seeded one in tests, same seam as ticket 0019's
-        /// <c>D20ResolutionMechanic</c>.</summary>
-        public OneD20SessionAssembler(Random? random = null)
+        /// <summary>Constructs the assembler against a World Module's pools, with an injectable RNG —
+        /// defaults to a real <see cref="Random"/>, swappable for a seeded one in tests, same seam as
+        /// ticket 0019's <c>D20ResolutionMechanic</c>.</summary>
+        public OneD20SessionAssembler(IOneD20WorldModule worldModule, Random? random = null)
         {
+            _worldModule = worldModule;
             _random = random ?? new Random();
         }
 
         /// <summary>Produces one session's randomized room→challenge/room→monster/room→item assignment.</summary>
         public OneD20SessionAssignment Assemble()
         {
-            var skillCheckRoomIds = OneD20RulebookContent.Rooms.Values
+            var skillCheckRoomIds = _worldModule.Rooms.Values
                 .Where(r => r.ChallengeType == OneD20ChallengeType.SkillCheck)
                 .Select(r => r.Id)
                 .ToList();
-            var fightRoomIds = OneD20RulebookContent.Rooms.Values
+            var fightRoomIds = _worldModule.Rooms.Values
                 .Where(r => r.ChallengeType == OneD20ChallengeType.Fight)
                 .Select(r => r.Id)
                 .ToList();
 
-            var challengeKeys = Shuffle(OneD20RulebookContent.Challenges.Keys.ToList());
-            var monsterIds = Shuffle(OneD20RulebookContent.Monsters.Keys.ToList());
+            var challengeKeys = Shuffle(_worldModule.Challenges.Keys.ToList());
+            var monsterIds = Shuffle(_worldModule.Monsters.Keys.ToList());
 
             var challengeKeyByRoom = skillCheckRoomIds
                 .Zip(challengeKeys.Take(skillCheckRoomIds.Count))
@@ -56,7 +58,7 @@ namespace LunaFlow.Rulebook.OneD20
 
             var itemIdByRoom = monsterIdByRoom.ToDictionary(
                 kv => kv.Key,
-                kv => OneD20RulebookContent.ItemIdByMonsterId[kv.Value]);
+                kv => _worldModule.ItemIdByMonsterId[kv.Value]);
 
             return new OneD20SessionAssignment(challengeKeyByRoom, monsterIdByRoom, itemIdByRoom);
         }

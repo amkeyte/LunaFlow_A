@@ -1,18 +1,18 @@
 namespace LunaFlow.Rulebook.OneD20
 {
     /// <summary>
-    /// The 1.d20 flavor-text table, keyed exactly as in <c>loot-rom-content-expansion-flavor.md</c>
-    /// (which supersedes <c>1-d20-flavor.md</c>'s prompt/success/failure table only — room
-    /// description keys are unchanged and carried over from there verbatim). The only place this
-    /// prose is allowed to live — GridMap's/D20System's/Loot's rules and handlers look text up by
-    /// key, never inline it. Flavor keys never contain numbers; the numeric readouts (damage, HP,
-    /// roll, DC) are always handler-constructed and combined with flavor text separately, never
-    /// hardcoded into the flavor text itself.
+    /// <see cref="DefaultOneD20WorldModule.FlavorText"/> — the 1.d20 flavor-text table, keyed exactly
+    /// as in <c>loot-rom-content-expansion-flavor.md</c> (which supersedes <c>1-d20-flavor.md</c>'s
+    /// prompt/success/failure table only — room description keys are unchanged and carried over from
+    /// there verbatim). The only place this prose is allowed to live — GridMap's/D20System's/Loot's
+    /// rules and handlers look text up by key, never inline it. Flavor keys never contain numbers; the
+    /// numeric readouts (damage, HP, roll, DC) are always handler-constructed and combined with flavor
+    /// text separately, never hardcoded into the flavor text itself.
     /// </summary>
-    public static class OneD20FlavorText
+    public sealed partial class DefaultOneD20WorldModule
     {
         /// <summary>Flavor text, keyed per <c>loot-rom-content-expansion-flavor.md</c>.</summary>
-        public static readonly IReadOnlyDictionary<string, string> Text = new Dictionary<string, string>
+        public IReadOnlyDictionary<string, string> FlavorText { get; } = new Dictionary<string, string>
         {
             // Room descriptions — unchanged from 1-d20-flavor.md; room position/topology never varies per session.
             ["room-1-desc"] = "Crates stacked head-high, a rolled-up delivery door letting in a slice of grey daylight. Someone's still here.",

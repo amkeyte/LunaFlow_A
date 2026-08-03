@@ -7,7 +7,7 @@ namespace LunaFlow.Rulebook.OneD20
     /// The 1.d20 Rulebook's <see cref="IRuleBook"/> declaration — depends on the <c>GridMap</c>,
     /// <c>D20System</c>, and <c>Loot</c> ROMs (spatial, challenge/combat, and loot/inventory
     /// concerns, respectively). Carries no logic of its own: this project's job is to be pure data
-    /// (<see cref="OneD20RulebookContent"/>/<see cref="OneD20FlavorText"/>/
+    /// (<see cref="IOneD20WorldModule"/>'s implementations plus
     /// <see cref="OneD20SessionAssembler"/>) plus this declaration, never a reference to
     /// <c>LunaFlow.Engine</c>.
     /// </summary>
