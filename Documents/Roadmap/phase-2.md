@@ -7,7 +7,7 @@ is implemented and behaviorally verified, including B5 parity (generated vs. han
 identically). Delivered via tickets 0007 (design) → 0008 (impl) → 0009 (doc reconcile) → 0010 (B1–B5
 suite) → 0011 (verdict).
 
-See [`design/rule-pipeline.md`](design/rule-pipeline.md).
+See [`design/rule-pipeline.md`](../design/rule-pipeline.md).
 
 ## Overview
 

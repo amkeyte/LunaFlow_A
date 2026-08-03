@@ -2,7 +2,7 @@
 
 **Status:** pending
 
-See [`design/scripting-content.md`](design/scripting-content.md).
+See [`design/scripting-content.md`](../design/scripting-content.md).
 
 ## Overview
 

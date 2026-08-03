@@ -4,7 +4,7 @@ using LunaFlow.Rom.D20System;
 using LunaFlow.Rom.Loot;
 using LunaFlow.Rules.GeneratorServices;
 
-namespace LunaFlow.EngineTests.Rom.Loot
+namespace LunaFlow.ContentTests.Rom.Loot
 {
     /// <summary>
     /// Fixture-level coverage for <see cref="LootRuleGroup.AwardItem"/> — Loot's one generic rule,

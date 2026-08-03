@@ -113,7 +113,7 @@ These conventions prevent common rot patterns. All violations worth fixing incre
 
 - Roadmap is the source of truth. Design docs, tickets, specs refer to it; never restate status inline.
 - Every design doc opens with: `Implementation status: see [Roadmap](../../Roadmap/roadmap.md).`
-- Tickets and specs carry their own status (per [ticket template](#ticket-template) and [spec preamble](../Specs/README.md)).
+- Tickets and specs carry their own status (per [ticket template](#ticket-template) and [spec preamble](../../Specs/README.md)).
 - If you catch a status claim in prose ("implemented in Phase 2"), it's rotten — delete it and link to the roadmap instead.
 
 ### Convention 2: "Link, don't duplicate"
@@ -126,7 +126,7 @@ These conventions prevent common rot patterns. All violations worth fixing incre
 
 - Any deprecated doc has immediate link to current pattern at the very top.
 - Template: `> **DEPRECATED** (date) — [X] is historical. **Current:** see [Y](link).`
-- Example: [`NineRooms/README-DEPRECATED.md`](NineRooms/README-DEPRECATED.md).
+- Example: [`NineRooms/README-DEPRECATED.md`](../../NineRooms/README-DEPRECATED.md).
 
 ### Convention 4: "Decision-first tickets"
 
@@ -143,7 +143,7 @@ These conventions prevent common rot patterns. All violations worth fixing incre
 
 - Mark files representing current, recommended approach at the top.
 - Deprecated/historical content has equally clear marker + redirect.
-- Example: [`1-d20-spec.md`](../Specs/1-d20/1-d20-spec.md) (current) vs. [`NineRooms/README-DEPRECATED.md`](NineRooms/README-DEPRECATED.md) (historical).
+- Example: [`1-d20-spec.md`](../../Specs/1-d20/1-d20-spec.md) (current) vs. [`NineRooms/README-DEPRECATED.md`](../../NineRooms/README-DEPRECATED.md) (historical).
 
 ### Convention 7: "No orphaned documents"
 

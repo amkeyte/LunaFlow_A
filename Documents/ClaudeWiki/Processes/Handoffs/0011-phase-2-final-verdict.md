@@ -45,7 +45,7 @@ Repo convention (`CLAUDE.md`): no state-changing git commands.
 
 ## Response
 
-**PASS.** Full verdict with evidence: [`Documents/QA/phase-2-verdict.md`](../../../Documents/QA/phase-2-verdict.md).
+**PASS.** Full verdict with evidence: [`Documents/QA/phase-2-verdict.md`](../../../QA/phase-2-verdict.md).
 
 Per the ask ("don't take 71/71 on the ticket's word"), I ran the full suite myself
 (`dotnet test tests/LunaFlow.EngineTests --settings LunaFlow_A.runsettings`) rather than reading

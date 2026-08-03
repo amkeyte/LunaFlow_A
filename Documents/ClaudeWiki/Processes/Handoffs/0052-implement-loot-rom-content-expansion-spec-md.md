@@ -1,6 +1,6 @@
 # 0052 — Implement loot-rom-content-expansion-spec.md
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Kofi (PM)
 **Opened:** 2026-07-30
 **For:** Baraka (Impl Dev)
@@ -52,9 +52,13 @@ Built per [CodePlan](../../../Roadmap/CodePlans/2-7-1.md), all four items:
    `LunaFlow_A.sln`. `LootRom : IRom`, `Provides: []`, `Requires: [ChallengeSolved]`. Zero project
    reference to `D20SystemExampleA`/`B` (only `D20SystemExampleC`, the Cartridge contract surface,
    plus `LunaFlow.Rom`/`Rules`/`Engine`). `ComponentRegistry.Validate()` passes with three ROMs
-   registered; `GridMap` and `Loot` both declare `Requires: [ChallengeSolved]` against D20System's
-   one `Provides` entry with no change needed to `Validate()` itself, confirming the spec's claim
-   about the existing two-phase check.
+   registered. **Corrected 2026-07-30, caught in [0054](0054-loot-rom-test-suite.md)'s review:** this
+   line originally claimed "`GridMap` and `Loot` both declare `Requires: [ChallengeSolved]`" —
+   wrong. `GridMapRom.Requires` is `Array.Empty<Capability>()`; win-line rules match
+   `IChallengeSolved` directly via NRules polymorphic matching, not capability declaration. Only
+   `Loot` declares the `Requires` entry — a pre-existing spec/code gap from Phase 2.7
+   (`grid-rom-d20-split-spec.md`'s capability table lists GridMap `Requires: [ChallengeSolved]`; the
+   shipped `GridMapRom.cs` doesn't), not something this ticket introduced or is in scope to fix.
 2. **Monster roster** — D20System's `MonsterTemplate` is now `(Id, Name, DescriptionKey, Stats)`,
    5 entries; `RoomChallenge` gained `MonsterId`. `FightCommandHandler` resolves the room's assigned
    monster per session; `fight`'s mechanic (attack rolls, lethality-first ordering, 3-round clock) is
@@ -96,4 +100,25 @@ monster-max-HP dictionary instead of a scalar (forced once the roster stopped be
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+**Resolved 2026-08-02 (Kofi, opener).** Both blockers now formally closed by their openers:
+[0054](0054-loot-rom-test-suite.md) (test suite, 140/140, all six new-coverage items built) and
+[0055](0055-loot-spec-mechanism-deviations.md) (both deviations ratified by Amara, spec corrected).
+The GridMap/Loot `Requires` correction 0054's review caught is already folded into this ticket's own
+Response, not left stale. All four build items — Loot ROM, monster roster, randomization, inventory
+— confirmed built and independently re-verified along the way by Nadia (0054) and Amara (0055), not
+just claimed here.
+
+**Closing this build ticket, not marking Phase 2.7.1 done.** Those are different claims: this ticket
+is Baraka's implementation scope, and it's met. The phase's own done-bar is QA's call —
+[0056](0056-phase-2-7-1-qa-gate.md) fired early (before 0054/0055 closed) and correctly came back
+FAIL on process grounds, not a defect. With both dependencies closed now, 0056 needs re-firing;
+its own six-item remainder list (three-ROM live coordination, `ChallengeSolved`'s dual requirers
+firing jointly, cross-session randomization, all-9-challenge loot gating, `LootRom`'s assembly-graph
+check, and the two-trx regression provenance) is still outstanding. Not done until that runs.
+
+**One pre-existing drift surfaced, not this ticket's to fix:** `grid-rom-d20-split-spec.md`'s
+capability table still lists GridMap `Requires: [ChallengeSolved]`, but the shipped `GridMapRom.cs`
+never declares it — win-line rules match `IChallengeSolved` directly via NRules polymorphism, no
+capability declaration needed. That's a Phase 2.7 spec/code gap, not something 0052 introduced.
+Worth a small ticket to reconcile the spec's table to what actually shipped; flagging rather than
+silently carrying it forward.

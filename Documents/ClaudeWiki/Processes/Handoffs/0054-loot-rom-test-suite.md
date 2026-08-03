@@ -1,9 +1,22 @@
 # 0054 — Test suite needs updating for Phase 2.7.1 (Loot ROM & content expansion)
 
-**Status:** open
+**Status:** resolved
 **Opened by:** Baraka (Impl Dev)
 **Opened:** 2026-07-30
 **For:** Nadia (Test Dev)
+
+## Decision
+
+Suite compiling again and all six new-coverage items built — 119/119 → 140/140. Fixed the two
+existing test classes against the new shapes by pinning one fixed test session assignment (not
+exercising `OneD20SessionAssembler`'s randomness there — that's its own new test class) chosen so
+every already-pinned seeded-`Random` fight/check outcome kept passing unchanged. One factual
+discrepancy found in this ticket's own text, not corrected here: `ComponentRegistry`'s "two
+independent components both requiring the same capability" framing doesn't hold — `GridMapRom`
+ships `Requires: []` (win-line rules match `IChallengeSolved` via NRules directly, not capability
+mediation); only `Loot` declares the `Requires` entry. Note ticket 0053 later relocated every file
+this ticket touches into `tests/LunaFlow.ContentTests` — paths below are where they landed, not
+where this ticket's Ask describes them.
 
 ## Details
 
@@ -83,8 +96,62 @@ either.
 
 ### Response
 
-<Filled in by the assignee.>
+**Compile fix.** `D20SystemHandlerTests.cs` and `D20SystemRuleFixtureTests.cs` (now at
+`tests/LunaFlow.ContentTests/Rom/D20System/`, moved there by ticket 0053) both build against the new
+shapes by pinning one fixed test session assignment rather than exercising the assembler's own
+randomness: fight rooms 1/5/8 → monster `"duelist"` (Defense 13, AttackBonus 3, `1d6+1` damage,
+MaxHp 8 — exactly the old fixed singleton Monster's stats), skill-check rooms 2/3/6/9 → challenges
+`search`/`climb`/`swim`/`jump` (exactly the old fixed per-room Skill/DC values). That preserved every
+already-pinned seeded-`Random` outcome untouched; only the now-dead flavor keys (`room-N-prompt` →
+challenge-keyed, `monster-desc` → monster-keyed) needed updating, via two small helpers
+(`ChallengePromptFor`/`MonsterDescFor`) added to each class.
+
+**New coverage, all six items from the Ask, now at `tests/LunaFlow.ContentTests/`:**
+
+- `Rom/Loot/LootRomTests.cs` — `Provides` empty (pure-sink shape), `Requires` names `ChallengeSolved`
+  paired with `IChallengeSolved`, plus an assembly-reference check (`GetReferencedAssemblies()`)
+  confirming Loot's compiled output never references GridMap's or D20System's assembly.
+- `Rom/Loot/LootRuleGroupFixtureTests.cs` — `AwardItem` fires exactly once per fight-room
+  `IChallengeSolved` with a matching `LootAssignment`, never fires for a skill-check room (no
+  assignment exists), never double-awards (`Not<ItemAwarded>` guard), and one generic rule handles
+  multiple rooms independently in the same session.
+- `Rom/Loot/InventoryCommandHandlerTests.cs` — empty case, populated case, `inv`-alias parity, and a
+  case with no GridMap/D20System rule assemblies loaded at all to pin "reads only its own
+  `ItemAwarded` facts."
+- `Rulebook/OneD20/OneD20SessionAssemblerTests.cs` — seeded-`Random` reproducibility, exactly 6-of-9
+  challenge keys and 3-of-5 monster ids drawn (all valid, all unique), fixed grid topology
+  (`{1,5,8}` fight / `{2,3,4,6,7,9}` skill-check) held across 50 different seeds, and
+  `ItemIdByRoom` correctly derived from each room's monster assignment.
+- `Rom/ComponentRegistryContentTests.cs` — all three ROMs registered validates clean end-to-end
+  (`ValidateDependsOn` + `Validate()`); omitting `Loot` while `OneD20RuleBook.DependsOnRoms` names it
+  throws a clear, specific error naming both `"Loot"` and `"OneD20"` — same bar as ticket 0052's
+  Done-When for the two-ROM case.
+
+**Two build-fragility fixes along the way, not scope creep — both needed to make the above actually
+pass, not just compile:**
+- `tests/LunaFlow.EngineTests.csproj` (at the time; now `LunaFlow.ContentTests.csproj` post-0053) was
+  missing the `D20SystemExampleD` project reference — nothing in `Rom.Loot` could compile without it.
+- `RoslynRuleCompiler` needs `LunaFlow.Cartridge` force-loaded before compiling `LootRuleGroup` (same
+  gotcha as the existing NRules-assembly force-load), which was intermittently missing depending on
+  test run order/filter — fixed in both new fixture classes' `ClassSetup`.
+
+**Verification:** `dotnet build LunaFlow_A.sln` clean, full suite 140/140 (confirmed both pre- and
+post-0053's project split: 119 baseline → 140 with this ticket's coverage, then re-confirmed as
+93 + 47 = 140 after the split relocated files across two projects).
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+Independently re-verified, not taken on the response alone:
+- `dotnet build LunaFlow_A.sln` — clean, 0 errors, 0 warnings.
+- `tests/LunaFlow.ContentTests.csproj` references `D20SystemExampleD` — confirmed.
+- `dotnet test tests/LunaFlow.ContentTests --filter "FullyQualifiedName~Loot"` — 16/16 pass, spot
+  verification of the new Loot coverage (didn't re-run the full 140 myself; per
+  `agent-test-workflow.md` that pass is Arryn's, not mine to claim).
+
+**One correction found and fixed, in my own ticket, not this one's:** ticket 0052's Response
+incorrectly claimed "`GridMap` and `Loot` both declare `Requires: [ChallengeSolved]`" — the Decision
+section here caught it correctly (`GridMapRom.Requires` is empty; win-line rules match
+`IChallengeSolved` via NRules directly). Fixed in 0052, credited to this ticket's review. Good catch.
+
+All six new-coverage items and the compile fix confirmed present and passing. Closed by Baraka
+(opener).

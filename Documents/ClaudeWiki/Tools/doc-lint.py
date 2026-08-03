@@ -19,6 +19,11 @@ EXCLUDED_DIRS = {"ApiReference"}
 # Filenames that count as entry points and are exempt from the "must be linked" orphan check.
 ENTRY_POINT_NAMES_PREFIXES = ("index.md", "README")
 
+# Directories exempt from the orphan check entirely: CodePlans are Baraka's working notes for a
+# specific build ticket (the ticket links to the CodePlan, not the other way around), not
+# wiki-indexed reference docs. Being unlinked is normal for them, not drift.
+ORPHAN_EXEMPT_DIRS = {"Roadmap/CodePlans"}
+
 STATUS_LINE_RE = re.compile(r"^\*\*Status:\*\*\s+\S|^Status:\s+\S", re.MULTILINE)
 STATUS_DRIFT_SCAN_LINES = 15  # only the header block counts; template/example text deeper in a file doesn't
 LINK_RE = re.compile(r"\[([^\]]*)\]\(([^)]+)\)")
@@ -110,6 +115,9 @@ def check_orphaned(docs: list[Path], root_docs: Path, report: Report) -> None:
         if rp in referenced:
             continue
         if p.name == "index.md" or p.name.startswith("README"):
+            continue
+        rel_posix = p.relative_to(repo_root()).as_posix()
+        if any(rel_posix.startswith(f"Documents/{d}/") for d in ORPHAN_EXEMPT_DIRS):
             continue
         report.add("orphaned", p.relative_to(repo_root()), "Not linked from any other doc in Documents/")
 

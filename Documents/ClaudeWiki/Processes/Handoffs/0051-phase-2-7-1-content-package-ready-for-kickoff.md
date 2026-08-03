@@ -27,7 +27,7 @@ resulting package is three documents:
   win-line rules and Loot's new award rule), and the first pure-sink ROM (`Requires` only, no
   `Provides`). Explicitly rules out multi-Rulebook support — that's real, deferred, future work, not
   this phase.
-- [`../../Specs/loot-rom-content-expansion-spec.md`](../../Specs/loot-rom-content-expansion-spec.md)
+- [`../../../Specs/loot-rom-content-expansion-spec.md`](../../../Specs/loot-rom-content-expansion-spec.md)
   — the buildable spec. Five monster templates (duelist/brawler/marksman/enforcer/scrapper)
   replacing the single fixed monster, three new skill checks (9-pool, 6 drawn per session), a new
   `example/D20SystemExampleD` project for Loot, `RoomChallenge` growing a nullable `MonsterId`
@@ -37,7 +37,7 @@ resulting package is three documents:
   skill-checks, which 3 of 5 monsters fill the fixed room-type slots) is specced as Rulebook-tier
   content-assembly code invoked by `Program.cs`, not living inside it — per Arryn's standing note in
   `Program.cs` against content code depending on the composition root's shape.
-- [`../../Specs/loot-rom-content-expansion-flavor.md`](../../Specs/loot-rom-content-expansion-flavor.md)
+- [`../../../Specs/loot-rom-content-expansion-flavor.md`](../../../Specs/loot-rom-content-expansion-flavor.md)
   — the prose companion. Prompt/success/failure keys move from room-indexed to challenge-indexed
   (a challenge can now land on any room of its type), and per Arryn's direction, all challenge and
   monster text is written deliberately generic so it holds up regardless of which room it lands in

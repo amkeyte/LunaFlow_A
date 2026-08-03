@@ -1,6 +1,6 @@
 # 0030 — Design-doc reconcile after Phase 2.6.5 (running log)
 
-**Status:** open
+**Status:** resolved
 **Opened by:** Amara (Architect)
 **Opened:** 2026-07-26
 **For:** Amara (Architect)
@@ -225,4 +225,17 @@ surfaced a pre-existing problem worth a separate raise — see the new item belo
 
 ## Resolution
 
-_(Amara to fill in on close.)_
+Closed 2026-07-30. Re-checked rather than taken on the Response's word:
+
+- Items 1–13: spot-checked `engine-core.md`'s "Authored content vs. infrastructure" section,
+  `glossary.md`'s `Capability`/`ComponentRegistry`/`IHasDependencies`/`IInteropRom`/`IRom`/
+  `Game system` entries, and `phase-2-6-5.md`/`phase-2-7.md`'s struck-and-reasoned edits — all
+  present as described. `IGameSystem`'s deletion is Baraka's territory (ticket 0031, resolved) and
+  not re-verified here; the doc-side ruling it's built on stands.
+- Item 14 (broken links): confirmed routed to and closed via
+  [ticket 0035](0035-broken-relative-links-across-documents-cleanup-pass.md), resolved by Kofi.
+  Nothing left unrouted.
+
+No open items remain against this ticket's original Ask. Closing as the long-running doc-currency
+pass it was scoped to be — new drift from here forward gets its own ticket rather than reopening
+this one, per the one-concern rule this ticket already held itself to.

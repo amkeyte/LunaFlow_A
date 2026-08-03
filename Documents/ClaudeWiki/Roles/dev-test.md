@@ -51,7 +51,7 @@ These are not optional. Skipping them is how tests end up green but hollow — c
   Learning-from-scratch tests for an unfamiliar harness (NRules, component validation, rule
   pipeline generation, etc.) are fastest when anchored to an existing working example rather than
   built from first principles. Canonical references:
-  [`D20SystemRuleFixtureTests.cs`](../../../tests/LunaFlow.EngineTests/Rom/D20System/D20SystemRuleFixtureTests.cs)
+  [`D20SystemRuleFixtureTests.cs`](../../../tests/LunaFlow.ContentTests/Rom/D20System/D20SystemRuleFixtureTests.cs)
   (rule-engine fixture patterns),
   [`ComponentRegistryTests.cs`](../../../tests/LunaFlow.EngineTests/Core/ComponentRegistryTests.cs)
   (component registry validation),

@@ -1,6 +1,6 @@
 using LunaFlow.Rulebook.OneD20;
 
-namespace LunaFlow.EngineTests.Rulebook.OneD20
+namespace LunaFlow.ContentTests.Rulebook.OneD20
 {
     /// <summary>
     /// Coverage for <see cref="OneD20SessionAssembler"/>: the session-start content-assembly step

@@ -13,13 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Content-tier ROM/Rulebook coverage (GridMap/D20System/Loot/OneD20) lives in
+         tests/LunaFlow.ContentTests instead (ticket 0053) — this project stays framework-only.
+         LunaFlow.Rom stays referenced for NineRoomsEngineFixtureTests.cs (Phase 1.5): NineRooms is
+         a toolbox-tier ROM shipped directly in src/LunaFlow.Rom, not an example/-tier game, and its
+         one-time engine-loop proof isn't the growing content the split targets. -->
     <ProjectReference Include="..\..\src\LunaFlow.Engine\LunaFlow.Engine.csproj" />
     <ProjectReference Include="..\..\src\LunaFlow.Rom\LunaFlow.Rom.csproj" />
-    <ProjectReference Include="..\..\src\LunaFlow.Rulebook\LunaFlow.Rulebook.csproj" />
-    <ProjectReference Include="..\..\example\D20SystemExampleA\D20SystemExampleA.csproj" />
-    <ProjectReference Include="..\..\example\D20SystemExampleB\D20SystemExampleB.csproj" />
-    <ProjectReference Include="..\..\example\D20SystemExampleC\D20SystemExampleC.csproj" />
-    <ProjectReference Include="..\..\example\D20SystemExampleD\D20SystemExampleD.csproj" />
   </ItemGroup>
 
   <ItemGroup>

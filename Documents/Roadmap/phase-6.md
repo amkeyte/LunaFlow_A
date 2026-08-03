@@ -2,7 +2,7 @@
 
 **Status:** pending
 
-See [`design/ai-gm-assistant.md`](design/ai-gm-assistant.md).
+See [`design/ai-gm-assistant.md`](../design/ai-gm-assistant.md).
 
 ## Overview
 

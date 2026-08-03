@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sibling to LunaFlow_A.runsettings, for tests/LunaFlow.ContentTests (split out of EngineTests by
+  ticket 0053, Documents/ClaudeWiki/Processes/Handoffs/0053-split-content-tests-into-their-own-test-project.md).
+  Same pinned-path idea, own directory — running both projects' passes with each project's own
+  settings file means neither trx can silently overwrite the other. See
+  Documents/ClaudeWiki/Processes/agent-test-workflow.md's "Fixed path convention" section.
+
+  VS2022: switch Test menu -> Configure Run Settings -> Select Solution-Wide runsettings File to
+  this one when you want ContentTests' pass captured; switch back to LunaFlow_A.runsettings for
+  EngineTests. (Whether VS2022 actually needs this switch for a single "Run All Tests" pass spanning
+  both projects, or already merges them into one trx per session, hasn't been confirmed hands-on —
+  worth Arryn spot-checking once from Test Explorer; this file exists so the CLI path is
+  unambiguously correct either way.)
+  CLI:    dotnet test tests/LunaFlow.ContentTests --settings LunaFlow_A.ContentTests.runsettings
+-->
+<RunSettings>
+  <RunConfiguration>
+    <ResultsDirectory>tests/LunaFlow.ContentTests/TestResults</ResultsDirectory>
+  </RunConfiguration>
+  <LoggerRunSettings>
+    <Loggers>
+      <Logger friendlyName="trx" enabled="True">
+        <Configuration>
+          <LogFileName>latest.trx</LogFileName>
+        </Configuration>
+      </Logger>
+    </Loggers>
+  </LoggerRunSettings>
+</RunSettings>

@@ -60,6 +60,17 @@ Each tier consumes the one below it without needing to understand its internals:
 
 This is also the cleanest way to keep **ROM** and **Rulebook** from blurring together, which is easy to do since both are C# and both get loosely called "the rules." The ROM is the game **system** — the difference between playing D&D and playing Monopoly, an entirely different fact vocabulary and set of mechanics (HP and spellcasting vs. property and rent) — built by a ROM Developer with no particular game in mind. A Rulebook is the specific, compiled **setting** built on top of one or more ROMs by a Rulebook Author — "the Land of Oz version of D&D" or "the Land of Oz version of Monopoly" — decisions about *this* game, made using tools the ROM Developer already built. World Modules and GM Overlays are what happens once you sit down to actually play that Rulebook — a **session**: "our visit to the Emerald City" is a World Module (pre-authored, reviewable), "go directly to the Wizard, do not pass Go" is a GM Overlay (live, unreviewed, scoped to that one session).
 
+**Rulebooks — and, by the same reasoning, World Modules — are additive, not exclusive.** Loading one
+doesn't preclude loading another alongside it: a night-elf character ruleset and a human character
+ruleset can both be active at once, and two World Modules could both contribute content to the same
+session the same way. This isn't a swap-one-for-another model, and it's worth stating explicitly
+because the four-tier diagram only implies it. Conflicts between simultaneously-loaded Rulebooks or
+World Modules are a rule-authoring concern first — however NRules' own priority/agenda-group
+machinery resolves two rules disagreeing — and past that, whoever assembles a given combination for
+shipping is responsible for it, not something the engine arbitrates on its own. See
+[`world-module.md`](world-module.md) for the tier this principle is first built against, in
+[Phase 2.8](../Roadmap/phase-2-8.md).
+
 This four-tier split is also why the ROM is meant to be **pluggable rather than a single fixed model** — a ROM Developer's Physics ROM (trajectories, materials, intersection tests) is a self-contained module a Rulebook Author can choose to depend on, the same way `Dice` is: it owns the trajectory math, the flammability lookup, and the intersection test as facts and calculations, while the Rulebook's rules read those ROM facts and decide what happens next (e.g. "flammable + intersects fire → ignites"). A more narrative-focused Rulebook can skip the Physics ROM entirely and use an abstracted damage roll instead, without changing the engine core, the rule pipeline, or any other Rulebook that *does* depend on it — that's the actual payoff of keeping ROM development separate from Rulebook authorship: rule authors choose their simulation fidelity by choosing which ROM modules to build on, not by forking the engine or the ROM itself.
 
 ### Code-level role hierarchy
@@ -140,4 +151,4 @@ Rulebooks (concrete games built on top of LunaFlow) are expected to live in thei
 
 ## Implementation status
 
-See [`../../Roadmap/roadmap.md`](../../Roadmap/roadmap.md) — the roadmap is the authoritative source for what's real vs. planned.
+See [`../Roadmap/roadmap.md`](../Roadmap/roadmap.md) — the roadmap is the authoritative source for what's real vs. planned.

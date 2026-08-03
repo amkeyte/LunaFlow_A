@@ -4,6 +4,11 @@
   Every run, from VS2022 Test Explorer or "dotnet test", writes a TRX to the same known path
   so the agent doesn't need to be told where to look.
 
+  Covers tests/LunaFlow.EngineTests only as of ticket 0053 (2026-08-02), which split content/ROM
+  tests out into tests/LunaFlow.ContentTests — that project has its own sibling settings file,
+  LunaFlow_A.ContentTests.runsettings, pointed at its own TestResults directory. A "full suite
+  green" claim needs both projects' latest.trx, not just this one.
+
   VS2022: Test menu, Configure Run Settings, Select Solution-Wide runsettings File, this file.
   CLI:    dotnet test tests/LunaFlow.EngineTests with the "settings" option pointed at this file.
 -->

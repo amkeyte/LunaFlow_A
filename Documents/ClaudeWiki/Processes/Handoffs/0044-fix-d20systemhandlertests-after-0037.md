@@ -29,7 +29,9 @@ Arryn-run pass is the next step; nothing known is red.
 ### Context
 
 Anticipated back in ticket [0038](0038-phase-2-7-test-suite-blocked-on-rom-implementations-in-src.md)'s
-reconciliation note — the moment's arrived. Baraka's build of ticket
+reconciliation note — the moment's arrived. (Nadia's own working notes toward this refactor, written
+against an earlier broker shape that didn't survive to ship, are preserved for the record at
+[0034a](0034a-phase-2-7-test-refactor.md) — historical, not a guide to what's below.) Baraka's build of ticket
 [0037](0037-implement-the-gridmap-d20system-split-grid-rom-d20-split-spec-md.md) deleted
 `LunaFlow.Rom.D20SystemInterop`/`D20SystemInteropRom` entirely (superseded by the `LunaFlow.Cartridge`
 namespace, per the Cartridge pivot). `tests/LunaFlow.EngineTests/Rom/D20System/D20SystemHandlerTests.cs`

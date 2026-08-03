@@ -1,6 +1,14 @@
 # Phase 2.8 — World Module extraction
 
-**Status:** pending
+**Status:** pending. Design and buildable spec exist —
+[`design/world-module.md`](../design/world-module.md) and
+[`Specs/world-module-extraction-spec.md`](../Specs/world-module-extraction-spec.md). Kicked off
+2026-08-02 (ticket [0057](../ClaudeWiki/Processes/Handoffs/0057-phase-2-8-design-package-ready-for-kickoff.md)) —
+build ticket to Baraka
+([0060](../ClaudeWiki/Processes/Handoffs/0060-implement-world-module-extraction-spec-md.md)) and the
+second-World-Module content pass to Juno
+([0059](../ClaudeWiki/Processes/Handoffs/0059-second-world-module-reskin-content.md)) running
+alongside it, not gating its start. Not yet built.
 
 ## Overview
 
@@ -61,7 +69,14 @@ proof here versus leaving simultaneous multi-module loading to a later, content-
 ## Related documents
 
 - [`design/architecture.md`](../design/architecture.md) — the four-tier diagram and role table this
-  phase enforces for real
+  phase enforces for real, plus the additive-composition principle this phase's Deliverables asked
+  to have recorded there
+- [`design/world-module.md`](../design/world-module.md) — the tier's shape: a Rulebook-owned data
+  contract a World Module implements, why it needs less machinery than Cartridge did, and what's
+  deliberately not built yet
+- [`Specs/world-module-extraction-spec.md`](../Specs/world-module-extraction-spec.md) — the buildable
+  spec: what moves out of `OneD20RulebookContent`/`OneD20FlavorText`, the validation pass, the
+  second-implementation proof
 - [`design/1-d20.md`](../design/1-d20.md) / [`Specs/1-d20/1-d20-spec.md`](../Specs/1-d20/1-d20-spec.md)
   — the content this phase's first World Module extraction draws from
 - [Phase 2.6 — ROM/Rulebook boundary fortification](phase-2-6.md) — where this content currently

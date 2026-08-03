@@ -53,6 +53,9 @@ regression, not an expected finding.)
 **Scans:** All `.md` files in `Documents/`.
 **Builds:** List of linked files from all index pages (`index.md`, `README*.md`, section indexes).
 **Flags:** Any file not in the linked list.
+**Exempt:** `Documents/Roadmap/CodePlans/` — a CodePlan is Baraka's working notes for one specific
+build ticket; the ticket links to the CodePlan, not the reverse, and it isn't a wiki-indexed
+reference doc. Being unlinked is the normal shape for these, not drift.
 **Output:**
 ```
 Orphaned documents (not linked from any index):
@@ -230,9 +233,9 @@ the backlog the tool surfaced, not a claim everything's clean:
 | --- | --- | --- |
 | Broken links | 84 (was 108 as of 2026-07-26, before [0035](../Processes/Handoffs/0035-broken-relative-links-across-documents-cleanup-pass.md)'s fix) | The dominant root cause — `Handoffs/*.md` linking `Roadmap/`/`design/`/`QA/`/`Specs/` with `../../` (2 levels) instead of the real `../../../` (3 levels) — is **fixed** in 12 tickets (24 links). Remaining 84 is a mix of: the same shape of bug in 3 very old archived tickets with an extra `Documents/` segment; ~20 similarly-shaped misses in `Roadmap/phase-*.md` (Kofi's pages, not Handoffs); stale paths in deprecated `NineRooms/` content; and a handful of intentional documentation examples on this page itself (`[design](../design/engne-core.md)` — a deliberate typo example) that a human filters on sight. Itemized in full in 0035. |
 | Missing Decision section | 28 | Every ticket from before Convention 4 existed (roughly 0001–0029). Expected — the convention applies going forward, not retroactively. A real backlog if full retrofitting is ever wanted, not a defect. |
-| Status drift | 2 | `NineRooms/nine-rooms-spec.md` (predates the `Specs/` folder convention) and `NineRooms/nine-rooms.md` (deprecation banner phrased as `**Status:** DEPRECATED...` rather than the Convention 3 blockquote template). Both historical/deprecated content; low priority. |
+| Status drift | 0 (fixed 2026-08-02) | `NineRooms/nine-rooms-spec.md` and `NineRooms/nine-rooms.md` had `**Status:**` fields outside their legitimate home; both cut, the deprecation banners already carry the redirect. |
 | Incomplete deprecation | 2 | Both are the literal string `DEPRECATED` appearing inside a filename reference (`README-DEPRECATED.md`) or this SKILL page's own rule description, not an actual unlinked deprecation banner. False positives from simple pattern-matching; understood, not worth over-fitting the regex for two hits. |
-| Orphaned docs | 2 | `Handoffs/0019-phase-2-5-final-verdict.md` — a deliberate redirect stub for a numbering collision, intentionally left unlinked per `wiki-style.md`'s supersede-don't-delete rule. `Specs/engine-host-spec.md` — genuinely under-linked; `nine-rooms-spec.md` references it with a broken relative path (see the broken-links row), which is also why the reference doesn't register. |
+| Orphaned docs | 2 (was 3; `CodePlans/` exempted 2026-08-02) | `Handoffs/0019-phase-2-5-final-verdict.md` — a deliberate redirect stub for a numbering collision, intentionally left unlinked per `wiki-style.md`'s supersede-don't-delete rule. `Handoffs/0034-phase-2-7-test-refactor.md` — not in the index and carries a `pending` status the ticket lifecycle doesn't define; flagged for Kofi to look at, not fixed here. `Roadmap/CodePlans/2-7-supersceded.md` no longer flags at all — CodePlans is now exempt from this check (see above). |
 
 The broken-links path bug is the one worth a real fix pass — everything else is either expected
 (Decision backlog) or a disclosed, low-value false positive.

@@ -91,7 +91,7 @@ that this is mechanism-only.
 ### Response
 
 All 12 corrections applied in place to
-[`grid-rom-d20-split-spec.md`](../../Specs/grid-rom-d20-split-spec.md) — same doc, no redesign, per
+[`grid-rom-d20-split-spec.md`](../../../Specs/grid-rom-d20-split-spec.md) — same doc, no redesign, per
 the ask. Notes on a few:
 
 - Items 1–6 (Overview, Scope, the `D20SystemInterop` section itself, `IPlayerMovement`'s wiring, the

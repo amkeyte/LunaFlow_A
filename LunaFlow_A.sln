@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D20SystemExampleC", "exampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D20SystemExampleD", "example\D20SystemExampleD\D20SystemExampleD.csproj", "{8FF85C93-D0CA-40FC-9E44-4882BC483EBB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaFlow.ContentTests", "tests\LunaFlow.ContentTests\LunaFlow.ContentTests.csproj", "{7C2E9F14-6B3A-4D8E-9F21-3A5C7E8B9D01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +84,10 @@ Global
 		{8FF85C93-D0CA-40FC-9E44-4882BC483EBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FF85C93-D0CA-40FC-9E44-4882BC483EBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FF85C93-D0CA-40FC-9E44-4882BC483EBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C2E9F14-6B3A-4D8E-9F21-3A5C7E8B9D01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C2E9F14-6B3A-4D8E-9F21-3A5C7E8B9D01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C2E9F14-6B3A-4D8E-9F21-3A5C7E8B9D01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C2E9F14-6B3A-4D8E-9F21-3A5C7E8B9D01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

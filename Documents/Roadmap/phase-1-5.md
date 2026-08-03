@@ -7,7 +7,7 @@ room-entry ordering) rests on the manual smoke playthrough, not automated regres
 call given Nine Rooms is disposable content. If these patterns get reused in real content, that gap
 needs an automated test.
 
-See [`Specs/nine-rooms-spec.md`](Specs/nine-rooms-spec.md), [`Specs/nine-rooms-facts.md`](Specs/nine-rooms-facts.md), and [`Specs/nine-rooms-gameplay.md`](Specs/nine-rooms-gameplay.md).
+See [`nine-rooms-spec.md`](../NineRooms/nine-rooms-spec.md), [`nine-rooms-facts.md`](../NineRooms/nine-rooms-facts.md), and [`nine-rooms-gameplay.md`](../NineRooms/nine-rooms-gameplay.md).
 
 ## Overview
 

@@ -5,12 +5,12 @@ line. Kept for the implemented engine-fixture test coverage; not current ROM/Rul
 guidance. See `LunaFlow.Rom.D20System` / `LunaFlow.Rulebook.OneD20` and
 [Phase 2.6](../Roadmap/phase-2-6.md) for the current pattern.
 
-**Status:** draft, for review. Supersedes nothing — this is the concrete companion to
+Supersedes nothing — this is the concrete companion to
 [`nine-rooms.md`](nine-rooms.md) (the concept doc) and
 [`../Roadmap/roadmap.md`](../Roadmap/roadmap.md) (Phase 1.5). Where this spec makes a call the
 concept doc left open, that's noted explicitly in [`nine-rooms-gameplay.md`](nine-rooms-gameplay.md).
 Its own "Engine wiring" section, item 1 below, is itself superseded by
-[`engine-host-spec.md`](engine-host-spec.md) — referenced inline to use `IEngineHost` rather
+[`../Specs/engine-host-spec.md`](../Specs/engine-host-spec.md) — referenced inline to use `IEngineHost` rather
 than re-deriving the surface.
 
 ## Purpose
@@ -28,7 +28,7 @@ to build until that follow-up work lands — this doc is the target those change
 
 - **[`nine-rooms-facts.md`](nine-rooms-facts.md)** — Fact shapes, room layout, room table, grid geometry
 - **[`nine-rooms-gameplay.md`](nine-rooms-gameplay.md)** — Commands, handlers, rules, gameplay decisions, acceptance criteria
-- **[`engine-host-spec.md`](engine-host-spec.md)** — `IEngineHost` interface and access model
+- **[`engine-host-spec.md`](../Specs/engine-host-spec.md)** — `IEngineHost` interface and access model
 
 ## Baseline: what Phase 1 already provides
 
@@ -57,7 +57,7 @@ Nothing today runs a `RuleEngine` inside `GameEngineCore`, and nothing lets a ru
    directly.** `GameEngineCore` is `internal sealed` — widening individual members to `public`
    (the original plan here) doesn't help, because an internal *class* can't be named from
    `LunaFlow.Rom`, a separate assembly with no `InternalsVisibleTo`, regardless of member
-   accessibility. [`engine-host-spec.md`](engine-host-spec.md) resolves this with a narrow public
+   accessibility. [`engine-host-spec.md`](../Specs/engine-host-spec.md) resolves this with a narrow public
    interface reached through a static gateway:
 
    ```csharp
@@ -77,7 +77,7 @@ Nothing today runs a `RuleEngine` inside `GameEngineCore`, and nothing lets a ru
    - `MoveCommandHandler`, `AnswerCommandHandler`, `LookCommandHandler` — they call `LunaFlowEngine.Host.Rules.Query<T>()` to read facts (see [`nine-rooms-gameplay.md`](nine-rooms-gameplay.md#commands--handlers))
    - Rule `Then()` blocks — they call `LunaFlowEngine.Host.Announce(...)` and `LunaFlowEngine.Host.Rules.Insert/Retract/Fire()` (see [`nine-rooms-gameplay.md`](nine-rooms-gameplay.md#rules-hand-written-arules))
 
-   See [`engine-host-spec.md`](engine-host-spec.md) for the full design, including why
+   See [`engine-host-spec.md`](../Specs/engine-host-spec.md) for the full design, including why
    `FinishTurn`/`Stop`/`RequestStop` are deliberately excluded from this surface.
 
 2. **`Fire()` runs after every dispatched command**, unconditionally, inside

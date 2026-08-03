@@ -36,7 +36,7 @@ Repo convention (`CLAUDE.md`): do not run state-changing git commands. Build/run
 
 ## Response
 
-**PASS.** Full verdict with evidence: [`Documents/QA/phase-1.5-build-smoke-verdict.md`](../../../Documents/QA/phase-1.5-build-smoke-verdict.md).
+**PASS.** Full verdict with evidence: [`Documents/QA/phase-1.5-build-smoke-verdict.md`](../../../QA/phase-1.5-build-smoke-verdict.md).
 
 1. **Build:** `dotnet build LunaFlow_A.sln` on .NET 9.0.300 SDK — succeeded, 0 errors, 4
    pre-existing unrelated warnings (`CS0219` unused-variable in test files).

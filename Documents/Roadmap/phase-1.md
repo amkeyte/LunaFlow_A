@@ -2,7 +2,7 @@
 
 **Status:** done
 
-See [`design/engine-core.md`](design/engine-core.md) for detail.
+See [`design/engine-core.md`](../design/engine-core.md) for detail.
 
 ## Overview
 

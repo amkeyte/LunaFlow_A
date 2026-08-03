@@ -2,7 +2,7 @@
 
 > See [`README-DEPRECATED.md`](README-DEPRECATED.md) for current pattern and status.
 
-**Status:** DEPRECATED as design guidance (2026-07-20) — disposable Phase 1.5 test content, kept
+Disposable Phase 1.5 test content, kept
 only for the engine-fixture regression coverage in
 `tests/LunaFlow.EngineTests/Core/NineRoomsEngineFixtureTests.cs` (not scheduled for removal). This
 doc still covers *why* Nine Rooms exists and why it's sequenced where it is, but **do not treat it
@@ -14,12 +14,12 @@ itself now superseded by Phase 2.6). For the current pattern, look at `LunaFlow.
 looks the way it does.
 
 For the actual fact shapes, rules, commands, and engine wiring, see
-[`../Specs/nine-rooms-spec.md`](../Specs/nine-rooms-spec.md) — that's the buildable version of
+[`nine-rooms-spec.md`](nine-rooms-spec.md) — that's the buildable version of
 this concept and the one that stays current as implementation decisions get made.
 
 ## Purpose
 
-Phase 1 of [`roadmap.md`](roadmap.md) is "done when running `MyLunaFlowServer` accepts a typed
+Phase 1 of [`roadmap.md`](../Roadmap/roadmap.md) is "done when running `MyLunaFlowServer` accepts a typed
 command and dispatches it to a handler, with no `NotImplementedException` in the path" — but
 that bar is satisfiable with a single synthetic command and no real content. Nine Rooms exists
 to prove the same plumbing (`ICommandParser` → `ICommandDispatcher` → `ICommandHandler` → NRules
@@ -27,7 +27,7 @@ facts → rule firing → turn settling) against something that's actually playa
 and checkable by hand: a small 3×3 grid of rooms with riddle/math challenges, won by completing
 a tic-tac-toe line rather than solving every room.
 
-It deliberately does **not** touch [`rule-pipeline.md`](rule-pipeline.md)'s `GeneratorServices`.
+It deliberately does **not** touch [`rule-pipeline.md`](../design/rule-pipeline.md)'s `GeneratorServices`.
 Rules are hand-written `ARule` subclasses, loaded the same way
 `tests/LunaFlow.EngineTests/Rules/RuleTests.cs` already loads its test rules
 (`RuleRepository.Load(...).Compile().CreateSession()`). That loading contract already works
@@ -65,7 +65,7 @@ share and factor out only that — not before.
 
 ## Roadmap placement
 
-See [`roadmap.md`](roadmap.md) — inserted as **Phase 1.5**, after Phase 1's engine
+See [`roadmap.md`](../Roadmap/roadmap.md) — inserted as **Phase 1.5**, after Phase 1's engine
 consolidation and before Phase 2's rule-pipeline work, rather than as part of either phase:
 
 - It can't come before Phase 1 is actually done — it needs a real `DefaultCommandParser`, a

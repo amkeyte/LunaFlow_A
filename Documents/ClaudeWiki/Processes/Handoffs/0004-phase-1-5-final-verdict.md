@@ -46,7 +46,7 @@ Repo convention (`CLAUDE.md`): no state-changing git commands.
 ## Response
 
 **PASS**, with one gap stated plainly rather than absorbed. Full verdict with evidence:
-[`Documents/QA/phase-1.5-verdict.md`](../../../Documents/QA/phase-1.5-verdict.md).
+[`Documents/QA/phase-1.5-verdict.md`](../../../QA/phase-1.5-verdict.md).
 
 Re-verified rather than inherited: re-ran `dotnet build` (still 0 errors after the test-suite
 changes from 0003/0005/0006 landed), read `latest.trx` directly for the 63/63-pass claim instead
@@ -61,7 +61,7 @@ not a gap I'm introducing, but the sign-off needs to say so plainly so it isn't 
 regression coverage later.
 
 **Reconciled** `Documents/QA/Phase_1.5_QA_Report.md`: moved to
-[`Documents/QA/Archive/Phase_1.5_QA_Report.md`](../../../Documents/QA/Archive/Phase_1.5_QA_Report.md)
+[`Documents/QA/Archive/Phase_1.5_QA_Report.md`](../../../QA/Archive/Phase_1.5_QA_Report.md)
 with a superseded banner, not deleted. `Documents/QA/index.md` now points at
 `phase-1.5-verdict.md` as the current authoritative record.
 

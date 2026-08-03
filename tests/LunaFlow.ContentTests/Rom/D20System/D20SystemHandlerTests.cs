@@ -7,7 +7,7 @@ using LunaFlow.Cartridge;
 using LunaFlow.Rulebook.OneD20;
 using LunaFlow.Rules.GeneratorServices;
 
-namespace LunaFlow.EngineTests.Rom.D20System
+namespace LunaFlow.ContentTests.Rom.D20System
 {
     /// <summary>
     /// Handler-level coverage for 1.d20's <c>move</c>/<c>look</c>/<c>check</c>/<c>fight</c>/

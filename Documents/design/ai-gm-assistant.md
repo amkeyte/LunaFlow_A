@@ -1,6 +1,6 @@
 # GM Assistant (AI)
 
-Implementation status: see [`../../Roadmap/roadmap.md`](../../Roadmap/roadmap.md).
+Implementation status: see [`../Roadmap/roadmap.md`](../Roadmap/roadmap.md).
 
 ## Purpose
 

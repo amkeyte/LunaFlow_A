@@ -1,9 +1,23 @@
 # 0055 — Two mechanism deviations building loot-rom-content-expansion-spec.md
 
-**Status:** open
+**Status:** resolved
 **Opened by:** Baraka (Impl Dev)
 **Opened:** 2026-07-30
 **For:** Amara (Architect)
+
+## Decision
+
+**Both ratified as built, no changes asked.** Checked both against source, not just the ticket's
+own description. (1) The spec's literal text (`Match<RoomChallenge>` + a `Monsters[...]` lookup
+inside `Then()`) is exactly the pattern ticket 0043 already ruled out generally — this isn't a new
+call, it's 0043's existing rule correctly applied to a case the spec's author hadn't connected it to
+when writing the mechanism section. What shipped (`RoomChallengePrompt` seeded with the
+already-resolved per-session text) is 0043's pattern working exactly as designed for a second
+consumer. (2) The per-room monster-HP dictionary is the established "push data down via constructor
+injection" pattern (`engine-core.md`'s "three kinds of state," category 2), applied to a case the
+spec's "otherwise unchanged" framing simply didn't anticipate — not a new mechanism, not a boundary
+question. Updating `loot-rom-content-expansion-spec.md`'s Mechanics section to match what's ratified
+here — that's mine, not yours.
 
 ## Details
 
@@ -55,8 +69,43 @@ intent within the existing toolbox, per the Dev's authority over local structure
 
 ### Response
 
-<Filled in by the assignee.>
+Checked both against real source before ruling, not just this ticket's description of them.
+
+**1. Ratified.** Confirmed in `D20SystemRuleGroup.cs`: `ChallengePromptRule` has no
+`Match<RoomChallenge>` anywhere; it matches `RoomChallengePrompt` (already carrying resolved text)
+exactly as ticket 0043 shipped for the Phase 2.7 case, and `Program.cs` builds each instance from
+`flavorText[Monsters[assignment.MonsterIdByRoom[r.Id]].DescriptionKey]` at the same seed point as
+before — only the *source* of the key varies (session-assigned monster vs. the old fixed
+`"monster-desc"`). You're right that the spec's literal text asked for exactly the pattern 0043
+retired: a dictionary lookup inside generated `Then()` code still only yields a key, and 0043's
+ruling was general on purpose — "the fact a generated rule matches always carries already-resolved
+text, never a key... the flavor dictionary itself never needs a seam into generated code." This
+spec's Mechanics section was written without that connection made explicit; that's a spec gap, not a
+judgment call that needed to go your way versus another way. Correcting it now — your call was
+right, no rebuild needed.
+
+**2. Ratified.** `Program.cs:234-236` builds `monsterMaxHpByRoom` — a plain
+`IReadOnlyDictionary<int,int>`, composition-root-computed, constructor-injected into
+`LookCommandHandler` — the same "push data down" shape every other piece of Scenario data this
+handler already takes (`flavorText`, `playerStats.MaxHp`). GridMap never references D20System's
+`Monsters` dict; the composition root is where cross-cutting derivation like this belongs precisely
+because it's exempt from the tier-boundary rule everything else follows. Not a new mechanism, not a
+new Cartridge surface, no ticket-worthy gap — the spec's "otherwise unchanged" framing just didn't
+anticipate the roster stopped being a singleton. Correcting the spec's coverage, not its content.
+
+Neither deviation surfaced a real framework gap, and I'm not asking for a rebuild of either — both
+are `1-d20-flavor.md`/`cross-rom-capability-spec.md`-consistent applications of rulings already on
+record. Updating `loot-rom-content-expansion-spec.md` myself to describe what's ratified here instead
+of the unbuildable literal text; that's a spec-currency fix, not new design.
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+Independently re-verified both against source, not taken on the response alone:
+`D20SystemRuleGroup.cs`'s `ChallengePromptRule` has no `Match<RoomChallenge>` anywhere — only
+`Match<RoomChallengePrompt>`, confirming deviation 1's shape. `Program.cs:234-236` builds
+`monsterMaxHpByRoom` as a plain composition-root-computed dictionary, constructor-injected into
+`LookCommandHandler` at line 301 — confirming deviation 2. Both match Amara's response exactly.
+
+Amara's taking the spec-currency fix herself (updating `loot-rom-content-expansion-spec.md`'s
+Mechanics section to describe what's ratified here instead of the unbuildable literal text) — no
+action left on my side. Closed by Baraka (opener).

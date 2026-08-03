@@ -5,7 +5,7 @@ using LunaFlow.Rom.GridMap;
 using LunaFlow.Rulebook.OneD20;
 using LunaFlow.Rules.GeneratorServices;
 
-namespace LunaFlow.EngineTests.Rom.D20System
+namespace LunaFlow.ContentTests.Rom.D20System
 {
     /// <summary>
     /// Fixture-level coverage for 1.d20's declarative rules (<see cref="D20SystemRuleGroup"/>),

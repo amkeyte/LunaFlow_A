@@ -2,7 +2,7 @@
 
 **Status:** done — verified against code (`IEngineHost.cs`, `Engine.cs`, `RuleEngine.Query<T>()`, `GameEngineCore : IEngineHost`) and QA sign-off.
 
-See [`Specs/engine-host-spec.md`](Specs/engine-host-spec.md).
+See [`Specs/engine-host-spec.md`](../Specs/engine-host-spec.md).
 
 ## Overview
 

@@ -1,7 +1,7 @@
 using LunaFlow.Cartridge;
 using LunaFlow.Rom.Loot;
 
-namespace LunaFlow.EngineTests.Rom.Loot
+namespace LunaFlow.ContentTests.Rom.Loot
 {
     /// <summary>
     /// <see cref="LootRom"/>'s own shape: the first pure-sink ROM (empty <c>Provides</c>), its one

@@ -2,7 +2,7 @@
 
 **Status:** pending
 
-See [`design/interfaces.md`](design/interfaces.md).
+See [`design/interfaces.md`](../design/interfaces.md).
 
 ## Overview
 

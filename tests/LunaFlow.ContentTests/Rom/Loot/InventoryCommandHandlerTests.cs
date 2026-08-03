@@ -4,7 +4,7 @@ using LunaFlow.Rom.Loot;
 using LunaFlow.Rulebook.OneD20;
 using LunaFlow.Rules.GeneratorServices;
 
-namespace LunaFlow.EngineTests.Rom.Loot
+namespace LunaFlow.ContentTests.Rom.Loot
 {
     /// <summary>
     /// Handler-level coverage for <see cref="InventoryCommandHandler"/> (<c>inventory</c>/<c>inv</c>),

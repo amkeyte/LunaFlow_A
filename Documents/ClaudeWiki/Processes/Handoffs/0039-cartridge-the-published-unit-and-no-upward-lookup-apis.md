@@ -24,7 +24,7 @@ consequences, which land on three different roles.
 ### Context
 
 Arryn design session, 2026-07-26/27, arising from a question Juno raised on
-[CodePlan 0037](../../../Roadmap/CodePlans/0037-gridmap-d20system-split.md) and a follow-on about where
+[CodePlan 0037](../../../Roadmap/CodePlans/2-7-supersceded.md) and a follow-on about where
 flavor text should live. Both turned out to be symptoms of the same missing concept.
 
 **The tell was repetition.** Four separate times, from four directions, someone tried to route
@@ -148,7 +148,7 @@ and content are unaffected — this is a mechanism correction, and I'd rather it
 question than have me edit her spec.
 
 **Baraka (Impl Dev) — routed, not assigned here:**
-[CodePlan 0037](../../../Roadmap/CodePlans/0037-gridmap-d20system-split.md) needs: Phase B (implement
+[CodePlan 0037](../../../Roadmap/CodePlans/2-7-supersceded.md) needs: Phase B (implement
 `Resolve`) deleted; `D20SystemInteropRom : IInteropRom` becomes a plain contracts assembly, not
 registered with `ComponentRegistry`; `FleeCommandHandler` takes `IPlayerMovement` directly rather than
 `IInteropRom`; and `LunaFlow.Rulebook`'s two ROM project references plus

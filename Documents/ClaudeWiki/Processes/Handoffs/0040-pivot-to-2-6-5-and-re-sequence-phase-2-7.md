@@ -52,7 +52,7 @@ that a rollback wouldn't touch.
   a genuine conceptual gap has been named — but it should be recorded as superseded by him, not by
   me.)*
 - `IInteropRom.Resolve`/`Resolve<T>` — cut entirely, never built.
-- [CodePlan 0037](../../../Roadmap/CodePlans/0037-gridmap-d20system-split.md) Phase B, and its
+- [CodePlan 0037](../../../Roadmap/CodePlans/2-7-supersceded.md) Phase B, and its
   registration of the interop project with `ComponentRegistry`.
 - `LunaFlow.Rulebook`'s project references to `LunaFlow.Rom` and `example/D20SystemExampleA`, plus
   `using LunaFlow.Rom.D20System;` in `OneD20RulebookContent.cs` — these violate the requirement that

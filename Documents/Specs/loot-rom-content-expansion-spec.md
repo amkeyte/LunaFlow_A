@@ -1,6 +1,9 @@
 # Loot ROM & Content Expansion — Implementation Spec
 
-**Status:** draft
+**Status:** draft. **Amended 2026-07-30** to correct the challenge-prompt mechanism and add
+`LookCommandHandler`'s per-room monster-HP dependency, per
+[ticket 0055](../ClaudeWiki/Processes/Handoffs/0055-loot-spec-mechanism-deviations.md)'s ratification
+— both describe what shipped, not new design.
 **Companion to:** [`../design/1-d20.md`](../design/1-d20.md) — the concept doc this expands; also
 exercises [`../design/cartridge.md`](../design/cartridge.md)'s mechanism past the two-ROM case
 Phase 2.7 proved.
@@ -135,12 +138,21 @@ actually exercised that way, not a new check.
 
 The existing challenge-prompt rule's combat branch currently announces a fixed `"monster-desc"`
 key, the same text for all three fight rooms. It now needs to announce **whichever monster this
-session assigned to this room's** `DescriptionKey`. That requires the rule to read the room's
-`MonsterId` at fire time — which resolves an open question `grid-rom-d20-split-spec.md` left open
-("whether `RoomChallenge` needs to be seeded as an NRules fact"): **yes, now it does.** The rule
-needs `Match<RoomChallenge>(() => challenge, c => c.Id == roomId)` to read `challenge.MonsterId`,
-then look up `Monsters[challenge.MonsterId].DescriptionKey` in `Then()` — the same shape the
-original (pre-split) `Match<Room>` used to read `room.PromptKey`, just carried one field further.
+session assigned to this room's** `DescriptionKey`. **Corrected 2026-07-30 (ticket 0055):** this
+does *not* mean giving the generated rule a `Match<RoomChallenge>` and a dictionary lookup in
+`Then()` — that reopens exactly what [ticket 0043](../ClaudeWiki/Processes/Handoffs/0043-generated-rules-have-no-seam-for-rulebook-flavor-text.md)
+already ruled out generally: generated `RulePrototype` code has no constructor/DI seam, and a
+dictionary lookup only yields a *key* even if one could be injected. `RoomChallenge` is **not**
+seeded as an NRules fact by this spec — the question `grid-rom-d20-split-spec.md` left open stays
+answered the way ticket 0043 answered it (no, not that fact, not that way).
+
+Instead, this is 0043's already-ruled pattern applied a second time: `Program.cs` resolves
+`Monsters[assignment.MonsterIdByRoom[roomId]].DescriptionKey → flavorText[...]` once during session
+assembly — the same moment the seeded `RoomChallengePrompt(int RoomId, string Text)` fact from
+`grid-rom-d20-split-spec.md` is already built — and seeds the *already-resolved* string there. Only
+the source of the text varies session to session (the assigned monster, not a fixed `"monster-desc"`
+key); `ChallengePromptRule`'s generated shape (`Match<RoomChallengePrompt>`, `Announce(prompt.Text)`)
+is unchanged from what Phase 2.7 shipped.
 
 Skill-check rooms are unaffected — `PromptKey` is still read directly off `RoomChallenge`, unchanged.
 
@@ -151,6 +163,19 @@ injected `Monsters` dictionary, and seeds `CombatRound` from that template's `St
 single fixed `MonsterTemplate`. Every other rule — lethality-first ordering, the 3-round clock, no
 HP carrying over between fights — is **unchanged**; only which stat block feeds it varies per room,
 per session.
+
+### GridMap — `look`'s combat-status line (changed, added 2026-07-30 per ticket 0055)
+
+**Not covered in this spec's original draft** — a real gap in its "otherwise unchanged" framing for
+GridMap's commands, surfaced building against it, not anticipated writing it. `look`'s combat-status
+line reports the current room's monster's max HP; that value now varies by which of the 5 monsters
+this session assigned to the room, so a scalar no longer works. GridMap cannot reference D20System's
+`Monsters` dictionary directly — that's the same peer-boundary rule everything else in this spec
+respects. `Program.cs` (composition root, exempt from the boundary rule by design) computes a plain
+`IReadOnlyDictionary<int, int>` (fight-room-id → that room's assigned monster's `MaxHp`) once during
+session assembly and constructor-injects it into `LookCommandHandler`, alongside `flavorText` and
+`playerStats.MaxHp` it already takes — the same "push data down" pattern, one more piece of Scenario
+data. No new Cartridge surface, no new GridMap→D20System reference, no framework gap.
 
 ### Loot — award rule (new)
 
@@ -324,3 +349,8 @@ not assumed here, and not something this spec's Done-When should quietly work ar
 - [`../Roadmap/phase-2-7-1.md`](../Roadmap/phase-2-7-1.md) — the phase this spec belongs to
 - [`../Roadmap/phase-2-7.md`](../Roadmap/phase-2-7.md) — the phase whose mechanism this exercises
   further
+- [Ticket 0043](../ClaudeWiki/Processes/Handoffs/0043-generated-rules-have-no-seam-for-rulebook-flavor-text.md) —
+  the flavor-text-seam ruling this spec's challenge-prompt mechanism now correctly applies a second
+  time
+- [Ticket 0055](../ClaudeWiki/Processes/Handoffs/0055-loot-spec-mechanism-deviations.md) — the
+  ratification behind this doc's 2026-07-30 amendment

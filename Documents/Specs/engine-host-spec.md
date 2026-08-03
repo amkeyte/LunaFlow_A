@@ -2,7 +2,7 @@
 
 **Status:** draft, for review  
 **Companion design doc:** [`../design/engine-core.md`](../design/engine-core.md) — specifically "ROM as the conduit to NRules."  
-**Related specs:** [`nine-rooms-spec.md`](nine-rooms-spec.md)
+**Related specs:** [`nine-rooms-spec.md`](../NineRooms/nine-rooms-spec.md)
 
 ## Purpose
 

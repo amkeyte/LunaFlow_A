@@ -50,32 +50,45 @@ suite solo and reporting a number.
 
 ## Producing a report from VS
 
-`LunaFlow_A.runsettings` (repo root) pins this for both entry points — no flags to remember.
-`ResultsDirectory` is `tests/LunaFlow.EngineTests/TestResults`, and a `trx` logger always writes
-`latest.trx` there, overwriting on each run.
+**Two test projects as of ticket 0053 (2026-08-02).** Content/ROM tests split out of
+`LunaFlow.EngineTests` into their own `LunaFlow.ContentTests` project, and each has its own
+runsettings file pinning its own output path — running both with the *same* settings file writes
+both to the same `latest.trx`, silently overwriting whichever ran second. Use the matching file for
+whichever project you're running:
+
+- `LunaFlow_A.runsettings` → `tests/LunaFlow.EngineTests/TestResults/latest.trx`
+- `LunaFlow_A.ContentTests.runsettings` → `tests/LunaFlow.ContentTests/TestResults/latest.trx`
 
 **Terminal** — from VS2022's integrated terminal, or any shell in the repo root:
 
 ```bash
 dotnet test tests/LunaFlow.EngineTests --settings LunaFlow_A.runsettings
+dotnet test tests/LunaFlow.ContentTests --settings LunaFlow_A.ContentTests.runsettings
 ```
 
-Add a `--filter` exactly as in [`test-runbook.md`](test-runbook.md) to scope it to one phase or
-class, e.g.:
+Add a `--filter` exactly as in [`test-runbook.md`](test-runbook.md) to scope either one to one
+phase or class, e.g.:
 
 ```bash
 dotnet test tests/LunaFlow.EngineTests --settings LunaFlow_A.runsettings --filter "FullyQualifiedName~GameEngineCoreeTurnLoopTests"
 ```
 
 **Test Explorer GUI** — Test menu → Configure Run Settings → Select Solution-Wide runsettings File
-→ `LunaFlow_A.runsettings`. After that, any Test Explorer run (including a playlist) writes to the
-same pinned path automatically — no separate export step.
+→ whichever of the two files matches the project you want captured this run; only one is active at
+a time. (Whether a single "Run All Tests" pass spanning both projects in one Test Explorer session
+already merges into one trx regardless of which settings file is selected hasn't been confirmed
+hands-on — worth a one-time spot-check next time you're in VS. Until confirmed, treat the two
+files/two commands above as the reliable path for a doneness claim.)
 
 ## Fixed path convention
 
-`tests/LunaFlow.EngineTests/TestResults/latest.trx`, always. A single known filename means the
-agent can go read it without being told the path every time. To keep a history instead of
-overwriting, override `LogFileName` for that one run (e.g.
+Two known paths now, one per test project — not one:
+
+- `tests/LunaFlow.EngineTests/TestResults/latest.trx`
+- `tests/LunaFlow.ContentTests/TestResults/latest.trx`
+
+A **"full suite green" claim needs both**, not just the one that happens to be freshest. To keep a
+history instead of overwriting either, override `LogFileName` for that one run (e.g.
 `--logger "trx;LogFileName=before-fix.trx"`) and tell the agent which file to read.
 
 ## How the agent reads it
@@ -102,8 +115,8 @@ confidence grows:
 1. Single failing test (`--filter "FullyQualifiedName~Class.Method"`).
 2. Its test class, or its [`test-runbook.md`](test-runbook.md) phase-mate class.
 3. The full `Core` namespace (matches the `GameEngineCoreAll.playlist` scope).
-4. Full unfiltered `dotnet test` — reserved for a final check before handing back to the user or
-   calling a fix done, not for in-progress iteration.
+4. Full unfiltered `dotnet test` on **both** projects — reserved for a final check before handing
+   back to the user or calling a fix done, not for in-progress iteration.
 
 ## Related pages
 

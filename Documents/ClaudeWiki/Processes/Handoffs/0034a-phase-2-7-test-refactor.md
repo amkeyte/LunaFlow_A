@@ -1,4 +1,18 @@
-# 0034: Phase 2.7 Test Refactor
+# 0034a: Phase 2.7 Test Refactor — **HISTORICAL, SUPERSEDED**
+
+> **Renamed 2026-08-02** from `0034-phase-2-7-test-refactor.md` — it collided with the real ticket
+> [0034](0034-handoff-juno-builds-against-cross-rom-capability-spec-md.md) (Juno's Grid/D20System
+> split, in the index). This file was never a real handoff ticket to begin with: no `Opened by`/
+> `For`, no Decision/Details structure, never registered in `_index.md`. It's Nadia's own working
+> notes toward refactoring the disabled Phase 2.7 test suite, written against a broker shape that
+> didn't survive to ship.
+>
+> **Current:** the test suite was actually fixed in ticket
+> [0044](0044-fix-d20systemhandlertests-after-0037.md), against the shipped Cartridge shape — plain
+> constructor injection (`FleeCommandHandler(IPlayerMovement)`), no `D20SystemInteropRom`, no
+> string-keyed `RegisterProvider`/`Resolve<T>("name")` broker. Everything below describing that
+> broker API is stale; kept for the record per `wiki-style.md`'s supersede-don't-delete rule, not as
+> guidance.
 
 **Owner:** Test Dev (Nadia)  
 **Status:** Pending  
@@ -237,7 +251,7 @@ public void WinLineRule_AllRoomsSolvedInLine_InsertsWinMarker()
 ## Reference
 
 - **Phase 2.7 spec**: Handoff 0027 (implementation, now complete)
-- **Architecture**: [design/engine-core.md](../../design/engine-core.md), [design/architecture.md](../../design/architecture.md)
+- **Architecture**: [design/engine-core.md](../../../design/engine-core.md), [design/architecture.md](../../../design/architecture.md)
 - **Capability mediation**: Cross-ROM capability broker pattern
 - **Verified:** Production build succeeds, manual server test passes (move → north, look, quit)
 
@@ -245,9 +259,11 @@ public void WinLineRule_AllRoomsSolvedInLine_InsertsWinMarker()
 
 ## Next Steps
 
-1. Remove `[Ignore]` attributes from test classes
-2. Update `StartSession()` and test fixtures per patterns above
-3. Verify ComponentRegistry validation passes
-4. Run full test suite: `dotnet test tests/LunaFlow.EngineTests`
-5. Ensure handler coverage (move, look, check, fight, flee) and rule coverage (win-lines, game-end)
+~~1. Remove `[Ignore]` attributes from test classes~~
+~~2. Update `StartSession()` and test fixtures per patterns above~~
+~~3. Verify ComponentRegistry validation passes~~
+~~4. Run full test suite: `dotnet test tests/LunaFlow.EngineTests`~~
+~~5. Ensure handler coverage (move, look, check, fight, flee) and rule coverage (win-lines, game-end)~~
 
+**Superseded by ticket [0044](0044-fix-d20systemhandlertests-after-0037.md)** — done against the
+shipped Cartridge shape instead of the broker sketched above.

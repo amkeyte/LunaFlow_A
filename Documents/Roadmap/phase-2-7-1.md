@@ -1,6 +1,11 @@
 # Phase 2.7.1 — Content expansion: Loot ROM, monster roster, room randomization
 
-**Status:** pending
+**Status:** done — QA-verified 2026-08-02 (ticket
+[0056](../ClaudeWiki/Processes/Handoffs/0056-phase-2-7-1-qa-gate.md), verdict
+[`phase-2-7-1-verdict.md`](../QA/phase-2-7-1-verdict.md), **PASS**). All Done-When criteria below
+confirmed against source, automated coverage, and live playthrough. One non-blocking gap noted: no
+automated fixture loads all three ROMs' rule groups together in one session — closed this pass via
+live playthrough instead; worth a joint-session test eventually, not urgent.
 
 ## Overview
 

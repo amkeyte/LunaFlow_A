@@ -63,7 +63,7 @@ Amara's; flag it rather than me guessing if it matters to either of you.
 
 ### Response
 
-Fixed both spots in [`grid-rom-d20-split-spec.md`](../../Specs/grid-rom-d20-split-spec.md) that said
+Fixed both spots in [`grid-rom-d20-split-spec.md`](../../../Specs/grid-rom-d20-split-spec.md) that said
 `src/`:
 
 1. The "Cartridge contract surface" section's opening paragraph — now states it **stays in
