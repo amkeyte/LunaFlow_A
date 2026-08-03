@@ -53,4 +53,14 @@ one Rulebook. *Revisit: when a second Rulebook needs the contract generalized (a
 additive-composition principle (`architecture.md`) is actually exercised with two World Modules
 loaded simultaneously and something needs to arbitrate between them.*
 
+**Not building a generic, reflection-based Lua World Module host yet.** [`world-module.md`](world-module.md#two-authoring-paths-into-one-contract)
+gives OneD20 a concrete `LuaOneD20WorldModule : IOneD20WorldModule` — it marshals a Lua table
+directly into OneD20's own record shapes (`OneD20RoomData`, etc.), the same way
+`DefaultOneD20WorldModule` does by hand. It is deliberately not a `LuaWorldModuleHost<T>` that
+reflects over any Rulebook's world-module contract and could host a second Rulebook's Lua content
+for free. Same discipline `IOneD20WorldModule` itself was built under, one tier up: don't abstract a
+mechanism from its single real consumer. *Revisit: once a second Rulebook needs the same
+Lua-hosting mechanism and the two concrete hosts have enough in common to be worth factoring — not
+before.*
+
 **Not providing any upward lookup API — permanently, on security grounds.** This is a scope boundary rather than a sequencing question, so it differs in kind from everything else here. No service locator, no queryable registry, no `Resolve(name)` a component can call to obtain something registered by a higher tier. The tier stack is a trust gradient ending in unreviewed script; a deep layer that *pulls* from a shallower one inherits its trust level at the depth where a failure has the widest blast radius. Crucially, this **cannot be delegated to validation** — `ComponentRegistry` checks *declared* dependencies, and a runtime lookup is undeclared by construction, so one such API silently reopens the boundary every declaration-time check exists to hold. Enforcement is by construction: the mechanism is not provided. Data is pushed down by the composition root and vetted by the receiver. *Revisit: never, by design. A concrete need for one is evidence of a modelling error, not of a missing feature.*

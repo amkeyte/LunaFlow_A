@@ -54,6 +54,65 @@ populates them; it doesn't get to redefine them. This is deliberately **not** a 
 gets built once a second Rulebook exists needing one, not speculatively on the strength of 1.d20
 being the only consumer.
 
+## Two authoring paths into one contract
+
+**Added 2026-08-03**, following on Phase 2.8's build. `IOneD20WorldModule` doesn't care how an
+implementation's properties got populated — `DefaultOneD20WorldModule` and `HollowKeepWorldModule`
+are both hand-written C#, and nothing about the contract, the validator, `OneD20SessionAssembler`,
+or `Program.cs`'s translation logic needs to change for a second authoring technology to produce a
+third implementation. That's the tier boundary working as designed: the Rulebook validates the
+*shape*, not the *provenance*.
+
+The second technology is Lua, hosted via MoonSharp — already the committed, sandboxed scripting
+choice per [`architecture.md`](architecture.md#technology-choices) and
+[`scripting-content.md`](scripting-content.md), not a new dependency. The concrete design:
+
+- **`LuaOneD20WorldModule : IOneD20WorldModule`** (`LunaFlow.Rulebook.OneD20`) executes a Lua chunk
+  once, at construction, and marshals the single top-level table it returns into
+  `Rooms`/`Challenges`/`Monsters`/etc. — the same in-memory shape `DefaultOneD20WorldModule`
+  produces, so nothing downstream can tell the difference.
+- **Lua covers both ends of `scripting-content.md`'s JSON/Lua split, for this tier specifically.** A
+  Lua table literal (`return { rooms = {...}, ... }`, no logic) is structurally the same thing a JSON
+  file would have been — Lua tables are already a superset of JSON's data shape. A chunk with actual
+  computation (loops, conditionals building repeated structure) is the same execution path, just
+  with more of it exercised. One technology covers "pure config" and "config with logic" as points
+  on a spectrum, not a format switch — collapsing `scripting-content.md`'s "JSON for data, Lua for
+  behavior" split into "Lua for both" **for the World Module tier only**. See that document's
+  refinement note for what stays split (scripted NRules *rules* are a different mechanism, below).
+- **The sandbox has to mean something concrete.** MoonSharp's default `CoreModules` set includes
+  `Io`/`Os` — a World-Builder script has no business touching either. The host configures a
+  restricted module set (`CoreModules.Preset_HardSandbox` or an equivalent explicit allow-list —
+  confirm the exact preset's contents against the MoonSharp version pinned in the `.csproj`, per
+  `CLAUDE.md`'s "upstream source before inference" convention, not from doc-comment recall). "We
+  picked a sandboxed Lua implementation" isn't itself a security property; the configuration is.
+- **Marshal-shape failures are a distinct, earlier failure mode than content-validity failures.**
+  Bad Lua syntax, a missing top-level table, a field of the wrong type, an unparseable
+  `ChallengeType` string — these fail loudly at construction, before `OneD20WorldModuleValidator`
+  ever runs. `OneD20WorldModuleValidator` itself is unchanged and untouched by any of this; it
+  already only knows how to validate an `IOneD20WorldModule`, regardless of what produced one.
+- **Where the MoonSharp dependency actually lives:** `LunaFlow.Scripting` — the project
+  `scripting-content.md` already reserved a slot for and nothing has occupied yet — owns MoonSharp
+  and a small sandboxed-execution primitive (run a chunk, get back a `Table`/`DynValue`).
+  `LunaFlow.Rulebook.OneD20` references it and owns the OneD20-specific marshaling (Lua table →
+  `OneD20RoomData`/etc.) itself, the same way it already owns `DefaultOneD20WorldModule`'s content.
+  This keeps the "how do I safely run Lua" plumbing separate from "what does *this Rulebook's*
+  content look like" — and sets up `LunaFlow.Scripting` to carry [Phase 4](../Roadmap/phase-4.md)'s
+  separate rule-scripting pipeline later without redoing this split.
+
+**Deliberately concrete, not generic, for now.** `LuaOneD20WorldModule` marshals directly into
+`IOneD20WorldModule`'s specific record shapes — it is not a reflection-based
+`LuaWorldModuleHost<T>` that could host any Rulebook's world-module contract. Same discipline
+`IOneD20WorldModule` itself was built under: don't generalize past the one real consumer that
+exists. See `non-goals.md`.
+
+**What this doesn't touch.** This is a second way to *author content* for the World Module tier —
+it says nothing about loading two World Modules at once (still unproven, see "Composition" above),
+and it is a different mechanism from scripting NRules *rules* (`rule-pipeline.md`'s
+`IRuleParser`/`IRuleCompiler`, `scripting-content.md`'s `when`/`then` DSL) — that pipeline compiles
+scripted *behavior* into the live rule engine; this one marshals scripted *data* into a Rulebook-
+owned record shape. Both may end up using MoonSharp and living partly in `LunaFlow.Scripting`, but
+they answer different questions and shouldn't be conflated just because they share a runtime.
+
 ## Validation stays with the Rulebook, not the World Module
 
 The Rulebook is the trusted side of this boundary — same reasoning `cartridge.md` gives for why
@@ -111,3 +170,5 @@ specific DCs) that only the default implementation happens to satisfy.
 - [`../Roadmap/phase-2-8.md`](../Roadmap/phase-2-8.md) — the phase this document answers
 - [`../Specs/world-module-extraction-spec.md`](../Specs/world-module-extraction-spec.md) — the
   buildable spec for extracting 1.d20's content against this design
+- [`../Specs/lua-world-module-spec.md`](../Specs/lua-world-module-spec.md) — the buildable spec for
+  the Lua-hosted authoring path described above

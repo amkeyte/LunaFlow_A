@@ -21,6 +21,22 @@ Three patterns for combining the two, in increasing order of preference as scrip
 2. **JSON fields that reference external `.lua` files** — cleaner separation, preferred for anything more than a trivial action.
 3. **Pure Lua config files (`return {}`)** — skips JSON deserialization entirely; most useful for developer/rulebook-adjacent tooling rather than typical world-builder content.
 
+## Refinement — the World Module tier collapses this split to Lua-only
+
+**Added 2026-08-03.** The table above frames JSON and Lua as two technologies for two different
+jobs — structured data vs. awkward-as-data logic. For the [World Module](world-module.md) tier
+specifically, that split doesn't hold: Lua table literals are already a structural superset of
+JSON's data shape, so a Lua chunk that's pure `return {...}` with no logic *is* the JSON case, and a
+chunk with real computation is the same execution path with more of it exercised. One technology
+covers both ends of that spectrum for World Module content, so
+[`world-module.md`'s Lua-hosted authoring path](world-module.md#two-authoring-paths-into-one-contract)
+uses Lua exclusively there rather than standing up a separate JSON deserializer alongside it.
+
+This refinement is scoped to World Module content authoring only. It does **not** change anything
+below — the script-driven rule adapter immediately below this section is a separate mechanism
+(compiling scripted *behavior* into the live rule engine, not marshaling scripted *data* into a
+Rulebook-owned shape) and isn't affected by which format World Module content happens to use.
+
 ## Script-driven rule adapter
 
 The concrete mechanism for turning world-builder content into live rules is a small DSL compiled at runtime through the same pipeline used for compiled rules:
