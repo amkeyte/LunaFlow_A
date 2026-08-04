@@ -26,15 +26,23 @@ namespace LunaFlow.Rom.D20System
         string? FailureKey,
         string? PromptKey);
 
+    /// <summary>Distinguishes a SkillCheck room's resolution basis: an ability-and-skill check, or a
+    /// saving throw. Null on <see cref="RoomChallenge"/> for Fight rooms; required for SkillCheck rooms.</summary>
+    public enum CheckKind { Skill, Save }
+
     /// <summary>A room's challenge data (without spatial information, which GridMap owns).
     /// <c>MonsterId</c> is set for Fight rooms only (resolves into <see cref="MonsterTemplate"/> via
-    /// the session's monster roster); null for SkillCheck rooms.</summary>
+    /// the session's monster roster); null for SkillCheck rooms. <c>Kind</c> discriminates a
+    /// SkillCheck room's <c>Skill</c>/<c>SkillAbility</c> fields (Skill kind) from <c>SaveType</c>
+    /// (Save kind) — mutually exclusive, per <c>phase-2-10-content-coverage-spec.md</c>.</summary>
     public sealed record RoomChallenge(
         int Id,
         RoomChallengeType ChallengeType,
+        CheckKind? Kind,
         string? Skill,
         string? SkillAbility,
         int? DC,
+        string? SaveType,
         string? SuccessKey,
         string? FailureKey,
         string? PromptKey,
@@ -51,9 +59,36 @@ namespace LunaFlow.Rom.D20System
     /// <summary>The pregenerated Strong-hero PC. Singleton, seeded once at session start.</summary>
     public sealed record PlayerCharacter(CombatantStats Stats);
 
+    /// <summary>The PC's three saving-throw bonuses — derived once at session assembly from the fixed
+    /// Strong-hero base-save table plus the matching ability modifier already in
+    /// <c>PlayerAbilityScores</c> (Con for Fortitude, Dex for Reflex, Wis for Will). Attached
+    /// alongside <see cref="PlayerCharacter"/>, not folded into <see cref="CombatantStats"/> —
+    /// monsters don't make saves in this content.</summary>
+    public sealed record SavingThrows(int Fortitude, int Reflex, int Will);
+
     /// <summary>One entry in the monster roster — a keyed, identified template (five entries this
-    /// session's content ships), replacing the pre-roster implicit singleton.</summary>
-    public sealed record MonsterTemplate(string Id, string Name, string DescriptionKey, CombatantStats Stats);
+    /// session's content ships), replacing the pre-roster implicit singleton. <c>InflictsPoison</c>
+    /// is true for exactly one roster monster (the Scrapper) — its hit connecting refreshes
+    /// <see cref="Poisoned"/>.</summary>
+    public sealed record MonsterTemplate(string Id, string Name, string DescriptionKey, CombatantStats Stats, bool InflictsPoison = false);
+
+    /// <summary>
+    /// A lingering roll penalty, inflicted by a poison-carrying monster's connecting hit and refreshed
+    /// (not stacked) on subsequent hits. Applies a -2 penalty to the PC's next <see cref="ChecksRemaining"/>
+    /// <c>check</c>/<c>fight</c> rolls, decrementing on each one, retracted at 0 — deliberately a roll
+    /// penalty rather than damage-over-time (1.d20 has no persistent PC HP outside an active
+    /// <c>CombatRound</c>; see <c>phase-2-10-content-coverage-spec.md</c>'s Mechanics section). Not
+    /// scoped to a room — accumulates and applies across a room transition, unlike <c>CombatRound</c>.
+    /// </summary>
+    public sealed record Poisoned(int ChecksRemaining);
+
+    /// <summary>A weapon's mechanical profile for <c>fight</c>'s PC-attack step: attack bonus, damage
+    /// die, damage bonus. The PC's default (starting sword) profile lives on
+    /// <see cref="PlayerCharacter"/>.<see cref="CombatantStats"/>; an equipped weapon (see
+    /// <c>LunaFlow.Cartridge.EquippedWeapon</c>) substitutes one of these instead. Fixed
+    /// Loot/D20System-tier data, not World-Module-authored — per-item combat math is a System-level
+    /// capability, the same way the PC's own starting sword stats are fixed.</summary>
+    public sealed record WeaponProfile(int AttackBonus, string DamageDie, int DamageBonus);
 
     /// <summary>Fact marking that a room's challenge has been resolved successfully.</summary>
     public sealed record RoomSolved(int RoomId) : IChallengeSolved;

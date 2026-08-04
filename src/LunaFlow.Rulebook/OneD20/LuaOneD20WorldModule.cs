@@ -184,14 +184,34 @@ namespace LunaFlow.Rulebook.OneD20
                 var t = pair.Value.Table;
                 var context = $"Challenge '{key}'";
 
-                var skill = RequireString(t, "skill", sourceName, context);
-                var skillAbility = RequireString(t, "skillAbility", sourceName, context);
+                // "kind" is optional, defaulting to "skill" — every script predating
+                // phase-2-10-content-coverage-spec.md's Save kind (including the shipped
+                // DefaultOneD20WorldModule.lua) omits it and must keep marshaling unchanged.
+                var kindStr = OptionalString(t, "kind") ?? "skill";
+                if (!Enum.TryParse<OneD20CheckKind>(kindStr, ignoreCase: true, out var kind))
+                {
+                    throw new InvalidOperationException(
+                        $"Lua World Module script '{sourceName}' invalid: {context}'s kind ('{kindStr}') " +
+                        $"is not a recognized OneD20CheckKind.");
+                }
+
+                string? skill = null, skillAbility = null, saveType = null;
+                if (kind == OneD20CheckKind.Save)
+                {
+                    saveType = RequireString(t, "saveType", sourceName, context);
+                }
+                else
+                {
+                    skill = RequireString(t, "skill", sourceName, context);
+                    skillAbility = RequireString(t, "skillAbility", sourceName, context);
+                }
                 var dc = (int)RequireNumber(t, "dc", sourceName, context);
                 var successKey = RequireString(t, "successKey", sourceName, context);
                 var failureKey = RequireString(t, "failureKey", sourceName, context);
                 var promptKey = RequireString(t, "promptKey", sourceName, context);
 
-                challenges[key] = new OneD20ChallengeTemplate(key, skill, skillAbility, dc, successKey, failureKey, promptKey);
+                challenges[key] = new OneD20ChallengeTemplate(
+                    key, skill, skillAbility, dc, successKey, failureKey, promptKey, kind, saveType);
             }
             return challenges;
         }
@@ -222,8 +242,11 @@ namespace LunaFlow.Rulebook.OneD20
                 var descriptionKey = RequireString(t, "descriptionKey", sourceName, context);
                 var statsTable = RequireTable(t, "stats", sourceName, context);
                 var stats = MarshalCombatantStats(statsTable, sourceName, $"{context}'s stats");
+                // "inflictsPoison" is optional, defaulting to false — scripts predating
+                // phase-2-10-content-coverage-spec.md omit it.
+                var inflictsPoison = OptionalBool(t, "inflictsPoison") ?? false;
 
-                monsters[id] = new OneD20MonsterTemplate(id, name, descriptionKey, stats);
+                monsters[id] = new OneD20MonsterTemplate(id, name, descriptionKey, stats, inflictsPoison);
             }
             return monsters;
         }
@@ -280,6 +303,22 @@ namespace LunaFlow.Rulebook.OneD20
                 dict[pair.Key.String] = (int)pair.Value.Number;
             }
             return dict;
+        }
+
+        /// <summary>Returns the string field <paramref name="key"/> if present and string-typed, else
+        /// null (missing/absent is not an error for an optional field, unlike <see cref="RequireString"/>).</summary>
+        private static string? OptionalString(Table parent, string key)
+        {
+            var value = parent.Get(key);
+            return value.Type == DataType.String ? value.String : null;
+        }
+
+        /// <summary>Returns the boolean field <paramref name="key"/> if present and boolean-typed, else
+        /// null.</summary>
+        private static bool? OptionalBool(Table parent, string key)
+        {
+            var value = parent.Get(key);
+            return value.Type == DataType.Boolean ? value.Boolean : null;
         }
 
         private static Table RequireTable(Table parent, string key, string sourceName, string context)

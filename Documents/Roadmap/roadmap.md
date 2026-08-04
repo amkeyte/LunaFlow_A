@@ -32,11 +32,18 @@ have to rediscover them.
 | Phase 2.7 | done (QA PASS) | [Multi-ROM composition](phase-2-7.md) |
 | Phase 2.7.1 | done (QA PASS) | [Content expansion: Loot ROM, monster roster, room randomization](phase-2-7-1.md) |
 | Phase 2.8 | done (QA PASS) | [World Module extraction](phase-2-8.md) |
-| Phase 2.9 | pending | [Lua World Module authoring](phase-2-9.md) |
+| Phase 2.9 | done (QA PASS) | [Lua World Module authoring](phase-2-9.md) |
+| Phase 2.10 | pending | [Content coverage stress test](phase-2-10.md) — build ticket cut to Baraka |
 | Phase 3 | superseded (confirmed) | [Vertical slice](phase-3.md) — superseded by Phase 2.5; the load-bearing condition held, verified by QA |
 | Phase 4 | pending | [World content & scripting](phase-4.md) — kickoff design pass needed before a buildable spec exists; see [0064](../ClaudeWiki/Processes/Handoffs/0064-phase-2-9-ready-and-phase-4-scope-correction.md) |
 | Phase 5 | pending | [Interface expansion](phase-5.md) (can start at Phase 1) |
 | Phase 6 | pending | [GM AI assistant](phase-6.md) |
+
+## Proposals (pre-commitment, not yet ratified)
+
+Pitches for follow-on phases that haven't been reviewed into the phase sequence above yet — see
+[`Proposals/_index.md`](Proposals/_index.md). Nothing here is committed; a proposal only lands above
+once it's been through Amara/Kofi review and gets its own `phase-N.md`.
 
 ## Unscheduled work
 

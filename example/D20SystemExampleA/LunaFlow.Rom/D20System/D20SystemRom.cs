@@ -12,10 +12,26 @@ namespace LunaFlow.Rom.D20System
     /// </summary>
     public sealed class D20SystemRom : IRom
     {
+        /// <summary>The fixed Strong-hero level-1 base save bonuses (Fort/Ref/Will), per
+        /// <c>1-d20.md</c> — added to the matching ability modifier (Con/Dex/Wis) to derive
+        /// <see cref="SavingThrows"/> once at construction. No World Module field; not session data.</summary>
+        private static readonly SavingThrows BaseSaves = new(Fortitude: 1, Reflex: 0, Will: 0);
+
+        /// <summary>Fixed Loot/D20System-tier weapon profiles for equippable items, keyed by item id —
+        /// not World-Module-authored (see <see cref="WeaponProfile"/>). Backup Piece (item id
+        /// "pistol"): 1d6, Dex-based, +0.</summary>
+        private static readonly IReadOnlyDictionary<string, WeaponProfile> DefaultWeaponProfiles =
+            new Dictionary<string, WeaponProfile>
+            {
+                ["pistol"] = new WeaponProfile(AttackBonus: 0, DamageDie: "1d6", DamageBonus: 0),
+            };
+
         private readonly PlayerCharacter _playerCharacter;
         private readonly IReadOnlyDictionary<string, MonsterTemplate> _monsters;
         private readonly IReadOnlyDictionary<int, RoomChallenge> _challenges;
         private readonly IReadOnlyDictionary<string, int> _playerAbilityScores;
+        private readonly SavingThrows _savingThrows;
+        private readonly IReadOnlyDictionary<string, WeaponProfile> _weaponProfiles;
         private readonly D20ResolutionMechanic _mechanic;
 
         /// <summary>Constructs the D20System ROM with challenge and combat data.</summary>
@@ -24,13 +40,19 @@ namespace LunaFlow.Rom.D20System
             IReadOnlyDictionary<string, MonsterTemplate> monsters,
             IReadOnlyDictionary<int, RoomChallenge> challenges,
             IReadOnlyDictionary<string, int> playerAbilityScores,
-            D20ResolutionMechanic? mechanic = null)
+            D20ResolutionMechanic? mechanic = null,
+            IReadOnlyDictionary<string, WeaponProfile>? weaponProfiles = null)
         {
             _playerCharacter = playerCharacter;
             _monsters = monsters;
             _challenges = challenges;
             _playerAbilityScores = playerAbilityScores;
             _mechanic = mechanic ?? new D20ResolutionMechanic();
+            _weaponProfiles = weaponProfiles ?? DefaultWeaponProfiles;
+            _savingThrows = new SavingThrows(
+                Fortitude: BaseSaves.Fortitude + AbilityModifier(playerAbilityScores["Con"]),
+                Reflex: BaseSaves.Reflex + AbilityModifier(playerAbilityScores["Dex"]),
+                Will: BaseSaves.Will + AbilityModifier(playerAbilityScores["Wis"]));
         }
 
         /// <summary>The ROM's display name.</summary>
@@ -70,6 +92,13 @@ namespace LunaFlow.Rom.D20System
 
         /// <summary>Provides access to PC ability scores.</summary>
         public IReadOnlyDictionary<string, int> PlayerAbilityScores => _playerAbilityScores;
+
+        /// <summary>The PC's saving-throw bonuses, derived once at construction from
+        /// <see cref="PlayerAbilityScores"/> and the fixed base-save table.</summary>
+        public SavingThrows SavingThrows => _savingThrows;
+
+        /// <summary>Fixed weapon profiles for equippable items, keyed by item id.</summary>
+        public IReadOnlyDictionary<string, WeaponProfile> WeaponProfiles => _weaponProfiles;
 
         /// <summary>Provides access to the resolution mechanic for d20 rolls.</summary>
         public D20ResolutionMechanic Mechanic => _mechanic;

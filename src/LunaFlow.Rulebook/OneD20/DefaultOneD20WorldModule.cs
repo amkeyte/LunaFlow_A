@@ -34,21 +34,25 @@ namespace LunaFlow.Rulebook.OneD20
         public int StartRoomId { get; } = 5;
 
         /// <summary>
-        /// The pool of 9 skill-check challenges, keyed by <see cref="OneD20ChallengeTemplate.Key"/>.
+        /// The pool of 9 skill-check challenges plus, per phase-2-10-content-coverage-spec.md, 2
+        /// save-check challenges (11 total), keyed by <see cref="OneD20ChallengeTemplate.Key"/>.
         /// Session-assembly assigns 6 of these to the grid's 6 fixed skill-check positions.
         /// </summary>
         public IReadOnlyDictionary<string, OneD20ChallengeTemplate> Challenges { get; } =
             new Dictionary<string, OneD20ChallengeTemplate>
             {
-                ["search"] = new("search", "Search", "Int", 10, "search-success", "search-failure", "search-prompt"),
-                ["climb"] = new("climb", "Climb", "Str", 12, "climb-success", "climb-failure", "climb-prompt"),
-                ["listen"] = new("listen", "Listen", "Wis", 8, "listen-success", "listen-failure", "listen-prompt"),
-                ["swim"] = new("swim", "Swim", "Str", 10, "swim-success", "swim-failure", "swim-prompt"),
-                ["disabledevice"] = new("disabledevice", "Disable Device", "Int", 12, "disabledevice-success", "disabledevice-failure", "disabledevice-prompt"),
-                ["jump"] = new("jump", "Jump", "Str", 8, "jump-success", "jump-failure", "jump-prompt"),
-                ["balance"] = new("balance", "Balance", "Dex", 11, "balance-success", "balance-failure", "balance-prompt"),
-                ["spot"] = new("spot", "Spot", "Wis", 13, "spot-success", "spot-failure", "spot-prompt"),
-                ["concentration"] = new("concentration", "Concentration", "Con", 12, "concentration-success", "concentration-failure", "concentration-prompt"),
+                ["search"] = new("search", "Search", "Int", 10, "search-success", "search-failure", "search-prompt", Kind: OneD20CheckKind.Skill),
+                ["climb"] = new("climb", "Climb", "Str", 12, "climb-success", "climb-failure", "climb-prompt", Kind: OneD20CheckKind.Skill),
+                ["listen"] = new("listen", "Listen", "Wis", 8, "listen-success", "listen-failure", "listen-prompt", Kind: OneD20CheckKind.Skill),
+                ["swim"] = new("swim", "Swim", "Str", 10, "swim-success", "swim-failure", "swim-prompt", Kind: OneD20CheckKind.Skill),
+                ["disabledevice"] = new("disabledevice", "Disable Device", "Int", 12, "disabledevice-success", "disabledevice-failure", "disabledevice-prompt", Kind: OneD20CheckKind.Skill),
+                ["jump"] = new("jump", "Jump", "Str", 8, "jump-success", "jump-failure", "jump-prompt", Kind: OneD20CheckKind.Skill),
+                ["balance"] = new("balance", "Balance", "Dex", 11, "balance-success", "balance-failure", "balance-prompt", Kind: OneD20CheckKind.Skill),
+                ["spot"] = new("spot", "Spot", "Wis", 13, "spot-success", "spot-failure", "spot-prompt", Kind: OneD20CheckKind.Skill),
+                ["concentration"] = new("concentration", "Concentration", "Con", 12, "concentration-success", "concentration-failure", "concentration-prompt", Kind: OneD20CheckKind.Skill),
+                // Save-kind additions (phase-2-10-content-coverage-spec.md's Content data table).
+                ["wire"] = new("wire", null, null, 10, "wire-success", "wire-failure", "wire-prompt", Kind: OneD20CheckKind.Save, SaveType: "Reflex"),
+                ["fumes"] = new("fumes", null, null, 12, "fumes-success", "fumes-failure", "fumes-prompt", Kind: OneD20CheckKind.Save, SaveType: "Fortitude"),
             };
 
         /// <summary>
@@ -69,7 +73,8 @@ namespace LunaFlow.Rulebook.OneD20
                 ["enforcer"] = new("enforcer", "The Enforcer", "monster-enforcer-desc",
                     new OneD20CombatantStats(Defense: 15, AttackBonus: 2, DamageDie: "1d8", DamageBonus: 2, MaxHp: 14)),
                 ["scrapper"] = new("scrapper", "The Scrapper", "monster-scrapper-desc",
-                    new OneD20CombatantStats(Defense: 14, AttackBonus: 2, DamageDie: "1d4", DamageBonus: 1, MaxHp: 6)),
+                    new OneD20CombatantStats(Defense: 14, AttackBonus: 2, DamageDie: "1d4", DamageBonus: 1, MaxHp: 6),
+                    InflictsPoison: true),
             };
 
         /// <summary>

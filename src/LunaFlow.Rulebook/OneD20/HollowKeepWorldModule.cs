@@ -36,15 +36,15 @@ namespace LunaFlow.Rulebook.OneD20
         public IReadOnlyDictionary<string, OneD20ChallengeTemplate> Challenges { get; } =
             new Dictionary<string, OneD20ChallengeTemplate>
             {
-                ["hk-search"] = new("hk-search", "Search", "Int", 10, "hk-search-success", "hk-search-failure", "hk-search-prompt"),
-                ["hk-climb"] = new("hk-climb", "Climb", "Str", 12, "hk-climb-success", "hk-climb-failure", "hk-climb-prompt"),
-                ["hk-listen"] = new("hk-listen", "Listen", "Wis", 8, "hk-listen-success", "hk-listen-failure", "hk-listen-prompt"),
-                ["hk-swim"] = new("hk-swim", "Swim", "Str", 10, "hk-swim-success", "hk-swim-failure", "hk-swim-prompt"),
-                ["hk-disabledevice"] = new("hk-disabledevice", "Disable Device", "Int", 12, "hk-disabledevice-success", "hk-disabledevice-failure", "hk-disabledevice-prompt"),
-                ["hk-jump"] = new("hk-jump", "Jump", "Str", 8, "hk-jump-success", "hk-jump-failure", "hk-jump-prompt"),
-                ["hk-balance"] = new("hk-balance", "Balance", "Dex", 11, "hk-balance-success", "hk-balance-failure", "hk-balance-prompt"),
-                ["hk-spot"] = new("hk-spot", "Spot", "Wis", 13, "hk-spot-success", "hk-spot-failure", "hk-spot-prompt"),
-                ["hk-concentration"] = new("hk-concentration", "Concentration", "Con", 12, "hk-concentration-success", "hk-concentration-failure", "hk-concentration-prompt"),
+                ["hk-search"] = new("hk-search", "Search", "Int", 10, "hk-search-success", "hk-search-failure", "hk-search-prompt", Kind: OneD20CheckKind.Skill),
+                ["hk-climb"] = new("hk-climb", "Climb", "Str", 12, "hk-climb-success", "hk-climb-failure", "hk-climb-prompt", Kind: OneD20CheckKind.Skill),
+                ["hk-listen"] = new("hk-listen", "Listen", "Wis", 8, "hk-listen-success", "hk-listen-failure", "hk-listen-prompt", Kind: OneD20CheckKind.Skill),
+                ["hk-swim"] = new("hk-swim", "Swim", "Str", 10, "hk-swim-success", "hk-swim-failure", "hk-swim-prompt", Kind: OneD20CheckKind.Skill),
+                ["hk-disabledevice"] = new("hk-disabledevice", "Disable Device", "Int", 12, "hk-disabledevice-success", "hk-disabledevice-failure", "hk-disabledevice-prompt", Kind: OneD20CheckKind.Skill),
+                ["hk-jump"] = new("hk-jump", "Jump", "Str", 8, "hk-jump-success", "hk-jump-failure", "hk-jump-prompt", Kind: OneD20CheckKind.Skill),
+                ["hk-balance"] = new("hk-balance", "Balance", "Dex", 11, "hk-balance-success", "hk-balance-failure", "hk-balance-prompt", Kind: OneD20CheckKind.Skill),
+                ["hk-spot"] = new("hk-spot", "Spot", "Wis", 13, "hk-spot-success", "hk-spot-failure", "hk-spot-prompt", Kind: OneD20CheckKind.Skill),
+                ["hk-concentration"] = new("hk-concentration", "Concentration", "Con", 12, "hk-concentration-success", "hk-concentration-failure", "hk-concentration-prompt", Kind: OneD20CheckKind.Skill),
             };
 
         /// <summary>The roster of 5 monsters. Stat blocks are unchanged, id-for-id, from

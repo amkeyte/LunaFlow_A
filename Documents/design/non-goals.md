@@ -68,6 +68,44 @@ mechanism from its single real consumer. *Revisit: once a second Rulebook needs 
 Lua-hosting mechanism and the two concrete hosts have enough in common to be worth factoring — not
 before.*
 
+**Not building rule-scale guardrails yet.** Pinned in conversation, 2026-08-03, while stress-testing
+the GM-Overlay reload draft against a hypothetical procedural ROM — nothing currently in the pipeline
+warns or protects against a rule set growing large or slow to compile. Three checks are pinned for
+later, not designed or built:
+
+- **(a) Per-module rule-count warning** — a module (ROM, Rulebook, GM Overlay, any future procedural
+  generator) that contributes more than some threshold *X* rules to the pipeline gets a warning at
+  the point its rules are gathered, before compilation.
+- **(b) Total rule-count warning** — the aggregate rule count across everything being compiled
+  together exceeds some threshold *Y*, independent of whether any single module is individually over
+  its own limit — catches the case where several modules are each reasonable but the sum isn't.
+- **(c) Compile/processing-time warning** — actual measured wall-clock time for a compile exceeds
+  some threshold *T*, regardless of what the rule count was. This is the one that actually matters
+  most and can't be replaced by (a)/(b): Rete's cost isn't a function of rule *count* alone, it's rule
+  count crossed with join complexity crossed with matching fact volume. A handful of rules with wide
+  joins across a large fact population can be far more expensive than ten thousand flat rules with
+  simple conditions — a count-based check gives false confidence in exactly the case that hurts most.
+
+**The motivating (hypothetical, not scoped) example:** a future ROM simulating basic chemistry —
+reactions between materials, possibly modeled on real periodic-table elements. Its *rule count* could
+look small and safe while its *join structure* (matching combinations of elements/compounds against
+each other) is combinatorially explosive — the textbook way a Rete ruleset "grows cancer" without
+tripping a naive rule-count ceiling. Consistent with `engine-core.md`'s push-down/never-pull-up
+framing elsewhere: **this stays the ROM author's responsibility to understand, not something the
+engine prevents.** These three checks are diagnostic — warnings a module author or a GM would see —
+not a load-time hard-fail in `ComponentRegistry.Validate()`'s style. That's a deliberate difference
+from this project's usual "fail fast, never silent degradation" convention: rule-set scale is a
+performance concern an author needs visibility into, not a correctness invariant the engine can
+unilaterally refuse to load against — nobody's shipping a chemistry ROM by accident.
+*Revisit: once a real ROM proposal risks this scale — check whether it's actually proposing many
+**rules** (this concern) or many **facts** matched by a handful of rules (which NRules already
+handles natively and this doesn't apply to) before assuming it needs any of this.* Same conversation
+also produced the framing this entry's motivating example stress-tested against — see
+[`gm-overlay.md`](gm-overlay.md)'s draft "The real axis is volatility, not trust": a rule source needs
+session isolation for cost-containment reasons independent of whether it also needs it for trust
+reasons, and a procedurally volatile-but-trusted ROM would be the case that actually exercises this,
+not GM Overlay.
+
 **Not registering GM Overlays with `ComponentRegistry` yet.** `EngineTier.GmOverlay` exists as a
 shipped enum value, but nothing is tagged with it — [`gm-overlay.md`](gm-overlay.md) (Phase 4 kickoff,
 2026-08-03) designs the tier's boundary and rules that the script-driven rule adapter belongs there,

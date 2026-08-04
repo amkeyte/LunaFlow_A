@@ -206,6 +206,38 @@ that type, ordinary NRules matching does the work with **no runtime broker call*
 deliberate. Generated rule code has no constructor or DI seam, so any design that needs rule code to
 *call* a broker reintroduces the static global `D20SystemContent.Configure` was.
 
+**When to leave `Requires` undeclared: correlation vs. construction order.** `Capability.Requires`
+exists to let `ComponentRegistry` answer one question — does the graph have a valid construction/load
+order, with no component needing something that isn't there yet or that only exists at a higher tier.
+It is not a general "these two things are related" annotation. Two peer ROMs that correlate on a
+shared NRules fact type never have a construction-order problem to declare: both facts live in the
+same session, `RuleEngine.Fire()` is synchronous, and neither peer's rule needs the other peer to have
+constructed first — matching happens at fire time, against whatever facts are present, regardless of
+which ROM's constructor ran first. So when two peers each read a contract the other provides —
+GridMap's win-line rules matching `IChallengeSolved` (D20System-owned) while D20System's
+challenge-prompt rules match `IPlayerLocation`/`IGameWon` (GridMap-owned) — declaring `Requires` on
+**both** sides encodes a construction-order claim that isn't true, and `ComponentRegistry`'s cycle
+detector correctly rejects it: from its point of view, that really is indistinguishable from two
+components each waiting on the other to be built first, which has no valid order.
+
+**The rule:** if a ROM's only relationship to a peer-provided contract is matching/querying it through
+NRules (`Match<T>`, `rules.Query<T>()`) — no capability the peer's code must construct and hand over
+before this ROM's own construction can complete — leave that side's `Requires` undeclared and say so
+in a doc comment on the ROM (`GridMapRom.Requires`'s comment is the model to copy). Declare `Requires`
+only for the direction that's a genuine capability the registry needs to size and order — typically
+one side of the pair, not both, exactly as D20System's `PlayerLocation`/`PlayerMovement`/`GameWon`
+requirements are real (it needs GridMap constructed to receive `IPlayerMovement`'s concrete instance)
+while GridMap's mirror-image dependency on `IChallengeSolved` was never anything but a fact-match.
+This isn't a special case invented for GridMap/D20System — it's `Requires`' actual scope, applied
+consistently. First written down here 2026-08-03, ticket
+[0071](../ClaudeWiki/Processes/Handoffs/0071-peer-rom-bidirectional-capability-cycle-detection-gap.md),
+after the same shape (GridMap↔D20System) shipped correctly once already, undeclared, without this
+reasoning being on record anywhere a second implementer could find it — see
+[`grid-rom-d20-split-spec.md`'s capability table correction](../Specs/grid-rom-d20-split-spec.md#capability-declarations)
+for the drift that surfaced it. `ComponentRegistry`'s cycle detector itself is not changed by this —
+it is working exactly as designed; this is a modeling correction on the `Requires` side, not a
+framework gap.
+
 ### ROM as the conduit to NRules
 
 A ROM's pure calculations (`Dice.Roll()`, a Physics ROM's intersection test) stay ordinary method calls — a Rulebook Author references the ROM assembly and calls them directly, same as any library. What should go through the ROM rather than being called directly is anything touching the live NRules session: inserting, updating, or retracting a fact. A Rulebook shouldn't call `RuleEngine`/NRules directly — it goes through the ROM's API for whatever fact types that ROM owns, and the ROM is what actually calls `RuleEngine.Insert`/`Update`/`Retract` underneath. That keeps NRules an implementation detail of the ROM layer, consistent with `non-goals.md`'s decision not to abstract over multiple rule engines — NRules stays a committed dependency, just not one a Rulebook Author touches directly — and gives the ROM one place to eventually stamp fact provenance for the "why did this happen" tracing flagged as an open question in `rule-pipeline.md`.

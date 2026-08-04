@@ -204,7 +204,7 @@ from a query (`ILocationQuery` in the spec's own example) to an action — suppl
 Provides: [ new("PlayerLocation", typeof(IPlayerLocation)),
             new("PlayerMovement", typeof(IPlayerMovement)),
             new("GameWon", typeof(IGameWon)) ]          // added post-build, ticket 0045
-Requires: [ new("ChallengeSolved", typeof(IChallengeSolved)) ]
+Requires: Array.Empty<Capability>()
 
 // D20System
 Provides: [ new("ChallengeSolved", typeof(IChallengeSolved)),
@@ -217,6 +217,18 @@ Requires: [ new("PlayerLocation", typeof(IPlayerLocation)),
 // GridMap and D20System declare Provides/Requires directly against each other; ComponentRegistry
 // validates the pair with no third component in the loop.
 ```
+
+**Corrected 2026-08-03, ticket [0071](../ClaudeWiki/Processes/Handoffs/0071-peer-rom-bidirectional-capability-cycle-detection-gap.md):**
+this table previously listed GridMap `Requires: [ChallengeSolved]`, which was never shipped and never
+built — `GridMapRom.cs` has always registered `Requires: Array.Empty<Capability>()`. Declaring it for
+real would create a two-node cycle with D20System (`D20System.Requires` already lists
+`PlayerLocation`/`PlayerMovement`/`GameWon`, all GridMap-provided), which `ComponentRegistry`'s cycle
+detector rejects unconditionally. The win-line rules this spec's [Mechanics /
+rules](#mechanics--rules) section describes always correlated against `IChallengeSolved` through
+ordinary NRules matching (`Match<IChallengeSolved>(...)`), never through capability-mediated
+resolution — so no behavior changed and no test regressed. The table was simply wrong; see
+[`engine-core.md`'s Cross-ROM correlation](../design/engine-core.md#cross-rom-correlation--see-the-spec)
+for the general rule this is now an instance of.
 
 ## Mechanics / rules
 

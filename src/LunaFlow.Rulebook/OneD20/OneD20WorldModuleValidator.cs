@@ -77,6 +77,23 @@ namespace LunaFlow.Rulebook.OneD20
                 RequireFlavorKey(module, challenge.PromptKey, $"Challenge '{challenge.Key}'s PromptKey");
                 RequireFlavorKey(module, challenge.SuccessKey, $"Challenge '{challenge.Key}'s SuccessKey");
                 RequireFlavorKey(module, challenge.FailureKey, $"Challenge '{challenge.Key}'s FailureKey");
+
+                // phase-2-10-content-coverage-spec.md: every SkillCheck-type challenge template must
+                // declare its Kind, and exactly one of (Skill+SkillAbility) or SaveType — never both,
+                // never neither — a malformed pairing fails at load, not mid-session.
+                if (challenge.Kind is null)
+                {
+                    throw new InvalidOperationException(
+                        $"World Module invalid: Challenge '{challenge.Key}' has no Kind set (required for every SkillCheck challenge template).");
+                }
+                var hasSkillPair = challenge.Skill is not null && challenge.SkillAbility is not null;
+                var hasSaveType = challenge.SaveType is not null;
+                if (hasSkillPair == hasSaveType)
+                {
+                    throw new InvalidOperationException(
+                        $"World Module invalid: Challenge '{challenge.Key}' must set exactly one of " +
+                        $"(Skill+SkillAbility) or SaveType, never both, never neither.");
+                }
             }
             foreach (var monster in module.Monsters.Values)
             {

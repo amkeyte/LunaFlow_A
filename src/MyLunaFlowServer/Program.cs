@@ -169,14 +169,15 @@ static IHasDependencies ConstructD20System(IOneD20WorldModule worldModule, OneD2
 {
     var challenges = worldModule.Rooms.Values
         .Select(r => r.ChallengeType == OneD20ChallengeType.Fight
-            ? new RoomChallenge(r.Id, RoomChallengeType.Fight, null, null, null, null, null, null,
+            ? new RoomChallenge(r.Id, RoomChallengeType.Fight, null, null, null, null, null, null, null, null,
                 MonsterId: assignment.MonsterIdByRoom[r.Id])
             : ToRoomChallenge(r.Id, worldModule.Challenges[assignment.ChallengeKeyByRoom[r.Id]]))
         .ToDictionary(c => c.Id);
     var playerStats = worldModule.PlayerCharacter;
     var monsters = worldModule.Monsters.Values
         .Select(m => new MonsterTemplate(m.Id, m.Name, m.DescriptionKey,
-            new CombatantStats(m.Stats.Defense, m.Stats.AttackBonus, m.Stats.DamageDie, m.Stats.DamageBonus, m.Stats.MaxHp)))
+            new CombatantStats(m.Stats.Defense, m.Stats.AttackBonus, m.Stats.DamageDie, m.Stats.DamageBonus, m.Stats.MaxHp),
+            m.InflictsPoison))
         .ToDictionary(m => m.Id);
     var rom = new D20SystemRom(
         new PlayerCharacter(new CombatantStats(playerStats.Defense, playerStats.AttackBonus, playerStats.DamageDie, playerStats.DamageBonus, playerStats.MaxHp)),
@@ -191,7 +192,9 @@ static IHasDependencies ConstructD20System(IOneD20WorldModule worldModule, OneD2
 /// <summary>Translates one Rulebook-owned pool challenge into D20System's RoomChallenge, assigned to
 /// <paramref name="roomId"/> this session.</summary>
 static RoomChallenge ToRoomChallenge(int roomId, OneD20ChallengeTemplate challenge) =>
-    new(roomId, RoomChallengeType.SkillCheck, challenge.Skill, challenge.SkillAbility, challenge.DC,
+    new(roomId, RoomChallengeType.SkillCheck,
+        challenge.Kind switch { OneD20CheckKind.Skill => CheckKind.Skill, OneD20CheckKind.Save => CheckKind.Save, _ => null },
+        challenge.Skill, challenge.SkillAbility, challenge.DC, challenge.SaveType,
         challenge.SuccessKey, challenge.FailureKey, challenge.PromptKey, MonsterId: null);
 
 /// <summary>Same isolation reasoning as <see cref="ConstructGridMap"/>, for Loot. The full 5-entry
@@ -315,6 +318,7 @@ static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, OneD
             opts.CommandDispatcher.RegisterHandler("flee", new FleeCommandHandler(movement, flavorText), "Retreat from the current fight.");
             opts.CommandDispatcher.RegisterHandler("inventory", new InventoryCommandHandler(flavorText), "List your collected items.");
             opts.CommandDispatcher.RegisterHandler("inv", new InventoryCommandHandler(flavorText), "List your collected items.");
+            opts.CommandDispatcher.RegisterHandler("equip", new EquipCommandHandler(flavorText), "Equip a held item, or 'equip sword' for your default weapon.");
         });
 
     engine.Run();

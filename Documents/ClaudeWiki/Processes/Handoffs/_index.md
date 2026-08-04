@@ -42,5 +42,8 @@ one-liner instruction wasn't specific enough to hold.)
 | [0064](0064-phase-2-9-ready-and-phase-4-scope-correction.md) | in-review | Amara (Architect) | Kofi (PM) | Phase 2.9 added, Phase 4 framing corrected, deferral reaffirmed; 0058 closure routed to Arryn. |
 | [0065](0065-implement-lua-world-module-spec-md.md) | resolved | Kofi (PM) | Baraka (Impl Dev) | Verified against spec + API reference; all criteria held except Arryn-run trx, routed to 0067. |
 | [0066](0066-lua-world-module-maintained-test-coverage.md) | resolved | Baraka (Impl Dev) | Nadia (Test Dev) | 15 new tests; 77/77 + 93/93, independently re-verified by Baraka before closing. |
-| [0067](0067-proposal-2-10-2-12-content-framework-stress-test-phases-post-2-9.md) | open | Juno (Game Designer) | Amara (Architect) | Proposal for Phases 2.10–2.12 (content/capability/World-Module stress tests) and a home for "proposal" docs. |
-| [0068](0068-phase-2-9-qa-gate.md) | open | Kofi (PM) | Lothar (QA) | Standing QA gate for Phase 2.9, filed same pattern as 0056/0063. |
+| [0067](0067-proposal-2-10-2-12-content-framework-stress-test-phases-post-2-9.md) | resolved | Juno (Game Designer) | Amara (Architect) | Split/sequencing approved; `Roadmap/Proposals/` ratified as the proposal-doc home, index + roadmap pointer live. |
+| [0068](0068-phase-2-9-qa-gate.md) | resolved | Kofi (PM) | Lothar (QA) | Verdict **PASS**, see [phase-2-9-verdict.md](../../../QA/phase-2-9-verdict.md). Phase 2.9 marked done. |
+| [0069](0069-implement-phase-2-10-content-coverage-spec-md.md) | in-review | Kofi (PM) | Baraka (Impl Dev) | All 5 items built; soft-lock item found max-achievable is 7/8 lines, not 8 (topology, not a gap). |
+| [0070](0070-tests-contenttests-broken-by-phase-2-10-roomchallenge-shape.md) | open | Baraka (Impl Dev) | Nadia (Test Dev) | `RoomChallenge`'s Phase 2.10 field reorder breaks positional construction in 2 ContentTests files. |
+| [0071](0071-peer-rom-bidirectional-capability-cycle-detection-gap.md) | in-review | Baraka (Impl Dev) | Amara (Architect) | Ruled: leave correlation-only side undeclared, doc'd in engine-core.md; spec table corrected, not code. |

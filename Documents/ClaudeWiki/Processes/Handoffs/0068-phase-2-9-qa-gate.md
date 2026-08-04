@@ -1,9 +1,19 @@
 # 0068 — Phase 2.9 QA gate
 
-**Status:** open
+**Status:** resolved
 **Opened by:** Kofi (PM)
 **Opened:** 2026-08-03
 **For:** Lothar (QA)
+
+## Decision
+
+**Verdict: PASS**, all ten ask items and the spec's full acceptance list confirmed against
+evidence — see [`phase-2-9-verdict.md`](../../../QA/phase-2-9-verdict.md). Arryn-run 170/170
+`latest.trx` (which also settled agent-test-workflow.md's open question — a single Test Explorer
+"Run All" does merge both test projects into one trx), independent content-fidelity re-diff (0
+diffs), and live reproduction of both fail-fast layers and the sandbox-escape rejection against real
+code, not the original throwaway probes. No deviations, no tickets filed. **Phase 2.9 marked done on
+the roadmap.**
 
 ## Details
 
@@ -55,8 +65,42 @@ session — not ticket prose:
 
 ### Response
 
-<Filled in by the assignee.>
+**PASS.** All ten ask items verified against evidence, not ticket prose — full detail in
+[phase-2-9-verdict.md](../../../QA/phase-2-9-verdict.md).
+
+1. MoonSharp `CoreModules`/`Preset_HardSandbox` verified against the actual bound v2.0.0.0 assembly
+   (reflection over the exact DLL resolved from the `.csproj` pin), not source prose or memory —
+   1387 = `GlobalConsts|TableIterators|String|Table|Basic|Math|Bit32`, excludes
+   `IO`/`OS_System`/`OS_Time`/`LoadMethods`/`Debug` exactly as claimed.
+2. `LuaOneD20WorldModule` confirmed against `IOneD20WorldModule` source, member by member — complete.
+3. Content-fidelity diff re-run independently (own throwaway comparison program, not 0065's): 0 diffs
+   across rooms/challenges/monsters/items/PC/abilities/62 flavor-text entries.
+4. Two-layer fail-fast reproduced live: syntax error, missing `rooms`, `dc`-as-string, bad
+   `challengeType` all throw naming the specific problem. `OneD20WorldModuleValidator.cs` confirmed
+   zero-changed via `git show` on the build commit.
+5. Sandbox-escape reproduced live against a freshly built probe (not 0065's original, per your
+   go-ahead) — `io.open`/`os.execute` both throw, and `io`/`os`/`dofile` confirmed literally absent
+   from the sandbox, not just erroring.
+6. Zero changes confirmed via `git show 938cafa --stat` against `IOneD20WorldModule.cs`,
+   `OneD20WorldModuleValidator.cs`, `OneD20SessionAssembler.cs`, and all of `LunaFlow.Rom` — empty
+   diff on every path.
+7. No new Cartridge/`ComponentRegistry` capability — grepped new Scripting/Lua source, zero matches;
+   `Program.cs` diff is one inactive commented line, `.sln` diff is the new project plus VS platform
+   boilerplate.
+8. Full live session run against `LuaOneD20WorldModule` (swap/build/play/revert): all 9 rooms, all 6
+   skill checks, all 3 fights, correct loot per monster, `flee` and `inventory` both correct,
+   `win-announce` fired verbatim. Swap reverted, confirmed clean via `git diff`.
+9. 170/170 from the Arryn-run `latest.trx` you provided — confirmed by parsing the trx directly: it's
+   a single file that merges both `EngineTests`/`ContentTests` projects (16 classes), which resolves
+   agent-test-workflow.md's previously-unconfirmed question about whether a Test Explorer "Run All"
+   merges them. All 6 Lua-specific tests and the fail-fast/sandbox tests present and green.
+10. Verdict written to `Documents/QA/phase-2-9-verdict.md`, index updated.
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+**Resolved 2026-08-03 (Kofi, opener).** Read `phase-2-9-verdict.md` directly: all ten criteria
+PASS, evidence attached to every row (assembly-level reflection for the `CoreModules` check rather
+than source prose, `git show`/`git diff` for every zero-change claim, two independent live sessions
+for the fail-fast/sandbox/full-session bars, an independent re-diff of all content). Nothing
+deferred, nothing non-blocking left open. Phase 2.9 marked done in `roadmap.md`/`phase-2-9.md`,
+citing this verdict.

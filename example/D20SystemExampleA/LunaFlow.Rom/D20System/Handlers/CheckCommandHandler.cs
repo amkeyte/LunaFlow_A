@@ -18,7 +18,8 @@ namespace LunaFlow.Rom.D20System
             _mechanic = mechanic ?? d20System.Mechanic;
         }
 
-        /// <summary>Resolves a skill check for the current room. Silent no-op if already solved.</summary>
+        /// <summary>Resolves a skill or saving-throw check for the current room. Silent no-op if
+        /// already solved.</summary>
         public void Handle(ICommand command)
         {
             var rules = LunaFlowEngine.Host.Rules;
@@ -26,15 +27,35 @@ namespace LunaFlow.Rom.D20System
             if (location is null) return;
 
             var challenge = _d20System.Challenges.Values.FirstOrDefault(c => c.Id == location.RoomId);
-            if (challenge?.SkillAbility is null) return;
+            if (challenge?.Kind is null) return;
 
             if (rules.Query<RoomSolved>().Any(rs => rs.RoomId == location.RoomId))
                 return;
 
-            var abilityScore = _d20System.PlayerAbilityScores[challenge.SkillAbility];
-            var modifier = D20SystemRom.AbilityModifier(abilityScore);
+            int modifier;
+            string readoutLabel;
+            if (challenge.Kind == CheckKind.Save)
+            {
+                modifier = challenge.SaveType switch
+                {
+                    "Fortitude" => _d20System.SavingThrows.Fortitude,
+                    "Reflex" => _d20System.SavingThrows.Reflex,
+                    "Will" => _d20System.SavingThrows.Will,
+                    _ => 0,
+                };
+                readoutLabel = challenge.SaveType!;
+            }
+            else
+            {
+                var abilityScore = _d20System.PlayerAbilityScores[challenge.SkillAbility!];
+                modifier = D20SystemRom.AbilityModifier(abilityScore);
+                readoutLabel = challenge.Skill!;
+            }
+
+            modifier += PoisonEffect.ApplyAndAdvance(rules);
+
             var result = _mechanic.ResolveCheck(modifier, challenge.DC ?? 10);
-            var readout = $"{challenge.Skill}: rolled {result.Total} vs. DC {result.TargetNumber}.";
+            var readout = $"{readoutLabel}: rolled {result.Total} vs. DC {result.TargetNumber}.";
 
             if (result.Success)
             {

@@ -55,11 +55,25 @@ namespace LunaFlow.Rom.D20System
             var pc = _d20System.PlayerCharacter.Stats;
             var monster = monsterTemplate.Stats;
 
-            // PC's attack.
-            var pcRoll = _mechanic.Roll("1d20");
-            if (pcRoll + pc.AttackBonus >= monster.Defense)
+            // Equipped-weapon branch (items 2/4): substitute attack bonus/damage die/bonus from the
+            // equipped weapon's profile if one is active, else fall back to the default sword's own
+            // stats on PlayerCharacter.Stats — Defense is never affected by which weapon is equipped.
+            var equipped = rules.Query<EquippedWeapon>().FirstOrDefault();
+            var attackBonus = pc.AttackBonus;
+            var damageDie = pc.DamageDie;
+            var damageBonus = pc.DamageBonus;
+            if (equipped is not null && _d20System.WeaponProfiles.TryGetValue(equipped.ItemId, out var weapon))
             {
-                var damage = _mechanic.Roll(pc.DamageDie) + pc.DamageBonus;
+                attackBonus = weapon.AttackBonus;
+                damageDie = weapon.DamageDie;
+                damageBonus = weapon.DamageBonus;
+            }
+
+            // PC's attack.
+            var pcRoll = _mechanic.Roll("1d20") + PoisonEffect.ApplyAndAdvance(rules);
+            if (pcRoll + attackBonus >= monster.Defense)
+            {
+                var damage = _mechanic.Roll(damageDie) + damageBonus;
                 monsterHp -= damage;
 
                 if (monsterHp <= 0)
@@ -89,6 +103,13 @@ namespace LunaFlow.Rom.D20System
                     rules.Insert(new RoomFailed(location.RoomId));
                     LunaFlowEngine.Host.Announce(_flavorText["pc-lost"]);
                     return;
+                }
+
+                if (monsterTemplate.InflictsPoison)
+                {
+                    var existingPoison = rules.Query<Poisoned>().FirstOrDefault();
+                    if (existingPoison is not null) rules.Retract(existingPoison);
+                    rules.Insert(new Poisoned(3));
                 }
 
                 LunaFlowEngine.Host.Announce(_flavorText["monster-hit"]);

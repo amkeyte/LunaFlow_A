@@ -1,11 +1,10 @@
 # Phase 2.9 — Lua World Module authoring
 
-**Status:** pending. Design and buildable spec complete —
-[`design/world-module.md`](../design/world-module.md#two-authoring-paths-into-one-contract) (new
-section) and [`design/scripting-content.md`](../design/scripting-content.md#refinement--the-world-module-tier-collapses-this-split-to-lua-only)
-(refinement note), plus [`Specs/lua-world-module-spec.md`](../Specs/lua-world-module-spec.md) —
-ready for a build ticket. See ticket
-[0064](../ClaudeWiki/Processes/Handoffs/0064-phase-2-9-ready-and-phase-4-scope-correction.md).
+**Status:** done (QA PASS). Built per [`Specs/lua-world-module-spec.md`](../Specs/lua-world-module-spec.md)
+against the design in [`design/world-module.md`](../design/world-module.md#two-authoring-paths-into-one-contract)
+and [`design/scripting-content.md`](../design/scripting-content.md#refinement--the-world-module-tier-collapses-this-split-to-lua-only).
+QA-verified 2026-08-03, ticket [0068](../ClaudeWiki/Processes/Handoffs/0068-phase-2-9-qa-gate.md),
+verdict [phase-2-9-verdict.md](../QA/phase-2-9-verdict.md).
 
 ## Overview
 

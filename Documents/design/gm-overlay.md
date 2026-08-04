@@ -319,6 +319,39 @@ swap) — that's a real authoring commitment on the Rulebook side this mechanism
 free, and whether `OneD20` (or any Rulebook) is willing to make that commitment is exactly the kind of
 question a Phase 4 kickoff pass would need to work through, not this doc.
 
+### The real axis is volatility, not trust
+
+**Added 2026-08-03, same conversation.** Stress-testing this shape against a hypothetical — a ROM
+that procedurally generates a large rule set (chemistry-simulation-scale, not Nine-Rooms-scale) —
+surfaced a correction to how this section frames the split. GM Overlay needed its own session for two
+independent reasons: it's **untrusted** (unreviewed, least-trusted author short of Player) and it's
+**volatile** (its rule set changes during play). This draft was written as if isolation follows from
+trust. It doesn't — it follows from volatility, and trust is only *one* reason a rule source can be
+volatile.
+
+A procedurally-generating ROM is the counter-example that makes this visible: fully trusted,
+first-party C#, reviewed the normal way — and yet, if it regenerates its rule set during play rather
+than once at bootstrap, it hits the exact same recompile-cost wall GM Overlay hits, for a completely
+unrelated reason. Bundling a volatile-but-trusted rule source into the same session as the stable core
+would reproduce the cost problem this split exists to solve, even though it wouldn't reproduce the
+isolation problem (a trusted ROM's actions don't need to be sandboxed from the rest of the engine the
+way a GM's script does).
+
+**So: two independent questions, not one, whenever a rule source is being placed.** Does it need
+**isolation** (is it untrusted)? Does it need **cost containment** (does its rule set change during
+play, and how large is it)? GM Overlay answers yes to both, which is why one session covers both
+needs for it specifically — that's a coincidence of this particular tier, not evidence the two
+questions are the same question. A future rule source could need only one, or neither, and should be
+sized accordingly rather than assumed to need "the GM Overlay treatment" wholesale.
+
+This doesn't add a third tier to this draft — there's no real consumer proposing rule-count-at-scale
+today, and building one on the strength of a hypothetical is exactly the mistake `non-goals.md`'s
+discipline exists to catch (see its "Not building rule-scale guardrails yet" entry, pinned from the
+same conversation, for where the concrete guardrails against this landed). What changes is how this
+draft should be read if a second real case ever does show up: as a session boundary motivated by
+volatility with trust as one contributing factor, not a session boundary *for* the trust gradient that
+volatility happens to ride along with.
+
 ### What's still completely open, even if this shape is adopted
 
 - Whether `GameEngineCore` is really the right owner of both sessions and the mirror/effect-fact pump,

@@ -236,3 +236,7 @@ These are flagged in planning but not resolved:
 - **Versioned rule schemas** — a `version:` tag for forward-compatibility of runtime/scripted rule sources, relevant once [`scripting-content.md`](scripting-content.md)'s script format exists.
 - **Validation pass** — warning on rules with no `Then`, duplicate names, or missing preconditions before compilation.
 - **Test tooling** — a `RuleTester`-style utility for firing a rule in isolation with injected facts, built on the same IR so it works for both compile-time and runtime rules.
+- **Scale guardrails** — per-module and total rule-count warnings, plus a compile/processing-time
+  warning, for a pipeline that currently has no ceiling on how many rules a module contributes. Pinned
+  for later, not designed yet — see [`non-goals.md`](non-goals.md)'s "Not building rule-scale
+  guardrails yet" entry.
