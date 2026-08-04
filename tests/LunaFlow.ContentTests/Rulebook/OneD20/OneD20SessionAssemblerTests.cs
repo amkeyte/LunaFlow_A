@@ -13,14 +13,15 @@ namespace LunaFlow.ContentTests.Rulebook.OneD20
     [TestCategory("Phase2.7.1")]
     public class OneD20SessionAssemblerTests
     {
+        private static readonly IOneD20WorldModule WorldModule = new DefaultOneD20WorldModule();
         private static readonly int[] FightRoomIds = { 1, 5, 8 };
         private static readonly int[] SkillCheckRoomIds = { 2, 3, 4, 6, 7, 9 };
 
         [TestMethod]
         public void Assemble_SameSeed_ProducesReproducibleAssignment()
         {
-            var a = new OneD20SessionAssembler(new Random(42)).Assemble();
-            var b = new OneD20SessionAssembler(new Random(42)).Assemble();
+            var a = new OneD20SessionAssembler(WorldModule, new Random(42)).Assemble();
+            var b = new OneD20SessionAssembler(WorldModule, new Random(42)).Assemble();
 
             foreach (var roomId in SkillCheckRoomIds)
                 Assert.AreEqual(a.ChallengeKeyByRoom[roomId], b.ChallengeKeyByRoom[roomId],
@@ -38,24 +39,24 @@ namespace LunaFlow.ContentTests.Rulebook.OneD20
         [TestMethod]
         public void Assemble_AssignsExactlySixOfNineChallengeKeys_AllValidAndUnique()
         {
-            var assignment = new OneD20SessionAssembler(new Random(1)).Assemble();
+            var assignment = new OneD20SessionAssembler(WorldModule, new Random(1)).Assemble();
 
             Assert.AreEqual(6, assignment.ChallengeKeyByRoom.Count);
             Assert.AreEqual(6, assignment.ChallengeKeyByRoom.Values.Distinct().Count(),
                 "No pool challenge should be assigned to more than one room");
-            Assert.IsTrue(assignment.ChallengeKeyByRoom.Values.All(k => OneD20RulebookContent.Challenges.ContainsKey(k)),
+            Assert.IsTrue(assignment.ChallengeKeyByRoom.Values.All(k => WorldModule.Challenges.ContainsKey(k)),
                 "Every assigned key must be a real entry in the 9-challenge pool");
         }
 
         [TestMethod]
         public void Assemble_AssignsExactlyThreeOfFiveMonsterIds_AllValidAndUnique()
         {
-            var assignment = new OneD20SessionAssembler(new Random(1)).Assemble();
+            var assignment = new OneD20SessionAssembler(WorldModule, new Random(1)).Assemble();
 
             Assert.AreEqual(3, assignment.MonsterIdByRoom.Count);
             Assert.AreEqual(3, assignment.MonsterIdByRoom.Values.Distinct().Count(),
                 "No roster monster should be assigned to more than one room");
-            Assert.IsTrue(assignment.MonsterIdByRoom.Values.All(id => OneD20RulebookContent.Monsters.ContainsKey(id)),
+            Assert.IsTrue(assignment.MonsterIdByRoom.Values.All(id => WorldModule.Monsters.ContainsKey(id)),
                 "Every assigned id must be a real entry in the 5-monster roster");
         }
 
@@ -64,7 +65,7 @@ namespace LunaFlow.ContentTests.Rulebook.OneD20
         {
             for (int seed = 0; seed < 50; seed++)
             {
-                var assignment = new OneD20SessionAssembler(new Random(seed)).Assemble();
+                var assignment = new OneD20SessionAssembler(WorldModule, new Random(seed)).Assemble();
 
                 CollectionAssert.AreEquivalent(SkillCheckRoomIds, assignment.ChallengeKeyByRoom.Keys.ToList(),
                     $"Seed {seed}: challenge assignment must land only on the fixed skill-check positions");
@@ -76,12 +77,12 @@ namespace LunaFlow.ContentTests.Rulebook.OneD20
         [TestMethod]
         public void Assemble_ItemIdByRoom_DerivedFromEachRoomsAssignedMonstersLootTableEntry()
         {
-            var assignment = new OneD20SessionAssembler(new Random(7)).Assemble();
+            var assignment = new OneD20SessionAssembler(WorldModule, new Random(7)).Assemble();
 
             Assert.AreEqual(assignment.MonsterIdByRoom.Count, assignment.ItemIdByRoom.Count);
             foreach (var (roomId, monsterId) in assignment.MonsterIdByRoom)
             {
-                Assert.AreEqual(OneD20RulebookContent.ItemIdByMonsterId[monsterId], assignment.ItemIdByRoom[roomId],
+                Assert.AreEqual(WorldModule.ItemIdByMonsterId[monsterId], assignment.ItemIdByRoom[roomId],
                     $"Room {roomId}'s loot must match its assigned monster's drop-table entry");
             }
         }
@@ -89,7 +90,7 @@ namespace LunaFlow.ContentTests.Rulebook.OneD20
         [TestMethod]
         public void Assemble_DefaultConstructor_StillProducesTheCorrectShape()
         {
-            var assignment = new OneD20SessionAssembler().Assemble();
+            var assignment = new OneD20SessionAssembler(WorldModule).Assemble();
 
             Assert.AreEqual(6, assignment.ChallengeKeyByRoom.Count);
             Assert.AreEqual(3, assignment.MonsterIdByRoom.Count);

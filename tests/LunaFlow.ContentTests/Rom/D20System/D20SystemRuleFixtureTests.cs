@@ -23,6 +23,7 @@ namespace LunaFlow.ContentTests.Rom.D20System
     [TestCategory("Phase2.7")]
     public class D20SystemRuleFixtureTests
     {
+        private static readonly IOneD20WorldModule WorldModule = new DefaultOneD20WorldModule();
         private static System.Reflection.Assembly _compiledD20SystemRules = null!;
         private static System.Reflection.Assembly _compiledGridMapRules = null!;
         private RuleEngine _engine = null!;
@@ -40,10 +41,10 @@ namespace LunaFlow.ContentTests.Rom.D20System
         };
 
         private static string ChallengePromptFor(int roomId) =>
-            OneD20FlavorText.Text[OneD20RulebookContent.Challenges[TestChallengeAssignment[roomId]].PromptKey];
+            WorldModule.FlavorText[WorldModule.Challenges[TestChallengeAssignment[roomId]].PromptKey];
 
         private static string MonsterDescFor(int roomId) =>
-            OneD20FlavorText.Text[OneD20RulebookContent.Monsters[TestMonsterAssignment[roomId]].DescriptionKey];
+            WorldModule.FlavorText[WorldModule.Monsters[TestMonsterAssignment[roomId]].DescriptionKey];
 
         [ClassInitialize]
         public static void ClassSetup(TestContext context)
@@ -72,8 +73,8 @@ namespace LunaFlow.ContentTests.Rom.D20System
             // constructor/DI seam, so they match already-resolved flavor text via
             // RoomChallengePrompt/GameEndAnnouncement facts instead of a placeholder. Seed them here
             // exactly as Program.cs does, so this fixture exercises the real content.
-            var flavorText = OneD20FlavorText.Text;
-            foreach (var room in OneD20RulebookContent.Rooms.Values)
+            var flavorText = WorldModule.FlavorText;
+            foreach (var room in WorldModule.Rooms.Values)
             {
                 _engine.Insert(room);
                 _engine.Insert(new RoomChallengePrompt(
@@ -230,7 +231,7 @@ namespace LunaFlow.ContentTests.Rom.D20System
 
             _engine.Fire();
 
-            Assert.IsTrue(_messages.Contains(OneD20FlavorText.Text["win-announce"]),
+            Assert.IsTrue(_messages.Contains(WorldModule.FlavorText["win-announce"]),
                 "GameEndRule should announce the real win text on any WinMarker");
         }
     }

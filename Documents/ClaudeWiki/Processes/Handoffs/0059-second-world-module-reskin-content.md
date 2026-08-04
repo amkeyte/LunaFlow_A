@@ -1,6 +1,6 @@
 # 0059 — Second World Module reskin content
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Kofi (PM)
 **Opened:** 2026-08-02
 **For:** Juno (Game Designer)
@@ -56,4 +56,11 @@ are in the two linked files; nothing here needs Baraka to re-derive intent.
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+**Resolved 2026-08-03 (Kofi, opener).** Content held up past the spec stage: a fixed-vocabulary key
+bug surfaced during Amara's own review (11 handler-hardcoded keys wrongly `hk-`-prefixed), fixed and
+independently re-verified in [0061](0061-hollow-keep-fixed-vocabulary-keys-must-not-be-prefixed.md).
+Baraka then built `HollowKeepWorldModule` against it as 0060's item 5 — numeric fields diffed
+byte-for-byte against `DefaultOneD20WorldModule`'s, flavor text checked clean of leftover
+warehouse-specific nouns, full session playtested (move/look/check/fight/flee/inventory, a win, a
+loss, a flee-and-return). Juno's deliverable is done and proven, not just filed. Closing this
+ticket; 0060 itself stays open pending 0062 (`tests/` compile break), unrelated to Juno's content.

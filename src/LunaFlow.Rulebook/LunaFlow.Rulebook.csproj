@@ -10,6 +10,11 @@
   <ItemGroup>
     <ProjectReference Include="..\LunaFlow.Engine\LunaFlow.Engine.csproj" />
     <ProjectReference Include="..\LunaFlow.Rules\LunaFlow.Rules.csproj" />
+    <ProjectReference Include="..\LunaFlow.Scripting\LunaFlow.Scripting.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="OneD20\Content\*.lua" />
   </ItemGroup>
 
   <Target Name="GenerateApiReference" AfterTargets="Build">

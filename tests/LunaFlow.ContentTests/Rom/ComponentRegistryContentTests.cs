@@ -41,36 +41,38 @@ namespace LunaFlow.ContentTests.Rom
 
         #region Concrete case: three-ROM OneD20 registration (Phase 2.7.1)
 
+        private static readonly IOneD20WorldModule WorldModule = new DefaultOneD20WorldModule();
+
         private static GridMapRom NewGridMap() =>
-            new(OneD20RulebookContent.Rooms.Values
+            new(WorldModule.Rooms.Values
                     .Select(r => new GridRoomData(r.Id, r.Row, r.Col, r.DescriptionKey))
                     .ToList(),
-                OneD20RulebookContent.StartRoomId);
+                WorldModule.StartRoomId);
 
         private static D20SystemRom NewD20System()
         {
-            var assignment = new OneD20SessionAssembler(new Random(1)).Assemble();
-            var challenges = OneD20RulebookContent.Rooms.Values
+            var assignment = new OneD20SessionAssembler(WorldModule, new Random(1)).Assemble();
+            var challenges = WorldModule.Rooms.Values
                 .Select(r => r.ChallengeType == OneD20ChallengeType.Fight
                     ? new RoomChallenge(r.Id, RoomChallengeType.Fight, null, null, null, null, null, null,
                         MonsterId: assignment.MonsterIdByRoom[r.Id])
-                    : ToRoomChallenge(r.Id, OneD20RulebookContent.Challenges[assignment.ChallengeKeyByRoom[r.Id]]))
+                    : ToRoomChallenge(r.Id, WorldModule.Challenges[assignment.ChallengeKeyByRoom[r.Id]]))
                 .ToDictionary(c => c.Id);
-            var playerStats = OneD20RulebookContent.PlayerCharacter;
-            var monsters = OneD20RulebookContent.Monsters.Values
+            var playerStats = WorldModule.PlayerCharacter;
+            var monsters = WorldModule.Monsters.Values
                 .Select(m => new MonsterTemplate(m.Id, m.Name, m.DescriptionKey,
                     new CombatantStats(m.Stats.Defense, m.Stats.AttackBonus, m.Stats.DamageDie, m.Stats.DamageBonus, m.Stats.MaxHp)))
                 .ToDictionary(m => m.Id);
             return new D20SystemRom(
                 new PlayerCharacter(new CombatantStats(playerStats.Defense, playerStats.AttackBonus, playerStats.DamageDie, playerStats.DamageBonus, playerStats.MaxHp)),
-                monsters, challenges, OneD20RulebookContent.PlayerAbilityScores);
+                monsters, challenges, WorldModule.PlayerAbilityScores);
         }
 
         private static RoomChallenge ToRoomChallenge(int roomId, OneD20ChallengeTemplate challenge) =>
             new(roomId, RoomChallengeType.SkillCheck, challenge.Skill, challenge.SkillAbility, challenge.DC,
                 challenge.SuccessKey, challenge.FailureKey, challenge.PromptKey, MonsterId: null);
 
-        private static LootRom NewLoot() => new(new MonsterLootTable(OneD20RulebookContent.ItemIdByMonsterId));
+        private static LootRom NewLoot() => new(new MonsterLootTable(WorldModule.ItemIdByMonsterId));
 
         [TestMethod]
         [TestCategory("Engine_Components")]

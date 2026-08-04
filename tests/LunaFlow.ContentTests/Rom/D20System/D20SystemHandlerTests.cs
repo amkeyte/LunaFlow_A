@@ -27,6 +27,7 @@ namespace LunaFlow.ContentTests.Rom.D20System
     [DoNotParallelize] // GameEngineCore.Instance is a singleton; tests must run sequentially
     public class D20SystemHandlerTests
     {
+        private static readonly IOneD20WorldModule WorldModule = new DefaultOneD20WorldModule();
         private GameEngineCore _engine = null!;
         private DefaultCommandDispatcher _dispatcher = null!;
         private readonly List<string> _messages = new();
@@ -53,10 +54,10 @@ namespace LunaFlow.ContentTests.Rom.D20System
         };
 
         private static string ChallengePromptFor(int roomId) =>
-            OneD20FlavorText.Text[OneD20RulebookContent.Challenges[TestChallengeAssignment[roomId]].PromptKey];
+            WorldModule.FlavorText[WorldModule.Challenges[TestChallengeAssignment[roomId]].PromptKey];
 
         private static string MonsterDescFor(int roomId) =>
-            OneD20FlavorText.Text[OneD20RulebookContent.Monsters[TestMonsterAssignment[roomId]].DescriptionKey];
+            WorldModule.FlavorText[WorldModule.Monsters[TestMonsterAssignment[roomId]].DescriptionKey];
 
         private static RoomChallenge ToRoomChallenge(int roomId, OneD20ChallengeTemplate challenge) =>
             new(roomId, RoomChallengeType.SkillCheck, challenge.Skill, challenge.SkillAbility, challenge.DC,
@@ -101,19 +102,19 @@ namespace LunaFlow.ContentTests.Rom.D20System
         private void StartSession(D20ResolutionMechanic? fightMechanic = null, D20ResolutionMechanic? checkMechanic = null)
         {
             // Instantiate ROMs with test data (mirrors Program.cs)
-            var gridMapData = OneD20RulebookContent.Rooms.Values
+            var gridMapData = WorldModule.Rooms.Values
                 .Select(r => new GridRoomData(r.Id, r.Row, r.Col, r.DescriptionKey))
                 .ToList();
-            _gridMap = new GridMapRom(gridMapData, OneD20RulebookContent.StartRoomId);
+            _gridMap = new GridMapRom(gridMapData, WorldModule.StartRoomId);
 
-            var d20Challenges = OneD20RulebookContent.Rooms.Values
+            var d20Challenges = WorldModule.Rooms.Values
                 .Select(r => r.ChallengeType == OneD20ChallengeType.Fight
                     ? new RoomChallenge(r.Id, RoomChallengeType.Fight, null, null, null, null, null, null,
                         MonsterId: TestMonsterAssignment[r.Id])
-                    : ToRoomChallenge(r.Id, OneD20RulebookContent.Challenges[TestChallengeAssignment[r.Id]]))
+                    : ToRoomChallenge(r.Id, WorldModule.Challenges[TestChallengeAssignment[r.Id]]))
                 .ToDictionary(c => c.Id);
-            var playerStats = OneD20RulebookContent.PlayerCharacter;
-            var monsters = OneD20RulebookContent.Monsters.Values
+            var playerStats = WorldModule.PlayerCharacter;
+            var monsters = WorldModule.Monsters.Values
                 .Select(m => new MonsterTemplate(m.Id, m.Name, m.DescriptionKey,
                     new CombatantStats(m.Stats.Defense, m.Stats.AttackBonus, m.Stats.DamageDie, m.Stats.DamageBonus, m.Stats.MaxHp)))
                 .ToDictionary(m => m.Id);
@@ -121,13 +122,13 @@ namespace LunaFlow.ContentTests.Rom.D20System
                 new PlayerCharacter(new CombatantStats(playerStats.Defense, playerStats.AttackBonus, playerStats.DamageDie, playerStats.DamageBonus, playerStats.MaxHp)),
                 monsters,
                 d20Challenges,
-                OneD20RulebookContent.PlayerAbilityScores,
+                WorldModule.PlayerAbilityScores,
                 fightMechanic ?? new D20ResolutionMechanic());
 
             var movement = new GridMovementService();
-            var flavorText = OneD20FlavorText.Text;
+            var flavorText = WorldModule.FlavorText;
             var monsterMaxHpByRoom = TestMonsterAssignment.ToDictionary(
-                kv => kv.Key, kv => OneD20RulebookContent.Monsters[kv.Value].Stats.MaxHp);
+                kv => kv.Key, kv => WorldModule.Monsters[kv.Value].Stats.MaxHp);
 
             // Register handlers with injected dependencies (direct DI, no interop broker)
             _dispatcher.RegisterHandler("move", new MoveCommandHandler(_gridMap, flavorText));
@@ -148,14 +149,14 @@ namespace LunaFlow.ContentTests.Rom.D20System
                 .Seed(() =>
                 {
                     // Announce room description on initial settle (room-5-startup-description trick from 0018)
-                    LunaFlowEngine.Host.Announce(OneD20FlavorText.Text[$"room-{OneD20RulebookContent.StartRoomId}-desc"]);
+                    LunaFlowEngine.Host.Announce(WorldModule.FlavorText[$"room-{WorldModule.StartRoomId}-desc"]);
                     var facts = new List<object>
                     {
-                        new PlayerPosition(OneD20RulebookContent.StartRoomId),
-                        OneD20RulebookContent.PlayerCharacter,
+                        new PlayerPosition(WorldModule.StartRoomId),
+                        WorldModule.PlayerCharacter,
                     };
                     // Insert all rooms so challenge-prompt rules can fire correctly
-                    foreach (var room in OneD20RulebookContent.Rooms.Values)
+                    foreach (var room in WorldModule.Rooms.Values)
                         facts.Add(room);
                     return facts.ToArray();
                 })
@@ -165,7 +166,7 @@ namespace LunaFlow.ContentTests.Rom.D20System
                     // constructor/DI seam, so they can't resolve a flavor key themselves. Resolve
                     // each key once, here — mirrors Program.cs's own seed block exactly — and hand
                     // the rule only the finished string via RoomChallengePrompt/GameEndAnnouncement.
-                    var prompts = OneD20RulebookContent.Rooms.Values
+                    var prompts = WorldModule.Rooms.Values
                         .Select(r => (object)new RoomChallengePrompt(
                             r.Id,
                             r.ChallengeType == OneD20ChallengeType.Fight
@@ -202,7 +203,7 @@ namespace LunaFlow.ContentTests.Rom.D20System
             Submit("move north"); // 5 -> 2 (row-1 to row-0)
 
             Assert.AreEqual(2, _engine.Rules.Query<PlayerPosition>().First().RoomId);
-            Assert.IsTrue(MessagesSince(baseline).Contains(OneD20FlavorText.Text["room-2-desc"]));
+            Assert.IsTrue(MessagesSince(baseline).Contains(WorldModule.FlavorText["room-2-desc"]));
 
             baseline = _messages.Count;
             Submit("move north"); // off-grid from row 0: rejected
@@ -235,11 +236,11 @@ namespace LunaFlow.ContentTests.Rom.D20System
             Submit("move north"); // 5 -> 2, a SkillCheck room
 
             var entered = MessagesSince(baseline);
-            Assert.AreEqual(1, entered.Count(m => m == OneD20FlavorText.Text["room-2-desc"]),
+            Assert.AreEqual(1, entered.Count(m => m == WorldModule.FlavorText["room-2-desc"]),
                 "DescriptionKey should announce exactly once, from the handler");
             Assert.AreEqual(1, entered.Count(m => m == ChallengePromptFor(2)),
                 "PromptKey should announce exactly once, from the rule (ticket 0050's RoomChallengePrompt seed)");
-            Assert.AreNotEqual(OneD20FlavorText.Text["room-2-desc"], ChallengePromptFor(2),
+            Assert.AreNotEqual(WorldModule.FlavorText["room-2-desc"], ChallengePromptFor(2),
                 "Description and prompt must never be identical text");
         }
 
@@ -250,7 +251,7 @@ namespace LunaFlow.ContentTests.Rom.D20System
         {
             StartSession();
 
-            var descIndex = _messages.IndexOf(OneD20FlavorText.Text["room-5-desc"]);
+            var descIndex = _messages.IndexOf(WorldModule.FlavorText["room-5-desc"]);
             var monsterIndex = _messages.IndexOf(MonsterDescFor(5));
 
             Assert.AreNotEqual(-1, descIndex, "Room 5's description should be announced at startup");
@@ -272,10 +273,10 @@ namespace LunaFlow.ContentTests.Rom.D20System
             Submit("fight"); // room 5, fresh combat
 
             var round = MessagesSince(baseline);
-            Assert.IsTrue(round.Contains(OneD20FlavorText.Text["monster-defeated"]));
-            Assert.IsFalse(round.Any(m => m.Contains(OneD20FlavorText.Text["pc-hit"])),
+            Assert.IsTrue(round.Contains(WorldModule.FlavorText["monster-defeated"]));
+            Assert.IsFalse(round.Any(m => m.Contains(WorldModule.FlavorText["pc-hit"])),
                 "A lethal PC hit must never announce pc-hit first");
-            Assert.IsFalse(round.Any(m => m.Contains(OneD20FlavorText.Text["monster-miss"]) || m.Contains(OneD20FlavorText.Text["monster-hit"])),
+            Assert.IsFalse(round.Any(m => m.Contains(WorldModule.FlavorText["monster-miss"]) || m.Contains(WorldModule.FlavorText["monster-hit"])),
                 "Counterattack step must be skipped entirely when the PC's hit ends the fight");
             Assert.IsTrue(_engine.Rules.Query<RoomSolved>().Any(rs => rs.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<CombatRound>().Any(cr => cr.RoomId == 5));
@@ -297,20 +298,20 @@ namespace LunaFlow.ContentTests.Rom.D20System
             Assert.AreEqual(7, round1.PlayerHp);
             Assert.AreEqual(8, round1.MonsterHp, "Monster HP untouched — PC missed this round");
 
-            _dispatcher.RegisterHandler("fight", new FightCommandHandler(_d20System, OneD20FlavorText.Text, new D20ResolutionMechanic(new Random(3))));
+            _dispatcher.RegisterHandler("fight", new FightCommandHandler(_d20System, WorldModule.FlavorText, new D20ResolutionMechanic(new Random(3))));
             var baseline = _messages.Count;
             Submit("fight"); // round 2: PC misses, monster's hit drops PlayerHp to 0
 
             var round2 = MessagesSince(baseline);
-            Assert.IsTrue(round2.Contains(OneD20FlavorText.Text["pc-lost"]));
-            Assert.IsFalse(round2.Any(m => m.Contains(OneD20FlavorText.Text["monster-hit"])),
+            Assert.IsTrue(round2.Contains(WorldModule.FlavorText["pc-lost"]));
+            Assert.IsFalse(round2.Any(m => m.Contains(WorldModule.FlavorText["monster-hit"])),
                 "A lethal monster hit must never announce monster-hit first");
             Assert.IsTrue(_engine.Rules.Query<RoomFailed>().Any(rf => rf.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<CombatRound>().Any(cr => cr.RoomId == 5));
 
             // Session continues: losing a fight fails only that room, not the run.
             Submit("move north"); // 5 -> 2
-            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, OneD20FlavorText.Text, new D20ResolutionMechanic(new Random(0))));
+            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, WorldModule.FlavorText, new D20ResolutionMechanic(new Random(0))));
             Submit("check"); // room 2, Search/Int mod 0 vs DC 10 — seed 0's d20=15 succeeds
 
             Assert.IsTrue(_engine.Rules.Query<RoomSolved>().Any(rs => rs.RoomId == 2),
@@ -333,7 +334,7 @@ namespace LunaFlow.ContentTests.Rom.D20System
             var baseline = _messages.Count;
             Submit("fight"); // round 3 -> timeout
 
-            Assert.IsTrue(MessagesSince(baseline).Contains(OneD20FlavorText.Text["monster-fled"]));
+            Assert.IsTrue(MessagesSince(baseline).Contains(WorldModule.FlavorText["monster-fled"]));
             Assert.IsTrue(_engine.Rules.Query<RoomFailed>().Any(rf => rf.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<RoomSolved>().Any(rs => rs.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<CombatRound>().Any(cr => cr.RoomId == 5));
@@ -359,14 +360,14 @@ namespace LunaFlow.ContentTests.Rom.D20System
             Assert.AreEqual(8, fresh.MonsterHp, "MonsterHp must seed from MonsterTemplate.Stats.MaxHp");
 
             // Take damage, then flee, then retry — the retry must not inherit the damage.
-            _dispatcher.RegisterHandler("fight", new FightCommandHandler(_d20System, OneD20FlavorText.Text, new D20ResolutionMechanic(new Random(41))));
+            _dispatcher.RegisterHandler("fight", new FightCommandHandler(_d20System, WorldModule.FlavorText, new D20ResolutionMechanic(new Random(41))));
             Submit("fight"); // PlayerHp 11 -> 7
             Assert.AreEqual(7, CombatRoundInRoom(5).PlayerHp);
 
             Submit("flee");
             Assert.IsFalse(_engine.Rules.Query<CombatRound>().Any(cr => cr.RoomId == 5));
 
-            _dispatcher.RegisterHandler("fight", new FightCommandHandler(_d20System, OneD20FlavorText.Text, new D20ResolutionMechanic(new Random(1))));
+            _dispatcher.RegisterHandler("fight", new FightCommandHandler(_d20System, WorldModule.FlavorText, new D20ResolutionMechanic(new Random(1))));
             Submit("fight"); // fresh fight in the same room after fleeing
 
             var retried = CombatRoundInRoom(5);
@@ -444,7 +445,7 @@ namespace LunaFlow.ContentTests.Rom.D20System
             // Assert.IsTrue(MessagesSince(baseline).Contains(D20SystemNarration.CheckNarration("check-2-failure", "Search", 5, 10)));
             Assert.IsFalse(_engine.Rules.Query<RoomSolved>().Any(rs => rs.RoomId == 2));
 
-            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, OneD20FlavorText.Text, new D20ResolutionMechanic(new Random(0))));
+            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, WorldModule.FlavorText, new D20ResolutionMechanic(new Random(0))));
             Submit("check"); // retry succeeds
 
             Assert.IsTrue(_engine.Rules.Query<RoomSolved>().Any(rs => rs.RoomId == 2));
@@ -464,7 +465,7 @@ namespace LunaFlow.ContentTests.Rom.D20System
             Submit("flee");
 
             var afterFlee = MessagesSince(baseline);
-            Assert.IsTrue(afterFlee.Contains(OneD20FlavorText.Text["pc-flee"]));
+            Assert.IsTrue(afterFlee.Contains(WorldModule.FlavorText["pc-flee"]));
             Assert.IsFalse(_engine.Rules.Query<CombatRound>().Any(cr => cr.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<RoomSolved>().Any(rs => rs.RoomId == 5));
             Assert.IsFalse(_engine.Rules.Query<RoomFailed>().Any(rf => rf.RoomId == 5));
@@ -482,7 +483,7 @@ namespace LunaFlow.ContentTests.Rom.D20System
 
             Submit("flee"); // must not throw — Submit() itself asserts completion within the timeout
 
-            Assert.IsTrue(MessagesSince(baseline).Contains(OneD20FlavorText.Text["pc-flee"]));
+            Assert.IsTrue(MessagesSince(baseline).Contains(WorldModule.FlavorText["pc-flee"]));
             Assert.AreEqual(5, _engine.Rules.Query<PlayerPosition>().First().RoomId, "No PreviousRoomId to retreat to — PC stays put");
             Assert.IsFalse(_engine.Rules.Query<CombatRound>().Any(cr => cr.RoomId == 5));
         }
@@ -498,20 +499,20 @@ namespace LunaFlow.ContentTests.Rom.D20System
             Submit("move north"); // 5 -> 2
             Submit("move east");  // 2 -> 3
 
-            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, OneD20FlavorText.Text, new D20ResolutionMechanic(new Random(0))));
+            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, WorldModule.FlavorText, new D20ResolutionMechanic(new Random(0))));
             Submit("check"); // room 3 (Climb/Str, DC 12) solved
 
             Submit("move south"); // 3 -> 6
-            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, OneD20FlavorText.Text, new D20ResolutionMechanic(new Random(0))));
+            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, WorldModule.FlavorText, new D20ResolutionMechanic(new Random(0))));
             Submit("check"); // room 6 (Swim/Str, DC 10) solved
 
             Submit("move south"); // 6 -> 9
-            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, OneD20FlavorText.Text, new D20ResolutionMechanic(new Random(0))));
+            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, WorldModule.FlavorText, new D20ResolutionMechanic(new Random(0))));
             Submit("check"); // room 9 (Jump/Str, DC 8) solved
 
             var markers = _engine.Rules.Query<WinMarker>().ToList();
             Assert.IsTrue(markers.Any(m => m.Line.SequenceEqual(new[] { 3, 6, 9 })));
-            Assert.IsTrue(_messages.Contains(OneD20FlavorText.Text["win-announce"]));
+            Assert.IsTrue(_messages.Contains(WorldModule.FlavorText["win-announce"]));
         }
 
         // ---- win: combat-inclusive line (criterion 15, second half) ----
@@ -521,22 +522,22 @@ namespace LunaFlow.ContentTests.Rom.D20System
         {
             StartSession();
             Submit("move north"); // 5 -> 2
-            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, OneD20FlavorText.Text, new D20ResolutionMechanic(new Random(0))));
+            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, WorldModule.FlavorText, new D20ResolutionMechanic(new Random(0))));
             Submit("check"); // room 2 solved (Search/Int, DC 10)
 
             Submit("move west"); // 2 -> 1 (Fight room)
-            _dispatcher.RegisterHandler("fight", new FightCommandHandler(_d20System, OneD20FlavorText.Text, new D20ResolutionMechanic(new Random(0))));
+            _dispatcher.RegisterHandler("fight", new FightCommandHandler(_d20System, WorldModule.FlavorText, new D20ResolutionMechanic(new Random(0))));
             Submit("fight"); // lethal PC hit solves room 1 in one round
 
             Submit("move east"); // 1 -> 2
             Submit("move east"); // 2 -> 3
-            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, OneD20FlavorText.Text, new D20ResolutionMechanic(new Random(0))));
+            _dispatcher.RegisterHandler("check", new CheckCommandHandler(_d20System, WorldModule.FlavorText, new D20ResolutionMechanic(new Random(0))));
             Submit("check"); // room 3 solved (Climb/Str, DC 12)
 
             var markers = _engine.Rules.Query<WinMarker>().ToList();
             Assert.IsTrue(markers.Any(m => m.Line.SequenceEqual(new[] { 1, 2, 3 })),
                 "Top-row line, which required room 1 solved via fight, should fire");
-            Assert.IsTrue(_messages.Contains(OneD20FlavorText.Text["win-announce"]));
+            Assert.IsTrue(_messages.Contains(WorldModule.FlavorText["win-announce"]));
         }
     }
 }

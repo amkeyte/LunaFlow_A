@@ -21,6 +21,7 @@ namespace LunaFlow.ContentTests.Rom.Loot
     [DoNotParallelize] // GameEngineCore.Instance is a singleton; tests must run sequentially
     public class InventoryCommandHandlerTests
     {
+        private static readonly IOneD20WorldModule WorldModule = new DefaultOneD20WorldModule();
         private static System.Reflection.Assembly _compiledLootRules = null!;
         private GameEngineCore _engine = null!;
         private DefaultCommandDispatcher _dispatcher = null!;
@@ -54,8 +55,8 @@ namespace LunaFlow.ContentTests.Rom.Loot
                 _engine.Stop(force: true);
             _messages.Clear();
             _dispatcher = new DefaultCommandDispatcher();
-            _dispatcher.RegisterHandler("inventory", new InventoryCommandHandler(OneD20FlavorText.Text));
-            _dispatcher.RegisterHandler("inv", new InventoryCommandHandler(OneD20FlavorText.Text));
+            _dispatcher.RegisterHandler("inventory", new InventoryCommandHandler(WorldModule.FlavorText));
+            _dispatcher.RegisterHandler("inv", new InventoryCommandHandler(WorldModule.FlavorText));
 
             _messageHandler = (s, e) => _messages.Add(e.Message);
             _engine.MessagePosted += _messageHandler;
@@ -95,7 +96,7 @@ namespace LunaFlow.ContentTests.Rom.Loot
 
             Submit("inventory");
 
-            Assert.IsTrue(_messages.Skip(baseline).Contains(OneD20FlavorText.Text["inventory-empty"]));
+            Assert.IsTrue(_messages.Skip(baseline).Contains(WorldModule.FlavorText["inventory-empty"]));
         }
 
         [TestMethod]
@@ -107,10 +108,10 @@ namespace LunaFlow.ContentTests.Rom.Loot
             Submit("inventory");
 
             var since = _messages.Skip(baseline).ToList();
-            Assert.IsTrue(since.Contains(OneD20FlavorText.Text["inventory-header"]));
-            Assert.IsTrue(since.Contains(OneD20FlavorText.Text["item-rapier-name"]));
-            Assert.IsTrue(since.Contains(OneD20FlavorText.Text["item-vest-name"]));
-            Assert.IsFalse(since.Contains(OneD20FlavorText.Text["inventory-empty"]),
+            Assert.IsTrue(since.Contains(WorldModule.FlavorText["inventory-header"]));
+            Assert.IsTrue(since.Contains(WorldModule.FlavorText["item-rapier-name"]));
+            Assert.IsTrue(since.Contains(WorldModule.FlavorText["item-vest-name"]));
+            Assert.IsFalse(since.Contains(WorldModule.FlavorText["inventory-empty"]),
                 "A populated inventory must never also announce the empty message");
         }
 
@@ -122,7 +123,7 @@ namespace LunaFlow.ContentTests.Rom.Loot
 
             Submit("inv");
 
-            Assert.IsTrue(_messages.Skip(baseline).Contains(OneD20FlavorText.Text["item-rapier-name"]));
+            Assert.IsTrue(_messages.Skip(baseline).Contains(WorldModule.FlavorText["item-rapier-name"]));
         }
 
         [TestMethod]
@@ -137,7 +138,7 @@ namespace LunaFlow.ContentTests.Rom.Loot
 
             Submit("inventory");
 
-            Assert.IsTrue(_messages.Skip(baseline).Contains(OneD20FlavorText.Text["item-knife-name"]));
+            Assert.IsTrue(_messages.Skip(baseline).Contains(WorldModule.FlavorText["item-knife-name"]));
         }
     }
 }

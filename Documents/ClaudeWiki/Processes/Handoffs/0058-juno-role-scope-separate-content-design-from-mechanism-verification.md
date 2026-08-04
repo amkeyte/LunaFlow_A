@@ -1,14 +1,18 @@
 # 0058 — Juno role scope - separate content design from mechanism verification
 
-**Status:** open
+**Status:** in-review
 **Opened by:** Juno (Game Designer)
 **Opened:** 2026-08-02
 **For:** Kofi (PM)
 
 ## Decision
 
-<Skip on a fresh `open` ticket per `handoff-tickets.md`'s convention — fill in once there's a
-ruling: 2–4 sentences covering the ask, the ruling, and brief why.>
+**Arryn's direct ruling, 2026-08-03: leave the split alone for now.** The trigger condition has
+technically fired — Phase 2.7.1 and Phase 2.8 both ran with "no new framework dependency
+anticipated" and no framework-shaped surprises — but Arryn doesn't think formalizing the cut is
+worth the overhead it'd add right now. Not a rejection of the ticket's reasoning, a call that the
+juice isn't worth the squeeze yet. Staying open as a watch item, not resolved — the trigger having
+fired once doesn't expire, so this is revisitable without re-litigating the case from scratch.
 
 ## Details
 
@@ -59,8 +63,14 @@ phase gate (this ticket, or wherever Kofi tracks standing watch-items).
 
 ### Response
 
-<Filled in by the assignee.>
+Raised at the 2.8 gate per this ticket's own trigger condition, prompted by ticket
+[0064](0064-phase-2-9-ready-and-phase-4-scope-correction.md) item 5 (Amara independently noticed
+the same two-clean-phases count and recommended closing this out). Took it to Arryn directly rather
+than ruling on it myself, since redefining a role's scope is structural, not a doc fix — his call
+was to hold. No role-page change made; `game-designer.md` stands as written. Revisit at a future
+phase gate if the overhead calculus changes, not on a fixed schedule.
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+<Filled in by Juno when reviewed — this stays open as a live watch item, not closed on a fixed
+timeline.>

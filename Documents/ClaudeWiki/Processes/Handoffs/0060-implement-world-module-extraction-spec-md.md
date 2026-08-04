@@ -1,6 +1,6 @@
 # 0060 — Implement world-module-extraction-spec.md
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Kofi (PM)
 **Opened:** 2026-08-02
 **For:** Baraka (Impl Dev)
@@ -107,4 +107,13 @@ call this fully closed.
 
 ### Resolution
 
-<Filled in by the opener when closing — what was confirmed, and how.>
+**Resolved 2026-08-03 (Kofi, opener).** The one bullet held open — full suite green — closed via
+[0062](0062-tests-lunaflow-contenttests-broken-by-phase-2-8-world-module-extraction.md): Baraka
+independently re-verified Nadia's repoint himself rather than taking the ticket's word (diffed all
+five files, re-ran the build and suite), 62/62 green. All five of this ticket's items — contract,
+static-surface retirement, assembler decoupling, validation pass, second implementation — built,
+demonstrated, and now backed by both a playtest and (per 0062) new automated coverage of the
+validator and `HollowKeepWorldModule` that didn't exist before. Closing this ticket. What's left
+before Phase 2.8 itself can be marked done is a QA verdict — the suite counts above are agent-run,
+not the Arryn-run `latest.trx` a phase-doneness verdict requires (`agent-test-workflow.md`'s hard
+rule); tracking that as the next step, not assuming it's covered by these numbers.

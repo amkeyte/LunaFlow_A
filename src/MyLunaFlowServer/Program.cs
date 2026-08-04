@@ -84,6 +84,7 @@ static (object GridMap, object D20System, object Loot, OneD20SessionAssignment A
         // line below to exercise HollowKeepWorldModule, the second, independently-authored proof.
         IOneD20WorldModule worldModule = new DefaultOneD20WorldModule();
         // IOneD20WorldModule worldModule = new HollowKeepWorldModule();
+        // IOneD20WorldModule worldModule = LuaOneD20WorldModule.FromEmbeddedResource();
         OneD20WorldModuleValidator.Validate(worldModule);
         var assignment = new OneD20SessionAssembler(worldModule).Assemble();
 

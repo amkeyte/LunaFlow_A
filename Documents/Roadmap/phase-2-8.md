@@ -1,14 +1,18 @@
 # Phase 2.8 — World Module extraction
 
-**Status:** pending. Design and buildable spec exist —
-[`design/world-module.md`](../design/world-module.md) and
-[`Specs/world-module-extraction-spec.md`](../Specs/world-module-extraction-spec.md). Kicked off
-2026-08-02 (ticket [0057](../ClaudeWiki/Processes/Handoffs/0057-phase-2-8-design-package-ready-for-kickoff.md)) —
-build ticket to Baraka
-([0060](../ClaudeWiki/Processes/Handoffs/0060-implement-world-module-extraction-spec-md.md)) and the
-second-World-Module content pass to Juno
-([0059](../ClaudeWiki/Processes/Handoffs/0059-second-world-module-reskin-content.md)) running
-alongside it, not gating its start. Not yet built.
+**Status:** done — QA-verified 2026-08-03 (ticket
+[0063](../ClaudeWiki/Processes/Handoffs/0063-phase-2-8-qa-gate.md), verdict
+[`phase-2-8-verdict.md`](../QA/phase-2-8-verdict.md), **PASS**). All Done-When criteria confirmed
+against source, an Arryn-run `latest.trx` (155/155), live fault injection on the validator, and a
+live Hollow Keep session (a win, a loss, a skill check) — not ticket prose. Baraka built all five
+spec items ([0060](../ClaudeWiki/Processes/Handoffs/0060-implement-world-module-extraction-spec-md.md)),
+Juno's Hollow Keep reskin proved the swap
+([0059](../ClaudeWiki/Processes/Handoffs/0059-second-world-module-reskin-content.md)), and the test
+suite is repointed and green
+([0062](../ClaudeWiki/Processes/Handoffs/0062-tests-lunaflow-contenttests-broken-by-phase-2-8-world-module-extraction.md)).
+One non-blocking finding carried forward: `OneD20WorldModuleValidatorTests.cs` under-specifies its
+own fixed-vocabulary/ability-loop coverage (1-of-11, 1-of-6) — an informal note to Nadia, not a
+ticket, since the mechanism itself is demonstrated working live.
 
 ## Overview
 

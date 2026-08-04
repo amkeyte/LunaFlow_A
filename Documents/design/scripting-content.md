@@ -39,7 +39,13 @@ Rulebook-owned shape) and isn't affected by which format World Module content ha
 
 ## Script-driven rule adapter
 
-The concrete mechanism for turning world-builder content into live rules is a small DSL compiled at runtime through the same pipeline used for compiled rules:
+**Tier, added 2026-08-03:** this mechanism belongs to the GM-Overlay tier, not World Module or
+Rulebook — see [`gm-overlay.md`](gm-overlay.md#ruling-phase-4s-startcombat-example-is-gm-overlay-territory)
+for the ruling and why. "World-builder content" below is kept as this section's original framing but
+should be read as GM-Overlay-authored; a World Module never produces live rule *behavior*, only data
+(see `world-module.md`).
+
+The concrete mechanism for turning a GM's scripted rule into a live one is a small DSL compiled at runtime through the same pipeline used for compiled rules:
 
 ```yaml
 - name: StartCombat
@@ -75,6 +81,15 @@ LunaFlow.Scripting/
 ## Open design questions
 
 - Whether the script format is YAML, JSON, or a small custom DSL — the example above is YAML-shaped but nothing has committed to it.
-- How Lua callbacks (MoonSharp) and the declarative `when`/`then` script format above relate to each other — are they two separate authoring paths, or does the declarative format compile down to generated Lua/C# glue?
-- Hot-reload semantics: what happens to an active session's already-fired rules when a world module is edited and reloaded mid-session.
-- Where script validation errors surface to a world-builder who isn't watching a compiler — this needs to integrate with whatever GM/world-builder tooling eventually exists, not just log to a console.
+- **Answered for the GM-Overlay case, 2026-08-03:** the declarative `when`/`then` shape stays as the
+  top-level rule structure (it's what lets standing-guard injection separate condition from action);
+  Lua, if used at all, would live *inside* a condition/action as an expression evaluator, not replace
+  the declarative shape. See [`gm-overlay.md`](gm-overlay.md#ruling-gm-overlay-does-not-collapse-to-lua-only-the-way-world-module-did).
+  Whether that inner expression language is a custom grammar or MoonSharp-backed remains open.
+- **Answered at the mechanism level, 2026-08-03:** NRules 1.0.2 (the pinned version) has no API to
+  mutate a running session's rule set — reload can only mean recompile a new `ISessionFactory` from
+  the full active rule set, create a new session, replay current facts into it, and swap. See
+  [`gm-overlay.md`"How reload actually works"](gm-overlay.md#how-reload-actually-works-verified-against-nrules-102-source),
+  checked against NRules source per `CLAUDE.md`'s convention. Still open: the concrete reload-primitive
+  API shape, its `GameEngineCore` integration point, and its measured cost at realistic fact counts.
+- Where script validation errors surface to a GM or world-builder who isn't watching a compiler — this needs to integrate with whatever GM/world-builder tooling eventually exists, not just log to a console.
