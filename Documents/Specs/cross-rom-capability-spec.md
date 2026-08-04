@@ -334,14 +334,76 @@ compile-time constraint and `ForceMemberResolution()`. Accepted for now, same ca
 type-enforced. A `RequiredCapability`/`ProvidedCapability` type split would close it structurally;
 not built on one observed near-miss. Revisit if a bypass actually ships.
 
-### 5.4 What this is and isn't
+### 5.4 Contract-surface shape check — interfaces only
+
+**Added 2026-08-03, ticket [0071](../ClaudeWiki/Processes/Handoffs/0071-peer-rom-bidirectional-capability-cycle-detection-gap.md)'s
+addendum.** §§5.1–5.3 prove that a *declared* capability's provider and contract bind correctly at
+bootstrap. They say nothing about a type that was never declared as a capability at all — a plain
+concrete class or record placed directly in the contract-surface assembly because two ROMs both
+happen to need it, bypassing `Capability`/`Provides`/`Requires` entirely. That's not a binding-mismatch
+problem §§5.1–5.3 catch; it's a shape problem — [`cartridge.md`](../design/cartridge.md#structure)
+already states the rule ("interfaces for facts that cross a boundary, interfaces for services the
+Cartridge offers") but nothing enforced it, and `EquippedWeapon` shipped as exactly this violation
+before 0071 caught it in review. This closes that gap the same way §5.1 closes the compatibility gap:
+force the check the convention was always implicitly claiming, at a moment bootstrap controls, instead
+of trusting every future author to remember it.
+
+**Check:** every publicly-exported type in the Cartridge's contract-surface assembly must be an
+interface.
+
+```csharp
+public static void ValidateInterfacesOnly(Assembly contractSurface)
+{
+    var offenders = contractSurface.GetExportedTypes()
+        .Where(t => !t.IsInterface)
+        .ToList();
+
+    if (offenders.Count > 0)
+    {
+        throw new InvalidOperationException(
+            $"Contract surface '{contractSurface.GetName().Name}' exposes non-interface type(s): " +
+            $"{string.Join(", ", offenders.Select(t => t.FullName))}. The contract surface may hold " +
+            "interfaces only — see cartridge.md's Structure section. A shared concrete type belongs " +
+            "behind an interface here, implemented by the owning ROM's concrete type, never named " +
+            "directly outside the Cartridge.");
+    }
+}
+```
+
+**Where it runs:** inside §5.1's bootstrap barrier, alongside the per-`Capability` probes — same
+non-zero-exit, fail-loud contract. `Program.cs` passes the contract-surface assembly explicitly
+(e.g. `typeof(IPlayerLocation).Assembly`), the same push-not-discover pattern registration already
+uses; there is no reflection-based hunt for "which assembly is a Cartridge's contract surface."
+
+**Scope, deliberately narrow:**
+
+- **Interfaces only, no allowlist for enums/structs/etc.** The five contracts shipped so far need
+  nothing but interfaces and plain member types (`int`, `string`, `bool`) already satisfied by the
+  interface signature itself — nothing today needs an auxiliary concrete type published in the
+  surface. If a real case needs one, that's a deliberate, reviewed loosening of this check with its
+  own ticket — not a default the check should anticipate.
+- **One assembly, one pass, at bootstrap** — same discipline §5.5 states for the rest of §5. Not a
+  general "audit any assembly" utility.
+- **Toolchain-generated public types are a known edge the implementer should verify against the actual
+  built assembly** (e.g. embedded compiler attributes on older target frameworks) rather than guessed
+  at here; if the real `LunaFlow.Cartridge.dll` trips this on something that isn't author-written, that
+  is worth a ticket back to reconcile the check, not worth pre-defending against in this spec.
+
+**Relationship to existing acceptance criterion 5** (§7): criterion 5 already states the invariant
+this check exists to verify — "contains interfaces and nothing else" — but qualifies it as "verified
+by inspecting," i.e. manually. This turns that manual bar into an automated, bootstrap-enforced one;
+see acceptance criterion 12 below.
+
+### 5.5 What this is and isn't
 
 A **binding smoke test**, not a compatibility proof. It cannot catch a semantic change: identical
 signatures with different meaning (`RoomId` silently becoming 1-based) pass, and would also pass a
 fingerprint check, so this is no worse than the deferred alternative. It covers what it forces and
-nothing more.
+nothing more. §5.4's shape check is a separate, narrower pass over a different question (what types
+exist in the surface, not whether a declared pairing binds) — stated here so the two aren't conflated.
 
-Scope discipline: declared contract types only, one pass, at one point. Not a general health-check
+Scope discipline: declared contract types only (§§5.1–5.3) plus one shape pass over the whole surface
+(§5.4), each running once, at one point. Not a general health-check
 framework.
 
 ## 6. Deliberately excluded
@@ -396,7 +458,14 @@ framework.
     (a stale build, a contract assembly rebuilt with a breaking change) — a caught exception that logs
     and continues fails this criterion, same bar the original criterion 9 held for the probe as a
     whole.
-11. Full suite green, read from an Arryn-run `latest.trx`.
+12. **`ValidateInterfacesOnly` (§5.4) runs at bootstrap against the Cartridge's contract-surface
+    assembly and fails loudly, non-zero, before any component is constructed, if a non-interface type
+    is exported from it.** Demonstrated by temporarily adding a public concrete type to
+    `LunaFlow.Cartridge` and observing bootstrap refuse to start with a message naming the offending
+    type — not a passing test alone, same assembly-graph-first bar as criteria 1 and 6. Upgrades
+    criterion 5's "verified by inspecting" to an automated, enforced check. Added 2026-08-03, ticket
+    [0071](../ClaudeWiki/Processes/Handoffs/0071-peer-rom-bidirectional-capability-cycle-detection-gap.md).
+13. Full suite green, read from an Arryn-run `latest.trx`.
 
 ## 8. Open
 

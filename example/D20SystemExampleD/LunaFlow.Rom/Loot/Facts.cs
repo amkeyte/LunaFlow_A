@@ -1,3 +1,5 @@
+using LunaFlow.Cartridge;
+
 namespace LunaFlow.Rom.Loot
 {
     /// <summary>
@@ -6,6 +8,16 @@ namespace LunaFlow.Rom.Loot
     /// loot-rom-content-expansion-spec.md.
     /// </summary>
     public sealed record MonsterLootTable(IReadOnlyDictionary<string, string> ItemIdByMonsterId);
+
+    /// <summary>
+    /// At most one at a time — equipping retracts the old, inserts the new, same convention as
+    /// <c>PlayerPosition</c>. Absent by default (PC fights with the starting sword). The concrete
+    /// implementer of <see cref="IEquippedWeapon"/>, per <c>cartridge.md</c>'s Structure section
+    /// (interfaces on the contract surface, concrete types stay with their owning ROM) — moved here
+    /// from a bare record directly in <c>LunaFlow.Cartridge</c>, which shipped in violation of that
+    /// rule and was caught in review; see ticket 0071.
+    /// </summary>
+    public sealed record EquippedWeapon(string ItemId) : IEquippedWeapon;
 
     /// <summary>
     /// Seeded once at session start, one per fight room, derived from that session's monster

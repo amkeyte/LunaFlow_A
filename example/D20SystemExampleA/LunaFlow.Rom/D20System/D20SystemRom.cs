@@ -70,7 +70,14 @@ namespace LunaFlow.Rom.D20System
             Capability.Provided<LunaFlow.Cartridge.ICombatStatus, CombatRound>("CombatStatus"),
         };
 
-        /// <summary>Capabilities this ROM requires: PlayerLocation, PlayerMovement, and GameWon (from GridMap).</summary>
+        /// <summary>Capabilities this ROM requires: PlayerLocation, PlayerMovement, and GameWon (from
+        /// GridMap). Deliberately does NOT include EquippedWeapon (from Loot): <c>fight</c> matches
+        /// <see cref="LunaFlow.Cartridge.IEquippedWeapon"/> directly through NRules
+        /// (<c>Query&lt;T&gt;()</c>), not capability mediation — Loot already <c>Requires</c>
+        /// ChallengeSolved from D20System, so declaring the reverse direction here would create a
+        /// D20System&#8596;Loot cycle <c>ComponentRegistry</c>'s cycle detector correctly rejects.
+        /// Same reasoning, same undeclared-with-comment shape, as <c>GridMapRom.Requires</c>'s
+        /// existing entry for ChallengeSolved. See ticket 0071's general ruling.</summary>
         public IReadOnlyList<Capability> Requires => new[]
         {
             new Capability("PlayerLocation", typeof(LunaFlow.Cartridge.IPlayerLocation)),

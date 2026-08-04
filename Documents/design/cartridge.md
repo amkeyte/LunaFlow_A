@@ -75,6 +75,28 @@ A Cartridge has exactly two parts:
 > Nothing outside a Cartridge may name an implementation type. Consumers reference the contract
 > surface only.
 
+**Corollary, stated explicitly after it was nearly missed once (ticket
+[0071](../ClaudeWiki/Processes/Handoffs/0071-peer-rom-bidirectional-capability-cycle-detection-gap.md)):
+a shared data type does not earn a place in the contract surface just by being shared.** The contract
+surface holds *interfaces* — the pinout, not the chip. A bare concrete record placed directly in
+`LunaFlow.Cartridge` because two ROMs both need to see it is an implementation type wearing the
+contract surface's address; it skips the one thing that makes the surface governed (an interface
+every implementer commits to, reviewable and stable independent of any one ROM's internals) while
+looking, from the assembly graph, exactly like it belongs there. Anything a peer needs to
+observe — a fact, a piece of state, an action — gets an interface here, same as the five contracts
+in the worked example below; the owning ROM's concrete type implements it and is never named outside
+the Cartridge. This is the mechanism, not a style preference: it's what keeps "which types can a mod
+author reach past review" a question the project structure answers, rather than one that depends on
+every future contributor re-deriving the discipline from first principles under deadline pressure.
+
+**Enforced, not just stated.** A convention nobody checks is a convention the next deadline erodes —
+which is exactly how `EquippedWeapon` shipped. [`cross-rom-capability-spec.md`
+§5.4](../Specs/cross-rom-capability-spec.md#54-contract-surface-shape-check--interfaces-only) specifies
+a bootstrap check that enumerates every publicly-exported type in a Cartridge's contract-surface
+assembly and refuses to start if any of them isn't an interface — the same "hard fail at bootstrap,
+never a silent degradation" bar §5's compatibility probe already holds, applied to this invariant
+instead.
+
 The contract surface is used **internally as well as externally**. A Cartridge's own ROMs talk to
 each other through it — that is not a second mechanism bolted on, it is the same surface serving
 both roles. This is what makes peer ROMs inside one Cartridge able to correlate facts without

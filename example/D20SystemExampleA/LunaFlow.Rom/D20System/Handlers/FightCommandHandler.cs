@@ -58,7 +58,7 @@ namespace LunaFlow.Rom.D20System
             // Equipped-weapon branch (items 2/4): substitute attack bonus/damage die/bonus from the
             // equipped weapon's profile if one is active, else fall back to the default sword's own
             // stats on PlayerCharacter.Stats — Defense is never affected by which weapon is equipped.
-            var equipped = rules.Query<EquippedWeapon>().FirstOrDefault();
+            var equipped = rules.Query<IEquippedWeapon>().FirstOrDefault();
             var attackBonus = pc.AttackBonus;
             var damageDie = pc.DamageDie;
             var damageBonus = pc.DamageBonus;

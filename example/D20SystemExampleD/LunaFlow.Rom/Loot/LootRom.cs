@@ -5,9 +5,10 @@ using LunaFlow.Rules;
 namespace LunaFlow.Rom.Loot
 {
     /// <summary>
-    /// The Loot ROM: tracks item awards from defeated monsters and the <c>inventory</c> command.
-    /// Owns facts: LootAssignment, ItemAwarded, LootPickupText.
-    /// Provides: none — first pure-sink ROM shape.
+    /// The Loot ROM: tracks item awards from defeated monsters, the <c>inventory</c> command, and
+    /// (per phase-2-10-content-coverage-spec.md) the <c>equip</c> command.
+    /// Owns facts: LootAssignment, ItemAwarded, LootPickupText, EquippedWeapon.
+    /// Provides: EquippedWeapon capability.
     /// Requires: ChallengeSolved capability (from D20System).
     /// </summary>
     public sealed class LootRom : IRom
@@ -26,8 +27,12 @@ namespace LunaFlow.Rom.Loot
         /// <summary>Credits for the Loot ROM.</summary>
         public string Credits => "Monster loot and inventory tracking";
 
-        /// <summary>Capabilities this ROM provides: none. First pure-sink shape.</summary>
-        public IReadOnlyList<Capability> Provides => Array.Empty<Capability>();
+        /// <summary>Capabilities this ROM provides: EquippedWeapon — matched by D20System's <c>fight</c>
+        /// handler via <see cref="LunaFlow.Cartridge.IEquippedWeapon"/>, per ticket 0071's ruling.</summary>
+        public IReadOnlyList<Capability> Provides => new[]
+        {
+            Capability.Provided<LunaFlow.Cartridge.IEquippedWeapon, EquippedWeapon>("EquippedWeapon"),
+        };
 
         /// <summary>Capabilities this ROM requires: ChallengeSolved (from D20System).</summary>
         public IReadOnlyList<Capability> Requires => new[]

@@ -1,6 +1,6 @@
 # 0071 — Peer-ROM bidirectional Capability dependencies trip ComponentRegistry's cycle detector
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Baraka (Impl Dev)
 **Opened:** 2026-08-03
 **For:** Amara (Architect)
@@ -123,11 +123,46 @@ Both asks, ruled:
    untouched — it's doing exactly what it's for; the gap was in what `Requires` was being asked to
    mean, not in the detector.
 
-Scope note: this ruling doesn't reach `EquippedWeapon` itself — per your own closing paragraph, that's
-yours to bring in line with the general rule now that it's written down. Sounds like your current
-shape (plain record, no interface, no `Capability` declaration) already matches it, since Loot→D20System
-would be the construction-order-real direction if either is, not the reverse.
+**Addendum, same day, after further discussion with Arryn:** ruling on `EquippedWeapon` directly
+rather than leaving it to your judgment — the shape you shipped (bare record, no interface, straight
+in `LunaFlow.Cartridge`) doesn't hold, and it's worth being explicit about why now rather than letting
+it stand as precedent. `cartridge.md`'s Structure section already says the contract surface is
+interfaces only — "the pinout, not the chip" — and a concrete record placed there because two ROMs
+both need to see it is an implementation type occupying contract-surface real estate without the one
+thing that makes the surface governed: an interface every implementer commits to. Nothing distinguishes
+it, from the assembly graph, from a type that *should* have gone through that review. Added an explicit
+corollary to `cartridge.md`'s Structure section closing this off in general, not just for this case.
+
+Concretely, bring `EquippedWeapon` in line with the other five contracts:
+
+- Add `IEquippedWeapon` to `LunaFlow.Cartridge`, shaped as an observation (fact-shaped, matched via
+  `Match<T>`/`Query<T>()`), same family as `IChallengeSolved`/`ICombatStatus` — not service-shaped
+  like `IPlayerMovement`, since nothing needs Loot to *perform* an action on D20System's behalf here.
+- Loot's concrete `EquippedWeapon` record implements it; `Loot.Provides` gains a `Capability` entry
+  for it, same pattern as every other provided contract.
+- D20System's `fight` handler matches/queries `IEquippedWeapon` directly. Per this ticket's general
+  ruling, **do not** add `EquippedWeapon` to `D20System.Requires`: `Loot.Requires` already lists
+  `ChallengeSolved` from D20System, so declaring the reverse direction reproduces the exact two-node
+  cycle this ticket exists to resolve. Leave D20System's side undeclared with a comment, mirroring
+  `GridMapRom.Requires`'s existing one.
+
+This is a ruling, not a suggestion to revisit — reopen a new ticket if building it surfaces something
+this doesn't cover, rather than deciding solo again.
 
 ### Resolution
 
-<Filled in by the opener when closing.>
+**Resolved 2026-08-03 (Baraka, opener).** Both asks ruled and the addendum applied — see ticket
+[0072](0072-build-cartridge-contract-surface-shape-check.md) for the concrete build (the §5.4 shape
+check, and `EquippedWeapon`'s rework into `IEquippedWeapon`/Loot's own concrete type/`Loot.Provides`),
+verified there against both the positive and negative case on the real built assembly, not just
+asserted. `cartridge.md`'s corollary and `cross-rom-capability-spec.md` §5.4 are live on disk and
+match what got built.
+
+**Not fully closed on the doc side.** The ruling's point 1 says the drift is corrected in
+`grid-rom-d20-split-spec.md`'s capability table, and the general rule is written into
+`engine-core.md`'s Cross-ROM correlation section — checked both directly, neither has actually
+changed. Flagged back in 0072's Response rather than silently left; not something I can fix myself
+(design docs, not `src/`). Resolving this ticket on the strength of what *did* land (the ruling itself,
+plus the part of it that's actually built and verified) — the two stale docs are a loose end for
+Amara/Kofi to close, not a reason to hold 0071 open when the actual design question is answered and
+acted on.

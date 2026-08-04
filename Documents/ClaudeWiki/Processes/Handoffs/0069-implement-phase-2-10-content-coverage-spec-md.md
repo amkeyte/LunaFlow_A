@@ -90,20 +90,18 @@ and `LuaOneD20WorldModule`'s marshaling were both updated so they keep passing t
 (Kind defaults to Skill when a script omits it) — a regression neither ticket asked for by name, but
 skipping it would have silently broken Phase 2.8's second-World-Module proof.
 
-**Item 2/4 (equip, Backup Piece) — built; the cross-ROM shape needed for it is not settled, see
-[0071](0071-peer-rom-bidirectional-capability-cycle-detection-gap.md).** `EquippedWeapon(string
-ItemId)` currently lives as a plain concrete record directly in `LunaFlow.Cartridge`, undeclared on
-both D20System's and Loot's `Capability` lists — both projects already reference the Cartridge
-assembly, so this compiles and runs, but it's an undeclared cross-ROM dependency, the same shape
-`GridMapRom.Requires` already carries for `IChallengeSolved` (see 0071 for the full precedent). Not
-presenting this as settled; 0071 is the actual design question and this ticket's shape follows its
-ruling. Backup Piece's profile (1d6, Dex-based, +0 — item id `"pistol"`, matching its existing Loot
-content) lives as a small fixed dictionary on `D20SystemRom`, per the spec's own call that per-item
-combat math is System-tier data, not World-Module-authored — that part's unaffected by 0071 either
-way. Both open questions resolved per the spec's suggested defaults: Scrapper carries
-`InflictsPoison`; `equip sword` re-selects the default (retracts `EquippedWeapon` rather than
-inserting a sentinel) — chose the literal string `"sword"` since nothing in the shipped content names
-the default weapon otherwise.
+**Item 2/4 (equip, Backup Piece) — built. Cross-ROM shape settled and reworked, see
+[0071](0071-peer-rom-bidirectional-capability-cycle-detection-gap.md)/[0072](0072-build-cartridge-contract-surface-shape-check.md).**
+`EquippedWeapon` now lives as a concrete record in Loot's own `Facts.cs`, implementing a new
+`IEquippedWeapon` contract in `LunaFlow.Cartridge`; `Loot.Provides` declares it, D20System's `fight`
+matches the interface and deliberately leaves it undeclared on `D20SystemRom.Requires` (declaring it
+would cycle against Loot's existing `Requires: [ChallengeSolved]` — see 0071's ruling). Behavior is
+unchanged from the original build; only the plumbing moved. Backup Piece's profile (1d6, Dex-based,
++0 — item id `"pistol"`) still lives as a small fixed dictionary on `D20SystemRom`, per the spec's own
+call that per-item combat math is System-tier data, not World-Module-authored. Both open questions
+resolved per the spec's suggested defaults: Scrapper carries `InflictsPoison`; `equip sword`
+re-selects the default (retracts `EquippedWeapon` rather than inserting a sentinel) — chose the
+literal string `"sword"` since nothing in the shipped content names the default weapon otherwise.
 
 **Item 5 (engineered soft-lock) — built, and it surfaced a real finding rather than a clean pass.**
 The spec's own acceptance criterion asks for a sequence that fails every one of the 8 win lines,

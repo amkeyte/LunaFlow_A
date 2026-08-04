@@ -117,6 +117,14 @@ static (object GridMap, object D20System, object Loot, OneD20SessionAssignment A
         registry.Validate();
         Console.WriteLine("Component registry validated successfully.");
 
+        // §5.4 contract-surface shape check: every publicly-exported type in the Cartridge's contract
+        // surface must be an interface (cartridge.md's Structure section states the rule; this is what
+        // enforces it, after a bare concrete type shipped there once and was only caught in review —
+        // ticket 0071/0072). typeof(IPlayerLocation).Assembly is the same "reference an already-known
+        // Cartridge type" pattern used everywhere else in this file, not a discovery mechanism.
+        currentModule = "Cartridge";
+        ContractSurfaceValidator.ValidateInterfacesOnly(typeof(LunaFlow.Cartridge.IPlayerLocation).Assembly);
+
         // §5.3 member-resolution probe: force JIT of every Provides entry's contract implementation,
         // without invoking anything. Catches a member-signature change in the installed contract
         // assembly that §5.2's compile-time constraint (checked only against this ROM's own build)
