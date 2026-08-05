@@ -50,6 +50,14 @@ return {
     concentration = { skill = "Concentration", skillAbility = "Con", dc = 12,
                        successKey = "concentration-success", failureKey = "concentration-failure",
                        promptKey = "concentration-prompt" },
+    -- Save-kind additions (phase-2-10-content-coverage-spec.md). No skill/skillAbility;
+    -- kind/saveType instead.
+    wire = { kind = "save", saveType = "Reflex", dc = 10,
+             successKey = "wire-success", failureKey = "wire-failure",
+             promptKey = "wire-prompt" },
+    fumes = { kind = "save", saveType = "Fortitude", dc = 12,
+              successKey = "fumes-success", failureKey = "fumes-failure",
+              promptKey = "fumes-prompt" },
   },
 
   -- The roster of 5 monsters. Outer table key IS the monster's Id -- not repeated as a
@@ -64,7 +72,8 @@ return {
     enforcer = { name = "The Enforcer", descriptionKey = "monster-enforcer-desc",
       stats = { defense = 15, attackBonus = 2, damageDie = "1d8", damageBonus = 2, maxHp = 14 } },
     scrapper = { name = "The Scrapper", descriptionKey = "monster-scrapper-desc",
-      stats = { defense = 14, attackBonus = 2, damageDie = "1d4", damageBonus = 1, maxHp = 6 } },
+      stats = { defense = 14, attackBonus = 2, damageDie = "1d4", damageBonus = 1, maxHp = 6 },
+      inflictsPoison = true },
   },
 
   -- The static, deterministic monster->item drop table (1:1).
@@ -126,6 +135,14 @@ return {
     ["spot-failure"] = "Nothing catches your eye yet. Look again.",
     ["concentration-success"] = "You block out the distraction and get it done.",
     ["concentration-failure"] = "Your focus slips at the wrong moment. Try again.",
+
+    -- Save-check prompts/success/failure (phase-2-10-content-coverage-spec.md).
+    ["wire-prompt"] = "A live wire's come loose and it's whipping around close enough to matter (dodge/brace).",
+    ["wire-success"] = "You throw yourself clear just in time.",
+    ["wire-failure"] = "It catches you — a jolt, nothing worse. You shake it off.",
+    ["fumes-prompt"] = "The air's thick with dust and something chemical — it's getting hard to breathe (steady yourself).",
+    ["fumes-success"] = "You get clear of the worst of it, coughing but steady.",
+    ["fumes-failure"] = "It hits you harder than expected. You need a second to recover.",
 
     -- Monster arrival descriptions (monster-indexed -- replaces the single fixed monster-desc key).
     ["monster-duelist-desc"] = "A seedy-looking man steps out of the shadows, rapier already in hand. He doesn't look like he wants to talk.",

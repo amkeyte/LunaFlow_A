@@ -73,6 +73,7 @@ static (object GridMap, object D20System, object Loot, OneD20SessionAssignment A
 {
     string? currentModule = null;
     Type? currentContract = null;
+    var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
     try
     {
@@ -117,6 +118,11 @@ static (object GridMap, object D20System, object Loot, OneD20SessionAssignment A
         registry.Validate();
         Console.WriteLine("Component registry validated successfully.");
 
+        var totalProvides = gridMap.Provides.Count + d20System.Provides.Count + loot.Provides.Count;
+        var totalRequires = gridMap.Requires.Count + d20System.Requires.Count + loot.Requires.Count;
+        Console.WriteLine($"ROMs registered: 3 (GridMap, D20System, Loot) + Rulebook: OneD20");
+        Console.WriteLine($"Capabilities: {totalProvides} provided, {totalRequires} required");
+
         // §5.4 contract-surface shape check: every publicly-exported type in the Cartridge's contract
         // surface must be an interface (cartridge.md's Structure section states the rule; this is what
         // enforces it, after a bare concrete type shipped there once and was only caught in review —
@@ -141,6 +147,8 @@ static (object GridMap, object D20System, object Loot, OneD20SessionAssignment A
             }
         }
 
+        stopwatch.Stop();
+        Console.WriteLine($"Bootstrap completed in {stopwatch.ElapsedMilliseconds}ms");
         return (gridMap, d20System, loot, assignment, worldModule);
     }
     catch (Exception ex) when (ex is TypeLoadException or MissingMethodException or MissingFieldException
@@ -235,6 +243,8 @@ static (IHasDependencies Component, IReadOnlyList<string> DependsOnRoms) Constru
 // (construction/registration/validation/probing), not a gap in it.
 static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, OneD20SessionAssignment assignment, IOneD20WorldModule worldModule)
 {
+    var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
     // RoslynRuleCompiler only sees already-loaded, file-backed assemblies (see its own doc comment)
     // — since 1.d20 has no hand-written ARule anywhere in this process to pull these in as a side
     // effect the way Nine Rooms' rules did, force them before the first RuleExport.Compile call. Same
@@ -261,15 +271,33 @@ static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, OneD
     var movement = new GridMovementService();
     var flavorText = worldModule.FlavorText;
 
+    // Compiled once here (rather than inline in .FromAssembly(...)) so each group's rule count is
+    // reflectable before being handed to the engine — startup-metrics only, no change to what gets
+    // loaded or in what order.
+    var gridMapRules = RuleExport.Compile(typeof(GridMapRuleGroup));
+    var d20SystemRules = RuleExport.Compile(typeof(D20SystemRuleGroup));
+    var lootRules = RuleExport.Compile(typeof(LootRuleGroup));
+
+    static int CountRules(System.Reflection.Assembly assembly) =>
+        assembly.GetTypes().Count(t => typeof(NRules.Fluent.Dsl.Rule).IsAssignableFrom(t) && !t.IsAbstract);
+
+    var gridMapRuleCount = CountRules(gridMapRules);
+    var d20SystemRuleCount = CountRules(d20SystemRules);
+    var lootRuleCount = CountRules(lootRules);
+    var totalRuleCount = gridMapRuleCount + d20SystemRuleCount + lootRuleCount;
+
+    Console.WriteLine($"Rules loaded: {totalRuleCount} total (GridMap: {gridMapRuleCount}, D20System: {d20SystemRuleCount}, Loot: {lootRuleCount})");
+    Console.WriteLine($"World Module: {worldModule.GetType().Name} (Rooms: {worldModule.Rooms.Count}, Challenge pool: {worldModule.Challenges.Count}, Monster roster: {worldModule.Monsters.Count})");
+
     var engine = new ConsoleEngine()
         .ConfigureGameEngine(opts =>
         {
             opts.GameName = "My LunaFlow Game";
             opts.EnableRulesEngine = true;
             opts.Rules
-                .FromAssembly(RuleExport.Compile(typeof(GridMapRuleGroup)))
-                .FromAssembly(RuleExport.Compile(typeof(D20SystemRuleGroup)))
-                .FromAssembly(RuleExport.Compile(typeof(LootRuleGroup)))
+                .FromAssembly(gridMapRules)
+                .FromAssembly(d20SystemRules)
+                .FromAssembly(lootRules)
                 .Seed(() => gridMapRoomData)
                 .Seed(() =>
                 {
@@ -327,7 +355,12 @@ static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, OneD
             opts.CommandDispatcher.RegisterHandler("inventory", new InventoryCommandHandler(flavorText), "List your collected items.");
             opts.CommandDispatcher.RegisterHandler("inv", new InventoryCommandHandler(flavorText), "List your collected items.");
             opts.CommandDispatcher.RegisterHandler("equip", new EquipCommandHandler(flavorText), "Equip a held item, or 'equip sword' for your default weapon.");
+
+            Console.WriteLine($"Commands registered: {opts.CommandDispatcher.GetCommandList().Count()}");
         });
+
+    stopwatch.Stop();
+    Console.WriteLine($"Session setup completed in {stopwatch.ElapsedMilliseconds}ms");
 
     engine.Run();
 }

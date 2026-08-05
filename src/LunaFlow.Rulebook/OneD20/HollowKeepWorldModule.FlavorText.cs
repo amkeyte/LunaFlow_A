@@ -54,6 +54,14 @@ namespace LunaFlow.Rulebook.OneD20
             ["hk-concentration-success"] = "You block out the distraction and get it done.",
             ["hk-concentration-failure"] = "Your focus slips at the wrong moment. Try again.",
 
+            // Save-check prompts/success/failure (phase-2-10-content-coverage-spec.md).
+            ["hk-trap-prompt"] = "A section of floor gives a fraction of an inch under your boot — something's rigged to swing (dodge/brace).",
+            ["hk-trap-success"] = "You throw yourself clear as the counterweight swings past.",
+            ["hk-trap-failure"] = "It catches you — a glancing hit, nothing worse. You shake it off.",
+            ["hk-miasma-prompt"] = "A sealed chamber's breath rolls out to meet you — foul, stagnant, and thick (steady yourself).",
+            ["hk-miasma-success"] = "You push through the worst of it, eyes watering but steady.",
+            ["hk-miasma-failure"] = "It hits you harder than expected. You need a second to recover.",
+
             // Monster arrival descriptions.
             ["hk-monster-outrider-desc"] = "A rider's cloak, a rider's boots, and a blade already drawn — he steps out from behind a fallen column like he's been waiting.",
             ["hk-monster-brute-desc"] = "A thick-necked man cracks his knuckles and squares up, grinning like this is the part of his day he enjoys.",

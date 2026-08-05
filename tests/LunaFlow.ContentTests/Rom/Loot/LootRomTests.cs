@@ -4,10 +4,10 @@ using LunaFlow.Rom.Loot;
 namespace LunaFlow.ContentTests.Rom.Loot
 {
     /// <summary>
-    /// <see cref="LootRom"/>'s own shape: the first pure-sink ROM (empty <c>Provides</c>), its one
-    /// <c>Requires</c> entry, and the assembly-boundary guarantee (no reference to GridMap's or
-    /// D20System's assembly — only the Cartridge contract surface) that ticket 0052's Done-When
-    /// calls for.
+    /// <see cref="LootRom"/>'s own shape: its <c>Provides</c> entry (<c>EquippedWeapon</c>, added by
+    /// ticket 0071's ruling), its one <c>Requires</c> entry, and the assembly-boundary guarantee (no
+    /// reference to GridMap's or D20System's assembly — only the Cartridge contract surface) that
+    /// ticket 0052's Done-When calls for.
     /// </summary>
     [TestClass]
     [TestCategory("Rom_OneD20")]
@@ -22,9 +22,13 @@ namespace LunaFlow.ContentTests.Rom.Loot
             }));
 
         [TestMethod]
-        public void Provides_IsEmpty_FirstPureSinkRomShape()
+        public void Provides_NamesEquippedWeapon_PairedWithIEquippedWeaponContract()
         {
-            Assert.AreEqual(0, NewLootRom().Provides.Count);
+            var provides = NewLootRom().Provides;
+            Assert.AreEqual(1, provides.Count);
+            Assert.AreEqual("EquippedWeapon", provides[0].Name);
+            Assert.AreEqual(typeof(IEquippedWeapon), provides[0].ContractType);
+            Assert.AreEqual(typeof(EquippedWeapon), provides[0].ProviderType);
         }
 
         [TestMethod]

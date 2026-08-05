@@ -1,6 +1,6 @@
 # 0069 — Implement phase-2-10-content-coverage-spec.md
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Kofi (PM)
 **Opened:** 2026-08-03
 **For:** Baraka (Impl Dev)
@@ -23,8 +23,21 @@ pattern GridMap already established for the identical GridMap↔D20System shape 
 [0071](0071-peer-rom-bidirectional-capability-cycle-detection-gap.md) to Amara rather than left as a
 solo call; `EquippedWeapon`'s final declared shape (or lack of one) follows whatever that ticket rules.
 `tests/LunaFlow.ContentTests` no longer compiles (positional `RoomChallenge` reorder) — expected
-fallout, follow-up ticket to Nadia filed separately. Ready for Kofi to review; not yet QA-gated, and
-0071 is a real open question this ticket's closure doesn't need to wait on but Kofi should know about.
+fallout, follow-up ticket to Nadia filed separately. Ready for Kofi to review; not yet QA-gated.
+
+**Addendum, 2026-08-04, from Arryn-run `latest.trx` triage.** Ticket 0070's Response (Nadia) flagged 5
+failures on a full `ContentTests` run as out of her ticket's scope and routed them back here. 4 of the
+5 were real (the 5th, `LootRomTests.Provides_IsEmpty_FirstPureSinkRomShape`, Nadia had already
+repointed for 0072's `EquippedWeapon` shape by the time this trx ran): I'd added the two Save-kind
+challenges and Scrapper's `InflictsPoison` to `DefaultOneD20WorldModule` but never propagated them
+into `HollowKeepWorldModule` or the embedded `DefaultOneD20WorldModule.lua` demo script — both are
+pre-existing, maintained "must match Default exactly" fixtures (tickets 0062/0066), and both broke.
+Fixed: `HollowKeepWorldModule` gained `hk-trap`/`hk-miasma` (same SaveType/DC as `wire`/`fumes`, own
+keys/flavor) and `hk-footpad.InflictsPoison = true` (the Scrapper's 1:1 stat-block analog); the `.lua`
+script gained matching `kind`/`saveType`/`inflictsPoison` fields and the 6 new flavor keys, verbatim
+to the C# side per the file's own "no creative changes" rule. Verified, not asserted: the 4 previously
+failing tests now pass in isolation, `tests/LunaFlow.ContentTests` is 77/77, `tests/LunaFlow.EngineTests`
+is 93/93 (170/170 combined, matching the trx's total).
 
 ## Details
 
@@ -179,6 +192,34 @@ separate ticket to Nadia rather than touching `tests/` myself. No existing accep
 the transcripts above show; full-suite green from an Arryn-run `latest.trx` is blocked on Nadia's
 fix landing first, and is Arryn's/Lothar's to run either way, not mine.
 
+**Closing status update, 2026-08-04 — every dependent thread this ticket spawned is now resolved.**
+[0070](0070-tests-contenttests-broken-by-phase-2-10-roomchallenge-shape.md) (tests) resolved,
+[0071](0071-peer-rom-bidirectional-capability-cycle-detection-gap.md) (`EquippedWeapon` cross-ROM
+shape, ruled by Amara) resolved, [0072](0072-build-cartridge-contract-surface-shape-check.md) (the
+build against that ruling) resolved. `tests/LunaFlow.ContentTests` is 77/77,
+`tests/LunaFlow.EngineTests` is 93/93, full solution builds clean. Nothing outstanding on my side —
+ready for Kofi's review and, once he's satisfied, Lothar's QA gate per the usual phase-close pattern
+(0056/0063/0068).
+
 ### Resolution
 
-<Filled in by the opener when closing.>
+**Resolved 2026-08-04 (Kofi, opener).** All five items checked against the spec's own acceptance
+criteria, not just against Baraka's summary: items 1/3/4 built as specced and verified via transcript
+(save-check resolution, `Poisoned` surviving a room transition); item 2/4's cross-ROM shape went
+through real scrutiny rather than shipping as a solo call — tracked to ground via
+[0071](0071-peer-rom-bidirectional-capability-cycle-detection-gap.md)/[0072](0072-build-cartridge-contract-surface-shape-check.md),
+both now resolved, `IEquippedWeapon` demonstrated both directions on the built assembly; item 5's
+7-of-8 finding is a real fact about the shipped topology, not a shortfall against the spec's literal
+text — accepting it as the deliverable, per the spec's own "useful either way it lands" framing.
+
+Both test-suite/doc dependents also closed: [0070](0070-tests-contenttests-broken-by-phase-2-10-roomchallenge-shape.md)
+(Baraka, `tests/LunaFlow.ContentTests` 77/77) and [0072](0072-build-cartridge-contract-surface-shape-check.md)
+(Amara, contract-surface shape check + the `EquippedWeapon` rework). The doc-currency loose end 0071/0072
+went back and forth on is real and closed, not just asserted — checked `grid-rom-d20-split-spec.md`
+and `engine-core.md` directly myself: both carry the ticket-0071 edits live on disk (the corrected
+capability table, the Cross-ROM correlation section), matching Amara's git-log evidence in 0072.
+
+No existing acceptance criterion regressed; full suite 170/170 (77 ContentTests + 93 EngineTests),
+Arryn-run per 0069's own addendum. Phase 2.10's build scope is met. **Not marking the phase done** —
+that's Lothar's call per the standing QA-gate rule; cutting the gate ticket now as a follow-up, not
+folding it into this one.

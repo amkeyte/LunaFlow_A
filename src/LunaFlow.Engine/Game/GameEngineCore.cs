@@ -61,10 +61,23 @@ namespace LunaFlow.Engine.Game
                 TurnFinished = false;
                 _turnAdvance.Reset();
 
+                // Timed separately from RuleExport.Compile's Roslyn codegen pass (MyLunaFlowServer's
+                // own "Session setup" metric, upstream of this call): ApplyTo's LoadRulesFromAssembly
+                // is what actually invokes NRules' RuleRepository.Compile()/CreateSession() — the real
+                // Rete network build — not the C#-source-to-assembly compile that already happened.
                 Rules = new RuleEngine();
+                var reteStopwatch = System.Diagnostics.Stopwatch.StartNew();
                 Options.Rules.ApplyTo(Rules);
+                reteStopwatch.Stop();
+                Post($"Rete network compiled in {reteStopwatch.ElapsedMilliseconds}ms (NRules RuleRepository.Compile/CreateSession).");
+
                 if (Rules.IsInitialized)
+                {
+                    var fireStopwatch = System.Diagnostics.Stopwatch.StartNew();
                     Rules.Fire(); // "initial settle": rules already satisfied by seeded facts get a chance to fire before turn one
+                    fireStopwatch.Stop();
+                    Post($"Initial settle fired in {fireStopwatch.ElapsedMilliseconds}ms.");
+                }
                 // BlockingCollection can't un-complete itself — a prior Stop() leaves it permanently
                 // closed to additions, so a restart needs a fresh one.
                 if (_commands.IsAddingCompleted)

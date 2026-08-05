@@ -60,8 +60,8 @@ namespace LunaFlow.ContentTests.Rom.D20System
             WorldModule.FlavorText[WorldModule.Monsters[TestMonsterAssignment[roomId]].DescriptionKey];
 
         private static RoomChallenge ToRoomChallenge(int roomId, OneD20ChallengeTemplate challenge) =>
-            new(roomId, RoomChallengeType.SkillCheck, challenge.Skill, challenge.SkillAbility, challenge.DC,
-                challenge.SuccessKey, challenge.FailureKey, challenge.PromptKey, MonsterId: null);
+            new(roomId, RoomChallengeType.SkillCheck, CheckKind.Skill, challenge.Skill, challenge.SkillAbility, challenge.DC,
+                null, challenge.SuccessKey, challenge.FailureKey, challenge.PromptKey, MonsterId: null);
 
         [ClassInitialize]
         public static void ClassSetup(TestContext context)
@@ -109,7 +109,7 @@ namespace LunaFlow.ContentTests.Rom.D20System
 
             var d20Challenges = WorldModule.Rooms.Values
                 .Select(r => r.ChallengeType == OneD20ChallengeType.Fight
-                    ? new RoomChallenge(r.Id, RoomChallengeType.Fight, null, null, null, null, null, null,
+                    ? new RoomChallenge(r.Id, RoomChallengeType.Fight, null, null, null, null, null, null, null, null,
                         MonsterId: TestMonsterAssignment[r.Id])
                     : ToRoomChallenge(r.Id, WorldModule.Challenges[TestChallengeAssignment[r.Id]]))
                 .ToDictionary(c => c.Id);

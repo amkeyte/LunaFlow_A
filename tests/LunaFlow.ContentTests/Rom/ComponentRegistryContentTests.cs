@@ -54,7 +54,7 @@ namespace LunaFlow.ContentTests.Rom
             var assignment = new OneD20SessionAssembler(WorldModule, new Random(1)).Assemble();
             var challenges = WorldModule.Rooms.Values
                 .Select(r => r.ChallengeType == OneD20ChallengeType.Fight
-                    ? new RoomChallenge(r.Id, RoomChallengeType.Fight, null, null, null, null, null, null,
+                    ? new RoomChallenge(r.Id, RoomChallengeType.Fight, null, null, null, null, null, null, null, null,
                         MonsterId: assignment.MonsterIdByRoom[r.Id])
                     : ToRoomChallenge(r.Id, WorldModule.Challenges[assignment.ChallengeKeyByRoom[r.Id]]))
                 .ToDictionary(c => c.Id);
@@ -69,8 +69,8 @@ namespace LunaFlow.ContentTests.Rom
         }
 
         private static RoomChallenge ToRoomChallenge(int roomId, OneD20ChallengeTemplate challenge) =>
-            new(roomId, RoomChallengeType.SkillCheck, challenge.Skill, challenge.SkillAbility, challenge.DC,
-                challenge.SuccessKey, challenge.FailureKey, challenge.PromptKey, MonsterId: null);
+            new(roomId, RoomChallengeType.SkillCheck, CheckKind.Skill, challenge.Skill, challenge.SkillAbility, challenge.DC,
+                null, challenge.SuccessKey, challenge.FailureKey, challenge.PromptKey, MonsterId: null);
 
         private static LootRom NewLoot() => new(new MonsterLootTable(WorldModule.ItemIdByMonsterId));
 

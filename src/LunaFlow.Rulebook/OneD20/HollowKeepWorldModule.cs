@@ -45,6 +45,10 @@ namespace LunaFlow.Rulebook.OneD20
                 ["hk-balance"] = new("hk-balance", "Balance", "Dex", 11, "hk-balance-success", "hk-balance-failure", "hk-balance-prompt", Kind: OneD20CheckKind.Skill),
                 ["hk-spot"] = new("hk-spot", "Spot", "Wis", 13, "hk-spot-success", "hk-spot-failure", "hk-spot-prompt", Kind: OneD20CheckKind.Skill),
                 ["hk-concentration"] = new("hk-concentration", "Concentration", "Con", 12, "hk-concentration-success", "hk-concentration-failure", "hk-concentration-prompt", Kind: OneD20CheckKind.Skill),
+                // Save-kind additions (phase-2-10-content-coverage-spec.md), reskinned — same
+                // SaveType/DC as DefaultOneD20WorldModule's wire/fumes, own keys and flavor.
+                ["hk-trap"] = new("hk-trap", null, null, 10, "hk-trap-success", "hk-trap-failure", "hk-trap-prompt", Kind: OneD20CheckKind.Save, SaveType: "Reflex"),
+                ["hk-miasma"] = new("hk-miasma", null, null, 12, "hk-miasma-success", "hk-miasma-failure", "hk-miasma-prompt", Kind: OneD20CheckKind.Save, SaveType: "Fortitude"),
             };
 
         /// <summary>The roster of 5 monsters. Stat blocks are unchanged, id-for-id, from
@@ -61,7 +65,8 @@ namespace LunaFlow.Rulebook.OneD20
                 ["hk-ironclad"] = new("hk-ironclad", "The Ironclad Sergeant", "hk-monster-ironclad-desc",
                     new OneD20CombatantStats(Defense: 15, AttackBonus: 2, DamageDie: "1d8", DamageBonus: 2, MaxHp: 14)),
                 ["hk-footpad"] = new("hk-footpad", "The Footpad", "hk-monster-footpad-desc",
-                    new OneD20CombatantStats(Defense: 14, AttackBonus: 2, DamageDie: "1d4", DamageBonus: 1, MaxHp: 6)),
+                    new OneD20CombatantStats(Defense: 14, AttackBonus: 2, DamageDie: "1d4", DamageBonus: 1, MaxHp: 6),
+                    InflictsPoison: true),
             };
 
         /// <summary>The static, deterministic monster→item drop table (1:1).</summary>
