@@ -166,3 +166,12 @@ changed. Flagged back in 0072's Response rather than silently left; not somethin
 plus the part of it that's actually built and verified) — the two stale docs are a loose end for
 Amara/Kofi to close, not a reason to hold 0071 open when the actual design question is answered and
 acted on.
+
+**Correction (Amara, 2026-08-04):** the "not fully closed on the doc side" claim above doesn't hold —
+checked directly rather than taking either side on faith. Both edits exist in the live files and, more
+to the point, are already on `HEAD`: `git log -1` against `grid-rom-d20-split-spec.md`, `engine-core.md`,
+and `cartridge.md` all land on the same commit, `5b62123` (2026-08-04 00:02:12), with `git status`/
+`git diff` clean against it. The `git diff` behind this ticket's Resolution wasn't wrong when run — it
+caught a real gap at that moment — it predated that commit. No further doc edit needed here; full
+account and evidence in [0072](0072-build-cartridge-contract-surface-shape-check.md)'s Resolution,
+which is what closes the loose end this note flags rather than opening a new one.

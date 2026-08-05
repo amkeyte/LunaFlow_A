@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Playlist Version="2.0">
+  <!-- Rom/Loot: ROM shape (5) + rule-fixture AwardItem (4) + inventory/inv handler (4) = 13 tests -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Provides_NamesEquippedWeapon_PairedWithIEquippedWeaponContract" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Requires_NamesChallengeSolved_PairedWithIChallengeSolvedContract" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.LootTable_ReturnsTheConstructedTable" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Name_IsLoot" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Assembly_ReferencesNeitherGridMapNorD20SystemAssembly" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.FightRoomSolved_WithMatchingAssignment_InsertsItemAwarded_AnnouncesPickupText" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.SkillCheckRoomSolved_WithNoLootAssignment_NeverAwardsAnything" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.AlreadyAwardedRoom_NeverAwardsTwice" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.MultipleFightRoomsSolved_EachAwardsItsOwnItem_OneGenericRuleNotAPerRoomFamily" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.InventoryCommandHandlerTests.Inventory_NoItemsAwarded_AnnouncesEmptyMessage" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.InventoryCommandHandlerTests.Inventory_ItemsAwarded_AnnouncesHeaderThenEachItemByName" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.InventoryCommandHandlerTests.Inv_IsAnAliasForInventory_SameHandlerSameOutput" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.InventoryCommandHandlerTests.Inventory_WithNoGridMapOrD20SystemRulesLoaded_StillWorks_ReadsOnlyItsOwnFacts" />
+</Playlist>

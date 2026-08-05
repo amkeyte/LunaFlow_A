@@ -47,7 +47,14 @@ stated and justified, not left for Baraka to guess.
 - Skill-check-room loot — only defeating a monster awards an item.
 - Any change to GridMap. Its facts, content, and commands are untouched by this entire spec.
 - Multiple simultaneous Rulebooks — all new content assembles into the one active Rulebook.
-- Any new Cartridge-tier contract for `LootRom`'s own capabilities — it provides none.
+- Any new Cartridge-tier contract for `LootRom`'s own capabilities — it provides none **as of this
+  spec**. **Note added per [ticket 0075](../ClaudeWiki/Processes/Handoffs/0075-phase-2-10-spec-currency-cleanup.md),
+  2026-08-04:** Phase 2.10 later gives Loot a real provided capability (`IEquippedWeapon`, per
+  [ticket 0071](../ClaudeWiki/Processes/Handoffs/0071-peer-rom-bidirectional-capability-cycle-detection-gap.md)) —
+  this bullet accurately scopes what *this* spec shipped and isn't being rewritten to describe a
+  later phase's addition; see [`phase-2-10-content-coverage-spec.md`](phase-2-10-content-coverage-spec.md)
+  for the current shape. The acceptance-criteria line below, by contrast, states `LootRom`'s
+  `Provides` as a present-tense claim about the whole system and is corrected to match.
 
 ## Fact / marker vocabulary
 
@@ -273,8 +280,15 @@ inventory listing text, and the rekeyed skill-check prompts/outcomes) lives in t
 
 ## Acceptance criteria
 
-- [ ] `LootRom : IRom` is registered, `Requires: [ChallengeSolved]`, `Provides: []`;
+- [ ] `LootRom : IRom` is registered, `Requires: [ChallengeSolved]`;
       `ComponentRegistry.Validate()` passes with three ROMs registered against `LunaFlow.Cartridge`.
+      **`Provides: []` as shipped for *this* spec — corrected per [ticket 0075](../ClaudeWiki/Processes/Handoffs/0075-phase-2-10-spec-currency-cleanup.md),
+      2026-08-04:** read literally today this line is stale, since Phase 2.10 legitimately gave Loot
+      a provided capability (`EquippedWeapon`/`IEquippedWeapon`, per [ticket 0071](../ClaudeWiki/Processes/Handoffs/0071-peer-rom-bidirectional-capability-cycle-detection-gap.md)/[0072](../ClaudeWiki/Processes/Handoffs/0072-build-cartridge-contract-surface-shape-check.md)).
+      Nothing about *this* phase's own build regressed — Loot shipped as a pure sink exactly as
+      stated, at the time this spec closed — so the criterion isn't rewritten to a different claim;
+      the current state of `LootRom.Provides` is tracked in
+      [`phase-2-10-content-coverage-spec.md`](phase-2-10-content-coverage-spec.md), not here.
 - [ ] `OneD20RuleBook.DependsOnRoms` names all three: `"GridMap"`, `"D20System"`, `"Loot"`.
 - [ ] `LootRom`'s project has zero reference to `GridMap` or `D20System` — assembly graph, not just
       a passing test, same bar as `grid-rom-d20-split-spec.md`.

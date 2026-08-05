@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Playlist Version="2.0">
+  <!-- Rom/D20System: handler-level (move/look/check/fight/flee, 16 tests) + -->
+  <!-- rule-fixture-level (challenge-prompt guards, win-line firing, 9 tests) = 25 tests -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Move_MatchesNineRoomsAdjacency_ValidAndRejected" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Move_TracksPreviousRoomId_UpdatingOnEachSuccessfulMove" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.EnterSkillCheckRoom_AnnouncesDescriptionOnce_AndPromptOnce_NeverDuplicated" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.SessionStart_AnnouncesRoom5Description_BeforeMonsterDesc" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Fight_LethalPcHit_AnnouncesMonsterDefeatedOnly_SolvesRoom_SkipsCounterattack" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Fight_LethalMonsterHit_AcrossTwoRounds_AnnouncesPcLostOnly_FailsRoom_SessionContinues" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Fight_ThreeRoundTimeout_NeitherReducedToZero_FailsRoomPermanently" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Fight_FreshRound_SeedsBothCombatantsAtMaxHp_NoCarryoverAfterFlee" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Fight_EveryRound_AnnouncesSomething" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Look_DuringActiveCombatRound_ReportsBothCombatantsHp" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Check_RoomSpecificSuccess_AnnouncesTextAndReadout_SolvesOnce_NoRePrompt" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Check_Failure_LeavesRoomUnsolved_RetryableWithNoPenalty" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Flee_DuringActiveCombat_RetractsCleanly_NoSolveNoFail_ReturnsToPreviousRoom" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Flee_Room5_NoPriorMove_DoesNotMoveOrThrow" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Win_CombatFreeColumn_FiresWinMarkerAndGameEnd" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Win_LineIncludingCombatRoom_FiresWinMarker_WhenSolvedViaFight" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.ChallengePrompt_SkillCheckRoom_AnnouncesPromptKey_WhileUnsolvedAndUnfailed" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.ChallengePrompt_FightRoom_AnnouncesMonsterDesc" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.ChallengePrompt_RoomSolved_StopsAnnouncing" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.ChallengePrompt_RoomFailed_StopsAnnouncing" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.ChallengePrompt_AfterWinMarker_StopsAnnouncing_EvenForUnrelatedUnsolvedRoom" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.WinLine_AllThreeRoomsSolved_InsertsWinMarker" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.WinLine_CombatRoomInLine_FiresWhenSolvedByFactAlone" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.WinLine_RoomFailedInLine_NeverFires_WhileUnrelatedLineStillFires" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.GameEnd_AnnouncesOnAnyWinMarker" />
+</Playlist>

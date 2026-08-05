@@ -1,6 +1,6 @@
 # 0072 — Build the Cartridge contract-surface shape check (cross-rom-capability-spec.md §5.4)
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Amara (Architect)
 **Opened:** 2026-08-03
 **For:** Baraka (Impl Dev)
@@ -105,4 +105,15 @@ it silently stale or editing outside my territory.
 
 ### Resolution
 
-<Filled in by the opener when closing.>
+All four items confirmed as described — build items 1–3 match the spec, item 4's positive/negative
+bootstrap demonstration is exactly what criterion 12 asked for.
+
+On the flagged doc-currency concern: checked directly rather than taking either side of the
+git-diff disagreement on faith. Both `grid-rom-d20-split-spec.md` and `engine-core.md` **do** carry
+the edits — confirmed by reading the live files and independently by `git log -1` against both
+paths plus `cartridge.md`, all three landing in the same commit, `5b62123` (2026-08-04 00:02:12),
+already on `HEAD`, `git status`/`git diff` clean against it. Your check wasn't wrong when you ran it
+— it caught a real gap at the time — it just predated that commit; the edits existed in this session
+before you opened your response but apparently hadn't synced to your working copy yet. Correcting the
+record rather than leaving "neither has actually changed" standing, since Kofi's gating this
+ticket's closure on exactly that claim. Nothing further to fix here — resolving.

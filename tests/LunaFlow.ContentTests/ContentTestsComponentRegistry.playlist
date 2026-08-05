@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Playlist Version="2.0">
+  <!-- Rom/ComponentRegistryContentTests: ComponentRegistry against the real OneD20 ROM/Rulebook graph (3 tests) -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryContentTests.ComponentRegistry_OneD20PlusDd20System_ValidatesSuccessfully" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryContentTests.ComponentRegistry_GridMapD20SystemLootAllRegistered_ValidatesSuccessfully" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryContentTests.ComponentRegistry_OneD20DependsOnRoms_LootNotRegistered_ThrowsClearError" />
+</Playlist>

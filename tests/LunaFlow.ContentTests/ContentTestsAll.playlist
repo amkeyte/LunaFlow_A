@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Playlist Version="2.0">
+  <!-- Complete LunaFlow.ContentTests suite (77 total tests) -->
+  <!-- Mirrors ContentTestsD20System + ContentTestsLoot + ContentTestsOneD20Rulebook + ContentTestsComponentRegistry -->
+
+  <!-- Rom/D20System (25 tests) -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Move_MatchesNineRoomsAdjacency_ValidAndRejected" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Move_TracksPreviousRoomId_UpdatingOnEachSuccessfulMove" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.EnterSkillCheckRoom_AnnouncesDescriptionOnce_AndPromptOnce_NeverDuplicated" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.SessionStart_AnnouncesRoom5Description_BeforeMonsterDesc" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Fight_LethalPcHit_AnnouncesMonsterDefeatedOnly_SolvesRoom_SkipsCounterattack" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Fight_LethalMonsterHit_AcrossTwoRounds_AnnouncesPcLostOnly_FailsRoom_SessionContinues" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Fight_ThreeRoundTimeout_NeitherReducedToZero_FailsRoomPermanently" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Fight_FreshRound_SeedsBothCombatantsAtMaxHp_NoCarryoverAfterFlee" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Fight_EveryRound_AnnouncesSomething" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Look_DuringActiveCombatRound_ReportsBothCombatantsHp" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Check_RoomSpecificSuccess_AnnouncesTextAndReadout_SolvesOnce_NoRePrompt" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Check_Failure_LeavesRoomUnsolved_RetryableWithNoPenalty" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Flee_DuringActiveCombat_RetractsCleanly_NoSolveNoFail_ReturnsToPreviousRoom" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Flee_Room5_NoPriorMove_DoesNotMoveOrThrow" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Win_CombatFreeColumn_FiresWinMarkerAndGameEnd" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Win_LineIncludingCombatRoom_FiresWinMarker_WhenSolvedViaFight" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.ChallengePrompt_SkillCheckRoom_AnnouncesPromptKey_WhileUnsolvedAndUnfailed" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.ChallengePrompt_FightRoom_AnnouncesMonsterDesc" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.ChallengePrompt_RoomSolved_StopsAnnouncing" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.ChallengePrompt_RoomFailed_StopsAnnouncing" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.ChallengePrompt_AfterWinMarker_StopsAnnouncing_EvenForUnrelatedUnsolvedRoom" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.WinLine_AllThreeRoomsSolved_InsertsWinMarker" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.WinLine_CombatRoomInLine_FiresWhenSolvedByFactAlone" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.WinLine_RoomFailedInLine_NeverFires_WhileUnrelatedLineStillFires" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.GameEnd_AnnouncesOnAnyWinMarker" />
+
+  <!-- Rom/Loot (13 tests) -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Provides_NamesEquippedWeapon_PairedWithIEquippedWeaponContract" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Requires_NamesChallengeSolved_PairedWithIChallengeSolvedContract" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.LootTable_ReturnsTheConstructedTable" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Name_IsLoot" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Assembly_ReferencesNeitherGridMapNorD20SystemAssembly" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.FightRoomSolved_WithMatchingAssignment_InsertsItemAwarded_AnnouncesPickupText" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.SkillCheckRoomSolved_WithNoLootAssignment_NeverAwardsAnything" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.AlreadyAwardedRoom_NeverAwardsTwice" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.MultipleFightRoomsSolved_EachAwardsItsOwnItem_OneGenericRuleNotAPerRoomFamily" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.InventoryCommandHandlerTests.Inventory_NoItemsAwarded_AnnouncesEmptyMessage" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.InventoryCommandHandlerTests.Inventory_ItemsAwarded_AnnouncesHeaderThenEachItemByName" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.InventoryCommandHandlerTests.Inv_IsAnAliasForInventory_SameHandlerSameOutput" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.InventoryCommandHandlerTests.Inventory_WithNoGridMapOrD20SystemRulesLoaded_StillWorks_ReadsOnlyItsOwnFacts" />
+
+  <!-- Rulebook/OneD20 (36 tests) -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20SessionAssemblerTests.Assemble_SameSeed_ProducesReproducibleAssignment" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20SessionAssemblerTests.Assemble_AssignsExactlySixOfNineChallengeKeys_AllValidAndUnique" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20SessionAssemblerTests.Assemble_AssignsExactlyThreeOfFiveMonsterIds_AllValidAndUnique" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20SessionAssemblerTests.Assemble_NeverAssignsOutsideFixedGridTopology_AcrossManySeeds" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20SessionAssemblerTests.Assemble_ItemIdByRoom_DerivedFromEachRoomsAssignedMonstersLootTableEntry" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20SessionAssemblerTests.Assemble_DefaultConstructor_StillProducesTheCorrectShape" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_DefaultOneD20WorldModule_DoesNotThrow" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_HollowKeepWorldModule_DoesNotThrow" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_RoomsMissingAFixedGridKey_ThrowsNamingRoomCount" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_FewerThanSixChallenges_ThrowsNamingChallengePoolFloor" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_FewerThanThreeMonsters_ThrowsNamingMonsterRosterFloor" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_MoreSkillCheckRoomsThanChallenges_ThrowsNamingPoolVsSlotFit" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_MoreFightRoomsThanMonsters_ThrowsNamingRosterVsSlotFit" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_RoomDescriptionKeyMissingFromFlavorText_ThrowsNamingTheRoom" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_ChallengePromptKeyMissingFromFlavorText_ThrowsNamingTheChallenge" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_MonsterDescriptionKeyMissingFromFlavorText_ThrowsNamingTheMonster" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_PlayerAbilityScoresMissingARequiredAbility_ThrowsNamingIt" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.Validate_FixedVocabularyFlavorKeyMissing_ThrowsNamingIt" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.HollowKeepWorldModule_RoomTopology_MatchesDefaultsGridPositionsAndSlotKinds" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.HollowKeepWorldModule_ChallengeMechanics_MatchDefaultsSkillAbilityAndDcPerPoolEntry" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.OneD20WorldModuleValidatorTests.HollowKeepWorldModule_PlayerAbilityScores_SameKeysAndValuesAsDefault" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.Construct_SyntaxError_ThrowsNamingSourceAndFailsToExecute" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.Construct_MissingRoomsKey_ThrowsNamingTopLevelAndRooms" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.Construct_ChallengeDcAsString_ThrowsNamingChallengeAndField" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.Construct_UnrecognizedChallengeType_ThrowsNamingRoomAndValue" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.Construct_ScriptCallsIoOpen_RejectedBecauseIoIsNotSandboxed" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.Construct_ScriptCallsOsExecute_RejectedBecauseOsIsNotSandboxed" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.FromEmbeddedResource_DemoScript_PassesOneD20WorldModuleValidatorUnmodified" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.FromEmbeddedResource_DemoScript_StartRoomIdMatchesDefault" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.FromEmbeddedResource_DemoScript_RoomsMatchDefaultExactly" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.FromEmbeddedResource_DemoScript_ChallengesMatchDefaultExactly" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.FromEmbeddedResource_DemoScript_MonstersMatchDefaultExactly" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.FromEmbeddedResource_DemoScript_ItemIdByMonsterIdMatchesDefaultExactly" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.FromEmbeddedResource_DemoScript_PlayerCharacterMatchesDefaultExactly" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.FromEmbeddedResource_DemoScript_PlayerAbilityScoresMatchDefaultExactly" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rulebook.OneD20.LuaOneD20WorldModuleTests.FromEmbeddedResource_DemoScript_FlavorTextMatchesDefaultExactly" />
+
+  <!-- Rom/ComponentRegistryContentTests (3 tests) -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryContentTests.ComponentRegistry_OneD20PlusDd20System_ValidatesSuccessfully" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryContentTests.ComponentRegistry_GridMapD20SystemLootAllRegistered_ValidatesSuccessfully" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryContentTests.ComponentRegistry_OneD20DependsOnRoms_LootNotRegistered_ThrowsClearError" />
+</Playlist>

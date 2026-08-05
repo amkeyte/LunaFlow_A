@@ -1,12 +1,20 @@
 # Phase 2.10 — Content Coverage Stress Test — Implementation Spec
 
-**Status:** in review — draft complete, acceptance criteria stated; awaiting Amara/Baraka read.
+**Status:** active — implemented & QA-verified ([Phase 2.10 verdict](../QA/phase-2-10-verdict.md),
+PASS). **Amended 2026-08-04** per [ticket 0075](../ClaudeWiki/Processes/Handoffs/0075-phase-2-10-spec-currency-cleanup.md)
+to correct three text-drift items the verdict flagged (none are behavior/build changes) — the
+soft-lock criterion's unsatisfiable wording, this document's own self-contradicting Scope/Out
+bullet, and `EquippedWeapon`'s shape description, brought in line with
+[0071](../ClaudeWiki/Processes/Handoffs/0071-peer-rom-bidirectional-capability-cycle-detection-gap.md)/[0072](../ClaudeWiki/Processes/Handoffs/0072-build-cartridge-contract-surface-shape-check.md)'s
+ruling.
 **Companion design doc:** [`../design/1-d20.md`](../design/1-d20.md) — read for rationale.
 **Companion to:** [`1-d20/1-d20-spec.md`](1-d20/1-d20-spec.md) (the base this extends) and
 [`Roadmap/Proposals/2-10-through-2-12-content-framework-stress-test.md`](../Roadmap/Proposals/2-10-through-2-12-content-framework-stress-test.md)
 (the reviewed proposal this turns into buildable form, per [ticket 0067](../ClaudeWiki/Processes/Handoffs/0067-proposal-2-10-2-12-content-framework-stress-test-phases-post-2-9.md)).
 **Supersedes:** nothing. Additive to [`loot-rom-content-expansion-spec.md`](loot-rom-content-expansion-spec.md) —
-every fact/capability shipped there is unchanged.
+its facts are unchanged, but **not** its `Provides` list: Loot legitimately gains `EquippedWeapon`
+as a provided capability here (see Fact vocabulary and ticket 0075's item 2). That older spec's own
+acceptance-list line is corrected separately, in the same pass.
 
 ## Purpose
 
@@ -30,7 +38,11 @@ finds one is needed, that's a ticket to the Architect, not something to route ar
 - A **Poisoned** status effect, inflicted by a specific monster's hit, that persists across a room
   transition and imposes a roll penalty until it expires.
 - One deliberately-engineered, documented input sequence that exhausts every win line via
-  `RoomFailed`, with the currently-silent behavior recorded as a verified finding.
+  `RoomFailed` that can structurally be exhausted, with the currently-silent behavior recorded as a
+  verified finding. **Corrected per ticket 0075:** the grid's fixed topology makes exhausting *every*
+  line mathematically impossible — column `[3,6,9]` contains none of the three Fight rooms and can
+  never be killed by `RoomFailed`. The achievable, verified-shipped target is 7 of 8 lines dead, with
+  `[3,6,9]` permanently reachable.
 
 **Out:**
 - A new room or a change to the grid's 9-position topology — the save-check challenge joins the
@@ -40,7 +52,12 @@ finds one is needed, that's a ticket to the Architect, not something to route ar
 - A general persistent-PC-HP system outside `CombatRound` — item 3's design deliberately avoids
   needing one (see Mechanics, below); if that gap matters later, it's a separate proposal, not
   smuggled in here.
-- Any change to `GridMap`, `Loot`, or the win-line rule family — untouched by this entire spec.
+- Any change to `GridMap` or the win-line rule family — both untouched by this entire spec.
+  **Corrected per ticket 0075:** an earlier draft of this bullet also listed `Loot` as untouched,
+  which contradicts this same document's Commands table and Content-data section — Loot **is**
+  touched (the `equip` command, `EquippedWeapon`; see items 2/4 below and Fact vocabulary), and that
+  was always the intent, just misstated here. The bullet is corrected to match the rest of the
+  document and what shipped, not the other way around.
 
 ## Fact / marker vocabulary
 
@@ -92,13 +109,34 @@ public sealed record Poisoned(int ChecksRemaining);
     // session or fails a room — a roll penalty, not damage (see Mechanics for why).
 ```
 
-New equippable-item state (item 2/4), Loot-owned:
+New equippable-item state (item 2/4), Loot-owned. **Corrected per ticket 0075/0071/0072** — this
+spec's original draft described `EquippedWeapon` as a bare Loot-owned record with no cross-ROM
+declaration, silently assuming D20System's `fight` step could just read it directly. That's wrong:
+GridMap/D20System/Loot are peers with no assembly references between them, so D20System reading a
+Loot-owned fact is exactly the kind of cross-ROM correlation `cross-rom-capability-spec.md` governs.
+The shipped shape, ruled in ticket 0071 and built in 0072:
 
 ```csharp
-public sealed record EquippedWeapon(string ItemId);
+// LunaFlow.Cartridge — the contract, not a bare record (cartridge.md's Structure section: the
+// contract surface is interfaces only).
+public interface IEquippedWeapon { string ItemId { get; } }
+```
+
+```csharp
+// Loot's own concrete type, alongside its other three facts.
+public sealed record EquippedWeapon(string ItemId) : IEquippedWeapon;
     // At most one at a time — equipping retracts the old, inserts the new, same convention as
     // PlayerPosition. Absent by default (PC fights with the starting sword).
 ```
+
+`Loot.Provides` gains `Capability.Provided<IEquippedWeapon, EquippedWeapon>("EquippedWeapon")`.
+**`D20System.Requires` deliberately does *not* gain a matching entry** — Loot already `Requires:
+[ChallengeSolved]` from D20System, so declaring the reverse direction would create a genuine
+two-node cycle in `ComponentRegistry`'s dependency graph (0071's finding). D20System's `fight`
+handler correlates via `rules.Query<IEquippedWeapon>()` — ordinary NRules fact matching on the
+shared contract type, not a declared, registry-validated dependency — with a doc comment on
+`D20SystemRom.Requires` stating why, mirroring the existing precedent `GridMapRom.Requires` already
+set for the same shape of peer correlation.
 
 ### World Module surface — the actual authoring layer, per Phase 2.8/`world-module-extraction-spec.md`
 
@@ -157,10 +195,11 @@ test it without inventing new content that doesn't cohere with what's already sh
 A new `equip <item>` command (Loot-owned, reads `ItemAwarded`/`EquippedWeapon`, writes
 `EquippedWeapon`): valid only for an item the PC actually holds (`ItemAwarded` exists for it) and
 that's flagged equippable in Loot's content data (see below); silently rejects otherwise. `fight`'s
-PC-attack step (D20System) resolves attack bonus/damage die/bonus from the equipped weapon's
-mechanical profile if `EquippedWeapon` exists, else falls back to the pregenerated sheet's default
-(sword, STR-based) — same lethality-first ordering, same lookup pattern the Save-kind branch above
-uses, no change to `fight`'s control flow otherwise.
+PC-attack step (D20System) queries `IEquippedWeapon` (cross-ROM, via the contract described in Fact
+vocabulary above — not a direct read of Loot's concrete type) and resolves attack bonus/damage
+die/bonus from it if present, else falls back to the pregenerated sheet's default (sword, STR-based)
+— same lethality-first ordering, same lookup pattern the Save-kind branch above uses, no change to
+`fight`'s control flow otherwise.
 
 Backup Piece's profile: `1d6, Dex-based attack bonus (+0, since PC's Dex mod is +0)` — a real
 trade-off against the default sword (`1d8+3, Str-based`), not a strict upgrade. This is the point:
@@ -193,18 +232,21 @@ gives it a reason to matter past its low raw stats, is the suggested default).
 ### Engineered soft-lock (item 5) — no new mechanics, a documented sequence
 
 No new facts or rules. The deliverable is a specific, reproducible command sequence — e.g.,
-deliberately losing or timing out `fight` in enough rooms that every one of the 8 win lines has a
-`RoomFailed` member — captured as a transcript (Nadia's format, same as any acceptance-criteria
-transcript) showing the session continues silently with zero reachable win lines. This is
-evidence-gathering against `1-d20-spec.md`'s existing open question, not a fix.
+deliberately losing or timing out `fight` in the three Fight rooms (1, 5, 8) — captured as a
+transcript (Nadia's format, same as any acceptance-criteria transcript) showing the session
+continues silently with 7 of the 8 win lines dead. **Corrected per ticket 0075:** the eighth,
+column `[3,6,9]`, contains no Fight room and can never be killed by `RoomFailed` — the transcript
+should also show `[3,6,9]` remaining solvable and firing normally, confirming the achievable ceiling
+is 7 of 8, not a bug in the sequence. This is evidence-gathering against `1-d20-spec.md`'s existing
+open question, not a fix.
 
 ## Commands & handlers
 
 | Command | Owner ROM | Args | Reads | Writes | Notes |
 | --- | --- | --- | --- | --- | --- |
 | `check` (Save branch) | D20System | — | `Room`, `SavingThrows` | `RoomSolved` | Existing command, new branch |
-| `fight` (equipped-weapon branch) | D20System | — | `EquippedWeapon`, `Poisoned` | `CombatRound`, `RoomSolved`/`RoomFailed`, `Poisoned` | Existing command, new lookups |
-| `equip` | Loot | item name | `ItemAwarded`, `EquippedWeapon` | `EquippedWeapon` | New — Loot-owned, no cross-ROM read |
+| `fight` (equipped-weapon branch) | D20System | — | `IEquippedWeapon` (cross-ROM, `Query<T>()`), `Poisoned` | `CombatRound`, `RoomSolved`/`RoomFailed`, `Poisoned` | Existing command, new lookups — the `IEquippedWeapon` read is cross-ROM (Loot `Provides`, D20System correlates without a declared `Requires`; see Fact vocabulary) |
+| `equip` | Loot | item name | `ItemAwarded`, `EquippedWeapon` | `EquippedWeapon` | New — Loot-owned; this command's own read/write is same-ROM, unlike `fight`'s read of it |
 
 ## Content data
 
@@ -254,9 +296,12 @@ true`. No stat changes.
       the one the poison was inflicted in — this is the load-bearing assertion for item 3, verify it
       explicitly, not just same-room application.
 - [ ] `Poisoned` expires after 3 checks/fights and stops applying the penalty.
-- [ ] The engineered soft-lock sequence is captured in a transcript showing zero reachable win
-      lines and no session-level announcement or state change reacting to it — the silence itself is
-      the recorded finding.
+- [ ] The engineered soft-lock sequence is captured in a transcript showing 7 of 8 win lines dead
+      and no session-level announcement or state change reacting to it — the silence itself is the
+      recorded finding. **Corrected per ticket 0075** (this bullet previously said "zero reachable
+      win lines," which the shipped grid topology makes mathematically unsatisfiable): the transcript
+      must also confirm column `[3,6,9]` remains solvable and fires `WinMarker` normally when solved
+      — the ceiling is 7 of 8, verified as a ceiling, not an unexplained shortfall.
 - [ ] No existing acceptance criterion from `1-d20-spec.md` or `loot-rom-content-expansion-spec.md`
       regresses.
 - [ ] Full suite green, read from an Arryn-run `latest.trx`.
@@ -301,4 +346,11 @@ that's a ticket to the Architect, not a quiet workaround.
   the reviewed proposal this spec implements Phase 2.10 of
 - [Ticket 0067](../ClaudeWiki/Processes/Handoffs/0067-proposal-2-10-2-12-content-framework-stress-test-phases-post-2-9.md) —
   the proposal's review/approval
+- [Ticket 0075](../ClaudeWiki/Processes/Handoffs/0075-phase-2-10-spec-currency-cleanup.md) — the
+  three text-drift corrections applied in this pass
+- [Ticket 0071](../ClaudeWiki/Processes/Handoffs/0071-peer-rom-bidirectional-capability-cycle-detection-gap.md) /
+  [Ticket 0072](../ClaudeWiki/Processes/Handoffs/0072-build-cartridge-contract-surface-shape-check.md) —
+  the ruling and build behind `IEquippedWeapon`'s actual shipped shape
+- [`../QA/phase-2-10-verdict.md`](../QA/phase-2-10-verdict.md) — the PASS verdict that flagged all
+  three drift items this pass corrects
 - [`content-spec-template.md`](../ClaudeWiki/Processes/content-spec-template.md) — the template this follows
