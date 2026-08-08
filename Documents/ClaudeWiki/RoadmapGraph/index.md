@@ -27,6 +27,15 @@ position in a line.
 | [`Mockups/sample-visualization.html`](Mockups/sample-visualization.html) | Fake example of the HTML graph visualization (open directly in a browser) |
 | [`migration-plan.md`](migration-plan.md) | How adoption would actually happen, staged, with rollback at every point before cutover |
 
+## Pilot data — real, not fictional
+
+[`Documents/Roadmap/Nodes/`](../../Roadmap/Nodes/_index.md) now holds real nodes (Phase 2.6.5
+through 2.12, ticket 0073, both convergence nodes) built as a Stage-1-style pilot against real,
+in-flight project data rather than a synthetic graph — see the
+[migration plan](migration-plan.md#stage-1--pilot-against-one-live-case). Still WIP, still nothing
+adopted; the real tooling in [`Specs/graph-tooling-spec.md`](Specs/graph-tooling-spec.md) isn't built
+yet, so every query against this pilot has been computed by hand so far.
+
 ## Two ideas worth knowing before reading further
 
 **Two kinds of node, two different lifecycle rules.** A regular work node (a build, a fix, a stress

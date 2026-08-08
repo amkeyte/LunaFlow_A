@@ -158,12 +158,27 @@ Nothing here invents new authority; it gives existing authority a mechanical pla
 
 ## 9. Open questions
 
-- Exact node-ID prefix and file location — proposed in [`Specs/node-format-spec.md`](Specs/node-format-spec.md),
-  not settled here.
+- ~~Exact node-ID prefix and file location~~ — **settled** by
+  [`Specs/node-format-spec.md`](Specs/node-format-spec.md): `Documents/Roadmap/Nodes/RM-NNNN-slug.md`,
+  monotonic `NNNN`, flat `_index.md` ledger alongside it.
 - Whether `render`'s output ever replaces `roadmap.md` outright, or the two coexist indefinitely —
   deferred to the migration plan, since it's a rollout-sequencing question, not a design one.
 - What happens to phase docs that already exist (`phase-0.md` through `phase-2-11.md`) — addressed in
   the migration plan as a backfill pass, not a rewrite.
+- **New, from the Stage-1 pilot:** the roadmap's own tier list (`CLAUDE.md`: Engine → Rules → ROM →
+  Rulebook) and the project's three named roles (`glossary.md`: ROM Developer, Rulebook Author, World
+  Builder) imply a three-checkpoint chain, not two — the pilot added `RM-0012`/`RM-0013` to model
+  this. Whether that third checkpoint belongs in the ratified model, or was a pilot-only backfill, is
+  undecided. Related: `RM-0013` is `reached` on a single case (OneD20 only) — real multi-Rulebook
+  reusability is untested and explicitly deferred per `phase-2-7-1.md`/`non-goals.md`, so this
+  convergence node's evidentiary bar is weaker than its siblings'. Worth a real governance answer
+  (§7) before ratification, not just a pilot footnote.
+- **New, from the same pilot:** non-goals (`Documents/design/non-goals.md`) deliberately stay out of
+  the graph rather than being modeled as parked/deferred nodes — `frontier`'s `open` status has no way
+  to express "known, scoped, explicitly not actionable yet" without either misrepresenting them as
+  pickable or inventing a new status value nothing else here needed. Decided against for now; revisit
+  only if a real case makes the omission actively costly, same trigger-based discipline `non-goals.md`
+  already holds everything else to.
 
 ## Related pages
 

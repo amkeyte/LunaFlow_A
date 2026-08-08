@@ -14,50 +14,56 @@ is throughout this migration until the specific step that says otherwise. At eve
 system keeps working — this is an addition running alongside the current process until it's proven,
 not a cutover done on faith.
 
-## Stage 0 — build against a copy, touch nothing live
+## Stage 0 — build against a copy, touch nothing live — **done, 2026-08-08**
 
-Implement [`Specs/graph-tooling-spec.md`](Specs/graph-tooling-spec.md) against a synthetic test
-graph (small, hand-built, the kind of thing the spec's own acceptance criteria already describe).
-Zero contact with real `Documents/Roadmap/` or `Documents/ClaudeWiki/` content at this stage. This is
-normal Dev/Test-Dev work, no different from building any other tool — nothing roadmap-process-facing
-changes yet.
+Implemented at [`scripts/roadmap/roadmap_graph.py`](../../../scripts/roadmap/roadmap_graph.py),
+Python stdlib only. All seven of `graph-tooling-spec.md`'s acceptance criteria pass — see
+[`scripts/roadmap/test_roadmap_graph.py`](../../../scripts/roadmap/test_roadmap_graph.py), nine
+tests, synthetic fixtures for every criterion, plus one that copies the real pilot data to a temp dir
+and diffs before/after to confirm read-only behavior. `python3 -m unittest
+scripts.roadmap.test_roadmap_graph -v` from the repo root to re-run.
 
-## Stage 1 — pilot against one live case
+Went a step further than this stage strictly required: also ran every query (`validate`, `frontier`,
+`downstream`, `blocking`, `render`, `export-json`) against the real 13-node pilot under
+`Documents/Roadmap/Nodes/` (via a temp copy, never the live files) and cross-checked the output
+against everything hand-computed during the pilot exercise — exact match throughout (frontier =
+RM-0007/RM-0008/RM-0009; no cycles; `downstream RM-0010` returns all eight nodes past it). That's
+Stage 1-and-beyond validation happening inside what was scoped as a synthetic-only stage — noted
+honestly rather than quietly relabeled as "Stage 0 complete" and left at that.
 
-Once Stage 0 passes its own acceptance criteria, create real node files for exactly one live,
-already-in-flight question: **ticket 0073**, the Roslyn-removal evaluation. This is the case that
-motivated the whole proposal, so it's the right first real test rather than a synthetic one.
+## Stage 1 — pilot against one live case — **already happened, out of order**
 
-- Write `RM-0001` (or whatever the real next ID is) as a work node wrapping 0073's question, citing
-  the existing ticket rather than duplicating it.
-- Do **not** yet create convergence nodes for "ROM Developer operational" etc. — that's a bigger
-  backfill, Stage 2's job, and shouldn't block proving the tool works on one real node first.
-- Run `frontier`/`validate` against this single-node graph. Confirm the output is sane before trusting
-  it with anything bigger.
+This stage as originally scoped (write exactly one real node, for ticket 0073 alone, prove the tool
+survives contact with one messy real case before trusting it further) never ran as its own discrete
+step. Instead, a separate pilot exercise (Arryn: *"let's mock up the note system... let's see what
+stage 0 gets us"*) produced real node files for the *entire* Phase 2.6.5–2.12 history plus 0073 plus
+two convergence-tier nodes, all before this script existed. The tool was then built and pointed at
+that already-existing real data, rather than the data being built incrementally against an
+already-working tool the way this stage assumed.
 
-This stage answers the real question: does the model hold up against real, messy, in-flight work, or
-only against a clean synthetic example? If it breaks here, that's cheap to find out and cheap to fix
-— one node, not the whole roadmap's history riding on it.
+Practical effect: no harm done — the acceptance-criteria tests using isolated synthetic fixtures give
+the same confidence this stage was meant to provide, and the cross-check against real data (Stage 0's
+note, above) is strictly more validation than "one node" would have been. But the *order* in the plan
+and the order in reality diverged, and this section is being left here, marked as such, rather than
+quietly rewritten to look like the plan was followed — same "supersede, don't delete" instinct this
+project applies everywhere else.
 
-## Stage 2 — backfill existing history, once
+## Stage 2 — backfill existing history, once — **already happened, same pilot exercise**
 
-Convert the currently-`done` phases (`phase-0.md` through `phase-2-9.md`, all QA-PASS'd) into
-`resolved` work nodes and the natural convergence points among them (e.g., whatever "ROM Developer
-operational" actually should mean, decided in this pass, not invented ad hoc) into `reached`
-convergence nodes — **as a one-time backfill, not a rewrite.** Every backfilled node's `ReachedLog` /
-resolution cites the *existing* QA verdict and ticket that already proved it, exactly as it's already
-documented in `Documents/QA/` and `Documents/ClaudeWiki/Processes/Handoffs/`. Nothing about *what
-happened* changes — only that it now also has a graph-shaped record alongside the prose record it
-already has.
+The 13 real nodes under `Documents/Roadmap/Nodes/` already cover this stage's scope: `phase-2-6-5.md`
+through `phase-2-12.md` converted to `resolved`/`open` work nodes (`RM-0001`–`RM-0009` for the phase
+history plus the 0073 evaluation), and the convergence points decided as three tiers, not the single
+"ROM Developer operational" this stage originally anticipated — `RM-0010` (ROM Developer, `reached`,
+real 3-ROM evidence), `RM-0012`/`RM-0013` (Rulebook tier, `reached`, single-case evidence, honestly
+flagged as weaker in `RM-0013`'s own body), and `RM-0011` (World Builder, `WIP`, blocked on
+RM-0007/RM-0008). Every backfilled node still cites the real QA verdict or ticket behind it, per this
+stage's original rule — nothing about *what happened* was changed, only that it now also has a
+graph-shaped record. What's genuinely still open from this stage's original scope: `phase-0.md`
+through `phase-2-6.md` (pre-pilot history) were never backfilled — the pilot's own root node,
+`RM-0001`, says so explicitly rather than implying full coverage.
 
-Currently in-flight and pending items get converted as-is: `phase-2-10.md` → `resolved` (it's done),
-`phase-2-11.md` → `open` (build ticket 0076 already cut), the `2.10–2.12` proposal's still-pending
-2.12 → whatever state matches its real status at the time this stage runs.
-
-**What doesn't get backfilled:** superseded/archived material (`phase-3.md`, the two Handoffs archive
-pages). Dead ends don't need a graph node; the existing "superseded, see X" note already does that
-job, and duplicating it into the graph is exactly the "two copies drift" problem this project already
-avoids elsewhere.
+**What doesn't get backfilled, confirmed still true:** superseded/archived material (`phase-3.md`, the
+two Handoffs archive pages) stayed out of the graph, per this stage's original rule.
 
 ## Stage 3 — run both systems in parallel
 

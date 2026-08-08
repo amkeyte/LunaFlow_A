@@ -1,8 +1,11 @@
 # Spec: the graph-tooling script
 
 > **WIP — draft complete, part of an unratified proposal.** See
-> [`../../index.md`](../../index.md) for this space's status. Not built yet — this is the buildable
-> spec a Dev would implement against once the proposal is approved, not existing tooling.
+> [`../../index.md`](../../index.md) for this space's status. **Built as of 2026-08-08** at
+> [`scripts/roadmap/roadmap_graph.py`](../../../../scripts/roadmap/roadmap_graph.py) — Stage 0 of
+> [`../migration-plan.md`](../migration-plan.md), all acceptance criteria below passing. Building the
+> tool does **not** ratify the proposal; nothing about `Documents/Roadmap/roadmap.md` being the live
+> source of truth has changed.
 
 **Companion to:** [`../proposal.md`](../proposal.md) §6 and [`node-format-spec.md`](node-format-spec.md)
 (the input this script reads). **Produces:** [`../Mockups/sample-generated-index.md`](../Mockups/sample-generated-index.md)-shaped
@@ -34,6 +37,13 @@ unknown `Kind`, `DependsOn` referencing a nonexistent ID) is a hard error naming
 same fail-loud discipline `ContractSurfaceValidator` already holds itself to; a script that silently
 skips a malformed node and produces a frontier missing an entry is worse than one that refuses to run.
 
+**`DependsOn` entries are markdown links** (`node-format-spec.md`'s "Link, don't reference bare"
+rule) — `[RM-0012](RM-0012-slug.md)`, not a bare ID. The parser extracts the RM-ID via pattern match
+(`RM-\d{4}`) against the bracket text, not an exact-string match against the whole field, so it's
+indifferent to which slug the link target uses — a stale link target (file renamed, slug edited) is a
+cosmetic problem for a human to fix, not a parse failure, as long as the ID in the brackets is intact
+and resolves to a real node.
+
 ## Queries
 
 ### `validate`
@@ -49,6 +59,14 @@ Every node where: (work node, `open`) or (convergence node, `WIP`), **and** ever
 resolves to a node that's `resolved` or `reached`. This is the actionable menu — see
 [`../Mockups/sample-generated-index.md`](../Mockups/sample-generated-index.md) for what it looks like
 rendered.
+
+### `dependents <RM-ID>`
+
+**Direct, one-hop reverse of `DependsOn`** — every node that names `<RM-ID>` in its own `DependsOn`
+list, nothing further. This is what node-format-spec.md's **Required By** section renders: the
+flow-reading pair to a node's own `DependsOn` block, top says what it needs, bottom says what needs
+it. Cheap, and deliberately shallow — for the full blast radius, see `downstream` below, which is
+built by walking `dependents` recursively rather than being a separate implementation.
 
 ### `downstream <RM-ID>`
 
@@ -99,20 +117,49 @@ Shape (illustrative, not final):
 `"from"` depends on `"to"` — same direction as `DependsOn` in the node file, so the JSON doesn't
 introduce a second convention to keep straight against the markdown source.
 
+## Deep-link contract for the future HTML consumer
+
+Out of scope for this script to build (see Scope above), but a requirement on whatever consumes its
+`export-json` output: it must honor `?focus=RM-NNNN` in its URL, highlighting and centering/scrolling
+to that node on load. This is what lets `render`'s markdown output, and every node file's own
+computed **Visualize** line (`node-format-spec.md`), link straight into the graph already centered on
+the node the reader came from, instead of dumping them into the full graph to hunt for it by eye.
+[`../Mockups/sample-visualization.html`](../Mockups/sample-visualization.html) already implements this
+— as of 2026-08-08 against the real pilot's 11 nodes (hand-built HTML, hand-copied data), not just an
+illustrative set. Proof of the mechanism and, until the real tool exists, the actual current target for
+every real node's `Visualize` line — not the real consumer this contract ultimately describes.
+
 ## Acceptance criteria
 
-- [ ] `validate` catches a synthetic cycle (three nodes, A→B→C→A) and names all three in the error.
-- [ ] `frontier` against a small synthetic graph returns exactly the nodes with all deps satisfied —
-      verified against a hand-computed expected set, not just "it returned something."
-- [ ] `downstream` against a four-deep synthetic chain (A→B→C→D) returns B, C, and D when queried on
-      A — the transitive case, not just direct dependents.
-- [ ] `render`'s output matches the mockup's structure: frontier section first, names only, no ticket
-      body text leaking into the index.
-- [ ] `export-json`'s node/edge shape round-trips against a hand-built synthetic graph without loss.
-- [ ] A malformed node file (bad `Kind`, or a `DependsOn` entry pointing at a nonexistent RM-ID)
-      produces a named, specific error, not a silent skip or a generic crash.
-- [ ] Read-only against `Documents/Roadmap/Nodes/` — confirmed via a run that diffs the folder
-      before/after and finds zero changes.
+All seven passing as of 2026-08-08 — see
+[`scripts/roadmap/test_roadmap_graph.py`](../../../../scripts/roadmap/test_roadmap_graph.py) (nine
+tests; each criterion below maps to one or more, named to match).
+
+- [x] `validate` catches a synthetic cycle (three nodes, A→B→C→A) and names all three in the error.
+      — `TestCycleDetection`
+- [x] `frontier` against a small synthetic graph returns exactly the nodes with all deps satisfied —
+      verified against a hand-computed expected set, not just "it returned something." —
+      `TestFrontier`
+- [x] `downstream` against a four-deep synthetic chain (A→B→C→D) returns B, C, and D when queried on
+      A — the transitive case, not just direct dependents. — `TestDownstream`
+- [x] `render`'s output matches the mockup's structure: frontier section first, names only, no ticket
+      body text leaking into the index. — `TestRender`
+- [x] `export-json`'s node/edge shape round-trips against a hand-built synthetic graph without loss.
+      — `TestExportJson`
+- [x] A malformed node file (bad `Kind`, or a `DependsOn` entry pointing at a nonexistent RM-ID)
+      produces a named, specific error, not a silent skip or a generic crash. — `TestMalformedNodes`
+      (three cases: bad `Kind`, dangling `DependsOn`, and confirming a malformed file aborts the
+      whole load rather than being silently dropped)
+- [x] Read-only against `Documents/Roadmap/Nodes/` — confirmed via a run that diffs the folder
+      before/after and finds zero changes. — `TestReadOnly` (runs every query against a temp copy of
+      the *real* pilot data, not just a synthetic graph, then hash-diffs before/after)
+
+**Beyond the acceptance criteria:** every query was also run directly against the real 13-node pilot
+and cross-checked against everything hand-computed during the pilot exercise — `frontier` returns
+exactly RM-0007/RM-0008/RM-0009, `validate` finds no cycles, `downstream RM-0010` returns all eight
+nodes past it, `dependents`/`blocking` match every node's own hand-written Required By section
+exactly. Not required by this spec, but cheap to do and worth recording — it's the difference between
+"passes its own tests" and "agrees with a human who did the same work by hand."
 
 ## Open implementation questions
 

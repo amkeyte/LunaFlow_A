@@ -6,6 +6,11 @@
 > really generate this. `RM-0059`/`RM-0080` in particular are hypothetical placeholders for a Phase 4 /
 > GM Overlay concept that is still a design draft today, not a ratified node — included here only to
 > show what a second, unrelated branch of the graph looks like once it exists.
+>
+> **Note (2026-08-08):** unlike this file, [`sample-visualization.html`](sample-visualization.html) was
+> since rebuilt against the real pilot's 11 nodes (`RM-0001`...`RM-0011`, `Documents/Roadmap/Nodes/`) —
+> the two mockups intentionally no longer share an ID space. This file stays illustrative because its
+> job is showing `render`'s *shape*, not proving anything against real data.
 
 *Generated 2026-08-04 — regenerate with `roadmap-graph render`, do not hand-edit.*
 
