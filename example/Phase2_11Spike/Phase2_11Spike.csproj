@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    Phase 2.11's checked-in, runnable evidence (ticket 0076) — not a maintained test (tests/ stays
+    Nadia's territory; this is Baraka's throwaway-turned-persisted spike, kept per Arryn's direction
+    so Lothar/QA can independently re-run it rather than trust a transcript pasted into the ticket).
+    Exercises item 7's relay/threshold behavior and items 6/8's isolated-registry failure content.
+    Deliberately NOT referenced by src/MyLunaFlowServer/MyLunaFlowServer.csproj.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\LunaFlow.Engine\LunaFlow.Engine.csproj" />
+    <ProjectReference Include="..\..\src\LunaFlow.Rules\LunaFlow.Rules.csproj" />
+    <ProjectReference Include="..\D20SystemExampleA\D20SystemExampleA.csproj" />
+    <ProjectReference Include="..\D20SystemExampleC\D20SystemExampleC.csproj" />
+    <ProjectReference Include="..\OneD20SharedRoms\OneD20SharedRoms.csproj" />
+    <ProjectReference Include="..\LunaFlow.Rom.Probes\LunaFlow.Rom.Probes.csproj" />
+  </ItemGroup>
+
+</Project>

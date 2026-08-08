@@ -18,4 +18,4 @@ the proposal doc and the ticket that reviewed it, not in this table.
 
 | Proposal | Status | Author | Summary |
 | --- | --- | --- | --- |
-| [2.10–2.12 — Content/framework stress test](2-10-through-2-12-content-framework-stress-test.md) | 2.10 promoted; 2.11/2.12 reviewed, specs drafted, pending phase ratification | Juno (Game Designer) | 2.10 promoted into [`phase-2-10.md`](../phase-2-10.md), build ticket 0069 cut to Baraka. 2.11/2.12 remain proposal-stage. Reviewed in [ticket 0067](../../ClaudeWiki/Processes/Handoffs/0067-proposal-2-10-2-12-content-framework-stress-test-phases-post-2-9.md). |
+| [2.10–2.12 — Content/framework stress test](2-10-through-2-12-content-framework-stress-test.md) | 2.10 done (QA PASS); 2.11 promoted; 2.12 reviewed, spec drafted, pending phase ratification | Juno (Game Designer) | 2.10 done. 2.11 promoted into [`phase-2-11.md`](../phase-2-11.md), build ticket 0076 cut to Baraka. 2.12 remains proposal-stage. Reviewed in [ticket 0067](../../ClaudeWiki/Processes/Handoffs/0067-proposal-2-10-2-12-content-framework-stress-test-phases-post-2-9.md). |

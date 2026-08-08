@@ -6,6 +6,7 @@ using LunaFlow.Rom.D20System;
 using LunaFlow.Rom.GridMap;
 using LunaFlow.Rom.GridMap.Handlers;
 using LunaFlow.Rom.Loot;
+using LunaFlow.Rom.Reputation;
 using LunaFlow.Rulebook.OneD20;
 using LunaFlow.Rules.GeneratorServices;
 
@@ -36,12 +37,13 @@ Console.WriteLine("Starting server");
 object gridMapObj;
 object d20SystemObj;
 object lootObj;
+object reputationObj;
 OneD20SessionAssignment assignment;
 IOneD20WorldModule worldModule;
 
 try
 {
-    (gridMapObj, d20SystemObj, lootObj, assignment, worldModule) = Bootstrap();
+    (gridMapObj, d20SystemObj, lootObj, reputationObj, assignment, worldModule) = Bootstrap();
 }
 catch (BootstrapContractException ex)
 {
@@ -60,7 +62,7 @@ catch (InvalidOperationException ex)
     throw;
 }
 
-RunGame(gridMapObj, d20SystemObj, lootObj, assignment, worldModule);
+RunGame(gridMapObj, d20SystemObj, lootObj, reputationObj, assignment, worldModule);
 Console.WriteLine("Server stopped.");
 
 // Constructs and registers both ROMs plus the Rulebook, validates the registry, and forces member
@@ -69,7 +71,7 @@ Console.WriteLine("Server stopped.");
 // method's own JIT can never fail on a binding fault either; the actual risky construction is one
 // level further down, in ConstructGridMap()/ConstructD20System(), whose call sites are where a
 // fault surfaces — attributable to whichever module was current when it did.
-static (object GridMap, object D20System, object Loot, OneD20SessionAssignment Assignment, IOneD20WorldModule WorldModule) Bootstrap()
+static (object GridMap, object D20System, object Loot, object Reputation, OneD20SessionAssignment Assignment, IOneD20WorldModule WorldModule) Bootstrap()
 {
     string? currentModule = null;
     Type? currentContract = null;
@@ -103,6 +105,10 @@ static (object GridMap, object D20System, object Loot, OneD20SessionAssignment A
         var loot = ConstructLoot(worldModule);
         registry.Register(loot, EngineTier.Rom, "Loot");
 
+        currentModule = "Reputation";
+        var reputation = ConstructReputation();
+        registry.Register(reputation, EngineTier.Rom, "Reputation");
+
         currentModule = "OneD20";
         var (ruleBook, dependsOnRoms) = ConstructRuleBook();
         registry.Register(ruleBook, EngineTier.Rulebook, "OneD20");
@@ -118,9 +124,9 @@ static (object GridMap, object D20System, object Loot, OneD20SessionAssignment A
         registry.Validate();
         Console.WriteLine("Component registry validated successfully.");
 
-        var totalProvides = gridMap.Provides.Count + d20System.Provides.Count + loot.Provides.Count;
-        var totalRequires = gridMap.Requires.Count + d20System.Requires.Count + loot.Requires.Count;
-        Console.WriteLine($"ROMs registered: 3 (GridMap, D20System, Loot) + Rulebook: OneD20");
+        var totalProvides = gridMap.Provides.Count + d20System.Provides.Count + loot.Provides.Count + reputation.Provides.Count;
+        var totalRequires = gridMap.Requires.Count + d20System.Requires.Count + loot.Requires.Count + reputation.Requires.Count;
+        Console.WriteLine($"ROMs registered: 4 (GridMap, D20System, Loot, Reputation) + Rulebook: OneD20");
         Console.WriteLine($"Capabilities: {totalProvides} provided, {totalRequires} required");
 
         // §5.4 contract-surface shape check: every publicly-exported type in the Cartridge's contract
@@ -137,7 +143,7 @@ static (object GridMap, object D20System, object Loot, OneD20SessionAssignment A
         // can't see. Loot's Provides is empty (first pure-sink ROM shape) — the loop iterates zero
         // capabilities for it, no special-casing needed.
         foreach (var (component, name) in new (IHasDependencies Component, string Name)[]
-            { (gridMap, "GridMap"), (d20System, "D20System"), (loot, "Loot") })
+            { (gridMap, "GridMap"), (d20System, "D20System"), (loot, "Loot"), (reputation, "Reputation") })
         {
             currentModule = name;
             foreach (var capability in component.Provides)
@@ -149,7 +155,7 @@ static (object GridMap, object D20System, object Loot, OneD20SessionAssignment A
 
         stopwatch.Stop();
         Console.WriteLine($"Bootstrap completed in {stopwatch.ElapsedMilliseconds}ms");
-        return (gridMap, d20System, loot, assignment, worldModule);
+        return (gridMap, d20System, loot, reputation, assignment, worldModule);
     }
     catch (Exception ex) when (ex is TypeLoadException or MissingMethodException or MissingFieldException
         or FileLoadException or FileNotFoundException or BadImageFormatException)
@@ -225,6 +231,17 @@ static IHasDependencies ConstructLoot(IOneD20WorldModule worldModule)
     return rom;
 }
 
+/// <summary>Same isolation reasoning as <see cref="ConstructGridMap"/>, for Reputation. No
+/// session/world-module data to thread through — it's a pure fact/rule accumulator, the same shape
+/// as GridMap's win-line tracking.</summary>
+static IHasDependencies ConstructReputation()
+{
+    var rom = new ReputationRom();
+    _ = rom.Provides;
+    _ = rom.Requires;
+    return rom;
+}
+
 /// <summary>
 /// Same isolation reasoning as <see cref="ConstructGridMap"/>, for the Rulebook. Returns
 /// <c>DependsOnRoms</c> alongside the component (rather than requiring the caller to know about
@@ -241,7 +258,7 @@ static (IHasDependencies Component, IReadOnlyList<string> DependsOnRoms) Constru
 // — which means these same GridMap/D20System types were just proven loadable — so casting back to
 // the concrete types here introduces no new binding risk; this is legitimately outside §5's scope
 // (construction/registration/validation/probing), not a gap in it.
-static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, OneD20SessionAssignment assignment, IOneD20WorldModule worldModule)
+static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, object reputationObj, OneD20SessionAssignment assignment, IOneD20WorldModule worldModule)
 {
     var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
@@ -257,6 +274,7 @@ static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, OneD
     var gridMap = (GridMapRom)gridMapObj;
     var d20System = (D20SystemRom)d20SystemObj;
     _ = (LootRom)lootObj; // Loot's static content (the loot table) is used only by Bootstrap()/ConstructLoot(); nothing here reads it back.
+    _ = (ReputationRom)reputationObj; // No state to read back — Reputation is a pure fact/rule accumulator.
 
     var gridMapRoomData = gridMap.RoomData;
     var playerStats = worldModule.PlayerCharacter;
@@ -277,6 +295,7 @@ static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, OneD
     var gridMapRules = RuleExport.Compile(typeof(GridMapRuleGroup));
     var d20SystemRules = RuleExport.Compile(typeof(D20SystemRuleGroup));
     var lootRules = RuleExport.Compile(typeof(LootRuleGroup));
+    var reputationRules = RuleExport.Compile(typeof(ReputationRuleGroup));
 
     static int CountRules(System.Reflection.Assembly assembly) =>
         assembly.GetTypes().Count(t => typeof(NRules.Fluent.Dsl.Rule).IsAssignableFrom(t) && !t.IsAbstract);
@@ -284,9 +303,10 @@ static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, OneD
     var gridMapRuleCount = CountRules(gridMapRules);
     var d20SystemRuleCount = CountRules(d20SystemRules);
     var lootRuleCount = CountRules(lootRules);
-    var totalRuleCount = gridMapRuleCount + d20SystemRuleCount + lootRuleCount;
+    var reputationRuleCount = CountRules(reputationRules);
+    var totalRuleCount = gridMapRuleCount + d20SystemRuleCount + lootRuleCount + reputationRuleCount;
 
-    Console.WriteLine($"Rules loaded: {totalRuleCount} total (GridMap: {gridMapRuleCount}, D20System: {d20SystemRuleCount}, Loot: {lootRuleCount})");
+    Console.WriteLine($"Rules loaded: {totalRuleCount} total (GridMap: {gridMapRuleCount}, D20System: {d20SystemRuleCount}, Loot: {lootRuleCount}, Reputation: {reputationRuleCount})");
     Console.WriteLine($"World Module: {worldModule.GetType().Name} (Rooms: {worldModule.Rooms.Count}, Challenge pool: {worldModule.Challenges.Count}, Monster roster: {worldModule.Monsters.Count})");
 
     var engine = new ConsoleEngine()
@@ -298,6 +318,7 @@ static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, OneD
                 .FromAssembly(gridMapRules)
                 .FromAssembly(d20SystemRules)
                 .FromAssembly(lootRules)
+                .FromAssembly(reputationRules)
                 .Seed(() => gridMapRoomData)
                 .Seed(() =>
                 {
@@ -337,7 +358,12 @@ static void RunGame(object gridMapObj, object d20SystemObj, object lootObj, OneD
                         .Select(kv => (object)new LootAssignment(kv.Key, kv.Value));
                     var pickupTexts = worldModule.ItemIdByMonsterId.Values
                         .Select(itemId => (object)new LootPickupText(itemId, flavorText[$"item-{itemId}-pickup"]));
-                    return assignments.Concat(pickupTexts);
+                    // Phase 2.11 item 7: the fixed bonus item's pickup text, seeded unconditionally —
+                    // unlike the monster-drop table above, BonusItemId isn't derived from this
+                    // session's assignment.
+                    var bonusPickupText = (object)new LootPickupText(
+                        LootRuleGroup.BonusItemId, flavorText[$"item-{LootRuleGroup.BonusItemId}-pickup"]);
+                    return assignments.Concat(pickupTexts).Append(bonusPickupText);
                 });
         })
         .ConfigureCommand(opts =>

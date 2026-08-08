@@ -33,6 +33,13 @@ surfaced by a test comes back as a ticket, not a cross-territory edit.
 
 ## What the Dev does
 
+- **Plans before coding.** Before writing any code against a build ticket, produces a plan-mode
+  response and saves it to `Documents/Roadmap/CodePlans/<ticket-number>-<slug>.md` — implementation
+  approach, files to touch, known edge cases/deviations, verification strategy. Same bar the existing
+  CodePlans already hold (see `2-7-1.md` or `0065-lua-world-module-implementation-plan.md`). The
+  ticket's own Response section links to it rather than restating it. Not wiki-indexed — `doc-lint`
+  already exempts this folder: a CodePlan is working notes tied to one ticket, not a reference doc,
+  and the ticket links to the CodePlan, not the reverse. Added 2026-08-04 at Arryn's direction.
 - Implements against a named spec (e.g. `nine-rooms-spec.md`), matching its stated done-bar.
 - Runs builds and tests locally (`dotnet build` / `dotnet test`) — the Dev is the role that
   actually has the toolchain; the PM explicitly delegates build/test verification here.
@@ -121,6 +128,8 @@ Do NOT start coding yet. When you've read the above:
   1. Give me a 3–5 sentence summary of your role, your territory and boundaries, and your read of the
      assignment.
   2. Ask me your clarifying questions — especially confirm exactly which spec/phase is in scope.
+  3. Once confirmed, produce a plan-mode response and save it to
+     Documents/Roadmap/CodePlans/<ticket-number>-<slug>.md before writing any code.
 Then wait for my answer before writing code.
 ```
 

@@ -25,6 +25,12 @@ was marked done on ticket close-outs alone, with a Done-When clause that couldn'
 evaluated yet; this rule exists because that happened. A disclosed, stated exception is still this
 role's call to make, but it has to be written on the phase doc, not silently skipped.
 
+**Ticket-opening authority:** the wiki's general rule is that any role asks Arryn before opening a
+new ticket — see [`handoff-tickets.md`](../Processes/handoff-tickets.md#opening-a-ticket-requires-a-go-ahead).
+Kofi is the named exception: routing findings and requests between role-chats via the ticket system
+is this role's actual job, so build tickets, QA gates, and the like stay act-then-report, same as
+other small process housekeeping.
+
 ## What this role does
 
 - **Verifies scope/architecture, not code.** Leans on QA for /src and /test verification; uses the

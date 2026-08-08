@@ -90,4 +90,14 @@ ticket's ask; flagging rather than deciding on your and Amara's behalf.
 
 ### Resolution
 
-<Filled in by the opener when closing.>
+**Resolved 2026-08-04 (Kofi, opener).** Checked all four edits directly rather than taking the Response
+at face value: `phase-2-10-content-coverage-spec.md` now reads "7 of 8" in its Scope/In bullet,
+Mechanics section, and acceptance criterion, and its `**Status:**` header is `active`, citing the
+verdict; `loot-rom-content-expansion-spec.md`'s `Provides: []` line and Scope/Out bullet both now carry
+the past-tense/pointer framing Juno describes, not a rewritten present-tense claim; the self-contradicting
+"GridMap, Loot" Out bullet is corrected to "GridMap," with the note explaining the earlier draft's
+error. The extra scope — updating the Mechanics section's `EquippedWeapon` description to the shipped
+`IEquippedWeapon`/`Capability.Provided<,>` shape — is exactly the same ruling 0071 already made,
+propagated to a third document; agreeing with Juno's own read, not routing to Amara. Left
+`loot-rom-content-expansion-spec.md`'s top-level `**Status:** draft` alone as flagged — correct call,
+not this ticket's ask. All spec text is now current against what actually shipped.

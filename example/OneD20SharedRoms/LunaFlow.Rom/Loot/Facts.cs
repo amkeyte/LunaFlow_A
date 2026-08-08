@@ -37,4 +37,13 @@ namespace LunaFlow.Rom.Loot
     /// seeded at session start.
     /// </summary>
     public sealed record LootPickupText(string ItemId, string Text);
+
+    /// <summary>
+    /// A second, independent award for the same room's <c>ItemAwarded</c>, granted only once the
+    /// party has reached Veteran-or-above <see cref="IReputationTier"/> — item 7's additive
+    /// extension to the award rule, per phase-2-11-capability-stress-test-spec.md. Accumulates,
+    /// never retracted, same convention as <see cref="ItemAwarded"/>. Fixed bonus item id, not
+    /// session-randomized — nothing about proving the relay needs a second loot table.
+    /// </summary>
+    public sealed record BonusItemAwarded(string ItemId, int RoomId);
 }

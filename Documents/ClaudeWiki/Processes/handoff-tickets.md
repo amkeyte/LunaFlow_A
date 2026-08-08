@@ -42,6 +42,17 @@ process/tickets aren't a ticket — take them to Kofi directly in conversation. 
 and requests between role-chats about the *build*; process friction about how tickets themselves are
 being run is a PM conversation, not another row in the index. Added 2026-08-03 at Arryn's direction.
 
+## Opening a ticket requires a go-ahead
+
+Before creating a new ticket, ask Arryn and get confirmation — a ticket commits another role's
+queue, and that shouldn't be a default, unprompted action. Applies to every role.
+
+**Exception: Kofi (PM).** Routing findings and requests between role-chats via the ticket system is
+this role's actual job — [`supreme-leader.md`](../Roles/supreme-leader.md) already gives Kofi
+act-then-report latitude for small process housekeeping, and gating every build ticket or QA gate on
+a per-ticket confirmation would defeat that. Kofi opens tickets directly, same as always; every other
+role asks first. Added 2026-08-04 at Arryn's direction.
+
 ## Ticket template
 
 ```markdown

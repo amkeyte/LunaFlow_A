@@ -95,6 +95,11 @@ namespace LunaFlow.Rulebook.OneD20
             ["item-knife-name"] = "Folding Knife",
             ["item-knife-pickup"] = "You take the knife from his hand before he can grab it back.",
 
+            // Loot — phase-2-11-capability-stress-test-spec.md item 7's fixed bonus item, granted
+            // once the party reaches Veteran-or-above reputation. Not part of the monster-drop table.
+            ["item-bonus-charm-name"] = "Loyalty Charm",
+            ["item-bonus-charm-pickup"] = "Word's gotten around about what you can do — that's worth something extra. You're handed a loyalty charm.",
+
             // Loot — inventory command text.
             ["inventory-empty"] = "You're not carrying anything yet.",
             ["inventory-header"] = "You're carrying:",

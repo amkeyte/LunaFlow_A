@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -7,6 +7,12 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <!--
+    Deliberately NOT referenced by src/MyLunaFlowServer/MyLunaFlowServer.csproj — this project holds
+    phase-2-11-capability-stress-test-spec.md's items 6/8 clash- and cycle-probe ROMs, built to fail
+    ComponentRegistry.Validate() on purpose. Referenced only by test/spike code that registers them
+    in an isolated, throwaway ComponentRegistry, never the live Cartridge's real composition root.
+  -->
   <ItemGroup>
     <ProjectReference Include="..\..\src\LunaFlow.Rom\LunaFlow.Rom.csproj" />
     <ProjectReference Include="..\..\src\LunaFlow.Rules\LunaFlow.Rules.csproj" />

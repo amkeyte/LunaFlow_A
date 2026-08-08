@@ -137,8 +137,17 @@ promise to a peer, and every member is something you cannot change later without
 
 ### 3.2 Rules for authors
 
-1. **Peers never reference each other's assemblies.** Both reference the interop assembly. That
-   one-directional edge is expected and governed; the peer-to-peer edge is the violation.
+1. **Peers never name each other's concrete implementation types.** Both reference the interop
+   assembly. That one-directional edge is expected and governed; a peer-to-peer edge naming a
+   sibling's concrete type is the violation. Where peer ROMs each still have their own project, "never
+   reference each other's assemblies" is an equivalent, simpler way to say this, verifiable against the
+   assembly graph. **That's no longer the target default** — `cartridge.md`'s Structure section
+   (corrected 2026-08-08, ticket
+   [0077](../ClaudeWiki/Processes/Handoffs/0077-do-peer-roms-still-need-one-project-each-now-that-cross-assembly-correlation-is-proven.md))
+   now calls for one shared implementation assembly per Cartridge, namespaced per ROM. In that shape
+   this rule is **convention-enforced, not compiler-enforced**, until the peer-isolation check
+   `non-goals.md` names and deliberately defers is built. Author discipline, not the compiler, is what
+   holds this rule today for any ROM sharing an assembly with a peer.
 2. **Only the owner inserts, updates, or retracts its own facts.** A consumer observes. Cross-ROM
    *mutation* is not supported in v1, deliberately — see §5.
 3. **Contract types live in the interop assembly, never in `LunaFlow.Rules`.** 2.6.5 closed that
@@ -426,8 +435,13 @@ framework.
 
 ## 7. Acceptance criteria
 
-1. Two peer ROMs correlate a fact through a contract type with **zero project reference between them**
-   — verified against the assembly graph, not merely by a passing test.
+1. Two peer ROMs correlate a fact through a contract type with **zero project reference between
+   them, or — once consolidated per `cartridge.md`'s corrected Structure section (ticket
+   [0077](../ClaudeWiki/Processes/Handoffs/0077-do-peer-roms-still-need-one-project-each-now-that-cross-assembly-correlation-is-proven.md))
+   — no reference to a sibling's concrete type from outside its own namespace**, verified against the
+   assembly graph while ROMs are still split by project, and by inspection (pending the deferred
+   `non-goals.md` compliance check) once they share one. Neither peer names the other's concrete type
+   either way — the assembly-graph check is one enforcement mechanism for that bar, not the bar itself.
 2. The consuming ROM's rule fires on a fact inserted by the owning ROM, matched via the contract type
    — and a consuming **handler** reaches the same fact via `Query<TContract>()`. Both paths, not one;
    they share no code (§2).

@@ -7,9 +7,9 @@ namespace LunaFlow.Rom.Loot
     /// <summary>
     /// The Loot ROM: tracks item awards from defeated monsters, the <c>inventory</c> command, and
     /// (per phase-2-10-content-coverage-spec.md) the <c>equip</c> command.
-    /// Owns facts: LootAssignment, ItemAwarded, LootPickupText, EquippedWeapon.
+    /// Owns facts: LootAssignment, ItemAwarded, LootPickupText, EquippedWeapon, BonusItemAwarded.
     /// Provides: EquippedWeapon capability.
-    /// Requires: ChallengeSolved capability (from D20System).
+    /// Requires: ChallengeSolved capability (from D20System), ReputationTier capability (from Reputation).
     /// </summary>
     public sealed class LootRom : IRom
     {
@@ -34,10 +34,14 @@ namespace LunaFlow.Rom.Loot
             Capability.Provided<LunaFlow.Cartridge.IEquippedWeapon, EquippedWeapon>("EquippedWeapon"),
         };
 
-        /// <summary>Capabilities this ROM requires: ChallengeSolved (from D20System).</summary>
+        /// <summary>Capabilities this ROM requires: ChallengeSolved (from D20System) and, per
+        /// phase-2-11-capability-stress-test-spec.md item 7, ReputationTier (from Reputation) — the
+        /// bonus-drop rule's second, independent requirement, proving the three-deep
+        /// D20System → Reputation → Loot chain.</summary>
         public IReadOnlyList<Capability> Requires => new[]
         {
             new Capability("ChallengeSolved", typeof(LunaFlow.Cartridge.IChallengeSolved)),
+            new Capability("ReputationTier", typeof(LunaFlow.Cartridge.IReputationTier)),
         };
 
         /// <summary>The ROM's LunaFlow reference.</summary>

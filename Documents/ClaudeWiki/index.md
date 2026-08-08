@@ -54,6 +54,17 @@ that helps a session ramp up fast and stay in scope, without belonging in a desi
 | [Skill — `doc-scaffold`](Tools/doc-scaffold-SKILL.md) | Tools |
 | [Skill — `doc-lint`](Tools/doc-lint-SKILL.md) | Tools |
 
+## Proposals under review (not yet ratified)
+
+Process/tooling proposals that haven't been adopted into the sections above — same "pre-commitment,
+not yet ratified" status `Documents/Roadmap/roadmap.md`'s own Proposals section already uses for
+content phases. Nothing here is current process until it's reviewed and merged into `Processes/` (or
+wherever it lands) for real.
+
+- [`RoadmapGraph/`](RoadmapGraph/index.md) — a WIP proposal to reframe the roadmap as a dependency
+  graph instead of a numbered phase sequence. Draft only; `roadmap.md`'s phase table is still the
+  live source of truth today.
+
 ## Migration candidates
 
 Existing docs that may move here once this structure firms up (not yet moved):

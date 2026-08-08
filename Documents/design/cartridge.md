@@ -97,6 +97,60 @@ assembly and refuses to start if any of them isn't an interface — the same "ha
 never a silent degradation" bar §5's compatibility probe already holds, applied to this invariant
 instead.
 
+**Project-per-ROM is a convention, not a requirement — clarified 2026-08-08, ticket
+[0077](../ClaudeWiki/Processes/Handoffs/0077-do-peer-roms-still-need-one-project-each-now-that-cross-assembly-correlation-is-proven.md);
+**default corrected same day, direct from Arryn, before the ticket closed.** "One or more assemblies"
+above was never softened language for a rule that actually meant one — every peer ROM shipped so far
+(GridMap, D20System, Loot) happening to get its own project under `example/` is [ticket
+0038](../ClaudeWiki/Processes/Handoffs/0038-phase-2-7-test-suite-blocked-on-rom-implementations-in-src.md)'s
+practical byproduct (it settled *location* — `example/`, not `src/` — not project count), reinforced
+since only because a dedicated project makes "zero project reference between peers" trivially
+checkable against the assembly graph.
+
+**The invariant that actually matters is narrower than "separate assemblies": no peer ROM names
+another peer ROM's concrete implementation type.** Correlation happens only through the Cartridge's
+contract surface (§3 above, and `cross-rom-capability-spec.md` §3.2 rule 1). A dedicated project per
+ROM is one *enforcement mechanism* for that invariant — there's no `ProjectReference` to misuse
+because there's nothing to reference — not the invariant itself. This is also why consolidating peer
+ROMs doesn't reopen the trust-gradient problem [§1](#1-the-tier-stack-is-a-trust-boundary-not-a-filing-scheme)
+above exists to guard: that asymmetry is about a *deeper* tier pulling from a *shallower* one. Two
+peer ROMs sit at the same tier: nothing about GridMap and D20System sharing a compilation unit hands
+either one authority the other doesn't already have.
+
+**Ruling, corrected: a Cartridge's implementation defaults to one shared assembly, with one named
+exception.** The first pass of this ruling weighed the compiler-enforced isolation as free and
+stopped there; it isn't — a project per ROM is a real, compounding cost against the thing an author
+actually looks at all day, and "30-odd ROM/Rulebook assemblies" cluttering one solution is a plausible
+future, not a hypothetical one. Namespaces are what separation is *for*; a project boundary was always
+a stronger tool than the problem needed, adopted because Phase 2.7 got it for free alongside 0038's
+location ruling, not because peer ROMs require it. **Corrected default: GridMap, Loot, and future
+peers (Reputation, etc.) consolidate into one implementation assembly, separated by namespace**
+(`LunaFlow.Rom.GridMap`, `LunaFlow.Rom.Loot`, etc.) — the same pattern `src/LunaFlow.Rom`'s own
+namespace layout already uses one tier down.
+
+**D20System (`example/D20SystemExampleA`) is the one named exception and stays its own separate
+assembly — per Arryn, for regression testability.** It's the oldest, most load-bearing ROM (direct
+descendant of the pre-split 1.d20 content, the one every other peer's `IChallengeSolved` correlation
+is ultimately checked against), and keeping it independently buildable and testable outweighs the
+consolidation argument for this one case. This is a standing exception, not a temporary migration
+step — future rulings on "does ROM X join the shared assembly" should treat D20System's separateness
+as the precedent for *why* something might stay out, not as leftover inertia to eventually clean up.
+**The contract surface stays its own assembly regardless of any of this** — that separation is
+load-bearing for a different reason (independent versioning, `non-goals.md`'s deferred fingerprinting)
+and neither the default nor the exception touches it.
+
+**What the consolidated side costs, stated plainly rather than assumed away:** moving peer isolation
+from compiler-enforced to convention-enforced is a real, immediate gap the moment GridMap and Loot
+(and future consolidated peers) share a project — not a someday risk, and not a gap D20System's
+separateness closes for the ROMs that do consolidate. Per Arryn's direction, the substitute
+enforcement — a build-time check inspecting a shared assembly for a ROM naming a sibling's concrete
+type — and a companion assembly fingerprint for future security use are **both named and deliberately
+deferred**, not built alongside this change; see `non-goals.md`. Consolidating without that check is a
+conscious, accepted trade for solution cleanliness and lower per-ROM overhead, not an oversight —
+worth restating if this default is ever cited without the caveat attached. D20System's boundary against
+the consolidated assembly stays compiler-enforced throughout, same as today — that part of the picture
+doesn't change.
+
 The contract surface is used **internally as well as externally**. A Cartridge's own ROMs talk to
 each other through it — that is not a second mechanism bolted on, it is the same surface serving
 both roles. This is what makes peer ROMs inside one Cartridge able to correlate facts without

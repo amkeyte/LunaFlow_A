@@ -1,10 +1,12 @@
 # Proposal — Phases 2.10–2.12: content/framework stress test (post-2.9)
 
-**Status:** partially promoted. **2.10 is ratified** — see [`../phase-2-10.md`](../phase-2-10.md),
-build ticket [0069](../../ClaudeWiki/Processes/Handoffs/0069-implement-phase-2-10-content-coverage-spec-md.md)
-cut to Baraka. **2.11 and 2.12 remain reviewed, specs drafted, pending phase ratification** —
-approved to proceed toward buildable specs via [ticket 0067](../../ClaudeWiki/Processes/Handoffs/0067-proposal-2-10-2-12-content-framework-stress-test-phases-post-2-9.md)
-(resolved); ratification into `phase-N.md` docs is still Kofi/Amara's call for those two. Registered
+**Status:** partially promoted. **2.10 is ratified and done** — see [`../phase-2-10.md`](../phase-2-10.md),
+QA PASS, ticket [0074](../../ClaudeWiki/Processes/Handoffs/0074-phase-2-10-qa-gate.md). **2.11 is
+ratified** — see [`../phase-2-11.md`](../phase-2-11.md), build ticket
+[0076](../../ClaudeWiki/Processes/Handoffs/0076-implement-phase-2-11-capability-stress-test-spec-md.md)
+cut to Baraka. **2.12 remains reviewed, spec drafted, pending phase ratification** — approved to
+proceed toward a buildable spec via [ticket 0067](../../ClaudeWiki/Processes/Handoffs/0067-proposal-2-10-2-12-content-framework-stress-test-phases-post-2-9.md)
+(resolved); ratification into a `phase-N.md` doc is still Kofi/Amara's call for it. Registered
 in [`Proposals/_index.md`](_index.md) and pointed to from `roadmap.md`'s "Proposals" section.
 
 **Author:** Juno (Game Designer). **Reviewed by:** Amara (Architect), via ticket 0067.
