@@ -69,8 +69,30 @@ namespace LunaFlow.Rom.D20System
     /// <summary>One entry in the monster roster — a keyed, identified template (five entries this
     /// session's content ships), replacing the pre-roster implicit singleton. <c>InflictsPoison</c>
     /// is true for exactly one roster monster (the Scrapper) — its hit connecting refreshes
-    /// <see cref="Poisoned"/>.</summary>
-    public sealed record MonsterTemplate(string Id, string Name, string DescriptionKey, CombatantStats Stats, bool InflictsPoison = false);
+    /// <see cref="Poisoned"/>. <c>EnrageThresholdFraction</c>/<c>EnrageDefenseBonus</c>
+    /// (phase-2-12-lua-worldmodule-stress-test-spec.md item 11) mirror
+    /// <c>OneD20MonsterTemplate</c>'s Rulebook-owned fields unchanged — carried through by
+    /// <c>Program.cs</c>'s translation, same as <c>InflictsPoison</c>. See
+    /// <see cref="MonsterEnraged"/> for the mechanic these two fields drive.</summary>
+    public sealed record MonsterTemplate(
+        string Id, string Name, string DescriptionKey, CombatantStats Stats,
+        bool InflictsPoison = false,
+        double? EnrageThresholdFraction = null,
+        int? EnrageDefenseBonus = null);
+
+    /// <summary>
+    /// Fact marking that the room's monster has crossed its Enrage HP threshold this fight —
+    /// inserted once per <see cref="CombatRound"/>, never re-inserted while it lasts. Purely
+    /// defensive (per ticket 0083's ruling): while present, the monster's effective Defense for any
+    /// subsequent PC attack this fight is <c>Stats.Defense + EnrageDefenseBonus</c>; it has no effect
+    /// on the monster's own attack roll (<c>FightCommandHandler</c>'s counterattack branch never
+    /// reads the monster's Defense at all). Retracted whenever this room's <c>CombatRound</c> ends —
+    /// win, loss, timeout, or flee — via <see cref="EnrageEffect.RetractIfPresent"/>, so a fresh
+    /// fight against the same monster in a retry always starts un-enraged. Deliberately combat-scoped
+    /// (unlike <see cref="Poisoned"/>, which is deliberately cross-room) — the contrast is worth
+    /// keeping straight, not a copy-paste of the same lifecycle shape.
+    /// </summary>
+    public sealed record MonsterEnraged(int RoomId);
 
     /// <summary>
     /// A lingering roll penalty, inflicted by a poison-carrying monster's connecting hit and refreshed

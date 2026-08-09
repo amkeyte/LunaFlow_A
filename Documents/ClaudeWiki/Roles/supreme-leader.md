@@ -108,7 +108,9 @@ Before doing anything, read (paths relative to the project root):
      "Where status lives."
    - Documents/design/non-goals.md — the scope line you guard.
   Where the build is:
-   - Documents/Roadmap/roadmap.md, then the in-flight phases: phase-2-6-5.md and phase-2-7.md.
+   - Documents/Roadmap/roadmap.md — check the phase sequence table for whatever's currently
+     `pending`/`in-review`, and read that phase's own doc. Don't assume it's whichever phase was
+     active when this prompt was last edited; the table is the source of truth, not this line.
   Then skim the other five role pages (architect, game-designer, dev, dev-test, qa) so you know who
   owns what.
 

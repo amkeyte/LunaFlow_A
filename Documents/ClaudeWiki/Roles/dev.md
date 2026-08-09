@@ -78,7 +78,9 @@ surfaced by a test comes back as a ticket, not a cross-territory edit.
 
 There is deliberately **one** dev today, because the critical path (Phase 1.5 → Phase 2) is
 sequential — parallel dev chats only help when there's non-overlapping territory to own.
-To add dev #2+ when genuinely parallel work appears (e.g. Phase 4 scripting alongside Phase 3):
+To add dev #2+ when genuinely parallel work appears (e.g. Phase 4 scripting alongside Phase 5
+interface expansion — the roadmap already flags Phase 5 as startable anytime, so it's the standing
+example of non-overlapping territory, not a fixed pairing):
 
 1. Copy this page to `Roles/dev-<territory>.md` (e.g. `dev-scripting.md`).
 2. Set an explicit, non-overlapping **territory** (which projects/folders it owns) so two devs

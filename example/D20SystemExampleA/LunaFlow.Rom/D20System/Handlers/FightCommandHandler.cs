@@ -69,15 +69,26 @@ namespace LunaFlow.Rom.D20System
                 damageBonus = weapon.DamageBonus;
             }
 
+            // Item 11 (phase-2-12-lua-worldmodule-stress-test-spec.md): while MonsterEnraged is
+            // present for this room, the monster's effective Defense for the PC's attack (only —
+            // never its own attack roll, per ticket 0083's ruling) is boosted. Read once, up front,
+            // since crossing the threshold this same round must not affect this round's own attack
+            // (see the crossing check below, which happens strictly after this read).
+            var wasEnraged = rules.Query<MonsterEnraged>().Any(e => e.RoomId == location.RoomId);
+            var effectiveDefense = wasEnraged
+                ? monster.Defense + monsterTemplate.EnrageDefenseBonus!.Value
+                : monster.Defense;
+
             // PC's attack.
             var pcRoll = _mechanic.Roll("1d20") + PoisonEffect.ApplyAndAdvance(rules);
-            if (pcRoll + attackBonus >= monster.Defense)
+            if (pcRoll + attackBonus >= effectiveDefense)
             {
                 var damage = _mechanic.Roll(damageDie) + damageBonus;
                 monsterHp -= damage;
 
                 if (monsterHp <= 0)
                 {
+                    EnrageEffect.RetractIfPresent(rules, location.RoomId);
                     rules.Insert(new RoomSolved(location.RoomId));
                     LunaFlowEngine.Host.Announce(_flavorText["monster-defeated"]);
                     return;
@@ -85,6 +96,17 @@ namespace LunaFlow.Rom.D20System
 
                 LunaFlowEngine.Host.Announce(_flavorText["pc-hit"]);
                 LunaFlowEngine.Host.Announce($"You deal {damage} damage. Monster HP: {monsterHp}/{monster.MaxHp}.");
+
+                // Item 11: crossing the Enrage threshold this hit. Guarded by !wasEnraged (not a
+                // fresh MonsterEnraged query) so it can never double-insert within one round; the
+                // fight continuing at all past this point means monsterHp > 0, matching "once, when
+                // MonsterHp <= Threshold * MaxHp" — never re-evaluated once already enraged.
+                if (!wasEnraged && monsterTemplate.EnrageThresholdFraction is not null &&
+                    monsterHp <= monsterTemplate.EnrageThresholdFraction.Value * monster.MaxHp)
+                {
+                    rules.Insert(new MonsterEnraged(location.RoomId));
+                    LunaFlowEngine.Host.Announce(_flavorText["monster-enraged"]);
+                }
             }
             else
             {
@@ -100,6 +122,7 @@ namespace LunaFlow.Rom.D20System
 
                 if (playerHp <= 0)
                 {
+                    EnrageEffect.RetractIfPresent(rules, location.RoomId);
                     rules.Insert(new RoomFailed(location.RoomId));
                     LunaFlowEngine.Host.Announce(_flavorText["pc-lost"]);
                     return;
@@ -124,6 +147,7 @@ namespace LunaFlow.Rom.D20System
             roundsElapsed += 1;
             if (roundsElapsed >= 3)
             {
+                EnrageEffect.RetractIfPresent(rules, location.RoomId);
                 rules.Insert(new RoomFailed(location.RoomId));
                 LunaFlowEngine.Host.Announce(_flavorText["monster-fled"]);
                 return;

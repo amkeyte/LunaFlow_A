@@ -1,7 +1,9 @@
 # Phase 2.12 — World Module Authoring Surface Stress Test (Lua Path) — Implementation Spec
 
-**Status:** in review — draft complete, acceptance criteria stated; item 11's contract extension
-especially awaiting Amara's read, per her own flag on ticket 0067.
+**Status:** in review — reviewed clean by Amara (ticket 0081), including item 11's contract
+extension; one Mechanics-section defect found and fixed (ticket 0083). Ratified into
+[`phase-2-12.md`](../Roadmap/phase-2-12.md); build ticket 0084 cut to Baraka. Per
+`content-spec-template.md`'s lifecycle, flips to `active` once built and QA-verified.
 **Companion design doc:** [`../design/world-module.md`](../design/world-module.md#two-authoring-paths-into-one-contract) — read for rationale.
 **Companion to:** [`lua-world-module-spec.md`](lua-world-module-spec.md) (the mechanism this content
 is authored against, unchanged by this spec) and
@@ -173,9 +175,12 @@ step, same lookup pattern `MonsterId`/`InflictsPoison` already use per Phase 2.1
 After the PC's attack step reduces `CombatRound.MonsterHp` (and the fight didn't end on that hit):
 if `EnrageThresholdFraction` is set, `MonsterHp <= EnrageThresholdFraction * MaxHp`, and
 `MonsterEnraged` doesn't already exist for this room, insert `MonsterEnraged(RoomId)` and announce
-an enrage flavor key. The monster's *effective* Defense for its own counterattack step, and for any
-subsequent PC attack this fight, becomes `Stats.Defense + EnrageDefenseBonus` while `MonsterEnraged`
-is present. Retracted with `CombatRound`, same lifecycle as `Poisoned`'s combat-scoped cousin would
+an enrage flavor key. The monster's *effective* Defense for any subsequent PC attack this fight
+becomes `Stats.Defense + EnrageDefenseBonus` while `MonsterEnraged` is present — purely defensive;
+Enrage does not affect the monster's own attack roll (`FightCommandHandler.cs`'s counterattack branch
+never reads the monster's Defense at all, only its `AttackBonus` against the PC's Defense, so there is
+no mechanism for a Defense bonus to touch it). Retracted with `CombatRound`, same lifecycle as
+`Poisoned`'s combat-scoped cousin would
 be if it had one (it doesn't — `Poisoned` is deliberately cross-room, `MonsterEnraged` is
 deliberately combat-scoped; the contrast is worth keeping straight, not a copy-paste of the same
 shape).

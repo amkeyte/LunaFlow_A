@@ -48,8 +48,16 @@ namespace LunaFlow.Rulebook.OneD20
     /// assignable to any of the grid's fixed fight positions. Keyed by <see cref="Id"/>, which also
     /// keys the monster→item loot table. <c>InflictsPoison</c> mirrors D20System's
     /// <c>MonsterTemplate</c> extension — true for exactly one roster monster.
+    /// <c>EnrageThresholdFraction</c>/<c>EnrageDefenseBonus</c> (phase-2-12-lua-worldmodule-stress-test-spec.md
+    /// item 11) are both nullable, both default null, and either both set or neither — enforced by
+    /// <see cref="OneD20WorldModuleValidator"/>, not the type system, since a record can't express a
+    /// paired-nullability constraint. <c>EnrageThresholdFraction</c> is a fraction of MaxHp in
+    /// <c>(0, 1]</c>; <c>EnrageDefenseBonus</c> is a flat bonus. Purely defensive — see
+    /// <c>MonsterTemplate</c>'s mirror on the ROM tier for the mechanic itself.
     /// </summary>
     public sealed record OneD20MonsterTemplate(
         string Id, string Name, string DescriptionKey, OneD20CombatantStats Stats,
-        bool InflictsPoison = false);
+        bool InflictsPoison = false,
+        double? EnrageThresholdFraction = null,
+        int? EnrageDefenseBonus = null);
 }

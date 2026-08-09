@@ -98,6 +98,26 @@ namespace LunaFlow.Rulebook.OneD20
             foreach (var monster in module.Monsters.Values)
             {
                 RequireFlavorKey(module, monster.DescriptionKey, $"Monster '{monster.Id}'s DescriptionKey");
+
+                // phase-2-12-lua-worldmodule-stress-test-spec.md item 11: EnrageThresholdFraction and
+                // EnrageDefenseBonus are either both set or both null — a record can't express that
+                // pairing itself, so it's enforced here, at load, not mid-fight.
+                var hasThreshold = monster.EnrageThresholdFraction.HasValue;
+                var hasBonus = monster.EnrageDefenseBonus.HasValue;
+                if (hasThreshold != hasBonus)
+                {
+                    throw new InvalidOperationException(
+                        $"World Module invalid: Monster '{monster.Id}' must set both EnrageThresholdFraction " +
+                        $"and EnrageDefenseBonus, or neither — got EnrageThresholdFraction=" +
+                        $"{(hasThreshold ? monster.EnrageThresholdFraction!.Value.ToString() : "null")}, " +
+                        $"EnrageDefenseBonus={(hasBonus ? monster.EnrageDefenseBonus!.Value.ToString() : "null")}.");
+                }
+                if (hasThreshold && (monster.EnrageThresholdFraction!.Value <= 0 || monster.EnrageThresholdFraction.Value > 1))
+                {
+                    throw new InvalidOperationException(
+                        $"World Module invalid: Monster '{monster.Id}'s EnrageThresholdFraction " +
+                        $"({monster.EnrageThresholdFraction.Value}) must be in (0, 1].");
+                }
             }
 
             foreach (var ability in RequiredAbilities)

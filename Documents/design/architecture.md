@@ -124,12 +124,18 @@ The current solution (`LunaFlow_A.sln`) has `LunaFlow.Engine`, `LunaFlow.Rules`,
 │   ├── LunaFlow.Rom/             # Rule Object Model: pluggable domain modules, per-module fact vocabulary
 │   ├── LunaFlow.Engine/          # Game loop, rule/apply logic (exists today)
 │   ├── LunaFlow.Rules/           # NRules setup, rule authoring & generation (exists today)
+│   ├── LunaFlow.Rulebook/        # Rulebook-tier infrastructure only — IRuleBook (see below)
 │   ├── LunaFlow.Scripting/       # MoonSharp integration and script host
 │   ├── LunaFlow.Interface/       # Shared messaging contracts (DTOs)
 │   ├── LunaFlow.Interface.Web/   # ASP.NET Core WebSocket server
 │   ├── LunaFlow.Interface.CLI/   # Console host, dev tools (MyLunaFlowServer today)
 │   ├── LunaFlow.AI/              # AI prompt manager, context handlers
 │   └── LunaFlow.Infrastructure/  # Logging, config, file I/O helpers
+├── example/                      # Real content, kept out of src/ — ROM and Rulebook alike
+│   ├── D20SystemExampleA/        # D20System ROM (the one peer-ROM consolidation exception)
+│   ├── D20SystemExampleC/        # D20 Cartridge contract surface
+│   ├── OneD20SharedRoms/         # GridMap/Loot/Reputation ROMs, consolidated per ticket 0078
+│   └── OneD20/                   # The OneD20 Rulebook's content — see below
 ├── tests/
 │   └── LunaFlow.EngineTests/     # Unit + integration tests (exists today)
 ├── scripts/
@@ -144,6 +150,8 @@ The current solution (`LunaFlow_A.sln`) has `LunaFlow.Engine`, `LunaFlow.Rules`,
 **Corrected 2026-07-20 (Amara doc pass):** `LunaFlow.Rom` is no longer an empty stub — it holds real, checked-in Nine Rooms content (`NineRoomsContent`, `MoveCommandHandler`/`LookCommandHandler`/`AnswerCommandHandler`, the challenge/win-line/game-end rule classes, `NineRoomsReference`), and, as of the 1.d20 work, is where its d20 System/Scenario content is expected to land too. Don't confuse it with `GameState`/`GameWorld`/`Session` in `LunaFlow.Engine.Game`: those are Engine-owned turn/session bookkeeping (turn number, connected sessions, per-connection context), not ROM content. Nine Rooms' actual game-domain facts — `Room`, `PlayerPosition`, `RoomSolved`, `WinMarker` — live in `LunaFlow.Rom.NineRooms` instead, per [`nine-rooms-spec.md`](../NineRooms/nine-rooms-spec.md). Once ROM work grows past Nine Rooms, expect `LunaFlow.Rom` to hold multiple independent modules (a Physics ROM, a Combat ROM, and so on) that a Rulebook opts into individually — see [System, setting, and session](#system-setting-and-session) above — rather than one monolithic model. (Nine Rooms itself is a deliberate exception to that: per `nine-rooms.md`, it's disposable test content that doesn't get a reusable module boundary.)
 
 Rulebooks (concrete games built on top of LunaFlow) are expected to live in their own solutions/`.csproj`s outside this repo, consuming `LunaFlow.Rules`, `LunaFlow.Engine`, `LunaFlow.Rulebook` (for `IRuleBook` and the Rulebook-tier identity/dependency contracts, relocated there in Phase 2.6.5 — see `engine-core.md`), and whichever `LunaFlow.Rom` modules they depend on as libraries. An internal `LunaFlow.Examples` project may be added here for testing and documentation purposes, but it is not a rulebook itself.
+
+**Corrected 2026-08-08 (Phase 2.11.1 design):** the paragraph above describes an eventual external-Rulebook world that hasn't happened yet — the one real Rulebook in this repo today, OneD20, is exactly the kind of in-repo example the previous paragraph's `LunaFlow.Examples` sketch anticipated, never built under that name because OneD20 already fills the role directly. Target shape: it lives at `example/OneD20`, not `src/LunaFlow.Rulebook` — content, same rule that already keeps `D20System`/`GridMap`/`Loot`/`Reputation` out of `src/LunaFlow.Rom` — leaving `src/LunaFlow.Rulebook` holding only `IRuleBook`, the tier's infrastructure, matching `src/LunaFlow.Rom`'s shape (Nine Rooms aside, per that project's own disclosed exception). See [`Specs/rulebook-content-extraction-spec.md`](../Specs/rulebook-content-extraction-spec.md) for the move itself and [`Roadmap/phase-2-11-1.md`](../Roadmap/phase-2-11-1.md) for status.
 
 **Corrected 2026-07-21 (Phase 2.6.5 design):** this line previously omitted `LunaFlow.Rulebook` entirely, back when the project held only example content (`OneD20`) and `IRuleBook` lived in `LunaFlow.Rules`. Since `IRuleBook` moved to `LunaFlow.Rulebook` — the project *is* the Rulebook tier, not an example holder that happens to also be usable for more — a real external Rulebook needs it too.
 

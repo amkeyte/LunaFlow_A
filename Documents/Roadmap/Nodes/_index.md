@@ -44,6 +44,7 @@ replaces it once an HTML consumer is built against `export-json`, per
 | [RM-0010](RM-0010-rom-developer-operational.md) | convergence | reached | Kofi | ROM Developer operational |
 | [RM-0012](RM-0012-rulebook-tier-established.md) | work | resolved | Kofi | OneD20 established as the Rulebook tier (backfilled, no ticket) |
 | [RM-0013](RM-0013-rulebook-author-operational.md) | convergence | reached | Kofi | Rulebook Author operational (single-case proof — see caveat in the node) |
+| [RM-0014](RM-0014-phase-2-11-1.md) | work | open | Kofi | Phase 2.11.1 — Rulebook content extraction (ticket 0082, open) — optional, dead-end |
 | [RM-0011](RM-0011-world-builder-operational.md) | convergence | WIP | Kofi | World Builder operational — blocked on RM-0007, RM-0008 |
 
 ## Related pages

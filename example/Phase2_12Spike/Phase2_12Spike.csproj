@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    Phase 2.12's checked-in, runnable evidence (ticket 0084) — not a maintained test (tests/ stays
+    Nadia's territory; this is Baraka's throwaway-turned-persisted spike, kept per Arryn's standing
+    direction so Lothar/QA can independently re-run it). Exercises "Signal Static"'s full session
+    playthrough, item 10's procedural roster, item 11's Enrage chain end to end, and item 12's two
+    Lua-path failure probes. Needs GameEngineCore directly (InternalsVisibleTo grant on
+    LunaFlow.Engine) to drive real command handlers the same way D20SystemHandlerTests.cs does.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\LunaFlow.Engine\LunaFlow.Engine.csproj" />
+    <ProjectReference Include="..\..\src\LunaFlow.Rules\LunaFlow.Rules.csproj" />
+    <ProjectReference Include="..\..\src\LunaFlow.Rulebook\LunaFlow.Rulebook.csproj" />
+    <ProjectReference Include="..\D20SystemExampleA\D20SystemExampleA.csproj" />
+    <ProjectReference Include="..\D20SystemExampleC\D20SystemExampleC.csproj" />
+    <ProjectReference Include="..\OneD20SharedRoms\OneD20SharedRoms.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -245,8 +245,17 @@ namespace LunaFlow.Rulebook.OneD20
                 // "inflictsPoison" is optional, defaulting to false — scripts predating
                 // phase-2-10-content-coverage-spec.md omit it.
                 var inflictsPoison = OptionalBool(t, "inflictsPoison") ?? false;
+                // "enrageThresholdFraction"/"enrageDefenseBonus" are both optional, defaulting to
+                // null — scripts predating phase-2-12-lua-worldmodule-stress-test-spec.md omit both.
+                // Pairing/range validity (both-or-neither, threshold in (0,1]) is
+                // OneD20WorldModuleValidator's job, not the marshaler's — this only reads what's
+                // present, same division as every other field here.
+                var enrageThresholdFraction = OptionalNumber(t, "enrageThresholdFraction");
+                var enrageDefenseBonus = OptionalNumber(t, "enrageDefenseBonus");
 
-                monsters[id] = new OneD20MonsterTemplate(id, name, descriptionKey, stats, inflictsPoison);
+                monsters[id] = new OneD20MonsterTemplate(id, name, descriptionKey, stats, inflictsPoison,
+                    enrageThresholdFraction,
+                    enrageDefenseBonus.HasValue ? (int)enrageDefenseBonus.Value : null);
             }
             return monsters;
         }
@@ -319,6 +328,14 @@ namespace LunaFlow.Rulebook.OneD20
         {
             var value = parent.Get(key);
             return value.Type == DataType.Boolean ? value.Boolean : null;
+        }
+
+        /// <summary>Returns the numeric field <paramref name="key"/> if present and number-typed, else
+        /// null (missing/absent is not an error for an optional field, unlike <see cref="RequireNumber"/>).</summary>
+        private static double? OptionalNumber(Table parent, string key)
+        {
+            var value = parent.Get(key);
+            return value.Type == DataType.Number ? value.Number : null;
         }
 
         private static Table RequireTable(Table parent, string key, string sourceName, string context)

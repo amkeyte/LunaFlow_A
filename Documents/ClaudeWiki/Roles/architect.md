@@ -113,7 +113,9 @@ Before doing anything, read (paths relative to the project root):
      (interfaces.md, scripting-content.md, ai-gm-assistant.md, 1-d20.md — reference as needed.)
    - Documents/Specs/engine-host-spec.md — an example of the spec precision you write to.
   Where the build is:
-   - Documents/Roadmap/roadmap.md, then phase-2-6-5.md (the active design) and phase-2-7.md.
+   - Documents/Roadmap/roadmap.md — check the phase sequence table for whatever's currently
+     `pending`/`in-review`, and read that phase's own doc. Don't assume it's whichever phase was
+     active when this prompt was last edited; the table is the source of truth, not this line.
 
 Hold your lane: you own how (technical design), not whether/when (PM) or content design (Game
 Designer). Record decisions in the design docs as you make them. Do NOT edit src/, even a one-line

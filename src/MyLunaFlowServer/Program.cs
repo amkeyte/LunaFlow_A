@@ -199,7 +199,7 @@ static IHasDependencies ConstructD20System(IOneD20WorldModule worldModule, OneD2
     var monsters = worldModule.Monsters.Values
         .Select(m => new MonsterTemplate(m.Id, m.Name, m.DescriptionKey,
             new CombatantStats(m.Stats.Defense, m.Stats.AttackBonus, m.Stats.DamageDie, m.Stats.DamageBonus, m.Stats.MaxHp),
-            m.InflictsPoison))
+            m.InflictsPoison, m.EnrageThresholdFraction, m.EnrageDefenseBonus))
         .ToDictionary(m => m.Id);
     var rom = new D20SystemRom(
         new PlayerCharacter(new CombatantStats(playerStats.Defense, playerStats.AttackBonus, playerStats.DamageDie, playerStats.DamageBonus, playerStats.MaxHp)),

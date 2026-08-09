@@ -32,6 +32,7 @@ namespace LunaFlow.Rom.D20System
             }
 
             rules.Retract(combat);
+            EnrageEffect.RetractIfPresent(rules, combat.RoomId);
             _movement.ReturnToPreviousRoom();
             LunaFlowEngine.Host.Announce(_flavorText["pc-flee"]);
         }

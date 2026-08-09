@@ -30,7 +30,8 @@ nodes, and that's worth knowing before leaning on it for anything real.
 
 ## Required By
 
-*(computed, hand-derived pending real tooling)* — [RM-0004](RM-0004-phase-2-8.md)
+*(computed, hand-derived pending real tooling)* — [RM-0004](RM-0004-phase-2-8.md),
+[RM-0014](RM-0014-phase-2-11-1.md) (added 2026-08-08)
 
 ## Related pages
 
