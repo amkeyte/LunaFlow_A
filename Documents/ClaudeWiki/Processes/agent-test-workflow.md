@@ -75,10 +75,12 @@ dotnet test tests/LunaFlow.EngineTests --settings LunaFlow_A.runsettings --filte
 
 **Test Explorer GUI** — Test menu → Configure Run Settings → Select Solution-Wide runsettings File
 → whichever of the two files matches the project you want captured this run; only one is active at
-a time. (Whether a single "Run All Tests" pass spanning both projects in one Test Explorer session
-already merges into one trx regardless of which settings file is selected hasn't been confirmed
-hands-on — worth a one-time spot-check next time you're in VS. Until confirmed, treat the two
-files/two commands above as the reliable path for a doneness claim.)
+a time. **Confirmed hands-on 2026-08-08 (Phase 2.11 QA gate, ticket 0080):** a single "Run All Tests"
+pass does merge both projects into one `.trx`, landing at whichever project's output path the active
+runsettings file pointed to — that run's `latest.trx` showed 181 total results (93 EngineTests + 88
+ContentTests), not just the one project its path implied. Treat a single merged file as valid
+full-suite evidence as long as the total count is cross-checked against both projects' known counts,
+same as that gate did — don't assume it's only the named project's tests.
 
 ## Fixed path convention
 

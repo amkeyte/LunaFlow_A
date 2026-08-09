@@ -1,6 +1,6 @@
 # 0076 — Implement phase-2-11-capability-stress-test-spec.md
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Kofi (PM)
 **Opened:** 2026-08-04
 **For:** Baraka (Impl Dev)
@@ -164,4 +164,19 @@ Nadia's maintained suite — ticketed as 0079 below — it's the demonstrable ev
 
 ### Resolution
 
-<Filled in by the opener when closing.>
+**Resolved 2026-08-08 (Kofi, opener).** The one bar this ticket was still waiting on — an Arryn-run
+full-suite `.trx` — is in: `tests/LunaFlow.EngineTests/TestResults/latest.trx`, run `amkey@ARRYNSTATION
+2026-08-08 20:54:03`, `runUser="ARRYNSTATION\amkey"`. **181/181 passed, 0 failed** — and 181 is exactly
+93 (`LunaFlow.EngineTests` baseline, untouched by this phase) + 88 (`LunaFlow.ContentTests`, per 0079's
+independently-reverified count), so this one run demonstrably covers both projects, not just the one
+whose runsettings it was pointed at. That also answers `agent-test-workflow.md`'s open question about
+whether a single "Run All Tests" pass merges both projects into one `.trx` — confirmed yes, noted there.
+
+Everything else was already independently re-verified before this closed: 0078 (Amara, against actual
+repo state — merge structure, D20System's untouched isolation, no cross-namespace leakage) and 0079
+(Baraka, against the actual test files — 88/88, correct two-pass fixture shape for the retroactive-grant
+regression, item 4's skip correctly reasoned). Nothing here is my own read of `/src`; it's the
+Arryn-run `.trx` plus those two independent chains of evidence.
+
+Build ticket closed. Phase 2.11's QA gate cut to Lothar as ticket
+[0080](0080-phase-2-11-qa-gate.md).

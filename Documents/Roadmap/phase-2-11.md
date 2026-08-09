@@ -1,9 +1,14 @@
 # Phase 2.11 — Cross-ROM capability mechanism stress test
 
-**Status:** pending. Built per [`Specs/phase-2-11-capability-stress-test-spec.md`](../Specs/phase-2-11-capability-stress-test-spec.md)
+**Status:** done (QA PASS). Built per [`Specs/phase-2-11-capability-stress-test-spec.md`](../Specs/phase-2-11-capability-stress-test-spec.md)
 against the reviewed proposal in
 [`Proposals/2-10-through-2-12-content-framework-stress-test.md`](Proposals/2-10-through-2-12-content-framework-stress-test.md),
 approved via ticket [0067](../ClaudeWiki/Processes/Handoffs/0067-proposal-2-10-2-12-content-framework-stress-test-phases-post-2-9.md).
+Build ([0076](../ClaudeWiki/Processes/Handoffs/0076-implement-phase-2-11-capability-stress-test-spec-md.md)),
+consolidation ([0078](../ClaudeWiki/Processes/Handoffs/0078-consolidate-gridmap-d20system-loot-reputation-into-one-implementation-assembly.md)),
+and test coverage ([0079](../ClaudeWiki/Processes/Handoffs/0079-phase-2-11-maintained-test-coverage.md))
+all closed; QA gate ([0080](../ClaudeWiki/Processes/Handoffs/0080-phase-2-11-qa-gate.md)) verdict
+**PASS** — see [`phase-2-11-verdict.md`](../QA/phase-2-11-verdict.md).
 
 ## Overview
 
@@ -74,8 +79,8 @@ content-only phase since 2.7.1 doesn't apply here by default.
 - Previous: [Phase 2.10 — Content coverage stress test](phase-2-10.md)
 - Sibling (same proposal, independent scope): Phase 2.12 (Lua World Module authoring-surface stress
   test) — still proposal-stage, not yet ratified into this sequence table.
-- Next: none scheduled against this phase specifically. Depending on what items 6/8 surface, may
-  produce a follow-up ticket to Amara before Phase 4 kickoff.
+- Next: none scheduled against this phase specifically. Items 6/8 surfaced no framework finding (QA
+  verdict, ticket 0080) — no follow-up ticket to Amara.
 
 ## Related documents
 

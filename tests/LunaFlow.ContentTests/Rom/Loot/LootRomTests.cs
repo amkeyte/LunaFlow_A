@@ -5,9 +5,10 @@ namespace LunaFlow.ContentTests.Rom.Loot
 {
     /// <summary>
     /// <see cref="LootRom"/>'s own shape: its <c>Provides</c> entry (<c>EquippedWeapon</c>, added by
-    /// ticket 0071's ruling), its one <c>Requires</c> entry, and the assembly-boundary guarantee (no
-    /// reference to GridMap's or D20System's assembly — only the Cartridge contract surface) that
-    /// ticket 0052's Done-When calls for.
+    /// ticket 0071's ruling), its two <c>Requires</c> entries (<c>ChallengeSolved</c>, and — per
+    /// phase-2-11-capability-stress-test-spec.md item 7 — <c>ReputationTier</c>), and the
+    /// assembly-boundary guarantee (no reference to GridMap's or D20System's assembly — only the
+    /// Cartridge contract surface) that ticket 0052's Done-When calls for.
     /// </summary>
     [TestClass]
     [TestCategory("Rom_OneD20")]
@@ -32,12 +33,14 @@ namespace LunaFlow.ContentTests.Rom.Loot
         }
 
         [TestMethod]
-        public void Requires_NamesChallengeSolved_PairedWithIChallengeSolvedContract()
+        public void Requires_NamesChallengeSolvedAndReputationTier_PairedWithTheirContracts()
         {
             var requires = NewLootRom().Requires;
-            Assert.AreEqual(1, requires.Count);
+            Assert.AreEqual(2, requires.Count);
             Assert.AreEqual("ChallengeSolved", requires[0].Name);
             Assert.AreEqual(typeof(IChallengeSolved), requires[0].ContractType);
+            Assert.AreEqual("ReputationTier", requires[1].Name);
+            Assert.AreEqual(typeof(IReputationTier), requires[1].ContractType);
         }
 
         [TestMethod]

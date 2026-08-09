@@ -38,7 +38,7 @@ replaces it once an HTML consumer is built against `export-json`, per
 | [RM-0004](RM-0004-phase-2-8.md) | work | resolved | Kofi | Phase 2.8 — World Module extraction |
 | [RM-0005](RM-0005-phase-2-9.md) | work | resolved | Kofi | Phase 2.9 — Lua World Module authoring |
 | [RM-0006](RM-0006-phase-2-10.md) | work | resolved | Kofi | Phase 2.10 — Content coverage stress test |
-| [RM-0007](RM-0007-phase-2-11.md) | work | open | Kofi | Phase 2.11 — Capability mechanism stress test (ticket 0076, in-review) |
+| [RM-0007](RM-0007-phase-2-11.md) | work | resolved | Kofi | Phase 2.11 — Capability mechanism stress test (QA gate 0080 — PASS) |
 | [RM-0008](RM-0008-phase-2-12.md) | work | open | Kofi | Phase 2.12 — Lua World Module stress test (still proposal-stage) |
 | [RM-0009](RM-0009-ticket-0073-roslyn-evaluation.md) | work | open | Amara | Evaluate Roslyn removal from the rule-compilation pipeline (ticket 0073) |
 | [RM-0010](RM-0010-rom-developer-operational.md) | convergence | reached | Kofi | ROM Developer operational |

@@ -1,6 +1,6 @@
 # 0078 — Consolidate GridMap/Loot(/Reputation) into one implementation assembly; D20System stays separate
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Amara (Architect)
 **Opened:** 2026-08-08
 **For:** Baraka (Impl Dev)
@@ -103,4 +103,36 @@ the merged project.
 
 ### Resolution
 
-<Filled in by the opener when closing.>
+**Resolved 2026-08-08 (Amara, opener).** Didn't take the Response on faith — checked the actual repo
+state, independent of the write-up:
+
+- `example/OneD20SharedRoms/OneD20SharedRoms.csproj` exists, references `LunaFlow.Rom`/`LunaFlow.Rules`/
+  `LunaFlow.Engine` plus `D20SystemExampleC` only — no reference to `D20SystemExampleA`. Contains
+  `LunaFlow.Rom.GridMap`, `LunaFlow.Rom.Loot`, and `LunaFlow.Rom.Reputation` namespaces as three
+  sibling folders, matching the ask.
+- `example/D20SystemExampleB` and `example/D20SystemExampleD` have no source or `.csproj` left, only
+  harmless leftover `obj/` cache directories (gitignored, not tracked) — the `.sln` no longer
+  references either. Not flagging the leftover `obj/` folders as a defect, just noting them for the
+  record; they're inert.
+- `example/D20SystemExampleA` (D20System) is untouched — same 8 files, `.csproj` last modified
+  2026-07-27, well before this ticket, still referencing only `src/` tiers and the contract surface,
+  no reference to `OneD20SharedRoms`. **Its isolation is exactly as compiler-enforced as it always
+  was** — the regression-testability rationale for keeping it separate holds structurally, confirmed,
+  not just asserted.
+- Grepped `OneD20SharedRoms` directly for cross-namespace leakage: no file under `GridMap/` names
+  `LunaFlow.Rom.Loot`, no file under `Loot/` names `LunaFlow.Rom.GridMap`, and `Reputation/` names
+  neither — the convention-enforced peer-isolation gap this ticket knowingly accepted hasn't actually
+  been exercised. Stands in for the deliberately-deferred automated check, same bar §5.4's manual
+  precedent set.
+- `Program.cs` registers all four ROMs (`GridMap`, `D20System`, `Loot`, `Reputation`) against
+  `ComponentRegistry`, correct types, correct tier.
+- Couldn't run `dotnet build` myself from this session, but didn't need to take the claim on faith
+  either: [ticket 0079](0079-phase-2-11-maintained-test-coverage.md) — Nadia's downstream test work,
+  already resolved — independently re-ran `dotnet build LunaFlow_A.sln` (clean) and `dotnet test
+  tests/LunaFlow.ContentTests` (88/88) against this exact merged state before closing, which exercises
+  `ComponentRegistry.Validate()` end-to-end on the post-merge graph. That's real, independent
+  confirmation of the build claim, not a second unverified assertion stacked on the first.
+
+No defects found. 0078 is done — the merge is real, committed, structurally matches the ask, and
+D20System's separateness is intact. Nothing further needed here; 0079 already closed downstream, and
+0076 itself is what's still waiting on an Arryn-run `latest.trx` per standing convention.

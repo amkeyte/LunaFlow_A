@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Playlist Version="2.0">
-  <!-- Complete LunaFlow.ContentTests suite (77 total tests) -->
-  <!-- Mirrors ContentTestsD20System + ContentTestsLoot + ContentTestsOneD20Rulebook + ContentTestsComponentRegistry -->
+  <!-- Complete LunaFlow.ContentTests suite (88 total tests) -->
+  <!-- Mirrors ContentTestsD20System + ContentTestsLoot + ContentTestsOneD20Rulebook + ContentTestsComponentRegistry + ContentTestsReputation -->
 
   <!-- Rom/D20System (25 tests) -->
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemHandlerTests.Move_MatchesNineRoomsAdjacency_ValidAndRejected" />
@@ -30,9 +30,9 @@
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.WinLine_RoomFailedInLine_NeverFires_WhileUnrelatedLineStillFires" />
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.D20System.D20SystemRuleFixtureTests.GameEnd_AnnouncesOnAnyWinMarker" />
 
-  <!-- Rom/Loot (13 tests) -->
+  <!-- Rom/Loot (17 tests) -->
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Provides_NamesEquippedWeapon_PairedWithIEquippedWeaponContract" />
-  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Requires_NamesChallengeSolved_PairedWithIChallengeSolvedContract" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Requires_NamesChallengeSolvedAndReputationTier_PairedWithTheirContracts" />
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.LootTable_ReturnsTheConstructedTable" />
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Name_IsLoot" />
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRomTests.Assembly_ReferencesNeitherGridMapNorD20SystemAssembly" />
@@ -40,6 +40,10 @@
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.SkillCheckRoomSolved_WithNoLootAssignment_NeverAwardsAnything" />
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.AlreadyAwardedRoom_NeverAwardsTwice" />
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.MultipleFightRoomsSolved_EachAwardsItsOwnItem_OneGenericRuleNotAPerRoomFamily" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.FightRoomSolved_AtOrAboveVeteran_AwardsItemAndBonus_AnnouncesBothPickupTexts" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.ItemAwardedBelowVeteran_NeverGainsBonusItemAwarded_AfterVeteranReachedLater" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.RoomSolvedWithBothVeteranAndLegendAlreadyPresent_AwardsExactlyOnceEach_NoDoubleFire" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.LootRuleGroupFixtureTests.SkillCheckRoomSolved_WithNoLootAssignment_NeverAwardsAnything_EvenAtVeteranOrAbove" />
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.InventoryCommandHandlerTests.Inventory_NoItemsAwarded_AnnouncesEmptyMessage" />
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.InventoryCommandHandlerTests.Inventory_ItemsAwarded_AnnouncesHeaderThenEachItemByName" />
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Loot.InventoryCommandHandlerTests.Inv_IsAnAliasForInventory_SameHandlerSameOutput" />
@@ -85,6 +89,17 @@
 
   <!-- Rom/ComponentRegistryContentTests (3 tests) -->
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryContentTests.ComponentRegistry_OneD20PlusDd20System_ValidatesSuccessfully" />
-  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryContentTests.ComponentRegistry_GridMapD20SystemLootAllRegistered_ValidatesSuccessfully" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryContentTests.ComponentRegistry_GridMapD20SystemLootReputationAllRegistered_ValidatesSuccessfully" />
   <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryContentTests.ComponentRegistry_OneD20DependsOnRoms_LootNotRegistered_ThrowsClearError" />
+
+  <!-- Rom/ComponentRegistryProbeTests (2 tests) -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryProbeTests.BountyAndHazardThreatProbes_BothRegistered_ThrowsNamingBothComponentsAndThreatLevel" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.ComponentRegistryProbeTests.CycleProbeAlphaAndBeta_BothRegistered_ThrowsIdentifyingACircularDependency" />
+
+  <!-- Rom/Reputation (5 tests) -->
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Reputation.ReputationRuleGroupFixtureTests.FirstSolve_InsertsReputationPointsAtOne" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Reputation.ReputationRuleGroupFixtureTests.SecondSolve_RetractsPriorPoints_LeavesExactlyOneFactAtIncrementedTotal" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Reputation.ReputationRuleGroupFixtureTests.ThirdSolve_CrossesVeteranThreshold_InsertsReputationTierReachedExactlyOnce" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Reputation.ReputationRuleGroupFixtureTests.SolvesPastVeteran_NeverReinsertsVeteranTier" />
+  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Reputation.ReputationRuleGroupFixtureTests.SixthSolve_CrossesLegendThreshold_InsertsLegendExactlyOnce_VeteranStillExactlyOnce" />
 </Playlist>

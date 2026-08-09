@@ -18,6 +18,9 @@
     <ProjectReference Include="..\..\example\D20SystemExampleA\D20SystemExampleA.csproj" />
     <ProjectReference Include="..\..\example\D20SystemExampleC\D20SystemExampleC.csproj" />
     <ProjectReference Include="..\..\example\OneD20SharedRoms\OneD20SharedRoms.csproj" />
+    <!-- LunaFlow.Rom.Probes is deliberately never referenced by MyLunaFlowServer.csproj (see its own
+         header comment) — test/spike code only, for the isolated-ComponentRegistry probe fixtures. -->
+    <ProjectReference Include="..\..\example\LunaFlow.Rom.Probes\LunaFlow.Rom.Probes.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,6 +2,7 @@ using LunaFlow.Engine.Components;
 using LunaFlow.Rom.D20System;
 using LunaFlow.Rom.GridMap;
 using LunaFlow.Rom.Loot;
+using LunaFlow.Rom.Reputation;
 using LunaFlow.Rulebook.OneD20;
 
 namespace LunaFlow.ContentTests.Rom
@@ -39,7 +40,7 @@ namespace LunaFlow.ContentTests.Rom
 
         #endregion
 
-        #region Concrete case: three-ROM OneD20 registration (Phase 2.7.1)
+        #region Concrete case: four-ROM OneD20 registration (Phase 2.7.1 + Phase 2.11's Reputation)
 
         private static readonly IOneD20WorldModule WorldModule = new DefaultOneD20WorldModule();
 
@@ -74,10 +75,12 @@ namespace LunaFlow.ContentTests.Rom
 
         private static LootRom NewLoot() => new(new MonsterLootTable(WorldModule.ItemIdByMonsterId));
 
+        private static ReputationRom NewReputation() => new();
+
         [TestMethod]
         [TestCategory("Engine_Components")]
         [TestCategory("Phase2.7.1")]
-        public void ComponentRegistry_GridMapD20SystemLootAllRegistered_ValidatesSuccessfully()
+        public void ComponentRegistry_GridMapD20SystemLootReputationAllRegistered_ValidatesSuccessfully()
         {
             var registry = new ComponentRegistry();
             var ruleBook = new OneD20RuleBook();
@@ -85,14 +88,18 @@ namespace LunaFlow.ContentTests.Rom
             registry.Register(NewGridMap(), EngineTier.Rom, "GridMap");
             registry.Register(NewD20System(), EngineTier.Rom, "D20System");
             registry.Register(NewLoot(), EngineTier.Rom, "Loot");
+            registry.Register(NewReputation(), EngineTier.Rom, "Reputation");
             registry.Register(ruleBook, EngineTier.Rulebook, "OneD20");
 
             registry.ValidateDependsOn("OneD20", ruleBook.DependsOnRoms);
             registry.Validate();
-            // Confirms the real three-ROM graph validates clean: Loot's Requires: [ChallengeSolved]
-            // is satisfied by D20System's Provides, GridMap's own zero Requires (its win-line rules
-            // match IChallengeSolved directly via NRules, not capability mediation) never collides
-            // with Loot's requirement of the same capability name, no cycle, no duplicate provider.
+            // Confirms the real four-ROM graph validates clean: Loot's Requires: [ChallengeSolved,
+            // ReputationTier] is satisfied by D20System's and Reputation's Provides respectively,
+            // Reputation's own Requires: [ChallengeSolved] is satisfied by the same D20System
+            // provider Loot already depends on (one provider, two independent requirers), GridMap's
+            // own zero Requires (its win-line rules match IChallengeSolved directly via NRules, not
+            // capability mediation) never collides with either requirement, no cycle, no duplicate
+            // provider.
         }
 
         [TestMethod]
