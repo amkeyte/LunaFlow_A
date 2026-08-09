@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Playlist Version="2.0">
-  <!-- Rom/Reputation: ReputationRuleGroup accrual (retract+insert) and Veteran/Legend thresholds (5 tests) -->
-  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Reputation.ReputationRuleGroupFixtureTests.FirstSolve_InsertsReputationPointsAtOne" />
-  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Reputation.ReputationRuleGroupFixtureTests.SecondSolve_RetractsPriorPoints_LeavesExactlyOneFactAtIncrementedTotal" />
-  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Reputation.ReputationRuleGroupFixtureTests.ThirdSolve_CrossesVeteranThreshold_InsertsReputationTierReachedExactlyOnce" />
-  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Reputation.ReputationRuleGroupFixtureTests.SolvesPastVeteran_NeverReinsertsVeteranTier" />
-  <Rule Name="Include" FullyQualifiedName="LunaFlow.ContentTests.Rom.Reputation.ReputationRuleGroupFixtureTests.SixthSolve_CrossesLegendThreshold_InsertsLegendExactlyOnce_VeteranStillExactlyOnce" />
-</Playlist>
