@@ -3,7 +3,8 @@
 Split from [`_index.md`](_index.md) 2026-08-02 once the live table grew unwieldy again. Covers
 Phase 2.6 through the Cartridge pivot (2.6.5/2.7 pre-content). See [`_index.md`](_index.md) for the
 current/active window and for the process this index supports; see
-[`index-archive.md`](index-archive.md) for 0001–0020.
+[`index-archive.md`](index-archive.md) for 0001–0020 and [`index-archive-3.md`](index-archive-3.md)
+for 0040–0057.
 
 Ticket files themselves haven't moved — still in this same `Handoffs/` folder. Only the index rows
 split out. Summaries below are one-line pointers, not full narratives; open the ticket for the real

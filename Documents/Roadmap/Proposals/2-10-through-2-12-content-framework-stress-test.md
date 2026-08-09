@@ -1,15 +1,16 @@
 # Proposal — Phases 2.10–2.12: content/framework stress test (post-2.9)
 
-**Status:** fully promoted. **2.10 is ratified and done** — see [`../phase-2-10.md`](../phase-2-10.md),
-QA PASS, ticket [0074](../../ClaudeWiki/Processes/Handoffs/0074-phase-2-10-qa-gate.md). **2.11 is
-ratified and done** — see [`../phase-2-11.md`](../phase-2-11.md), QA PASS, ticket
-[0080](../../ClaudeWiki/Processes/Handoffs/0080-phase-2-11-qa-gate.md). **2.12 is ratified** — see
-[`../phase-2-12.md`](../phase-2-12.md), reviewed clean by Amara (ticket
-[0081](../../ClaudeWiki/Processes/Handoffs/0081-phase-2-12-spec-ready-for-ratification-read.md)),
-build ticket [0084](../../ClaudeWiki/Processes/Handoffs/0084-implement-phase-2-12-lua-worldmodule-stress-test-spec-md.md)
-cut to Baraka. All three phases of this proposal are now real, sequenced roadmap phases; this doc is
-historical from here. Registered in [`Proposals/_index.md`](_index.md) and pointed to from
-`roadmap.md`'s "Proposals" section.
+**Status:** fully done. **2.10** — see [`../phase-2-10.md`](../phase-2-10.md), QA PASS, ticket
+[0074](../../ClaudeWiki/Processes/Handoffs/0074-phase-2-10-qa-gate.md). **2.11** — see
+[`../phase-2-11.md`](../phase-2-11.md), QA PASS, ticket
+[0080](../../ClaudeWiki/Processes/Handoffs/0080-phase-2-11-qa-gate.md). **2.12** — see
+[`../phase-2-12.md`](../phase-2-12.md), QA PASS, ticket
+[0086](../../ClaudeWiki/Processes/Handoffs/0086-phase-2-12-qa-gate.md); item 11's Enrage finding
+(cheap contract extension, doesn't prove a runtime-composable "effect fact") routed to Amara for
+`gm-overlay.md` as ticket [0087](../../ClaudeWiki/Processes/Handoffs/0087-phase-2-12-item-11-finding-for-gm-overlay-draft.md).
+All three phases of this proposal are now real, completed roadmap phases; this doc is historical from
+here. Registered in [`Proposals/_index.md`](_index.md) and pointed to from `roadmap.md`'s "Proposals"
+section.
 
 **Author:** Juno (Game Designer). **Reviewed by:** Amara (Architect), via ticket 0067.
 

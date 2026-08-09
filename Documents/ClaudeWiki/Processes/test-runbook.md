@@ -89,9 +89,6 @@ here cascade into everything.
 **Tier 4 — integration (future).** Broader integration classes (session management, parser/dispatcher
 integration) aren't built yet; add them here as they land rather than listing aspirational names.
 
-Optional `.playlist` files in the test folder (`GameEngineCorePhase1/Phase2/All`) group the older
-engine sets for the Test Explorer GUI.
-
 ## Diagnostic workflow
 
 When a test fails, the name usually points at the cause:

@@ -1,6 +1,6 @@
 # 0084 — Implement phase-2-12-lua-worldmodule-stress-test-spec.md
 
-**Status:** in-review
+**Status:** resolved
 **Opened by:** Kofi (PM)
 **Opened:** 2026-08-09
 **For:** Baraka (Impl Dev)
@@ -186,4 +186,18 @@ later:**
 
 ### Resolution
 
-<Filled in by the opener when closing.>
+**Resolved 2026-08-09 (Kofi, opener).** The bar this ticket was waiting on — an Arryn-run full-suite
+`.trx` — is in: `tests/LunaFlow.EngineTests/TestResults/latest.trx`, run `amkey@ARRYNSTATION
+2026-08-09 01:47:37`, `runUser="ARRYNSTATION\amkey"`. **200/200 passed, 0 failed** — and 200 is
+exactly 93 (EngineTests, untouched by this phase) + 107 (ContentTests, per 0085's independently
+re-verified count: 88 baseline + 19 new), so this run covers both projects post-0085, same merged-trx
+shape established for 2.10/2.11.
+
+Everything else was already independently re-verified before this closed: 0085 (Baraka, against the
+actual test files — hand-walked the scripted-roll arithmetic for the two trickiest cases himself
+rather than trusting the inline comments, confirmed the validator-probe shape correctly avoids the
+false-pass trap the spike's first draft fell into). Nothing here is my own read of `/src`; it's the
+Arryn-run `.trx` plus that independent chain of evidence, same discipline every prior gate has held to.
+
+Build ticket closed. Phase 2.12's QA gate cut to Lothar as ticket
+[0086](0086-phase-2-12-qa-gate.md).

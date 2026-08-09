@@ -167,6 +167,83 @@ namespace LunaFlow.ContentTests.Rulebook.OneD20
             Assert.IsTrue(ex.Message.Contains("missing the fixed-vocabulary key 'win-announce'"));
         }
 
+        // ---- Item 11 (phase-2-12-lua-worldmodule-stress-test-spec.md): Enrage pairing/range check ----
+        // Mutates one monster ("duelist") in an otherwise-untouched, fully-valid TestWorldModule —
+        // deliberately NOT a minimal single-monster module (see
+        // example/Phase2_12Spike/Program.cs's SingleMonsterProbeWorldModule doc comment for the
+        // mistake that shape caused: under-populated modules trip the roster/pool-size floor checks
+        // first, so a "reject" assertion passes for the wrong reason). TestWorldModule.FromDefault()
+        // already has 9 rooms, 9 challenges, 5 monsters — every other check stays satisfied.
+
+        [TestMethod]
+        public void Validate_MonsterEnrageThresholdSetWithoutDefenseBonus_ThrowsNamingMonsterAndEnrage()
+        {
+            var module = TestWorldModule.FromDefault();
+            var monsters = new Dictionary<string, OneD20MonsterTemplate>(module.Monsters);
+            monsters["duelist"] = monsters["duelist"] with { EnrageThresholdFraction = 0.5, EnrageDefenseBonus = null };
+            module.Monsters = monsters;
+
+            var ex = Assert.ThrowsException<InvalidOperationException>(
+                () => OneD20WorldModuleValidator.Validate(module));
+            Assert.IsTrue(ex.Message.Contains("Enrage"));
+            Assert.IsTrue(ex.Message.Contains("'duelist'"));
+        }
+
+        [TestMethod]
+        public void Validate_MonsterEnrageDefenseBonusSetWithoutThreshold_ThrowsNamingMonsterAndEnrage()
+        {
+            var module = TestWorldModule.FromDefault();
+            var monsters = new Dictionary<string, OneD20MonsterTemplate>(module.Monsters);
+            monsters["duelist"] = monsters["duelist"] with { EnrageThresholdFraction = null, EnrageDefenseBonus = 3 };
+            module.Monsters = monsters;
+
+            var ex = Assert.ThrowsException<InvalidOperationException>(
+                () => OneD20WorldModuleValidator.Validate(module));
+            Assert.IsTrue(ex.Message.Contains("Enrage"));
+            Assert.IsTrue(ex.Message.Contains("'duelist'"));
+        }
+
+        [TestMethod]
+        public void Validate_MonsterEnrageThresholdAboveOne_ThrowsNamingMonsterAndEnrage()
+        {
+            var module = TestWorldModule.FromDefault();
+            var monsters = new Dictionary<string, OneD20MonsterTemplate>(module.Monsters);
+            monsters["duelist"] = monsters["duelist"] with { EnrageThresholdFraction = 1.5, EnrageDefenseBonus = 3 };
+            module.Monsters = monsters;
+
+            var ex = Assert.ThrowsException<InvalidOperationException>(
+                () => OneD20WorldModuleValidator.Validate(module));
+            Assert.IsTrue(ex.Message.Contains("Enrage"));
+            Assert.IsTrue(ex.Message.Contains("'duelist'"));
+        }
+
+        [TestMethod]
+        public void Validate_MonsterEnrageThresholdAtZero_ThrowsNamingMonsterAndEnrage()
+        {
+            // Exclusive lower bound: (0, 1] rejects exactly 0.
+            var module = TestWorldModule.FromDefault();
+            var monsters = new Dictionary<string, OneD20MonsterTemplate>(module.Monsters);
+            monsters["duelist"] = monsters["duelist"] with { EnrageThresholdFraction = 0.0, EnrageDefenseBonus = 3 };
+            module.Monsters = monsters;
+
+            var ex = Assert.ThrowsException<InvalidOperationException>(
+                () => OneD20WorldModuleValidator.Validate(module));
+            Assert.IsTrue(ex.Message.Contains("Enrage"));
+            Assert.IsTrue(ex.Message.Contains("'duelist'"));
+        }
+
+        [TestMethod]
+        public void Validate_MonsterEnrageThresholdAtOne_DoesNotThrow()
+        {
+            // Inclusive upper bound: (0, 1] accepts exactly 1.
+            var module = TestWorldModule.FromDefault();
+            var monsters = new Dictionary<string, OneD20MonsterTemplate>(module.Monsters);
+            monsters["duelist"] = monsters["duelist"] with { EnrageThresholdFraction = 1.0, EnrageDefenseBonus = 3 };
+            module.Monsters = monsters;
+
+            OneD20WorldModuleValidator.Validate(module);
+        }
+
         [TestMethod]
         public void HollowKeepWorldModule_RoomTopology_MatchesDefaultsGridPositionsAndSlotKinds()
         {

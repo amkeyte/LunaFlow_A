@@ -116,12 +116,16 @@ above is no longer purely hypothetical, but what actually got built is narrower 
 and lands in different places than sketched. Real, in `LunaFlow.Engine.Components`: `EngineTier`
 and tier-ordering enforcement (a component depending on a higher tier is a load-time error, exactly
 as described above), plus `Capability`/`IHasDependencies` — a `Provides`/`Requires` contract, not
-the single `DependsOn: IEnumerable<Type>` shown above. `IRom`/`IInteropRom` (implementing
-`IHasDependencies`) live in `LunaFlow.Rom`, not as a generic `ARom : AEngineComponent` sketched
+the single `DependsOn: IEnumerable<Type>` shown above. `IRom` (implementing
+`IHasDependencies`) lives in `LunaFlow.Rom`, not as a generic `ARom : AEngineComponent` sketched
 here — Phase 2.6.5 rejected a single shared base class in favor of each tier project owning its own
 identity type, all implementing the same minimal Engine-defined contract. Peer-tier dependencies
-(ROM-to-ROM) resolve through `IInteropRom` as a capability broker, not through `DependsOn` naming a
-concrete type directly. Still not built, still deferred, non-goal as originally stated:
+(ROM-to-ROM) resolve through the Cartridge contract surface — peers declare `Provides`/`Requires`,
+NRules matches the shared contract type directly — not through `DependsOn` naming a concrete type
+directly. **Corrected 2026-08-09:** this paragraph previously named `IInteropRom` as the resolution
+mechanism, current as of Phase 2.6.5's design but overtaken by the Cartridge pivot two phases later;
+`IInteropRom` was a proposed runtime capability broker that never shipped real behavior and is now
+retired (see `glossary.md`). Still not built, still deferred, non-goal as originally stated:
 `IEngineEventSubscriber` and the tier-and-dependency-ordered `OnTurnAdvance` dispatch pass described
 below — 2.6.5 only validates dependencies at load time, it doesn't touch turn-by-turn event
 delivery. Treat the `AEngineComponent`/`ARom` code block above as historical (the design's first

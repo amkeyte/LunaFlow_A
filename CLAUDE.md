@@ -59,7 +59,8 @@ Four content/framework tiers plus a host, layered so each depends only downward:
 - `src/LunaFlow.Engine` — runtime: command handling, the game loop/host (`GameEngineCore` +
   `ConsoleEngine`), and `RuleEngine`, a thin wrapper over NRules.
 - `src/LunaFlow.Rules` — the tier-agnostic rule-authoring surface: `ARule`, the reference/identity
-  model, `IMechanic`, and `GeneratorServices` (the author-declaration → NRules pipeline).
+  model, and `GeneratorServices` (the author-declaration → NRules pipeline). (`IMechanic` retired
+  2026-08-09 — see `design/glossary.md`.)
 - `src/LunaFlow.Rom` — the ROM tier: reusable game-system toolboxes, with direct engine access
   (today: `D20System`, `NineRooms`).
 - `src/LunaFlow.Rulebook` — the Rulebook tier: a specific game's data built on a ROM (today:

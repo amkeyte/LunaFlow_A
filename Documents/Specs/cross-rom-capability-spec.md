@@ -446,8 +446,10 @@ framework.
    — and a consuming **handler** reaches the same fact via `Query<TContract>()`. Both paths, not one;
    they share no code (§2).
 3. **No lookup API exists anywhere in the shipped surface** — no `Resolve`, no service locator, no
-   queryable registry. Verified by inspecting the contract surface and `IInteropRom`, not by testing
-   that nobody calls one. Absence is the criterion.
+   queryable registry. Verified by inspecting the contract surface for such a method, not by testing
+   that nobody calls one. Absence is the criterion. (`IInteropRom`, the marker this once would have
+   lived on, was retired 2026-08-09 — zero implementers ever shipped; see `glossary.md`. Its absence
+   from the codebase is now itself part of the same absence-is-the-criterion check.)
 4. A consuming ROM obtains a peer's service implementation **only** as a constructor argument typed
    to a contract interface, supplied by `Program.cs`.
 5. **The contract surface assembly implements no `IRom`** and is not registered with

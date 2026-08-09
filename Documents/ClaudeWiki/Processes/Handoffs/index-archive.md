@@ -2,7 +2,8 @@
 
 Split from [`_index.md`](_index.md) 2026-07-26 once the live table grew unwieldy. Covers Phases 1.5,
 2, and 2.5 — all closed. See [`_index.md`](_index.md) for the current/active window and for the
-process this index supports; see [`index-archive-2.md`](index-archive-2.md) for 0021–0039.
+process this index supports; see [`index-archive-2.md`](index-archive-2.md) for 0021–0039 and
+[`index-archive-3.md`](index-archive-3.md) for 0040–0057.
 
 Ticket files themselves haven't moved — still in this same `Handoffs/` folder. Only the index rows
 split out. Summaries below are one-line pointers, not full narratives; open the ticket for the real

@@ -2,11 +2,12 @@
 
 Implementation status: see [`../Roadmap/roadmap.md`](../Roadmap/roadmap.md).
 
-> ⚠️ **This document contains one unratified draft section:
-> ["Draft two-network split (unratified)"](#draft-two-network-split-unratified).** Everything else
-> in this document is a standing ruling. That one section is not — it's a candidate revision to
-> "Boundary against Rulebook" below, flagged inline at the point it revises, and nothing outside this
-> document currently depends on it or should.
+> **Ruled, 2026-08-09: single session for v1.** The two-network split proposed and drafted here on
+> 2026-08-03 is **considered, not adopted** — kept in place below for the reasoning trail, same
+> convention `glossary.md` uses for a rejected design worth keeping ("kept for lineage"). See
+> ["Ruled: single session, not two"](#ruled-single-session-not-two) for why the isolation problem
+> that motivated it turned out to already be solved a different way, and what would still bring it
+> back.
 
 A **GM Overlay** is a live, session-scoped rule or world-state edit a GM (Storyteller) makes during
 play — "Goblin 3 is unkillable," "go directly to the Wizard, do not pass Go." `architecture.md`'s
@@ -47,16 +48,17 @@ though both sit at the same trust distance from Rulebook in the tier diagram.
 
 ## Boundary against Rulebook
 
-**Correction flag, 2026-08-03 — see the draft section below.** This section originally claimed GM
-Overlay rules compile into and fire inside the *same* session as the Rulebook. That's wrong in a way
-that matters: a rule's RHS actions run with full `ISession` reach once compiled in, regardless of
-what LHS guards gated whether it fired — standing-guard injection bounds *whether* a rule fires, not
-what it's allowed to do once it does. ["Draft two-network split (unratified)"](#draft-two-network-split-unratified)
-below is the candidate fix (a separate, isolated overlay session, never handed the main session
-directly). ⚠️ **That fix is draft, not ratified** — the same-session description immediately below is
-kept as written, uncorrected in place, so the history of what changed and why stays legible. Don't
-build against either version without confirming which one is current; as of this writing, neither is
-— this whole boundary is mid-revision.
+**History note, resolved 2026-08-09 — see ["Ruled: single session, not two"](#ruled-single-session-not-two)
+below for the final word.** This section originally (2026-08-03) claimed GM Overlay rules compile
+into and fire inside the *same* session as the Rulebook, then got flagged as wrong the same day: a
+rule's RHS actions run with full `ISession` reach once compiled in, regardless of what LHS guards
+gated whether it fired. A two-network split (a separate, isolated overlay session) was drafted as the
+fix and sat unratified for a stretch. **It's since been superseded again, the other direction: single
+session is correct after all, but not for the reason the original text below assumed** — the
+isolation gap is closed a different way (a narrow, closed expression grammar, ruled via ticket 0073,
+rather than a session boundary). Full reasoning below the two-network draft. The paragraph
+immediately following is kept as originally written for the history, same as the draft that corrected
+it is kept below rather than deleted.
 
 Rulebook rules and GM Overlay rules can both end up as ordinary NRules rules loaded into the same
 session — that's the point of `rule-pipeline.md`'s IR being format-agnostic (`RuleParseContext` →
@@ -66,9 +68,19 @@ differs is trust and compile time, not the destination shape:
 - **Rulebook**: C#, statically checked at build time, fully trusted, compiled ahead of play via
   `ReflectionRuleParser` + `RoslynRuleCompiler` (compile-time mode, `rule-pipeline.md`).
 - **GM Overlay**: scripted, unreviewed, produced during play, compiled through the same pipeline's
-  **runtime mode** — swapping the compiler target from "emit an assembly" to "compile into the
-  current session" (`rule-pipeline.md`'s own framing of what distinguishes the two modes). This is
-  the concrete slot Phase 4's `IRuleParser`/`IRuleCompiler` pair for a script DSL fills.
+  **runtime mode** — the concrete slot Phase 4's `IRuleParser`/`IRuleCompiler` pair for a script DSL
+  fills. **Mechanism ruled, 2026-08-09 (ticket [0073](../ClaudeWiki/Processes/Handoffs/0073-rule-compilation-cost-and-runtime-mode.md),
+  full evidence in [`rule-pipeline-compilation-cost.md`](rule-pipeline-compilation-cost.md)):** not
+  Roslyn. Rulebook's compile-time path stays exactly as it is (~800ms of in-memory `CSharpCompilation`,
+  tolerable as a one-time startup cost for trusted content); the runtime path instead builds
+  `IRuleDefinition`s directly via `NRules.RuleModel.Builders.RuleBuilder` and
+  `System.Linq.Expressions.LambdaExpression` — no C# source text generated, nothing handed to a
+  compiler frontend at all. Two independent reasons this is right for this tier specifically, not
+  just cheaper: it's the mechanism NRules itself actually exposes for building an `IRuleDefinition`
+  (`RuleCompiler.Compile(IEnumerable<IRuleDefinition>)` never required Roslyn — verified against the
+  pinned 1.0.2 source), and a narrow AST-to-`Expression`-tree translator can only ever emit the
+  operations it explicitly implements, which is a tighter trust boundary for the least-trusted tier
+  in the stack than assembling untrusted content into C# source and handing it to a general compiler.
 
 Because a GM Overlay author is the least trusted contributor in the stack short of a Player, the same
 standing-guard injection that protects a C# `[StandingRule]` has to apply automatically here too —
@@ -124,18 +136,23 @@ parsing Lua's own control flow, which reopens exactly the structural question th
 `when`/`then` shape exists to avoid answering generically.
 
 **Ruling:** the top-level rule structure stays a declarative `when`/`then` shape (format — YAML vs.
-something else — still `scripting-content.md`'s open question, not resolved by this doc). What Lua
-might still reasonably own is narrower: the *expression language inside* a condition or action line
-(`player.state == "ready"`, `set session.inCombat = true`), if a small custom grammar turns out to be
-more machinery than reusing MoonSharp's expression evaluator for that one job. That's a real, still-
-open question, but it is not the same question `world-module.md` answered, and answering it the same
-way without checking would be exactly the mistake `non-goals.md`'s discipline exists to catch.
+something else — still `scripting-content.md`'s open question, not resolved by this doc).
+
+**Expression grammar, ruled 2026-08-09 (direct corollary of ticket 0073's compile-mechanism ruling
+above — not a separate decision):** custom, not Lua. The condition/action bodies
+(`player.state == "ready"`, `set session.inCombat = true`) get parsed into a small, purpose-built AST
+and translated directly to `System.Linq.Expressions`, the same mechanism the rule structure itself now
+compiles through. Reaching for MoonSharp here would reintroduce a general embedded interpreter —
+broader trust surface, per-evaluation interpretation cost — for exactly the case a narrow,
+explicit-operations-only translator was chosen to avoid that for one level up. This was a live open
+question until 0073 forced the answer; noted here so it doesn't read as independently re-litigated.
 
 This also answers `scripting-content.md`'s second open question ("are declarative `when`/`then` and
 Lua two separate authoring paths, or does the declarative format compile down to generated Lua/C#
-glue?") for the GM-Overlay case specifically: they are not two competing top-level paths. The
-declarative shape is structural and stays; Lua, if used at all here, would live *inside* it as an
-expression evaluator, not replace it.
+glue?") for the GM-Overlay case specifically, now definitively rather than provisionally: they are not
+two competing top-level paths, and Lua isn't the answer for either layer. The declarative shape is
+structural and stays; the expression grammar inside it is the small custom grammar ruled above, not
+Lua living inside it as an evaluator — that possibility, left open in this doc's first pass, is closed.
 
 ## Placement in the tier stack, and what stays deferred
 
@@ -214,6 +231,16 @@ add/remove pair. An overlay that expires on its own (a GM's "just for this encou
 content-authoring concern layered on top of this primitive — a marker fact plus a turn-count guard,
 the same convention `[StandingRule]` guards already use — not a second reload mechanism.
 
+**That convention is now verified, not just assumed.** When this was first written, "the same
+convention `[StandingRule]` guards already use" was an untested extrapolation — nothing had ever made
+a marker survive past the scope that created it. Phase 2.10 item 3 (Poisoned — a status marker
+inflicted mid-fight, required to persist across a room transition and keep applying a penalty until it
+expires) shipped and passed QA specifically to test whether the Marker/`StandingRule` suppression
+pattern holds across a boundary it had never crossed. It does — confirmed end-to-end, not just
+unit-tested (see [`phase-2-10.md`](../Roadmap/phase-2-10.md)). The auto-expiry design above rests on
+solid ground now, not an extrapolation from a pattern that had only ever operated within a single
+`CombatRound`.
+
 ### Where this lives, and what it doesn't decide
 
 - **The swap is `LunaFlow.Engine`-tier machinery, not GM-Overlay-authored code.** A GM Overlay script
@@ -231,16 +258,13 @@ This resolves `scripting-content.md`'s hot-reload open question **at the mechani
 reload structurally *is* — while leaving the concrete API shape and its measured cost for Phase 4's
 buildable spec.
 
-## Draft two-network split (unratified)
+## Two-network split — considered, not adopted (kept for lineage)
 
-> ⚠️ **DRAFT — NOT RATIFIED. Nothing should depend on this section.**
-> Everything below, to the end of this section, is a candidate design from a 2026-08-03 conversation,
-> not a ruling. Nothing above this line in the document changes because of it, and nothing elsewhere
-> in the wiki cites it — if you find a doc that does, that's drift, not intent. This exists so the
-> idea doesn't get lost before a Phase 4 kickoff pass actually evaluates it. **Do not build against
-> this section, and do not treat it as resolving any open item listed elsewhere in this document** —
-> those stay open until this is either ratified (with this banner removed and the sections above
-> corrected for real) or dropped.
+> ⚠️ **CONSIDERED AND NOT ADOPTED, ruled 2026-08-09.** This section is a 2026-08-03 draft, kept as
+> written rather than deleted — same "rejected design, kept for lineage" convention `glossary.md`
+> uses. Nothing in this repo should be built against it. See
+> ["Ruled: single session, not two"](#ruled-single-session-not-two) at the end of this section for
+> why, and what would legitimately bring it back.
 
 ### The problem this is trying to solve
 
@@ -307,6 +331,22 @@ second session is needed at all:
   session is actually for: not a data pipe, a small place for the GM's own reactive logic to run,
   whose output becomes effect facts the same way a one-shot toggle would.
 
+**Real evidence now exists on one half of this, and it's worth being precise about which half.**
+Phase 2.12 item 11 (Enrage — a threshold-triggered Defense boost, the first extension to
+`IOneD20WorldModule`'s fixed shape since Phase 2.8) shipped and passed QA; the finding was routed
+here directly (ticket [0087](../ClaudeWiki/Processes/Handoffs/0087-phase-2-12-item-11-finding-for-gm-overlay-draft.md)).
+**What it proves:** extending a Rulebook-owned content shape with a conditional, threshold-triggered
+stat modifier is cheap and needs zero `ComponentRegistry`/`Capability`/`EngineTier` involvement — real
+evidence for the "rebind or toggle a pre-declared extension point" half of this section's claim.
+**What it does not prove, in Lothar's own words, worth keeping verbatim:** "extending the monster
+shape is cheap" is proven; "the runtime-composable effect mechanism is proven" is not. Enrage is
+authored ahead of time, in content, by whoever writes the World Module — threshold and bonus fixed at
+Lua-authoring time, interpreted by a rule hand-written for exactly that one field pair. This section's
+actual target — a GM improvising a stat change mid-session via a runtime-declared, *generically*
+interpreted effect fact, not one bespoke rule per concept — is a fundamentally different shape that
+Enrage says nothing about either way. Don't read Enrage as de-risking the effect-fact idea; it only
+de-risks the much narrower claim that `IOneD20WorldModule` itself can grow without framework cost.
+
 **The hard ceiling, stated plainly so it doesn't get oversold later:** an overlay can rebind or toggle
 whatever extension points the Rulebook already declared as override-able. It cannot introduce a fact
 type or behavior category the compiled main network has zero rules watching for — NRules resolves
@@ -371,24 +411,83 @@ volatility happens to ride along with.
   against this one and might turn out to be cheaper for the isolation problem specifically, even if it
   doesn't help the cost problem.
 
+### Ruled: single session, not two
+
+**2026-08-09, following directly from ticket 0073's compile-mechanism ruling above.** The last open
+item in the list just above — "versus a simpler same-session model" — turned out to be the answer,
+but not for the reason it was floated as a maybe. Checked `IActionInterceptor` against NRules source
+(`Intercept(IContext context, IReadOnlyCollection<IActionInvocation> actions)` —
+`context` carries "information about the firing rule," confirmed against
+[the API source](https://nrules.net/api/NRules.Extensibility.IActionInterceptor.html)) expecting it
+might be the fix. It isn't the load-bearing one — something else already ruled today is.
+
+**The isolation problem this section opened with is already closed, by a different ruling, made the
+same day.** The isolation gap — "a rule's RHS actions have full `ISession` reach once compiled,
+independent of what LHS guards gated" — was true under the assumption GM-Overlay content compiles the
+way Rulebook content does: opaque C# text handed to a general compiler, capable of expressing
+anything. Ticket 0073 ruled that assumption out for the runtime path specifically: GM-Overlay rules
+(both structure and expression grammar) are built through a narrow, purpose-built AST-to-`Expression`
+translator that **can only ever emit the operations it explicitly implements.** A GM-Overlay rule
+cannot construct a call to retract an arbitrary Rulebook-internal fact, because nothing in a closed
+grammar gives it the vocabulary to say so — not because a session boundary stopped it, because the
+capability to express it was never compiled into existence in the first place. That's a stronger
+guarantee than session isolation gives, not a weaker one: a second session bounds *where* a
+misbehaving action can reach; a closed grammar prevents the action from being constructible at all.
+
+**What residual risk this leaves, and where it actually lives now:** whether the grammar's own
+primitive operations (`set <field> = <value>`, `insert Event(<name>)`, eventually an effect-fact
+insertion) are themselves scoped to a reviewed, closed allowlist — a field or fact type the grammar
+can target has to be one the Rulebook explicitly declared settable/insertable, the same discipline the
+still-useful "effect fact" vocabulary idea above already wanted. That's a grammar-design and
+Rulebook-authoring review question now, not a session-architecture one. `IActionInterceptor` remains a
+real, available, source-verified mechanism if a belt-and-suspenders runtime audit is ever wanted later
+— it can distinguish which rule is firing via `IContext` and choose not to invoke an action — but
+nothing in this ruling requires it; the grammar closure is what's actually load-bearing.
+
+**What the two-network draft's other rationale (cost containment) still means:** unaffected by the
+above, and still real, but ["The real axis is volatility, not trust"](#the-real-axis-is-volatility-not-trust)
+already correctly identified that this is a scale problem, not a trust problem — and at GM-Overlay's
+actual scale (a tabletop session's fact count, dozens not millions), full-session replay is expected
+to be cheap, per "How reload actually works" above. That's still an assumption to confirm empirically
+in Phase 4's spec, not proven here, but it's the same assumption either way, single- or two-session —
+a second session only pays for itself once total fact count is large enough for full replay to
+actually hurt, which nothing in view today (GM-Overlay as scoped) is close to.
+
+**Ruling:** GM-Overlay rules compile into and fire inside the **same session** as the Rulebook,
+exactly as "How reload actually works" already described (recompile the complete current rule set —
+Rulebook plus every active overlay — replay facts, swap) — that section needed no correction, only
+"Boundary against Rulebook" did, twice, and this is the second and final correction. The two-network
+split stays on record above, not deleted, and stays the right answer **if** a genuinely volatile,
+large-scale rule source shows up — the hypothetical procedural-ROM case `non-goals.md`'s "Not building
+rule-scale guardrails yet" entry already names — where cost containment, not isolation, would be the
+actual driver. Not GM-Overlay, not today.
+
 ## What this doc does not settle
 
 - The script format itself (YAML vs. something else) — still `scripting-content.md`'s open question.
-- The expression grammar for condition/action bodies (custom vs. Lua-via-MoonSharp) — narrowed above,
-  not decided.
+- ~~The expression grammar for condition/action bodies~~ — **ruled 2026-08-09**: custom, translated
+  to `System.Linq.Expressions`, per ticket 0073's corollary above.
+- ~~The compile mechanism for the runtime path~~ — **ruled 2026-08-09**: `RuleBuilder` + `Expression`,
+  not Roslyn, per ticket 0073 (`rule-pipeline-compilation-cost.md`).
 - The concrete reload-primitive API shape and its `GameEngineCore` integration point — mechanism
-  ruled above, shape left to a Phase 4 spec.
+  (recompile-and-replay) ruled, now with a ruled compiler target too; exact API shape still left to a
+  Phase 4 spec.
 - Any concrete GM-facing authoring surface (a live console command, a text box, a hot-key) — that's
   interface-layer/tooling work, not this tier's contract.
 - Whether GM Overlay ever becomes a registered, dependency-declaring component — deferred per above.
-- **Whether the two-network split happens at all** — the draft above is a candidate, not a decision;
-  until it's ratified, "one session, GM Overlay rules compiled directly in" (the original, now-flagged
-  "Boundary against Rulebook" text) is still what's on record, isolation gap and all.
+- ~~Whether the two-network split happens at all~~ — **ruled 2026-08-09**: no, single session for v1.
+  See ["Ruled: single session, not two"](#ruled-single-session-not-two). The draft stays on record as
+  the answer if a genuinely volatile, large-scale rule source ever shows up — not GM-Overlay as
+  scoped.
+- **The grammar's own allowlist** — which fields a `set` operation may target and which fact types an
+  `insert` operation may construct, reviewed and closed per Rulebook. This is the real safety surface
+  now that session isolation isn't carrying that weight; not designed yet, just named as where the
+  design work actually needs to go.
 
-These, plus the rule-DSL format ruling and the two-network-split go/no-go, are what a Phase 4 kickoff
-spec still needs before Baraka has something buildable — narrower than before this doc (the tier
-question and the reload mechanism's shape are both answered now), not fully closed, and the isolation
-question is open rather than silently assumed away.
+These, plus the rule-DSL format ruling and the grammar allowlist, are what a Phase 4 kickoff spec
+still needs before Baraka has something buildable — narrower than before this doc (the tier question,
+the reload mechanism, the compile mechanism, the expression grammar, and the session-architecture
+question are all answered now), not fully closed.
 
 ## Related documents
 
@@ -411,3 +510,15 @@ question is open rather than silently assumed away.
   [`RuleCompiler`](https://nrules.net/api/NRules.RuleCompiler.html) — the upstream source "How reload
   actually works" is checked against, at NRules 1.0.2, the version pinned in `LunaFlow.Engine.csproj`
   and `LunaFlow.Rules.csproj`
+- [`rule-pipeline-compilation-cost.md`](rule-pipeline-compilation-cost.md) and [ticket
+  0073](../ClaudeWiki/Processes/Handoffs/0073-rule-compilation-cost-and-runtime-mode.md) — the
+  compile-mechanism ruling (`RuleBuilder`+`Expression`, not Roslyn) this doc's "Boundary against
+  Rulebook" and expression-grammar ruling build on
+- [Ticket 0087](../ClaudeWiki/Processes/Handoffs/0087-phase-2-12-item-11-finding-for-gm-overlay-draft.md) —
+  the Enrage finding folded into "What this does and doesn't let a GM do" above
+- [`../Roadmap/phase-2-10.md`](../Roadmap/phase-2-10.md) — item 3 (Poisoned), verifying the
+  marker-across-a-boundary assumption this doc's overlay-expiry design rests on
+- [`../Roadmap/phase-2-12.md`](../Roadmap/phase-2-12.md) — Enrage's full build/QA record
+- [`IActionInterceptor`](https://nrules.net/api/NRules.Extensibility.IActionInterceptor.html) — checked
+  against source while ruling out the two-network split; a real, available defense-in-depth mechanism,
+  not required by the final ruling

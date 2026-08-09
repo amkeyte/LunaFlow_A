@@ -1,9 +1,9 @@
 # Phase 2.12 — World Module Authoring Surface Stress Test (Lua Path) — Implementation Spec
 
-**Status:** in review — reviewed clean by Amara (ticket 0081), including item 11's contract
-extension; one Mechanics-section defect found and fixed (ticket 0083). Ratified into
-[`phase-2-12.md`](../Roadmap/phase-2-12.md); build ticket 0084 cut to Baraka. Per
-`content-spec-template.md`'s lifecycle, flips to `active` once built and QA-verified.
+**Status:** active. Built (ticket 0084), maintained test coverage landed (ticket 0085), QA-verified
+PASS (ticket [0086](../ClaudeWiki/Processes/Handoffs/0086-phase-2-12-qa-gate.md), see
+[`phase-2-12-verdict.md`](../QA/phase-2-12-verdict.md)). Per `content-spec-template.md`'s lifecycle,
+`active` means implemented and acceptance-criteria-verified, not just designed.
 **Companion design doc:** [`../design/world-module.md`](../design/world-module.md#two-authoring-paths-into-one-contract) — read for rationale.
 **Companion to:** [`lua-world-module-spec.md`](lua-world-module-spec.md) (the mechanism this content
 is authored against, unchanged by this spec) and

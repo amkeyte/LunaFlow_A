@@ -2,10 +2,14 @@
 
 Implementation status: see [Roadmap](../Roadmap/roadmap.md).
 
-> ⚠️ **FINDINGS + CANDIDATE OPTIONS — NOT RATIFIED.** Everything below is Baraka's writeup for
-> Amara to rule on (ticket 0073), not a decision. Nothing in this repo depends on it yet. Don't
-> build against any option below until it's ruled — same posture `gm-overlay.md`'s own draft
-> section holds.
+> **RULED, 2026-08-09 (ticket [0073](../ClaudeWiki/Processes/Handoffs/0073-rule-compilation-cost-and-runtime-mode.md)): Option B.**
+> Roslyn stays, untouched, for compile-time Rulebook authoring. Scripted/GM-Overlay content's runtime
+> path builds on `RuleBuilder` + `System.Linq.Expressions` instead — no C# source text, no
+> `Assembly.Load`. Option C (merge per-group Roslyn invocations) is endorsed as separate,
+> independently-worthwhile follow-up, not part of this ruling. The findings and the other four
+> options below are kept as written — the evidence and reasoning, not just the verdict — per this
+> project's own "record the reasoning trail" convention; the options that weren't picked stay
+> instructive for why. Nothing built yet against this ruling — that's Phase 4 kickoff's job.
 
 ## Purpose
 
@@ -111,6 +115,15 @@ that this is something that came up in my pre-Claude design time as a solution t
 hypothetical problem.
 Also, we currently aren't making use of the IMechanic concept, which may be why I did this originally.\
 Needs explored.
+
+**[Amara, 2026-08-09] Explored, and resolved — `IMechanic` itself is retired.** Checked real usage
+against the definition: `D20ResolutionMechanic` had silently stopped implementing it since the
+Cartridge pivot, unnoticed through six later phases, and three ROMs built since (GridMap, Loot,
+Reputation) each needed the kind of hard-wired multi-fact logic the interface was meant to name and
+none used it — real content stayed with `ICommandHandler` throughout. Full finding in
+`glossary.md`'s Mechanic entry. This doesn't touch the generator/Roslyn question above, which stays
+open — `IMechanic` and `GeneratorServices` are separate seams that happened to get raised in the same
+note.
 
 ## What NRules actually requires (verified against the pinned 1.0.2 source)
 
@@ -221,7 +234,7 @@ genuinely two separate axes (**what compiles the rule** vs. **what session it la
 combine, not compete — worth reading together with whichever option above gets ruled on, not instead
 of it.
 
-## Where the evidence points (not a ruling)
+## Where the evidence pointed — and where Amara ruled
 
 Option B is the only one that (a) fixes the cost where it's actually load-bearing — live reload, not
 startup — (b) doesn't ask Rulebook authors to give up anything they have today, (c) doesn't reopen a
@@ -229,8 +242,10 @@ ruling made for good reasons at the time, and (d) is scoped by a requirement (`g
 declarative-`when`/`then`-plus-expression-grammar ruling) that already exists on the record, not one
 invented for this doc. C is worth doing regardless, independently, as a small startup-cost win. A and
 D both trade something real (Rulebook expressiveness, or a clean trust boundary) for a benefit that
-doesn't address the actual finding. This is Baraka's read of the evidence gathered, not a decision —
-see ticket [0073](../ClaudeWiki/Processes/Handoffs/0073-rule-compilation-cost-and-runtime-mode.md).
+doesn't address the actual finding. This was Baraka's read of the evidence gathered — Amara ruled B on
+it, with a direct corollary (the expression-grammar question resolves the same way, custom over Lua) —
+see ticket [0073](../ClaudeWiki/Processes/Handoffs/0073-rule-compilation-cost-and-runtime-mode.md)'s
+Response for the full reasoning.
 
 ## Related documents
 

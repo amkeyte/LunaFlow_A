@@ -101,10 +101,19 @@ unilaterally refuse to load against — nobody's shipping a chemistry ROM by acc
 **rules** (this concern) or many **facts** matched by a handful of rules (which NRules already
 handles natively and this doesn't apply to) before assuming it needs any of this.* Same conversation
 also produced the framing this entry's motivating example stress-tested against — see
-[`gm-overlay.md`](gm-overlay.md)'s draft "The real axis is volatility, not trust": a rule source needs
+[`gm-overlay.md`](gm-overlay.md)'s "The real axis is volatility, not trust": a rule source needs
 session isolation for cost-containment reasons independent of whether it also needs it for trust
 reasons, and a procedurally volatile-but-trusted ROM would be the case that actually exercises this,
 not GM Overlay.
+
+**Addendum, 2026-08-09:** `gm-overlay.md`'s two-network session split (drafted 2026-08-03 as the
+isolation *and* cost-containment fix for GM Overlay specifically) was ruled **not adopted** for v1 —
+single session, same as Rulebook. Isolation turned out not to need it: GM-Overlay content compiles
+through a narrow, closed AST-to-`Expression` translator (ticket 0073) that can only emit operations it
+explicitly implements, a stronger guarantee than a session boundary gives. Cost containment still
+might need it, but only at a scale nothing in view today reaches — this is the same trigger this entry
+already names, restated concretely rather than left abstract: **the two-network split is what "revisit"
+looks like, mechanically, if that trigger ever fires.**
 
 **Not registering GM Overlays with `ComponentRegistry` yet.** `EngineTier.GmOverlay` exists as a
 shipped enum value, but nothing is tagged with it — [`gm-overlay.md`](gm-overlay.md) (Phase 4 kickoff,

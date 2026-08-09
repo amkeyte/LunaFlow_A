@@ -22,8 +22,8 @@ to an agent.
 
 ## Division of labor
 
-- **User, via VS2022:** runs the actual test pass (Test Explorer, a playlist from
-  [`test-runbook.md`](test-runbook.md), or the integrated terminal) and produces a `.trx` report.
+- **User, via VS2022:** runs the actual test pass (Test Explorer or the integrated terminal) and
+  produces a `.trx` report.
 - **Agent:** reads the `.trx`, extracts only the failed cases (name, message, stack trace), and
   proposes a fix — or, mid-fix, runs a single narrow `dotnet test --filter` itself when it needs a
   quick yes/no without interrupting the user.
@@ -116,7 +116,7 @@ confidence grows:
 
 1. Single failing test (`--filter "FullyQualifiedName~Class.Method"`).
 2. Its test class, or its [`test-runbook.md`](test-runbook.md) phase-mate class.
-3. The full `Core` namespace (matches the `GameEngineCoreAll.playlist` scope).
+3. The full `Core` namespace (`--filter "FullyQualifiedName~LunaFlow.EngineTests.Core"`).
 4. Full unfiltered `dotnet test` on **both** projects — reserved for a final check before handing
    back to the user or calling a fix done, not for in-progress iteration.
 

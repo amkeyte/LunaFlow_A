@@ -1,9 +1,17 @@
 # 0085 — Phase 2.12 maintained test coverage
 
-**Status:** open
+**Status:** resolved
 **Opened by:** Baraka (Impl Dev)
 **Opened:** 2026-08-09
 **For:** Nadia (Test Dev)
+
+## Decision
+
+All 6 items built. Re-ran `example/Phase2_12Spike` first to confirm its baseline still passes, then
+reused its already-verified roll sequences where the maintained tests cover the same ground (items
+1's threshold/defensive/flee/retry chain), deriving only the loss and timeout-while-enraged sequences
+fresh (the spike doesn't cover those). `dotnet build` full-solution green, `dotnet test
+tests/LunaFlow.ContentTests` **107/107** (88 baseline + 19 new).
 
 ## Details
 
@@ -77,8 +85,106 @@ established.
 
 ### Response
 
-<Filled in by the assignee.>
+**Items 1 & 3 — new file `tests/LunaFlow.ContentTests/Rom/D20System/SignalStaticEnrageHandlerTests.cs`
+(9 tests).** Same `StartSession`-inline shape as `D20SystemHandlerTests.cs`, driven live through
+`GameEngineCore.Instance`, but against "Signal Static" (loaded via
+`LuaOneD20WorldModule.FromEmbeddedResource`) instead of `DefaultOneD20WorldModule` — the latter has
+no Enrage-capable monster. Pinned room/monster assignment matches
+`example/Phase2_12Spike/Program.cs`'s exactly. A small test-owned `ScriptedRolls : Random` (returns a
+scripted value queue, exhausts loudly) replaces `D20SystemHandlerTests`' seed-searched `Random(seed)`
+approach — same technique the spike's own `ScriptedRandom` introduced, re-declared here rather than
+referencing the spike project (spikes are explicitly throwaway/unmaintained by their own convention).
+
+- `StartSession_TranslatesEnrageFieldsFromWorldModuleIntoMonsterTemplate_Unchanged` (item 3): asserts
+  `EnrageThresholdFraction`/`EnrageDefenseBonus` carry unchanged into the ROM-tier `MonsterTemplate`
+  `FightCommandHandler` actually reads, and that a plain monster carries both as null — structural,
+  no fight needed.
+- `Fight_FirstHitCrossingThreshold_InsertsMonsterEnragedExactlyOnce_AtMonsterHpEqualToThreshold`:
+  threshold crossing, exactly once, at `MonsterHp == Threshold*MaxHp` exactly (not just "below").
+- `Fight_WhileEnraged_IdenticalPcRollThatHitBefore_NowMissesAgainstBoostedDefense`: the same roll
+  that hit at baseline now misses at the enraged effective Defense — the defensive-effect claim
+  pinned against one concrete roll, not "some roll misses."
+- `Fight_MonsterCounterattack_UnaffectedByEnrage_IdenticalRollSameOutcomeBeforeAndAfter`: the named
+  regression per ticket 0083's ruling — the same `monsterRoll` deals the identical damage once
+  pre-enrage and once post-enrage (8→5 both times), proving Enrage never touches the monster's own
+  attack calculation.
+- `MonsterEnraged_RetractsOnWin` / `RetractsOnLoss` / `RetractsOnThreeRoundTimeout` / `RetractsOnFlee`
+  — four separate tests, one per `CombatRound` terminal outcome, as asked (not one generic
+  "retracts" test). Win/flee reuse the spike's Scenario B numbers directly (re-ran the spike first to
+  confirm it still passes); loss and timeout-while-enraged are new sequences of my own derivation
+  — verified empirically via `dotnet test`, same discipline `D20SystemHandlerTests.cs`'s own seeded
+  scenarios document ("verified deterministic... not hand-computed"), both passed on the first run.
+- `Fight_RetryAfterFlee_StartsUnenraged_IdenticalRollThatMissedNowHitsAgain`: the retroactive-safety
+  property — reuses the spike's full Scenario B roll sequence (already spike-verified), a roll that
+  missed while enraged connects again at baseline after a flee+retry.
+
+**Item 2 — extended `OneD20WorldModuleValidatorTests.cs` (5 tests).** Reused this file's existing
+`TestWorldModule.FromDefault()` double (seeded from a real, fully-valid `DefaultOneD20WorldModule`)
+rather than building a new minimal single-monster probe module — mutating just one monster
+("duelist")'s Enrage fields keeps every other structural check (room/challenge/monster counts)
+satisfied, avoiding the exact mistake `example/Phase2_12Spike/Program.cs`'s
+`SingleMonsterProbeWorldModule` doc comment warns about (an under-populated probe module trips the
+roster/pool-size floor checks first, so "reject" assertions pass for the wrong reason). Four
+rejection cases (threshold-only, bonus-only, threshold>1, threshold==0) plus the inclusive-upper-bound
+accept case (threshold==1) — read `OneD20WorldModuleValidator.cs` directly for the exact thrown-message
+wording rather than guessing.
+
+**Item 4 — extended `LuaOneD20WorldModuleTests.cs` (2 tests).** `Construct_MonsterWithEnrageFieldsSet_MarshalsThresholdAndBonusExactly`
+and `Construct_MonsterWithoutEnrageFields_MarshalsBothFieldsAsNull`, same inline-minimal-script shape
+as this file's existing `Construct_*` tests. (The full `FromEmbeddedResource_DemoScript_MonstersMatchDefaultExactly`
+round-trip test already incidentally covers the absent-defaults-to-null path for
+`DefaultOneD20WorldModule.lua`, since it predates this phase and has no Enrage fields — these two
+new tests make that claim explicit and direct rather than relying on an incidental proof.)
+
+**Item 5 — `FromEmbeddedResource_SignalStatic_PassesOneD20WorldModuleValidatorUnmodified`** in
+`LuaOneD20WorldModuleTests.cs`, mirroring the existing Default-script test exactly, plus items 1/3
+above (which exercise Signal Static live, end to end). **SpikeSession promotion call:** rebuilt
+rather than promoted verbatim — `D20SystemHandlerTests.cs`'s own convention is an inline private
+`StartSession` method on the test class, not a separate reusable session helper class; mixing the two
+conventions in one test project felt like the wrong trade for reuse this size (one new test class).
+
+**Item 6 — extended `LuaOneD20WorldModuleTests.cs` (2 tests)** using the spike's exact Lua source
+snippets for both probes: `Construct_ChallengeDcAsString_ThrowsBeforeValidatorIsEverReached`
+(marshal-failure — asserts the exception names the script/entry/field, and a flag provably never
+set past construction proves the validator was never reached) and
+`Construct_FourChallengesAgainstSixSlotFloor_ConstructsCleanly_ThenRejectedByValidator`
+(validator-failure — marshal-clean construction, then rejected at the pool-size floor specifically).
+
+**Verification:** `dotnet build LunaFlow_A.sln` — full solution green, 0 warnings, 0 errors.
+`dotnet test tests/LunaFlow.ContentTests` (full suite, no filter) — **107/107 pass** (88 baseline +
+19 new: 9 Enrage lifecycle/field-carry + 5 validator + 2 Lua marshaling + 1 Signal Static + 2 item-12
+probes). Updated 2 `.playlist` files (`ContentTestsD20System.playlist`,
+`ContentTestsOneD20Rulebook.playlist`) and `ContentTestsAll.playlist`, cross-checked every entry
+against `dotnet test --list-tests` discovery in both directions (no phantom entries, no discovered
+test missing from `ContentTestsAll`) and confirmed `ContentTestsAll` still equals the exact sum of
+the 5 split playlists.
 
 ### Resolution
 
-<Filled in by the opener when closing.>
+**Resolved 2026-08-09 (Baraka, opener).** Independently ran the suite rather than trusting the
+Response: `dotnet build LunaFlow_A.sln` clean, `dotnet test tests/LunaFlow.ContentTests` **107/107**,
+`--list-tests` discovery also reports 107 — matches.
+
+Read `SignalStaticEnrageHandlerTests.cs` directly and re-derived the roll arithmetic by hand for the
+two trickiest cases rather than trusting the inline comments:
+- `Fight_MonsterCounterattack_UnaffectedByEnrage_...`: walked the scripted queue
+  `(1, 9, 3, 8, 1, 9, 3)` against the handler's actual call order — round 1 (PC miss, monster hits for
+  3, PlayerHp 11→8) consumes exactly 3 rolls, round 2 (PC hits and crosses the threshold mid-round,
+  *then* the identical `monsterRoll=9`/damage=3 fires again, PlayerHp 8→5) consumes exactly 4 more.
+  The math checks out and genuinely isolates the claim: the counterattack's outcome and damage are
+  byte-for-byte identical before and after Enrage triggers, because the branch never reads the
+  monster's Defense at all — not asserted, demonstrated.
+- `MonsterEnraged_RetractsOnLoss`: walked `(8,1,1, 10,9,6, 10,9,6)` — PlayerHp goes 11→5→-1 across
+  three rounds, correctly triggering the loss branch on round 3 while enraged (effective Defense 15
+  throughout rounds 2-3, confirmed by the miss/hit pattern matching that Defense value specifically,
+  not the baseline 12).
+
+Also confirmed: the corrected validator-probe shape (mutating one monster in a fully-valid
+`TestWorldModule.FromDefault()`, not a new under-populated fake module) correctly avoids the exact
+false-pass trap `example/Phase2_12Spike`'s first draft fell into — read `OneD20WorldModuleValidatorTests.cs`
+directly, all five assertions check the message contains `"Enrage"` and `"'duelist'"` specifically,
+not just that *some* exception fired. Item 12's two probes mirror the spike's exact Lua source and
+the "validator never reached" flag technique.
+
+No defects found. No fix requested. Phase 2.12's full-suite-green bar (0084) is now unblocked on the
+test side — still needs an Arryn-run `latest.trx` before 0084 itself can close.

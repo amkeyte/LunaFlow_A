@@ -125,6 +125,155 @@ namespace LunaFlow.ContentTests.Rulebook.OneD20
             OneD20WorldModuleValidator.Validate(luaModule);
         }
 
+        // ---- Phase 2.12 item 9/10/11: "Signal Static" — a second, Lua-only World Module (no C# twin) ----
+
+        [TestMethod]
+        public void FromEmbeddedResource_SignalStatic_PassesOneD20WorldModuleValidatorUnmodified()
+        {
+            var luaModule = LuaOneD20WorldModule.FromEmbeddedResource(
+                resourceName: "LunaFlow.Rulebook.OneD20.Content.SignalStaticWorldModule.lua");
+
+            OneD20WorldModuleValidator.Validate(luaModule);
+        }
+
+        // ---- Item 11: enrageThresholdFraction/enrageDefenseBonus marshaling ----
+
+        [TestMethod]
+        public void Construct_MonsterWithEnrageFieldsSet_MarshalsThresholdAndBonusExactly()
+        {
+            const string source = """
+                return {
+                  rooms = {},
+                  challenges = {},
+                  monsters = {
+                    hound = { name = "Hound", descriptionKey = "x",
+                               stats = { defense = 12, attackBonus = 2, damageDie = "1d6", damageBonus = 0, maxHp = 8 },
+                               enrageThresholdFraction = 0.5, enrageDefenseBonus = 3 },
+                  },
+                  itemIdByMonsterId = {},
+                  playerCharacter = { defense = 10, attackBonus = 0, damageDie = "1d4", damageBonus = 0, maxHp = 10 },
+                  playerAbilityScores = {},
+                  flavorText = {},
+                  startRoomId = 1,
+                }
+                """;
+
+            var module = new LuaOneD20WorldModule(source, "enrage-fields-set");
+
+            var hound = module.Monsters["hound"];
+            Assert.AreEqual(0.5, hound.EnrageThresholdFraction);
+            Assert.AreEqual(3, hound.EnrageDefenseBonus);
+        }
+
+        [TestMethod]
+        public void Construct_MonsterWithoutEnrageFields_MarshalsBothFieldsAsNull()
+        {
+            // Scripts predating phase-2-12-lua-worldmodule-stress-test-spec.md (including
+            // DefaultOneD20WorldModule.lua) omit both fields entirely and must keep marshaling
+            // unchanged — the fields default to null, not zero or some other silent substitution.
+            const string source = """
+                return {
+                  rooms = {},
+                  challenges = {},
+                  monsters = {
+                    hound = { name = "Hound", descriptionKey = "x",
+                               stats = { defense = 12, attackBonus = 2, damageDie = "1d6", damageBonus = 0, maxHp = 8 } },
+                  },
+                  itemIdByMonsterId = {},
+                  playerCharacter = { defense = 10, attackBonus = 0, damageDie = "1d4", damageBonus = 0, maxHp = 10 },
+                  playerAbilityScores = {},
+                  flavorText = {},
+                  startRoomId = 1,
+                }
+                """;
+
+            var module = new LuaOneD20WorldModule(source, "enrage-fields-absent");
+
+            var hound = module.Monsters["hound"];
+            Assert.IsNull(hound.EnrageThresholdFraction);
+            Assert.IsNull(hound.EnrageDefenseBonus);
+        }
+
+        // ---- Item 12: the two Lua-path failure probes ----
+
+        [TestMethod]
+        public void Construct_ChallengeDcAsString_ThrowsBeforeValidatorIsEverReached()
+        {
+            // Marshal-failure probe: LuaOneD20WorldModule's constructor must throw before
+            // OneD20WorldModuleValidator.Validate is ever reachable — proven by a flag that can only
+            // ever be set on the far side of a successful construction, same technique
+            // example/Phase2_12Spike/Program.cs's RunItem12Probes uses.
+            const string source = """
+                return {
+                  rooms = {
+                    [1] = { row = 0, col = 0, challengeType = "SkillCheck", descriptionKey = "x" },
+                  },
+                  challenges = {
+                    broken = { skill = "Search", skillAbility = "Int", dc = "ten",
+                               successKey = "s", failureKey = "f", promptKey = "p" },
+                  },
+                  monsters = {},
+                  itemIdByMonsterId = {},
+                  playerCharacter = { defense = 10, attackBonus = 0, damageDie = "1d4", damageBonus = 0, maxHp = 10 },
+                  playerAbilityScores = { Str = 10, Dex = 10, Con = 10, Int = 10, Wis = 10, Cha = 10 },
+                  flavorText = {},
+                  startRoomId = 1,
+                }
+                """;
+            var validatorReached = false;
+
+            var ex = Assert.ThrowsException<InvalidOperationException>(() =>
+            {
+                var probe = new LuaOneD20WorldModule(source, "item-12-marshal-probe");
+                OneD20WorldModuleValidator.Validate(probe);
+                validatorReached = true;
+            });
+
+            Assert.IsTrue(ex.Message.Contains("item-12-marshal-probe"), "Message must name the script");
+            Assert.IsTrue(ex.Message.Contains("'dc'"), "Message must name the offending field");
+            Assert.IsTrue(ex.Message.Contains("'broken'"), "Message must name the offending entry");
+            Assert.IsFalse(validatorReached, "OneD20WorldModuleValidator must never be reached — the constructor must throw first");
+        }
+
+        [TestMethod]
+        public void Construct_FourChallengesAgainstSixSlotFloor_ConstructsCleanly_ThenRejectedByValidator()
+        {
+            // Validator-failure probe: marshal-clean (every field the right type, 9 valid rooms) but
+            // only 4 challenges against the grid's 6-slot requirement. Must construct successfully,
+            // then fail at OneD20WorldModuleValidator's existing pool-size check specifically — proves
+            // the two-layer fail-fast split (marshal-shape here, content-validity in the validator)
+            // for the failure mode that lands in the second layer, complementing the marshal-failure
+            // probe above which lands in the first.
+            var roomsBlock = string.Join(",\n", Enumerable.Range(1, 9)
+                .Select(i => $"[{i}] = {{ row = 0, col = 0, challengeType = \"SkillCheck\", descriptionKey = \"x\" }}"));
+            var source = $$"""
+                return {
+                  rooms = {
+                    {{roomsBlock}}
+                  },
+                  challenges = {
+                    c1 = { skill = "Search", skillAbility = "Int", dc = 8, successKey = "s", failureKey = "f", promptKey = "p" },
+                    c2 = { skill = "Search", skillAbility = "Int", dc = 8, successKey = "s", failureKey = "f", promptKey = "p" },
+                    c3 = { skill = "Search", skillAbility = "Int", dc = 8, successKey = "s", failureKey = "f", promptKey = "p" },
+                    c4 = { skill = "Search", skillAbility = "Int", dc = 8, successKey = "s", failureKey = "f", promptKey = "p" },
+                  },
+                  monsters = {},
+                  itemIdByMonsterId = {},
+                  playerCharacter = { defense = 10, attackBonus = 0, damageDie = "1d4", damageBonus = 0, maxHp = 10 },
+                  playerAbilityScores = { Str = 10, Dex = 10, Con = 10, Int = 10, Wis = 10, Cha = 10 },
+                  flavorText = {},
+                  startRoomId = 1,
+                }
+                """;
+
+            var probe = new LuaOneD20WorldModule(source, "item-12-validator-probe"); // must not throw
+
+            var ex = Assert.ThrowsException<InvalidOperationException>(
+                () => OneD20WorldModuleValidator.Validate(probe));
+            Assert.IsTrue(ex.Message.Contains("Challenges"));
+            Assert.IsTrue(ex.Message.Contains("4"));
+        }
+
         [TestMethod]
         public void FromEmbeddedResource_DemoScript_StartRoomIdMatchesDefault()
         {

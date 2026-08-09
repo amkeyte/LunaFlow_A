@@ -49,7 +49,9 @@ So the enforcement is **by construction, not by check**: the mechanism is not pr
 upward lookup API to call. This is strictly stronger than validating, and it is the reason
 `IInteropRom.Resolve` — proposed and specced during Phase 2.7 design — was cut rather than
 constrained. A composition root that injects the same object explicitly achieves the identical
-result with no pull surface at all.
+result with no pull surface at all. (`IInteropRom` itself — not just `Resolve` — was later retired
+outright, 2026-08-09: zero implementers ever shipped once the contract surface took over peer
+correlation. See `glossary.md`.)
 
 ### 2. A ROM must be replaceable without recompiling what sits above it
 

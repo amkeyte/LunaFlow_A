@@ -1,13 +1,16 @@
 # Phase 2.12 — World Module authoring surface stress test (Lua path)
 
-**Status:** pending. Built per [`Specs/phase-2-12-lua-worldmodule-stress-test-spec.md`](../Specs/phase-2-12-lua-worldmodule-stress-test-spec.md)
+**Status:** done (QA PASS). Built per [`Specs/phase-2-12-lua-worldmodule-stress-test-spec.md`](../Specs/phase-2-12-lua-worldmodule-stress-test-spec.md)
 against the reviewed proposal in
 [`Proposals/2-10-through-2-12-content-framework-stress-test.md`](Proposals/2-10-through-2-12-content-framework-stress-test.md),
 approved via ticket [0067](../ClaudeWiki/Processes/Handoffs/0067-proposal-2-10-2-12-content-framework-stress-test-phases-post-2-9.md).
-Ratified via ticket [0081](../ClaudeWiki/Processes/Handoffs/0081-phase-2-12-spec-ready-for-ratification-read.md)
-(Amara's review, including item 11's Mechanics-section fix on ticket
-[0083](../ClaudeWiki/Processes/Handoffs/0083-phase-2-12-item-11-mechanics-section-misdescribes-enrage-s-defense-effect.md)).
-Build ticket cut to Baraka as [0084](../ClaudeWiki/Processes/Handoffs/0084-implement-phase-2-12-lua-worldmodule-stress-test-spec-md.md).
+Ratified via ticket [0081](../ClaudeWiki/Processes/Handoffs/0081-phase-2-12-spec-ready-for-ratification-read.md);
+build ([0084](../ClaudeWiki/Processes/Handoffs/0084-implement-phase-2-12-lua-worldmodule-stress-test-spec-md.md))
+and test coverage ([0085](../ClaudeWiki/Processes/Handoffs/0085-phase-2-12-maintained-test-coverage.md))
+both closed; QA gate ([0086](../ClaudeWiki/Processes/Handoffs/0086-phase-2-12-qa-gate.md)) verdict
+**PASS** — see [`phase-2-12-verdict.md`](../QA/phase-2-12-verdict.md). Item 11's Phase-4 finding
+routed to Amara as ticket [0087](../ClaudeWiki/Processes/Handoffs/0087-phase-2-12-item-11-finding-for-gm-overlay-draft.md).
+This closes out the 2.10–2.12 proposal in full.
 
 ## Overview
 

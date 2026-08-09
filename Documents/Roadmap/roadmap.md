@@ -36,7 +36,7 @@ have to rediscover them.
 | Phase 2.10 | done (QA PASS) | [Content coverage stress test](phase-2-10.md) |
 | Phase 2.11 | done (QA PASS) | [Cross-ROM capability mechanism stress test](phase-2-11.md) |
 | Phase 2.11.1 | pending | [Rulebook content extraction](phase-2-11-1.md) — structural move, spec complete, not yet built |
-| Phase 2.12 | pending | [World Module authoring surface stress test (Lua path)](phase-2-12.md) — ratified, build ticket 0084 cut to Baraka |
+| Phase 2.12 | done (QA PASS) | [World Module authoring surface stress test (Lua path)](phase-2-12.md) |
 | Phase 3 | superseded (confirmed) | [Vertical slice](phase-3.md) — superseded by Phase 2.5; the load-bearing condition held, verified by QA |
 | Phase 4 | pending | [World content & scripting](phase-4.md) — kickoff design pass needed before a buildable spec exists; see [0064](../ClaudeWiki/Processes/Handoffs/0064-phase-2-9-ready-and-phase-4-scope-correction.md) |
 | Phase 5 | pending | [Interface expansion](phase-5.md) (can start at Phase 1) |
