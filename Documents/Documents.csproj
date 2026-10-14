@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="ClaudeWiki\Processes\Handoffs\Archive\" />
     <Folder Include="html\" />
     <Folder Include="Test\" />
     <Folder Include="QA\" />

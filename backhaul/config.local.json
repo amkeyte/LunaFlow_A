@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "project_name": "LunaFlow_A",
+  "content_roots": {
+    "tickets": "C:\\_local\\source\\LunaFlow_A\\backhaul\\tickets",
+    "wiki": "C:\\_local\\source\\LunaFlow_A\\backhaul\\wiki",
+    "roadmap": "C:\\_local\\source\\LunaFlow_A\\backhaul\\roadmap",
+    "roles": "C:\\_local\\source\\LunaFlow_A\\backhaul\\roles"
+  },
+  "enabled_modules": ["roadmap", "roles"],
+  "client_folders": {
+    "LUNA": "C:\\_local\\source\\LunaFlow_A"
+  },
+  "repo_url": "https://github.com/amkeyte/Backhaul",
+  "host_root": "C:\\_local\\source\\LunaFlow_A"
+}
