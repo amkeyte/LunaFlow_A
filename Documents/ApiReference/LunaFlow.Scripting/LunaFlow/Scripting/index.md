@@ -1,0 +1,9 @@
+## LunaFlow\.Scripting Namespace
+
+| Classes | |
+| :--- | :--- |
+| [SandboxedScriptHost](SandboxedScriptHost/index.md 'LunaFlow\.Scripting\.SandboxedScriptHost') | [ISandboxedScriptHost](ISandboxedScriptHost/index.md 'LunaFlow\.Scripting\.ISandboxedScriptHost') backed by a MoonSharp [MoonSharp\.Interpreter\.Script](https://learn.microsoft.com/en-us/dotnet/api/moonsharp.interpreter.script 'MoonSharp\.Interpreter\.Script') configured with             [MoonSharp\.Interpreter\.CoreModules\.Preset\_HardSandbox](https://learn.microsoft.com/en-us/dotnet/api/moonsharp.interpreter.coremodules.preset_hardsandbox 'MoonSharp\.Interpreter\.CoreModules\.Preset\_HardSandbox') — verified against the MoonSharp 2\.0\.0 source             \(`CoreModules.cs` at the `v2.0.0.0` tag\) to compose exactly             `GlobalConsts | TableIterators | String | Table | Basic | Math | Bit32`, excluding             `IO`/`OS_System`/`OS_Time`/`LoadMethods`/`Debug` — no filesystem,             process, or OS\-time access is reachable from a script run through this host\. A fresh             [MoonSharp\.Interpreter\.Script](https://learn.microsoft.com/en-us/dotnet/api/moonsharp.interpreter.script 'MoonSharp\.Interpreter\.Script') is constructed per [Execute\(string\)](SandboxedScriptHost/Execute(string).md 'LunaFlow\.Scripting\.SandboxedScriptHost\.Execute\(string\)') call so one script's globals can             never leak into another's\. |
+
+| Interfaces | |
+| :--- | :--- |
+| [ISandboxedScriptHost](ISandboxedScriptHost/index.md 'LunaFlow\.Scripting\.ISandboxedScriptHost') | A small, sandboxed Lua execution primitive — not tied to any Rulebook or content shape\. Runs a Lua chunk and returns its top\-level return value\. See [SandboxedScriptHost](SandboxedScriptHost/index.md 'LunaFlow\.Scripting\.SandboxedScriptHost') for the concrete sandboxing configuration\. Per `lua-world-module-spec.md`\. |
